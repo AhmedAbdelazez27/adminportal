@@ -6,6 +6,6 @@ import { PageNotFoundComponent } from './shared/components/page-not-found/page-n
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: HomeComponent,canActivate: [authGuard]  }, //canActivate: [authGuard] 
+  { path: 'home', component: HomeComponent }, //canActivate: [authGuard] 
   { path: '**', component: PageNotFoundComponent }
 ];
