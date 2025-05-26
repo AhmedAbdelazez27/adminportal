@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+/* styles.scss */
+body.rtl {
+  direction: rtl;
+  text-align: right;
+  color:purple
+}
+
+body.ltr {
+  direction: ltr;
+  text-align: left;
+  color: red;
+}
