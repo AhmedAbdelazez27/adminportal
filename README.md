@@ -1,59 +1,131 @@
-# Adminportal
+# 🚀  Angular Starter
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.4.
+A modern, multilingual, responsive Angular 19+ starter kit built with scalability and developer productivity in mind.
 
-## Development server
+This starter is designed for real-world admin portals and dashboards. It includes pre-configured support for:
+- Arabic/English localization
+- RTL/LTR layout switching
+- Bootstrap 5.3 integration
+- FontAwesome icons
+- Global loading spinner (Ngx Spinner)
+- Toastr notification system
+- Modular routing and standalone components
 
-To start a local development server, run:
+---
+
+## 📁 Project Structure
+
+```
+src/
+│
+├── app/
+│   ├── core/               # Services, guards, interceptors, constants
+│   ├── features/           # Feature modules like auth, dashboard, etc.
+│   ├── shared/             # Shared components, directives, pipes
+│   ├── assets/i18n/        # en.json / ar.json translation files
+│   ├── app.config.ts       # Angular standalone configuration
+│   └── app.routes.ts       # Application routing
+│
+├── styles.scss             # Global styles and RTL overrides
+├── index.html              # Main entry point with <base href>
+└── main.ts                 # Bootstraps the AppComponent
+```
+
+---
+
+## 🛠 Technologies Used
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| Angular | 19+ | Core SPA Framework |
+| Bootstrap 5.3 | Latest | UI Styling (RTL/LTR support) |
+| FontAwesome | Latest | Icon support |
+| @ngx-translate/core | ^14 | Dynamic i18n |
+| ngx-spinner | ^13 | Global loading indicator |
+| ngx-toastr | ^17 | Toaster notifications |
+| SCSS | - | Global styling |
+
+---
+
+## 🚀 Getting Started
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Run the project
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+App will be available at [http://localhost:4200](http://localhost:4200)
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🌍 Language & Layout Direction
 
-```bash
-ng generate component component-name
+- Default language: **English**
+- Supports: **English 🇬🇧 / Arabic 🇸🇦**
+- Direction is automatically switched (`dir="rtl"` or `dir="ltr"`) based on the current language
+- Language preference is stored in `localStorage` under key: `lang`
+
+You can toggle language by calling:
+```ts
+translationService.toggleLanguage();
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
+## 🔄 Global Loader
+
+To show/hide loader anywhere:
+
+```ts
+constructor(private spinner: NgxSpinnerService) {}
+
+this.spinner.show();
+setTimeout(() => this.spinner.hide(), 2000);
 ```
 
-## Building
+Loader type: `line-scale`, background: semi-transparent dark overlay.
 
-To build the project run:
+You can customize the spinner via `NgxSpinnerModule.forRoot()` inside `app.config.ts`.
 
-```bash
-ng build
+---
+
+## 🔔 Toast Notifications
+
+To show success or error messages globally:
+
+```ts
+constructor(private toastr: ToastrService) {}
+
+this.toastr.success('Success message', 'Title');
+this.toastr.error('Something went wrong', 'Error');
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+> 📍 Toastr position changes dynamically based on language (right for EN, left for AR).
 
-## Running unit tests
+---
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## 📌 Notes
 
-```bash
-ng test
-```
+- This starter uses **standalone components** and **Angular modern providers API**
+- Ideal for dashboards, portals, and enterprise applications
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## ✨ Coming Enhancements
 
-```bash
-ng e2e
-```
+- Auth module + login form
+- Layout system (Sidebar + Topbar)
+- Global HTTP error handling
+- Reusable NotificationService
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 👨‍💻 Maintained by:
+Ahmed Abdelaziz
