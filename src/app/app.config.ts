@@ -1,6 +1,6 @@
 // src/app/app.config.ts
 import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom } from '@angular/core';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations'; // ✅ هذا هو المهم لتفعيل animation
@@ -11,6 +11,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 
 // 👇️ Factory لتحميل ملفات الترجمة
 export function HttpLoaderFactory(http: HttpClient) {
@@ -45,6 +46,11 @@ export const appConfig: ApplicationConfig = {
         enableHtml: true,
         preventDuplicates: true
       })
-    )
+    ),
+     {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ]
 };
