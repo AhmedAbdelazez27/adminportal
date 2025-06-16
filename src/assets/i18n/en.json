@@ -3,6 +3,16 @@
   "LANGUAGE": "Language",
   "TOGGLE_LANG": "Switch to Arabic",
   "PAGE_NOT_FOUND": "Oops! Page not found.",
-  "BACK_HOME": "Back to Home"
+  "BACK_HOME": "Back to Home",
+    "LOGIN": {
+    "SUCCESS": "Logged in successfully.",
+    "FAILED": "Login failed. Please check your credentials."
+  },
+  "TOAST": {
+    "TITLE": {
+      "SUCCESS": "Success",
+      "ERROR": "Error"
+    }
+  }
 
 }
