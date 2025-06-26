@@ -1,9 +1,8 @@
-// src/app/app.config.ts
 import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom } from '@angular/core';
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient } from '@angular/common/http';
+import {  HttpClient, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
-import { provideAnimations } from '@angular/platform-browser/animations'; // ✅ هذا هو المهم لتفعيل animation
+import { provideAnimations } from '@angular/platform-browser/animations'; 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -11,9 +10,9 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
-import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { apiKeyInterceptor } from './core/interceptors/api-key.interceptor';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
-// 👇️ Factory لتحميل ملفات الترجمة
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -22,10 +21,13 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),
-    provideAnimations(), // ✅ مضاف لتفعيل animation بشكل صحيح
+     provideHttpClient(
+      withFetch(),
+      withInterceptors([apiKeyInterceptor,authInterceptor]) 
+    ),
+    provideAnimations(), 
     importProvidersFrom(
-      BrowserAnimationsModule, // ⛔️ ممكن يكون غير ضروري، لكن تركناه بناءً على طلبك
+      BrowserAnimationsModule, 
       TranslateModule.forRoot({
         defaultLanguage: 'en',
         loader: {
@@ -38,7 +40,7 @@ export const appConfig: ApplicationConfig = {
         type: 'ball-spin-clockwise-fade-rotating'
       }),
       ToastrModule.forRoot({
-        positionClass: 'toast-top-right', // أو toast-bottom-left للغة العربية
+        positionClass: 'toast-top-right', 
         timeOut: 3000,
         progressBar: true,
         progressAnimation: 'increasing',
@@ -46,11 +48,6 @@ export const appConfig: ApplicationConfig = {
         enableHtml: true,
         preventDuplicates: true
       })
-    ),
-     {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    }
+    )
   ]
 };

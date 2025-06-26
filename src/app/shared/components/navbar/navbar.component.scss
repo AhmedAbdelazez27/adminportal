@@ -1,0 +1,36 @@
+.top-navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+
+  .nav-link {
+    color: #444;
+    padding: 0.75rem 1rem;
+    &.active {
+      background-color: #a9895e;
+      color: #fff;
+      border-radius: 10px;
+    }
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    margin-top: 0.5rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    display: none;
+    z-index: 999;
+
+    &.show {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 0.5rem 1rem;
+      color: #333;
+      &:hover {
+        background-color: #f8f8f8;
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+<nav class="top-navbar d-flex align-items-center justify-content-between px-4 py-2">
+  <div class="d-flex align-items-center">
+    <img src="assets/logo.png" height="40" class="me-3" alt="Ajman" />
+    <img src="assets/logo-en.png" height="40" alt="Ajman English" />
+  </div>
+
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link active" routerLink="/home">
+        <i class="fas fa-th-large me-1"></i> Dashboard
+      </a>
+    </li>
+
+   <li class="nav-item dropdown"
+    (mouseover)="onMouseEnter()"
+    (mouseout)="onMouseLeave()">
+  <a class="nav-link dropdown-toggle" href="javascript:void(0)">
+    <i class="fas fa-id-badge me-1"></i> Authentication
+  </a>
+  <ul class="dropdown-menu" [class.show]="open">
+    <li><a class="dropdown-item" routerLink="/authentication/roles">Roles</a></li>
+    <li><a class="dropdown-item" routerLink="/authentication/users">Users</a></li>
+  </ul>
+</li>
+
+
+    <!-- Add other menu items as needed -->
+  </ul>
+
+  <div class="user-info d-flex align-items-center">
+    <i class="fas fa-bell me-3"></i>
+    <button class="btn btn-sm btn-outline-primary" (click)="toggleLang()">
+    {{ translation.currentLang === 'en' ? 'العربية' : 'English' }}
+  </button>
+  </div>
+</nav>

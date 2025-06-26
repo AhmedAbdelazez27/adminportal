@@ -15,7 +15,7 @@ export class AppComponent {
     @ViewChild('customSpinner', { static: true }) customSpinnerTemplate!: TemplateRef<any>;
 
    constructor(public translation: TranslationService,private spinner: NgxSpinnerService, private toastr: ToastrService) {
-    this.showLoader()
+    // this.showLoader()
    }
 
 showLoader() {
