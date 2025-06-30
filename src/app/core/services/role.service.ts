@@ -21,10 +21,11 @@ export class RoleService {
         return this.http.post(this.BASE_URL, payload);
     }
 
-    getRoles(skip: number, take: number): Observable<any> {
+    getRoles(skip: number, take: number, searchValue: string): Observable<any> {
         const params = new HttpParams()
             .set('skip', skip)
-            .set('take', take);
+            .set('take', take)
+            .set('searchValue', searchValue);
 
         return this.http.get(`${this.BASE_URL}`, { params });
     }

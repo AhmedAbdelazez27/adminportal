@@ -33,12 +33,12 @@
   }
 
   .circle-one {
-    border-color: #0d6efd transparent transparent transparent; // اللون الأول
+    border-color: #0d6efd transparent transparent transparent;
     animation: spin-one 1s linear infinite;
   }
 
   .circle-two {
-    border-color: #ffc107 transparent transparent transparent; // اللون الثاني
+    border-color: #ffc107 transparent transparent transparent; 
     animation: spin-two 1s linear infinite reverse;
   }
 }

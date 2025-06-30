@@ -434,40 +434,40 @@
 
 
 
-// كل التنبيهات
+
 .toast {
   font-family: 'Cairo', sans-serif;
   font-size: 16px;
   border-radius: 10px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  direction: rtl; // لو بتستخدم RTL
+  direction: rtl; 
 }
 
-// تنبيه النجاح
+
 .toast-success {
-  background-color: #198754; // Bootstrap success green
+  background-color: #198754; 
   color: white;
 }
 
-// تنبيه الخطأ
+
 .toast-error {
-  background-color: #dc3545; // Bootstrap danger red
+  background-color: #dc3545; 
   color: white;
 }
 
-// تنبيه المعلومات
+
 .toast-info {
-  background-color: #0dcaf0; // Bootstrap info blue
+  background-color: #0dcaf0; 
   color: black;
 }
 
-// تنبيه التحذير
+
 .toast-warning {
-  background-color: #ffc107; // Bootstrap warning yellow
+  background-color: #ffc107; 
   color: black;
 }
 
-// زر الإغلاق
+
 .toast-close-button {
   color: white;
   font-weight: bold;

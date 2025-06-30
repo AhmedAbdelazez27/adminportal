@@ -27,7 +27,7 @@ onMouseEnter() {
 onMouseLeave() {
   this.timeoutId = setTimeout(() => {
     this.open = false;
-  }, 200); // مهلة صغيرة قبل الإغلاق
+  }, 200);
 }
 
 }
