@@ -30,8 +30,8 @@ export class RoleService {
         return this.http.get(`${this.BASE_URL}`, { params });
     }
 
-    updateRole(payload: UpdateRoleDto): Observable<any> {
-        return this.http.put(this.BASE_URL, payload);
+    updateRole(payload: any): Observable<any> {
+        return this.http.put(this.BASE_URL, {id:payload?.id , name : payload?.name , aspNetUsersRoleCount: 1});
     }
 
     unassignRole(payload: UnassignRoleDto): Observable<any> {
