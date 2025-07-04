@@ -17,6 +17,20 @@
       "SUCCESS": "Success",
       "ERROR": "Error"
     }
+  },
+   "ROLE": {
+    "CREATED": {
+      "SUCCESS": "Role created successfully",
+      "FAIL": "Failed to create role"
+    },
+    "UPDATED": {
+      "SUCCESS": "Role updated successfully",
+      "FAIL": "Failed to update role"
+    },
+    "DELETED": {
+      "SUCCESS": "Role deleted successfully",
+      "FAIL": "Failed to delete role"
+    }
   }
 
 }
