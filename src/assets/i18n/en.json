@@ -8,6 +8,10 @@
     "SUCCESS": "Logged in successfully.",
     "FAILED": "Login failed. Please check your credentials."
   },
+   "ASSIGN": {
+    "SUCCESS": "Role assigned successfully",
+    "FAIL": "Error assigning role"
+  },
   "TOAST": {
     "TITLE": {
       "SUCCESS": "Success",

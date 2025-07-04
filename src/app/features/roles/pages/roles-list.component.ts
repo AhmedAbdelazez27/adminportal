@@ -5,6 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { CreateRoleDto } from '../../../core/dtos/create-role.dto';
 import { UserService } from '../../../core/services/user.service';
 import { AssignRoleDto } from '../../../core/dtos/assign-role.dto';
+import { TranslateService } from '@ngx-translate/core';
+import { ToastrService } from 'ngx-toastr';
+import { SpinnerService } from '../../../core/services/spinner.service';
 
 @Component({
   selector: 'app-roles-list',
@@ -13,9 +16,9 @@ import { AssignRoleDto } from '../../../core/dtos/assign-role.dto';
   styleUrl: './roles-list.component.scss'
 })
 export class RolesListComponent {
-onUserSelectionChange() {
-throw new Error('Method not implemented.');
-}
+  onUserSelectionChange() {
+    throw new Error('Method not implemented.');
+  }
   roles: any[] = [];
   totalCount: number = 0;
   currentPage: number = 1;
@@ -28,10 +31,11 @@ throw new Error('Method not implemented.');
   userList: any[] = [];
   selectedRoleId: string = '';
   selectedUser: string[] = [];
-  selectedUserIds: any[] = [];
+  userDropdowns: any[] = [{ selectedUserIds: [] }];
+  selectedUserIds: string[] = [];
 
 
-  constructor(private roleService: RoleService, private _UserService: UserService) { }
+  constructor(private roleService: RoleService, private _UserService: UserService, private spinnerService: SpinnerService, private toastr: ToastrService, private translate: TranslateService) { }
 
   ngOnInit(): void {
 
@@ -154,44 +158,45 @@ throw new Error('Method not implemented.');
     })
   }
 
+  onOptionChange(option: any, index: number): void {
+    if (option.selected) {
+      this.userDropdowns[index].selectedUserIds.push(option.id);
+    } else {
+      const idx = this.userDropdowns[index].selectedUserIds.indexOf(option.id);
+      if (idx !== -1) {
+        this.userDropdowns[index].selectedUserIds.splice(idx, 1);
+      }
+    }
+  }
+
+  getSelectedOptionsLabel(selectedUserIds: string[]): string {
+    const selectedUserNames = this.userList
+      .filter(user => selectedUserIds.includes(user.id))
+      .map(user => user.text);
+    return selectedUserNames.length > 0 ? selectedUserNames.join(', ') : 'Select Users';
+  }
+
   assignRole(): void {
     const payload: AssignRoleDto = {
-      userIds: this.selectedUserIds,
+      userIds: this.userDropdowns.map(dropdown => dropdown.selectedUserIds).flat(),
       roleId: this.roleToSelected.id
     };
-    console.log(this.selectedUserIds);
-    
+    console.log('Assigning role to users:', payload.userIds);
+    this.spinnerService.show();
+
     this.roleService.assignRole(payload).subscribe(
       {
         next: (response) => {
+          this.toastr.success(this.translate.instant('ASSIGN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
+          this.spinnerService.hide();
           console.log('Role assigned successfully', response);
         },
         error: (error) => {
-          console.error('Error assigning role:', error);
+          this.toastr.success(this.translate.instant('ASSIGN.FAIL'), this.translate.instant('TOAST.TITLE.SUCCESS'));
+          this.spinnerService.hide();
         }
       }
     );
-  }
-
-    getSelectedOptionsLabel(selectedList: any[]): string {
-    if (selectedList.length > 0) {
-      return selectedList.map((y: { text: any; }) => y.text).join(', ');
-    } else {
-      return '';
-    }
-  };
-
-  
-  onOptionChange(option: any, selectedList: any[], selectedArr: string) {
-    if (option.selected) {
-      selectedList.push(option);
-      (this as any)[selectedArr] = [...selectedList];
-    } else {
-      selectedList = selectedList.filter((item: { id: any; }) => item.id !== option.id);
-      (this as any)[selectedArr] = [...selectedList]; // Dynamically access the property
-    }
-    console.log((this as any)[selectedArr]);
-    this.getSelectedOptionsLabel(selectedList);
   }
 
 }
