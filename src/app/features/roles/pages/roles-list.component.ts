@@ -13,6 +13,9 @@ import { AssignRoleDto } from '../../../core/dtos/assign-role.dto';
   styleUrl: './roles-list.component.scss'
 })
 export class RolesListComponent {
+onUserSelectionChange() {
+throw new Error('Method not implemented.');
+}
   roles: any[] = [];
   totalCount: number = 0;
   currentPage: number = 1;
@@ -25,6 +28,8 @@ export class RolesListComponent {
   userList: any[] = [];
   selectedRoleId: string = '';
   selectedUser: string[] = [];
+  selectedUserIds: any[] = [];
+
 
   constructor(private roleService: RoleService, private _UserService: UserService) { }
 
@@ -151,10 +156,11 @@ export class RolesListComponent {
 
   assignRole(): void {
     const payload: AssignRoleDto = {
-      userIds: this.selectedUser,
+      userIds: this.selectedUserIds,
       roleId: this.roleToSelected.id
     };
-
+    console.log(this.selectedUserIds);
+    
     this.roleService.assignRole(payload).subscribe(
       {
         next: (response) => {
@@ -166,4 +172,26 @@ export class RolesListComponent {
       }
     );
   }
+
+    getSelectedOptionsLabel(selectedList: any[]): string {
+    if (selectedList.length > 0) {
+      return selectedList.map((y: { text: any; }) => y.text).join(', ');
+    } else {
+      return '';
+    }
+  };
+
+  
+  onOptionChange(option: any, selectedList: any[], selectedArr: string) {
+    if (option.selected) {
+      selectedList.push(option);
+      (this as any)[selectedArr] = [...selectedList];
+    } else {
+      selectedList = selectedList.filter((item: { id: any; }) => item.id !== option.id);
+      (this as any)[selectedArr] = [...selectedList]; // Dynamically access the property
+    }
+    console.log((this as any)[selectedArr]);
+    this.getSelectedOptionsLabel(selectedList);
+  }
+
 }

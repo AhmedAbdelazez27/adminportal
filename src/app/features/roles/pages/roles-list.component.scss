@@ -1,0 +1,29 @@
+.dropdownDDL {
+  width: 100%;
+  button {
+    height: 35px !important;
+    padding: 7px 14px !important;
+  }
+
+  button,
+  ul {
+    width: 100%;
+  }
+
+  .btn , .search-input {
+    text-align: start;
+    border: 1px solid #D3D3D3;
+    background-color: #FFFFFF;
+  }
+
+  .btn:first-child:active,
+  .btn.active,
+  .btn.show,
+  .btn:hover {
+    color: #4B5768 !important;
+    background-color: transparent !important;
+    border-color: none !important;
+    text-align: start;
+    border-color: #420098;
+  }
+}

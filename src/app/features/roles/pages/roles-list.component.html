@@ -303,7 +303,8 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="users" tabindex="-1" aria-labelledby="usersLabel" aria-hidden="true">
+    <div class="modal fade" id="users" tabindex="-1" aria-labelledby="usersLabel" aria-hidden="true"
+        data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -312,12 +313,40 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="userSelect" class="form-label">Select User</label>
+                        <!--     <label for="userSelect" class="form-label">Select User</label>
                         <select class="form-select mb-3" id="userSelect" [(ngModel)]="selectedUser"
                             aria-label="Select User">
                             <option *ngFor="let user of userList" [value]="user.id">{{ user.name }}</option>
-                        </select>
+                        </select> -->
+                        <label for="userSelect" class="form-label">Select User</label>
+                        <div class="dropdownDDL">
+                            <button class="btn" type="button" id="containerDropdown" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+
+                                {{ getSelectedOptionsLabel(selectedUserIds) }}
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="containerDropdown">
+                                <ng-container *ngFor="let option of userList; let i=index">
+                                    <li>
+                                        <div class="form-check ms-2">
+                                            <input class="form-check-input" type="checkbox"
+                                                [id]="'container' + option.id" [value]="option.id"
+                                                [(ngModel)]="option.selected"
+                                                (ngModelChange)="onOptionChange(option, selectedUserIds,'selectedUserIds')">
+                                            <label class="form-check-label" [for]="'container' + option.id"
+                                                style="width: 100%;">
+                                                {{ option.text }}
+                                            </label>
+                                        </div>
+                                    </li>
+                                </ng-container>
+                            </ul>
+                        </div>
                     </div>
+
+
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
