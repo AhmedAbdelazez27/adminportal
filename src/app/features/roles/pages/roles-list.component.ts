@@ -22,7 +22,7 @@ export class RolesListComponent {
   itemsPerPage: number = 2;
   pages: number[] = [];
   searchValue: string = '';
-  newRole: CreateRoleDto = { name: '', aspNetUsersRoleCount: 1 };
+  newRole: CreateRoleDto = { name: ''};
   selectedRole: any = {};
   roleToSelected: any;
   userList: any[] = [];
@@ -89,7 +89,7 @@ export class RolesListComponent {
     }
   }
   onSearch(): void {
-    this.getRoles(this.currentPage, this.searchValue);
+    this.getRoles(1, this.searchValue);
   }
 
   clear() {
@@ -105,7 +105,7 @@ export class RolesListComponent {
         this.spinnerService.hide();  // Hide spinner after saving role
         console.log('Role saved successfully', response);
         this.getRoles(1);
-        this.newRole = { name: '', aspNetUsersRoleCount: 0 };
+        this.newRole = { name: '' };
       },
       (error) => {
         this.toastr.error(this.translate.instant('ROLE.CREATED.FAIL'), this.translate.instant('TOAST.TITLE.ERROR'));

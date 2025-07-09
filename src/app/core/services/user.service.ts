@@ -19,12 +19,12 @@ export class UserService {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Base}`, payload);
   }
 
-  getUsers(skip: number, take: number): Observable<any> {
-    const params = new HttpParams().set('skip', skip).set('take', take);
-    return this.http.get<any>(`${this.BASE_URL}${ApiEndpoints.User.Base}`, { params });
+  getUsers(skip: number, take: number, searchValue: string): Observable<any> {
+    // const params = new HttpParams().set('skip', skip).set('take', take).set('searchValue', searchValue);
+    return this.http.post<any>(`${this.BASE_URL}${ApiEndpoints.User.Base}${ApiEndpoints.User.GetAll}`, { searchValue,take,skip });
   }
 
-  updateUser(payload: UpdateUserDto): Observable<any> {
+  updateUser(payload: any): Observable<any> {
     return this.http.put(`${this.BASE_URL}${ApiEndpoints.User.Base}`, payload);
   }
 

@@ -4,19 +4,28 @@
   "TOGGLE_LANG": "التبديل إلى الإنجليزية",
   "PAGE_NOT_FOUND": "عذرًا! الصفحة غير موجودة.",
   "BACK_HOME": "العودة إلى الصفحة الرئيسية",
-   "LOGIN": {
+  "LOGIN": {
     "SUCCESS": "تم تسجيل الدخول بنجاح.",
     "FAILED": "فشل تسجيل الدخول. يرجى التحقق من البيانات."
   },
-   "ASSIGN": {
+  "ASSIGN": {
     "SUCCESS": "تم تعيين الدور بنجاح",
     "FAIL": "حدث خطأ أثناء تعيين الدور"
   },
+  "ADD_USER": "إضافة مستخدم جديد",
+  "EDIT_USER": "تعديل المستخدم",
+  "SAVE": "حفظ",
+  "UPDATE": "تحديث",
   "TOAST": {
     "TITLE": {
       "SUCCESS": "نجاح",
       "ERROR": "خطأ"
-    }
+    },
+    "VALIDATION_ERROR": "يرجى ملء جميع الحقول المطلوبة.",
+    "USER_CREATED": "تمت إضافة المستخدم بنجاح.",
+    "USER_UPDATED": "تم تعديل المستخدم بنجاح.",
+    "CREATE_ERROR": "فشل في إنشاء المستخدم.",
+    "UPDATE_ERROR": "فشل في تعديل المستخدم."
   },
   "ROLE": {
     "CREATED": {
@@ -31,6 +40,68 @@
       "SUCCESS": "تم حذف الدور بنجاح",
       "FAIL": "فشل في حذف الدور"
     }
-  }
-
+  },
+  "NAME": "الاسم",
+  "ENTER_NAME": "ادخل الاسم",
+  "NAME_REQUIRED": "الاسم مطلوب",
+  "NAME_EN": "الاسم بالإنجليزية",
+  "ENTER_NAME_EN": "ادخل الاسم بالإنجليزية",
+  "NAME_EN_REQUIRED": "الاسم بالإنجليزية مطلوب",
+  "USERNAME": "اسم المستخدم",
+  "ENTER_USERNAME": "ادخل اسم المستخدم",
+  "USERNAME_REQUIRED": "اسم المستخدم مطلوب",
+  "PASSWORD": "كلمة المرور",
+  "ENTER_PASSWORD": "ادخل كلمة المرور",
+  "PASSWORD_REQUIRED": "كلمة المرور مطلوبة",
+  "CONFIRM_PASSWORD": "تأكيد كلمة المرور",
+  "ENTER_CONFIRM_PASSWORD": "اعد كتابة كلمة المرور",
+  "CONFIRM_PASSWORD_REQUIRED": "يرجى تأكيد كلمة المرور",
+  "EMAIL": "البريد الإلكتروني",
+  "ENTER_EMAIL": "ادخل البريد الإلكتروني",
+  "INVALID_EMAIL": "صيغة البريد الإلكتروني غير صحيحة",
+  "MOBILE": "رقم الجوال",
+  "ENTER_MOBILE": "ادخل رقم الجوال",
+  "MOBILE_INVALID": "رقم الجوال غير صحيح",
+  "TELEPHONE": "رقم الهاتف",
+  "ENTER_TELEPHONE": "ادخل رقم الهاتف",
+  "TELEPHONE_INVALID": "رقم الهاتف غير صحيح",
+  "ADDRESS": "العنوان",
+  "ENTER_ADDRESS": "ادخل العنوان",
+  "ADDRESS_INVALID": "العنوان غير صحيح",
+  "GENDER": "النوع",
+  "MALE": "ذكر",
+  "FEMALE": "أنثى",
+  "COUNTRY": "الدولة",
+  "SELECT": "اختر",
+  "EMPLOYER": "جهة العمل",
+  "USER_TYPE": "نوع المستخدم",
+  "USER_TYPE_REQUIRED": "نوع المستخدم مطلوب",
+  "FOUNDATION_TYPE": "نوع المؤسسة",
+  "ENTER_FOUNDATION_TYPE": "ادخل نوع المؤسسة",
+  "FOUNDATION_NAME": "اسم المؤسسة",
+  "ENTER_FOUNDATION_NAME": "ادخل اسم المؤسسة",
+  "LICENSE_NUMBER": "رقم الرخصة",
+  "ENTER_LICENSE_NUMBER": "ادخل رقم الرخصة",
+  "LICENSE_END_DATE": "تاريخ انتهاء الرخصة",
+  "CIVIL_ID": "الرقم المدني",
+  "ENTER_CIVIL_ID": "ادخل الرقم المدني",
+  "FAX": "فاكس",
+  "ENTER_FAX": "ادخل الفاكس",
+  "BOX_NO": "صندوق البريد",
+  "ENTER_BOX_NO": "ادخل رقم صندوق البريد",
+  "ENTITY_ID": "رقم الجهة",
+  "ENTER_ENTITY_ID": "ادخل رقم الجهة",
+  "APPLY_DATE": "تاريخ التقديم",
+  "USER_STATUS": "حالة المستخدم",
+  "ACTIVE": "نشط",
+  "INACTIVE": "غير نشط",
+  "SERVICE_TYPE": "نوع الخدمة",
+  "TYPE_1": "النوع الأول",
+  "TYPE_2": "النوع الثاني",
+  "ROLES": "الصلاحيات",
+  "ROLES_REQUIRED": "يجب اختيار صلاحية واحدة على الأقل",
+  "SUBMIT": "إرسال",
+  "PASSWORD_MIN_LENGTH": "كلمة المرور يجب أن تكون على الأقل 6 أحرف.",
+  "PASSWORD_PATTERN": "كلمة المرور يجب أن تحتوي على حرف كبير، حرف صغير، رقم، ورمز خاص.",
+  "PASSWORDS_MATCH": "كلمتا المرور متطابقتان!"
 }

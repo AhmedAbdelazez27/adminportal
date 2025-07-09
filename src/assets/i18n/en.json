@@ -4,11 +4,15 @@
   "TOGGLE_LANG": "Switch to Arabic",
   "PAGE_NOT_FOUND": "Oops! Page not found.",
   "BACK_HOME": "Back to Home",
-    "LOGIN": {
+  "ADD_USER": "Add New User",
+  "EDIT_USER": "Edit User",
+  "SAVE": "Save",
+  "UPDATE": "Update",
+  "LOGIN": {
     "SUCCESS": "Logged in successfully.",
     "FAILED": "Login failed. Please check your credentials."
   },
-   "ASSIGN": {
+  "ASSIGN": {
     "SUCCESS": "Role assigned successfully",
     "FAIL": "Error assigning role"
   },
@@ -16,9 +20,15 @@
     "TITLE": {
       "SUCCESS": "Success",
       "ERROR": "Error"
-    }
+    },
+    "VALIDATION_ERROR": "Please fill in the required fields correctly.",
+    "FETCH_ROLES": "Error while fetching users",
+    "USER_CREATED": "User added successfully.",
+    "USER_UPDATED": "User updated successfully.",
+    "CREATE_ERROR": "Failed to create user.",
+    "UPDATE_ERROR": "Failed to update user."
   },
-   "ROLE": {
+  "ROLE": {
     "CREATED": {
       "SUCCESS": "Role created successfully",
       "FAIL": "Failed to create role"
@@ -31,6 +41,70 @@
       "SUCCESS": "Role deleted successfully",
       "FAIL": "Failed to delete role"
     }
-  }
+  },
+  "NAME": "Name",
+  "ENTER_NAME": "Enter name",
+  "NAME_REQUIRED": "Name is required",
+  "NAME_EN": "Name (English)",
+  "ENTER_NAME_EN": "Enter English name",
+  "NAME_EN_REQUIRED": "English name is required",
+  "USERNAME": "Username",
+  "ENTER_USERNAME": "Enter username",
+  "USERNAME_REQUIRED": "Username is required",
+  "PASSWORD": "Password",
+  "ENTER_PASSWORD": "Enter password",
+  "PASSWORD_REQUIRED": "Password is required",
+  "CONFIRM_PASSWORD": "Confirm Password",
+  "ENTER_CONFIRM_PASSWORD": "Enter password again",
+  "CONFIRM_PASSWORD_REQUIRED": "Please confirm password",
+  "EMAIL": "Email",
+  "ENTER_EMAIL": "Enter email",
+  "INVALID_EMAIL": "Invalid email format",
+  "MOBILE": "Mobile",
+  "ENTER_MOBILE": "Enter mobile number",
+  "MOBILE_INVALID": "Invalid mobile number",
+  "TELEPHONE": "Telephone",
+  "ENTER_TELEPHONE": "Enter telephone",
+  "TELEPHONE_INVALID": "Invalid telephone",
+  "ADDRESS": "Address",
+  "ENTER_ADDRESS": "Enter address",
+  "ADDRESS_INVALID": "Invalid address",
+  "GENDER": "Gender",
+  "MALE": "Male",
+  "FEMALE": "Female",
+  "COUNTRY": "Country",
+  "SELECT": "Select",
+  "EMPLOYER": "Employer",
+  "USER_TYPE": "User Type",
+  "USER_TYPE_REQUIRED": "User type is required",
+  "FOUNDATION_TYPE": "Foundation Type",
+  "ENTER_FOUNDATION_TYPE": "Enter foundation type",
+  "FOUNDATION_NAME": "Foundation Name",
+  "ENTER_FOUNDATION_NAME": "Enter foundation name",
+  "LICENSE_NUMBER": "License Number",
+  "ENTER_LICENSE_NUMBER": "Enter license number",
+  "LICENSE_END_DATE": "License Expiry Date",
+  "CIVIL_ID": "Civil ID",
+  "ENTER_CIVIL_ID": "Enter civil ID",
+  "FAX": "Fax",
+  "ENTER_FAX": "Enter fax",
+  "BOX_NO": "Box Number",
+  "ENTER_BOX_NO": "Enter box number",
+  "ENTITY_ID": "Entity ID",
+  "ENTER_ENTITY_ID": "Enter entity ID",
+  "APPLY_DATE": "Apply Date",
+  "USER_STATUS": "User Status",
+  "ACTIVE": "Active",
+  "INACTIVE": "Inactive",
+  "SERVICE_TYPE": "Service Type",
+  "TYPE_1": "Type 1",
+  "TYPE_2": "Type 2",
+  "ROLES": "Roles",
+  "ROLES_REQUIRED": "At least one role is required",
+  "SUBMIT": "Submit",
+  "PASSWORD_MIN_LENGTH": "Password must be at least 6 characters.",
+  "PASSWORD_PATTERN": "Password must include uppercase, lowercase, number, and special character.",
+  "PASSWORDS_MATCH": "Passwords match!",
+  "PASSWORD_GUIDELINES": "Password must be at least 6 characters and include uppercase, lowercase, numbers, and special characters."
 
 }

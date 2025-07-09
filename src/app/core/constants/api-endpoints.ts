@@ -1,6 +1,7 @@
 export class ApiEndpoints {
   static readonly User = {
     Base: '/User',
+    GetAll: '/GetAll',
     GetById: (id: string) => `/User/${id}`,
     Delete: (id: string) => `/User/${id}`,
     GetUsersSelect2List: '/User/GetUsersSelect2List'
@@ -17,6 +18,6 @@ export class ApiEndpoints {
     Assign: '/AssignRole',    
 
   };
-
+ 
 }
 
