@@ -15,9 +15,19 @@ export class ApiEndpoints {
     Unassign: '/UnAssignRole',
     GetRoleUsers: (roleId: string) => `/GetRoleUsers/${roleId}`,
     GetRolesSelect2List: '/GetRolesSelect2List',
-    Assign: '/AssignRole',    
+    Assign: '/AssignRole',
 
   };
- 
+
+    static readonly Departments = {
+    Base: '/Department',
+    Select2: '/Select2'
+  };
+
+  static readonly UsersDepartments = {
+    Base: '/UsersDepartments',
+    Assign: '/Assign'
+  };
+
 }
 

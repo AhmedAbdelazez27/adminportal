@@ -26,7 +26,9 @@
     "USER_CREATED": "User added successfully.",
     "USER_UPDATED": "User updated successfully.",
     "CREATE_ERROR": "Failed to create user.",
-    "UPDATE_ERROR": "Failed to update user."
+    "UPDATE_ERROR": "Failed to update user.",
+    "DEPARTMENTS_ASSIGNED": "Departments assigned successfully.",
+    "DEPARTMENTS_ASSIGN_FAILED": "Failed to assign departments. Please try again."
   },
   "ROLE": {
     "CREATED": {
@@ -106,5 +108,4 @@
   "PASSWORD_PATTERN": "Password must include uppercase, lowercase, number, and special character.",
   "PASSWORDS_MATCH": "Passwords match!",
   "PASSWORD_GUIDELINES": "Password must be at least 6 characters and include uppercase, lowercase, numbers, and special characters."
-
 }

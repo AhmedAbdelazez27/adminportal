@@ -6,10 +6,13 @@ import { SpinnerService } from '../../../core/services/spinner.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { confirmPasswordValidator } from '../../../shared/customValidators/confirmPasswordValidator';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { DepartmentService } from '../../../core/services/department.service';
+
 
 @Component({
   selector: 'app-users-list',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule,NgSelectModule],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss'
 })
@@ -28,14 +31,26 @@ export class UsersListComponent implements OnInit {
   roles: any[] = [];
   mode: 'add' | 'edit' = 'add';
   editingUserId: any | null = null;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+  departments :any[]=[];
+  userDepartmentForm: FormGroup;
+  selectedUserIdForDepartments: any;
+
+
 
   constructor(
     private userService: UserService,
+    private departmentService: DepartmentService,
     private spinnerService: SpinnerService,
     private toastr: ToastrService,
     private translate: TranslateService,
     private fb: FormBuilder,
   ) {
+this.userDepartmentForm = this.fb.group({
+  departmentIds: [[], Validators.required]
+});
+
     this.userForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(1)]],
       nameEn: ['', [Validators.required, Validators.minLength(1)]],
@@ -64,6 +79,7 @@ export class UsersListComponent implements OnInit {
       serviceType: [null],
       roles: [null],
       id: [null],
+      masterId: [null],
     }, {
       validators: confirmPasswordValidator('password', 'confirmPassword')
     });
@@ -71,6 +87,7 @@ export class UsersListComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getUsers(1, '');
+    this.getDepartments();
   }
 
 
@@ -176,6 +193,8 @@ export class UsersListComponent implements OnInit {
 
     } else {
       delete formData.id;
+      delete formData.masterId;
+
     }
     this.spinnerService.show();
 
@@ -228,7 +247,8 @@ export class UsersListComponent implements OnInit {
       ...user,
       roles: user.roles?.map((r: any) => r.id) || [],
       gender: user.gender ?? false,
-      id: user.id ?? null
+      id: user.id ?? null,
+      masterId: user?.masterId ?? null
     });
     this.togglePasswordFields(false);
   };
@@ -256,12 +276,91 @@ export class UsersListComponent implements OnInit {
     confirmPassword?.updateValueAndValidity();
   }
 
-showPasswordMatch(): boolean {
-  const pass = this.userForm.get('password')?.value;
-  const confirm = this.userForm.get('confirmPassword')?.value;
+  showPasswordMatch(): boolean {
+    const pass = this.userForm.get('password')?.value;
+    const confirm = this.userForm.get('confirmPassword')?.value;
 
-  return pass && confirm && pass === confirm && !this.userForm.get('confirmPassword')?.errors?.['mismatch'];
+    return pass && confirm && pass === confirm && !this.userForm.get('confirmPassword')?.errors?.['mismatch'];
+  }
+
+toggleDropdown(event: MouseEvent, select: any): void {
+  event.preventDefault();
+
+  setTimeout(() => {
+    if (select.isOpen) {
+      select.close();
+    } else {
+      select.open();
+    }
+  }, 100);
 }
+// assign department to user
+getDepartments(){
+  this.departmentService.getDepartments(0,600).subscribe({
+    next: (res)=>{
+      console.log(res);
+      this.departments = res?.results
+    },
+    error: (err)=>{
+      console.log(err);
+      
+    }
+  })
+}
+openAssignDepartmentsModal(user: any): void {
+  this.selectedUserIdForDepartments = user.id;
+
+  if (!this.departments?.length) this.getDepartments();
+  this.getUserDepartments(user.id);
+
+  this.userDepartmentForm.reset({
+    departments: user.departments?.map((d: any) => d.id) || []
+  });
+}
+
+assignDepartments(): void {
+  if (this.userDepartmentForm.invalid || !this.selectedUserIdForDepartments) {
+    this.toastr.error('Please select at least one department');
+    return;
+  }
+  console.log(this.userDepartmentForm.value);
+  
+  const payload = {
+    userId: this.selectedUserIdForDepartments,
+    departmentIds: this.userDepartmentForm.value.departmentIds
+  };
+
+  this.spinnerService.show();
+
+  this.userService.assignDepartments(payload).subscribe({
+    next: () => {
+      this.toastr.success(this.translate.instant('TOAST.DEPARTMENTS_ASSIGNED'));
+      this.spinnerService.hide();
+      const closeBtn = document.querySelector('.closeDepartment.btn-close') as HTMLElement;
+      console.log(closeBtn);
+      
+    closeBtn?.click();
+      this.getUsers(this.currentPage); // refresh table
+    },
+    error: () => {
+      this.toastr.error(this.translate.instant('TOAST.DEPARTMENTS_ASSIGN_FAILED'));
+      this.spinnerService.hide();
+    }
+  });
+}
+
+getUserDepartments(userId: string): void {
+  this.userService.getUserDepartments({ userId }).subscribe({
+    next: (res:any) => {
+      const selected = res?.data?.map((d: any) => d.departmentId.toString()) || [];
+      this.userDepartmentForm.patchValue({ departmentIds: selected });
+    },
+    error: (err) => {
+      console.error('Failed to load user departments', err);
+    }
+  });
+}
+
 
 
 }

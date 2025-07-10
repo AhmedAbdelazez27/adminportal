@@ -21,7 +21,7 @@ export class UserService {
 
   getUsers(skip: number, take: number, searchValue: string): Observable<any> {
     // const params = new HttpParams().set('skip', skip).set('take', take).set('searchValue', searchValue);
-    return this.http.post<any>(`${this.BASE_URL}${ApiEndpoints.User.Base}${ApiEndpoints.User.GetAll}`, { searchValue,take,skip });
+    return this.http.post<any>(`${this.BASE_URL}${ApiEndpoints.User.Base}${ApiEndpoints.User.GetAll}`, { searchValue, take, skip });
   }
 
   updateUser(payload: any): Observable<any> {
@@ -43,6 +43,14 @@ export class UserService {
     orderByValue: string | null
   }): Observable<any> {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.GetUsersSelect2List}`, payload);
+  }
+
+  assignDepartments(payload: { userId: string; departmentIds: number[] }) {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersDepartments.Base}${ApiEndpoints.UsersDepartments.Assign}`, payload);
+  }
+
+  getUserDepartments(payload: { userId: string }) {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersDepartments.Base}`, payload);
   }
 
 }
