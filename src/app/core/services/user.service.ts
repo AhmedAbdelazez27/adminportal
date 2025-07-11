@@ -25,7 +25,7 @@ export class UserService {
   }
 
   updateUser(payload: any): Observable<any> {
-    return this.http.put(`${this.BASE_URL}${ApiEndpoints.User.Base}`, payload);
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Base}/Update`, payload);
   }
 
   getUserById(id: string): Observable<any> {
@@ -49,8 +49,17 @@ export class UserService {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersDepartments.Base}${ApiEndpoints.UsersDepartments.Assign}`, payload);
   }
 
+  assignEntities(payload: { userId: string; entityIds: number[] }) {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersEntities.Base}${ApiEndpoints.UsersEntities.AssignUserEntities}`, payload);
+  }
+
   getUserDepartments(payload: { userId: string }) {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersDepartments.Base}`, payload);
   }
+
+   getUserIntities(payload: { userId: string }) {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersEntities.Base}${ApiEndpoints.UsersEntities.GetUsersEntitiesSelect2List}`, payload);
+  }
+
 
 }

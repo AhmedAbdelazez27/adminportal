@@ -29,5 +29,15 @@ export class ApiEndpoints {
     Assign: '/Assign'
   };
 
+    static readonly UsersEntities = {
+    Base: '/UsersEntities',
+    GetUsersEntitiesSelect2List: '/GetAll',
+    AssignUserEntities: '/AssignUserEntities',
+  };
+
+  static readonly Entity = {
+    Base: '/Entity'
+  };
+
 }
 

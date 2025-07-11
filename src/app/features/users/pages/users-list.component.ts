@@ -8,6 +8,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { confirmPasswordValidator } from '../../../shared/customValidators/confirmPasswordValidator';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DepartmentService } from '../../../core/services/department.service';
+import { EntityService } from '../../../core/services/entit.service';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class UsersListComponent implements OnInit {
   users: any[] = [];
   totalCount: number = 0;
   currentPage: number = 1;
-  itemsPerPage: number = 2;
+  itemsPerPage: number = 5;
   pages: number[] = [];
   searchValue: string = '';
   userForm: FormGroup;
@@ -35,6 +36,7 @@ export class UsersListComponent implements OnInit {
   showConfirmPassword: boolean = false;
   departments :any[]=[];
   userDepartmentForm: FormGroup;
+  userEntityForm: FormGroup;
   selectedUserIdForDepartments: any;
 
 
@@ -42,6 +44,7 @@ export class UsersListComponent implements OnInit {
   constructor(
     private userService: UserService,
     private departmentService: DepartmentService,
+    private entityService: EntityService,
     private spinnerService: SpinnerService,
     private toastr: ToastrService,
     private translate: TranslateService,
@@ -49,6 +52,9 @@ export class UsersListComponent implements OnInit {
   ) {
 this.userDepartmentForm = this.fb.group({
   departmentIds: [[], Validators.required]
+});
+this.userEntityForm = this.fb.group({
+  entityIds: [[], Validators.required]
 });
 
     this.userForm = this.fb.group({
@@ -88,6 +94,7 @@ this.userDepartmentForm = this.fb.group({
   ngOnInit(): void {
     this.getUsers(1, '');
     this.getDepartments();
+    this.getEntitys();
   }
 
 
@@ -327,7 +334,7 @@ assignDepartments(): void {
   
   const payload = {
     userId: this.selectedUserIdForDepartments,
-    departmentIds: this.userDepartmentForm.value.departmentIds
+    departmentIds: this.userDepartmentForm.value?.departmentIds
   };
 
   this.spinnerService.show();
@@ -352,7 +359,7 @@ assignDepartments(): void {
 getUserDepartments(userId: string): void {
   this.userService.getUserDepartments({ userId }).subscribe({
     next: (res:any) => {
-      const selected = res?.data?.map((d: any) => d.departmentId.toString()) || [];
+      const selected = res?.data?.map((d: any) => d?.departmentId.toString()) || [];
       this.userDepartmentForm.patchValue({ departmentIds: selected });
     },
     error: (err) => {
@@ -361,6 +368,84 @@ getUserDepartments(userId: string): void {
   });
 }
 
+// assign entity to user
+getEntitys(){
+  this.entityService.getEntities(0,600).subscribe({
+    next: (res)=>{
+      console.log(res);
+      this.entities = res?.data
+      console.log(res,this.entities);
+      
+    },
+    error: (err)=>{
+      console.log(err);
+      
+    }
+  })
+};
+
+openAssignIntitiesModal(user: any): void {
+  console.log(user);
+  
+  this.selectedUserIdForDepartments = user.id;
+
+  if (!this.entities?.length) this.getEntitys();
+
+  this.getUserIntities(user.id);
+
+  this.userEntityForm.reset({
+    entityIds: user.departments?.map((d: any) => d.id) || []
+  });
+}
+
+getUserIntities(userId: string): void {
+  console.log("entity calling the service");
+  
+  this.userService.getUserIntities({ userId }).subscribe({
+    next: (res:any) => {
+      console.log("user entit = ",res);
+      
+      const selected = res?.map((d: any) => d?.entityId) || [];
+      console.log("userentity ids = ",selected);
+      
+      this.userEntityForm.patchValue({ entityIds: selected });
+    },
+    error: (err) => {
+      console.error('Failed to load user entities', err);
+    }
+  });
+}
+
+assignIntities(): void {
+  if (this.userEntityForm.invalid || !this.selectedUserIdForDepartments) {
+    this.toastr.error('Please select at least one entity');
+    return;
+  }
+  console.log(this.userEntityForm.value);
+  
+  const payload = {
+    userId: this.selectedUserIdForDepartments,
+    entityIds: this.userEntityForm.value?.entityIds
+  };
+
+  this.spinnerService.show();
+
+  this.userService.assignEntities(payload).subscribe({
+    next: () => {
+      this.toastr.success(this.translate.instant('TOAST.DEPARTMENTS_ASSIGNED'));
+      this.spinnerService.hide();
+      const closeBtn = document.querySelector('.closeEntity.btn-close') as HTMLElement;
+      console.log(closeBtn);
+      
+    closeBtn?.click();
+      this.getUsers(this.currentPage); // refresh table
+    },
+    error: () => {
+      this.toastr.error(this.translate.instant('TOAST.DEPARTMENTS_ASSIGN_FAILED'));
+      this.spinnerService.hide();
+    }
+  });
+}
 
 
 }
