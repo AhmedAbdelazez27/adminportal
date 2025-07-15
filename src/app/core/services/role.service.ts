@@ -31,7 +31,7 @@ export class RoleService {
     }
 
     updateRole(payload: any): Observable<any> {
-        return this.http.put(this.BASE_URL, {id:payload?.id , name : payload?.name , aspNetUsersRoleCount: 1});
+        return this.http.put(this.BASE_URL, { id: payload?.id, name: payload?.name, aspNetUsersRoleCount: 1 });
     }
 
     unassignRole(payload: UnassignRoleDto): Observable<any> {
@@ -47,7 +47,7 @@ export class RoleService {
     }
 
     deleteRole(roleId: string): Observable<any> {
-        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.Delete(roleId)}`,{});
+        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.Delete(roleId)}`, {});
     }
 
     getRolesSelect2List(payload: RoleSelect2RequestDto): Observable<any> {
@@ -59,9 +59,16 @@ export class RoleService {
     }
 
     getScreensList(payload: any): Observable<any> {
+
         return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.GetScreensList}`, payload);
     }
 
-
+    assignScreens(payload: {
+        roleId: string;
+        claimType: string;
+        claimValues: string[];
+    }) {
+        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.AssignScreenPermission}`, payload);
+    }
 
 }

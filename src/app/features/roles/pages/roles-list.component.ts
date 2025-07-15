@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CreateRoleDto } from '../../../core/dtos/create-role.dto';
 import { UserService } from '../../../core/services/user.service';
 import { AssignRoleDto } from '../../../core/dtos/assign-role.dto';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { EntityService } from '../../../core/services/entit.service';
@@ -13,7 +13,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-roles-list',
-  imports: [CommonModule, FormsModule,ReactiveFormsModule,NgSelectModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule, TranslateModule],
   templateUrl: './roles-list.component.html',
   styleUrls: ['./roles-list.component.scss']
 })
@@ -34,6 +34,7 @@ export class RolesListComponent {
   selectedUserIds: string[] = [];
   userEntityForm: FormGroup;
   entities: any[] = [];
+  modules: any[] = [];
 
   constructor(
     private roleService: RoleService,
@@ -271,7 +272,7 @@ export class RolesListComponent {
   getUserIntities(roleId: string): void {
     console.log("entity calling the service");
 
-    this._UserService.getUserIntities({ userId:null,roleId }).subscribe({
+    this._UserService.getUserIntities({ userId: null, roleId }).subscribe({
       next: (res: any) => {
         console.log("role entit = ", res);
 
@@ -289,8 +290,8 @@ export class RolesListComponent {
   assignIntities(): void {
     console.log(this.roleToSelected);
     console.log(this.userEntityForm);
-    
-    
+
+
     if (this.userEntityForm.invalid || !this.selectedRoleId) {
       this.toastr.error('Please select at least one entity');
       return;
@@ -320,21 +321,60 @@ export class RolesListComponent {
       }
     });
   }
-// screens permission 
-getScreensList(roleId:any){
-  this.roleService.getScreensList({RoleId:roleId}).subscribe({
-    next: (res)=>{
-      console.log(res);
-      
-    },
-    error: (err)=>{
+  // screens permission 
+  getScreensList(roleId: any) {
+    this.selectedRoleId = roleId
+    this.roleService.getScreensList({ roleId }).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.modules = res?.data
+      },
+      error: (err) => {
 
-    },
-    complete: ()=>{
+      },
+      complete: () => {
 
+      }
+    })
+  }
+  onScreenToggle(screen: any) {
+    console.log(`${screen.name} selected = ${screen.selected}`);
+  }
+
+  saveScreensPermissions(): void {
+    if (!this.selectedRoleId) {
+      this.toastr.error(this.translate.instant('TOAST.ROLE_REQUIRED'));
+      return;
     }
-  })
-}
+
+
+    const selectedScreens = this.modules
+      .flatMap(m => m.screens)
+      .filter(screen => screen.selected === true)
+      .map(screen => screen.name);
+
+    const payload = {
+      roleId: this.selectedRoleId,
+      claimType: '',
+      claimValues: selectedScreens
+    };
+
+    this.spinnerService.show();
+
+    this.roleService.assignScreens(payload).subscribe({
+      next: () => {
+        this.toastr.success(this.translate.instant('TOAST.SCREENS_ASSIGNED'));
+        this.spinnerService.hide();
+        const closeBtn = document.querySelector('.btn-screen.btn-close') as HTMLElement;
+        closeBtn?.click();
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('TOAST.SCREENS_ASSIGN_FAILED'));
+        this.spinnerService.hide();
+      }
+    });
+  }
+
 
 
 }

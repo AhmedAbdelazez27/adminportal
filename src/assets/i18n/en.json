@@ -28,7 +28,10 @@
     "CREATE_ERROR": "Failed to create user.",
     "UPDATE_ERROR": "Failed to update user.",
     "DEPARTMENTS_ASSIGNED": "Departments assigned successfully.",
-    "DEPARTMENTS_ASSIGN_FAILED": "Failed to assign departments. Please try again."
+    "DEPARTMENTS_ASSIGN_FAILED": "Failed to assign departments. Please try again.",
+    "SCREENS_ASSIGNED": "Screens assigned successfully.",
+    "SCREENS_ASSIGN_FAILED": "Failed to assign screens.",
+    "ROLE_REQUIRED": "Please select a role first."
   },
   "ROLE": {
     "CREATED": {

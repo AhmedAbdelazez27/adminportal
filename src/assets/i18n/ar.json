@@ -27,7 +27,10 @@
     "CREATE_ERROR": "فشل في إنشاء المستخدم.",
     "UPDATE_ERROR": "فشل في تعديل المستخدم.",
     "DEPARTMENTS_ASSIGNED": "تم تعيين الأقسام بنجاح.",
-    "DEPARTMENTS_ASSIGN_FAILED": "فشل في تعيين الأقسام، حاول مرة أخرى."
+    "DEPARTMENTS_ASSIGN_FAILED": "فشل في تعيين الأقسام، حاول مرة أخرى.",
+    "SCREENS_ASSIGNED": "تم حفظ صلاحيات الشاشات بنجاح.",
+    "SCREENS_ASSIGN_FAILED": "فشل في حفظ صلاحيات الشاشات.",
+    "ROLE_REQUIRED": "يرجى اختيار دور وظيفي أولًا."
   },
   "ROLE": {
     "CREATED": {

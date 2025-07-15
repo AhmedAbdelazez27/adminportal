@@ -122,7 +122,7 @@
                             </li>
                             <li class="mb-1">
                                 <a class="dropdown-item d-flex gap-2 align-items-center" data-bs-toggle="modal"
-                                    data-bs-target="#screens" (click)="getScreensList(role?.Id)">
+                                    data-bs-target="#screens" (click)="getScreensList(role?.id)">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"
                                         fill="none">
                                         <path
@@ -340,7 +340,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-gold" data-bs-dismiss="modal" (click)="assignRole()">Save</button>
+                    <button type="button" class="btn btn-gold" data-bs-dismiss="modal"
+                        (click)="assignRole()">Save</button>
                 </div>
             </div>
         </div>
@@ -349,147 +350,58 @@
 
     <!-- Modal screens -->
     <div class="modal fade" id="screens" tabindex="-1" aria-labelledby="screensLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="screensLabel">screens</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row mb-3">
-                            <div class="col-xl-5">
-                                <select class="form-select mb-3" aria-label="Default select example">
-                                    <option selected>Select Cateory</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                            </div>
-                            <div class="col-xl-5">
-                                <div class="mb-3">
-                                    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Search Screen">
-                                </div>
-                            </div>
-                            <div class="col-xl-2">
-                                <button type="button" class="btn btn-gold w-100" style="height:48px;">Apply Filter</button>
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="screensLabel">screens</h1>
+                    <button type="button" class="btn-screen btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-xl-5">
+                            <select class="form-select mb-3" aria-label="Default select example">
+                                <option selected>Select Cateory</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+                        <div class="col-xl-5">
+                            <div class="mb-3">
+                                <input type="email" class="form-control" id="exampleFormControlInput1"
+                                    placeholder="Search Screen">
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <h5 class="gold mb-3 bold">Screens Category</h5>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="1">
-                                    <label class="form-check-label" for="1">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="2">
-                                    <label class="form-check-label" for="2">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="3">
-                                    <label class="form-check-label" for="3">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="4">
-                                    <label class="form-check-label" for="4">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="5">
-                                    <label class="form-check-label" for="5">Screen Name</label>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <h5 class="gold mb-3 bold">Screens Category</h5>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="1">
-                                    <label class="form-check-label" for="1">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="2">
-                                    <label class="form-check-label" for="2">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="3">
-                                    <label class="form-check-label" for="3">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="4">
-                                    <label class="form-check-label" for="4">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="5">
-                                    <label class="form-check-label" for="5">Screen Name</label>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <h5 class="gold mb-3 bold">Screens Category</h5>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="1">
-                                    <label class="form-check-label" for="1">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="2">
-                                    <label class="form-check-label" for="2">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="3">
-                                    <label class="form-check-label" for="3">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="4">
-                                    <label class="form-check-label" for="4">Screen Name</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="5">
-                                    <label class="form-check-label" for="5">Screen Name</label>
-                                </div>
-                            </div>
-
+                        <div class="col-xl-2">
+                            <button type="button" class="btn btn-gold w-100" style="height:48px;">Apply Filter</button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-gold">Save</button>
+                    <div class="row mb-3" *ngFor="let module of modules">
+                        <div class="col-12">
+                            <h5 class="gold mb-3 bold">{{ module.moduleName }}</h5>
+                        </div>
+
+                        <ng-container *ngFor="let screen of module.screens">
+                            <div class="col-xl-4 col-lg-6 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" [id]="screen.name"
+                                        [(ngModel)]="screen.selected" (change)="onScreenToggle(screen)" />
+                                    <label class="form-check-label" [for]="screen.name">
+                                        {{ screen.name }}
+                                    </label>
+                                </div>
+                            </div>
+                        </ng-container>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-gold" (click)="saveScreensPermissions()">
+                        {{ 'SAVE' | translate }}</button>
                 </div>
             </div>
         </div>
+    </div>
 
 
 
@@ -501,10 +413,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="EntitiesLabel">Entities</h1>
-                    <button type="button" class="closeEntity btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="closeEntity btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                     <form [formGroup]="userEntityForm">
+                    <form [formGroup]="userEntityForm">
                         <div class="mb-3">
                             <label for="departments" class="form-label">Add Entities</label>
                             <ng-select [items]="entities" bindLabel="entitY_NAME" bindValue="entitY_ID"
