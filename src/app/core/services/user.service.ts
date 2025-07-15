@@ -33,7 +33,7 @@ export class UserService {
   }
 
   deleteUser(id: string): Observable<any> {
-    return this.http.delete(`${this.BASE_URL}${ApiEndpoints.User.Delete(id)}`);
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Delete(id)}`,{});
   }
 
   getUsersForSelect2(payload: {
@@ -52,12 +52,15 @@ export class UserService {
   assignEntities(payload: { userId: string; entityIds: number[] }) {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersEntities.Base}${ApiEndpoints.UsersEntities.AssignUserEntities}`, payload);
   }
+  AssignRoleEntities(payload: { roleId: string; entityIds: number[] }) {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersEntities.Base}${ApiEndpoints.UsersEntities.AssignRoleEntities}`, payload);
+  }
 
   getUserDepartments(payload: { userId: string }) {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersDepartments.Base}`, payload);
   }
 
-   getUserIntities(payload: { userId: string }) {
+   getUserIntities(payload: { userId?: any,roleId?: any }) {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersEntities.Base}${ApiEndpoints.UsersEntities.GetUsersEntitiesSelect2List}`, payload);
   }
 

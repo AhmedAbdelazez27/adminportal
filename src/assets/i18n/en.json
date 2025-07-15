@@ -107,5 +107,7 @@
   "PASSWORD_MIN_LENGTH": "Password must be at least 6 characters.",
   "PASSWORD_PATTERN": "Password must include uppercase, lowercase, number, and special character.",
   "PASSWORDS_MATCH": "Passwords match!",
-  "PASSWORD_GUIDELINES": "Password must be at least 6 characters and include uppercase, lowercase, numbers, and special characters."
+  "PASSWORD_GUIDELINES": "Password must be at least 6 characters and include uppercase, lowercase, numbers, and special characters.",
+  "ENTITIES_ASSIGNED": "Entities assigned successfully.",
+  "ENTITIES_ASSIGN_FAILED": "Failed to assign entities."
 }

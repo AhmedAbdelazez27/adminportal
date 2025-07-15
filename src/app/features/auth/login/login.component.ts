@@ -34,7 +34,9 @@ submit(): void {
 
   this.auth.login(this.form.value).subscribe({
     next: (res) => {
-      this.auth.saveToken(res?.token);
+      console.log(res?.token );
+      
+      this.auth.saveToken(res?.Token);
       this.toastr.success(this.translate.instant('LOGIN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
       this.spinnerService.hide();
       this.router.navigate(['/home']);

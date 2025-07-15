@@ -432,7 +432,7 @@ assignIntities(): void {
 
   this.userService.assignEntities(payload).subscribe({
     next: () => {
-      this.toastr.success(this.translate.instant('TOAST.DEPARTMENTS_ASSIGNED'));
+      this.toastr.success(this.translate.instant('ENTITIES_ASSIGNED'));
       this.spinnerService.hide();
       const closeBtn = document.querySelector('.closeEntity.btn-close') as HTMLElement;
       console.log(closeBtn);
@@ -441,11 +441,35 @@ assignIntities(): void {
       this.getUsers(this.currentPage); // refresh table
     },
     error: () => {
-      this.toastr.error(this.translate.instant('TOAST.DEPARTMENTS_ASSIGN_FAILED'));
+      this.toastr.error(this.translate.instant('ENTITIES_ASSIGN_FAILED'));
       this.spinnerService.hide();
     }
   });
 }
 
+  // Delete user
+  selectUserToDelete(user:any){
+    this.selectedUserIdForDepartments = user.id
+  }
+
+  deleteUser(): void {
+    if (this.selectedUserIdForDepartments) {
+      this.spinnerService.show();  
+      this.userService.deleteUser(this.selectedUserIdForDepartments).subscribe(
+        (response) => {
+          this.selectedUserIdForDepartments = null;
+          this.spinnerService.hide();  // Hide spinner after deletion
+          const closeBtn = document.querySelector('.btn-delete.btn-close') as HTMLElement;
+         console.log(closeBtn);
+
+        closeBtn?.click();
+        },
+        (error) => {
+          this.spinnerService.hide();  
+          console.error('Error deleting role:', error);
+        }
+      );
+    }
+  }
 
 }

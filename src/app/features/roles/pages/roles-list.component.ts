@@ -1,17 +1,19 @@
 import { Component } from '@angular/core';
 import { RoleService } from '../../../core/services/role.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateRoleDto } from '../../../core/dtos/create-role.dto';
 import { UserService } from '../../../core/services/user.service';
 import { AssignRoleDto } from '../../../core/dtos/assign-role.dto';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../../core/services/spinner.service';
+import { EntityService } from '../../../core/services/entit.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-roles-list',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,ReactiveFormsModule,NgSelectModule],
   templateUrl: './roles-list.component.html',
   styleUrls: ['./roles-list.component.scss']
 })
@@ -22,7 +24,7 @@ export class RolesListComponent {
   itemsPerPage: number = 2;
   pages: number[] = [];
   searchValue: string = '';
-  newRole: CreateRoleDto = { name: ''};
+  newRole: CreateRoleDto = { name: '' };
   selectedRole: any = {};
   roleToSelected: any;
   userList: any[] = [];
@@ -30,14 +32,22 @@ export class RolesListComponent {
   selectedUser: string[] = [];
   userDropdowns: any[] = [{ selectedUserIds: [] }];
   selectedUserIds: string[] = [];
+  userEntityForm: FormGroup;
+  entities: any[] = [];
 
   constructor(
     private roleService: RoleService,
     private _UserService: UserService,
     private spinnerService: SpinnerService,
     private toastr: ToastrService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+    private entityService: EntityService,
+    private fb: FormBuilder
+  ) {
+    this.userEntityForm = this.fb.group({
+      entityIds: [[], Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     this.getRoles(this.currentPage, this.searchValue);
@@ -116,7 +126,6 @@ export class RolesListComponent {
   }
   openEditModal(role: any): void {
     this.selectedRole = { ...role };
-    console.log(this.selectedRole);
 
   }
 
@@ -228,5 +237,104 @@ export class RolesListComponent {
       dropdown.selectedUserIds = [];  // Clear selected userIds in each dropdown
     });
   }
+
+
+  // assign entity to user
+  getEntitys() {
+    this.entityService.getEntities(0, 600).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.entities = res?.data
+        console.log(res, this.entities);
+
+      },
+      error: (err) => {
+        console.log(err);
+
+      }
+    })
+  };
+
+  openAssignIntitiesModal(role: any): void {
+    console.log(role);
+    this.selectedRoleId = role.id;
+
+    if (!this.entities?.length) this.getEntitys();
+
+    this.getUserIntities(role.id);
+
+    this.userEntityForm.reset({
+      entityIds: role?.departments?.map((d: any) => d.id) || []
+    });
+  }
+
+  getUserIntities(roleId: string): void {
+    console.log("entity calling the service");
+
+    this._UserService.getUserIntities({ userId:null,roleId }).subscribe({
+      next: (res: any) => {
+        console.log("role entit = ", res);
+
+        const selected = res?.map((d: any) => d?.entityId) || [];
+        console.log("roleentity ids = ", selected);
+
+        this.userEntityForm.patchValue({ entityIds: selected });
+      },
+      error: (err) => {
+        console.error('Failed to load role entities', err);
+      }
+    });
+  }
+
+  assignIntities(): void {
+    console.log(this.roleToSelected);
+    console.log(this.userEntityForm);
+    
+    
+    if (this.userEntityForm.invalid || !this.selectedRoleId) {
+      this.toastr.error('Please select at least one entity');
+      return;
+    }
+    console.log(this.userEntityForm.value);
+
+    const payload = {
+      roleId: this.selectedRoleId,
+      entityIds: this.userEntityForm.value?.entityIds
+    };
+
+    this.spinnerService.show();
+
+    this._UserService.AssignRoleEntities(payload).subscribe({
+      next: () => {
+        this.toastr.success(this.translate.instant('ENTITIES_ASSIGNED'));
+        this.spinnerService.hide();
+        const closeBtn = document.querySelector('.closeEntity.btn-close') as HTMLElement;
+        console.log(closeBtn);
+
+        closeBtn?.click();
+        this.getRoles(this.currentPage); // refresh table
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('ENTITIES_ASSIGN_FAILED'));
+        this.spinnerService.hide();
+      }
+    });
+  }
+// screens permission 
+getScreensList(roleId:any){
+  this.roleService.getScreensList({RoleId:roleId}).subscribe({
+    next: (res)=>{
+      console.log(res);
+      
+    },
+    error: (err)=>{
+
+    },
+    complete: ()=>{
+
+    }
+  })
+}
+
 
 }

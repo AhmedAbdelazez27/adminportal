@@ -3,7 +3,7 @@ export class ApiEndpoints {
     Base: '/User',
     GetAll: '/GetAll',
     GetById: (id: string) => `/User/${id}`,
-    Delete: (id: string) => `/User/${id}`,
+    Delete: (id: string) => `/User/Delete/${id}`,
     GetUsersSelect2List: '/User/GetUsersSelect2List'
   };
 
@@ -11,15 +11,16 @@ export class ApiEndpoints {
     Base: '/Roles',
     GetPaginated: '/Roles',
     GetById: (id: string) => `/${id}`,
-    Delete: (id: string) => `/${id}`,
+    Delete: (id: string) => `/Delete/${id}`,
     Unassign: '/UnAssignRole',
     GetRoleUsers: (roleId: string) => `/GetRoleUsers/${roleId}`,
     GetRolesSelect2List: '/GetRolesSelect2List',
     Assign: '/AssignRole',
+    GetScreensList: '/Roles/GetScreensList',
 
   };
 
-    static readonly Departments = {
+  static readonly Departments = {
     Base: '/Department',
     Select2: '/Select2'
   };
@@ -29,10 +30,11 @@ export class ApiEndpoints {
     Assign: '/Assign'
   };
 
-    static readonly UsersEntities = {
+  static readonly UsersEntities = {
     Base: '/UsersEntities',
     GetUsersEntitiesSelect2List: '/GetAll',
     AssignUserEntities: '/AssignUserEntities',
+    AssignRoleEntities: '/AssignRoleEntities',
   };
 
   static readonly Entity = {
