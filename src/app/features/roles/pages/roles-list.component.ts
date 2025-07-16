@@ -21,7 +21,7 @@ export class RolesListComponent {
   roles: any[] = [];
   totalCount: number = 0;
   currentPage: number = 1;
-  itemsPerPage: number = 2;
+  itemsPerPage: number = 5;
   pages: number[] = [];
   searchValue: string = '';
   newRole: CreateRoleDto = { name: '' };
@@ -35,6 +35,9 @@ export class RolesListComponent {
   userEntityForm: FormGroup;
   entities: any[] = [];
   modules: any[] = [];
+  searchKeyword: string = '';
+  selectedModuleFilter: string = 'all';
+  originalModules: any[] = [];
 
   constructor(
     private roleService: RoleService,
@@ -327,16 +330,46 @@ export class RolesListComponent {
     this.roleService.getScreensList({ roleId }).subscribe({
       next: (res) => {
         console.log(res);
-        this.modules = res?.data
+        this.originalModules = res?.data || [];
+        this.modules = [...this.originalModules];
       },
       error: (err) => {
-
+        console.log(err);
       },
       complete: () => {
-
+        console.log("complete");
       }
     })
   }
+
+  applyFilter(): void {
+    const keyword = this.searchKeyword.toLowerCase().trim();
+    const selectedModule = this.selectedModuleFilter;
+
+    this.modules = this.originalModules
+      .filter(module => {
+        // فلترة حسب الموديول
+        const matchesModule = selectedModule === 'all' || module.module.toString() === selectedModule;
+
+        // فلترة الشاشات حسب الكلمة
+        const filteredScreens = module.screens.filter((screen: any) =>
+          screen.name.toLowerCase().includes(keyword)
+        );
+
+        // احتفظ فقط بالموديولات اللي فيها نتائج
+        return matchesModule && filteredScreens.length > 0;
+      }).map(module => {
+        const filteredScreens = module.screens.filter((screen: any) =>
+          screen.name.toLowerCase().includes(keyword)
+        );
+        return {
+          ...module,
+          screens: filteredScreens
+        };
+      });
+  }
+
+
   onScreenToggle(screen: any) {
     console.log(`${screen.name} selected = ${screen.selected}`);
   }

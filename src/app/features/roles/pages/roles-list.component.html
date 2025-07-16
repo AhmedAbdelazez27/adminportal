@@ -354,26 +354,28 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="screensLabel">screens</h1>
-                    <button type="button" class="btn-screen btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-screen btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-xl-5">
-                            <select class="form-select mb-3" aria-label="Default select example">
-                                <option selected>Select Cateory</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="form-select mb-3" [(ngModel)]="selectedModuleFilter">
+                                <option value="all">All Modules</option>
+                                <option *ngFor="let module of originalModules" [value]="module.module">
+                                    {{ module.moduleName }}
+                                </option>
                             </select>
                         </div>
                         <div class="col-xl-5">
                             <div class="mb-3">
-                                <input type="email" class="form-control" id="exampleFormControlInput1"
-                                    placeholder="Search Screen">
+                                <input type="text" class="form-control" placeholder="Search Screen"
+                                    [(ngModel)]="searchKeyword" />
+
                             </div>
                         </div>
                         <div class="col-xl-2">
-                            <button type="button" class="btn btn-gold w-100" style="height:48px;">Apply Filter</button>
+                            <button type="button" class="btn btn-gold w-100" style="height:48px;" (click)="applyFilter()">Apply Filter</button>
                         </div>
                     </div>
                     <div class="row mb-3" *ngFor="let module of modules">
