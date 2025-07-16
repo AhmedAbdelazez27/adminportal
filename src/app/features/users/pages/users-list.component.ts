@@ -9,11 +9,12 @@ import { confirmPasswordValidator } from '../../../shared/customValidators/confi
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DepartmentService } from '../../../core/services/department.service';
 import { EntityService } from '../../../core/services/entit.service';
+import { forkJoin, of } from 'rxjs';
 
 
 @Component({
   selector: 'app-users-list',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule,NgSelectModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, NgSelectModule],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss'
 })
@@ -34,10 +35,17 @@ export class UsersListComponent implements OnInit {
   editingUserId: any | null = null;
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
-  departments :any[]=[];
+  departments: any[] = [];
   userDepartmentForm: FormGroup;
   userEntityForm: FormGroup;
   selectedUserIdForDepartments: any;
+  userPermissions: any[] = [];
+  permissionTypes: string[] = ['View', 'Create', 'Update', 'Delete', 'Approve', 'Reject'];
+  availablePermissionActions: string[] = [
+    'Create', 'View', 'Update', 'Delete', 'Post', 'UnPost'
+  ];
+  originalPermissions: string[] = [];
+
 
 
 
@@ -50,12 +58,12 @@ export class UsersListComponent implements OnInit {
     private translate: TranslateService,
     private fb: FormBuilder,
   ) {
-this.userDepartmentForm = this.fb.group({
-  departmentIds: [[], Validators.required]
-});
-this.userEntityForm = this.fb.group({
-  entityIds: [[], Validators.required]
-});
+    this.userDepartmentForm = this.fb.group({
+      departmentIds: [[], Validators.required]
+    });
+    this.userEntityForm = this.fb.group({
+      entityIds: [[], Validators.required]
+    });
 
     this.userForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(1)]],
@@ -290,186 +298,309 @@ this.userEntityForm = this.fb.group({
     return pass && confirm && pass === confirm && !this.userForm.get('confirmPassword')?.errors?.['mismatch'];
   }
 
-toggleDropdown(event: MouseEvent, select: any): void {
-  event.preventDefault();
+  toggleDropdown(event: MouseEvent, select: any): void {
+    event.preventDefault();
 
-  setTimeout(() => {
-    if (select.isOpen) {
-      select.close();
-    } else {
-      select.open();
-    }
-  }, 100);
-}
-// assign department to user
-getDepartments(){
-  this.departmentService.getDepartments(0,600).subscribe({
-    next: (res)=>{
-      console.log(res);
-      this.departments = res?.results
-    },
-    error: (err)=>{
-      console.log(err);
-      
-    }
-  })
-}
-openAssignDepartmentsModal(user: any): void {
-  this.selectedUserIdForDepartments = user.id;
-
-  if (!this.departments?.length) this.getDepartments();
-  this.getUserDepartments(user.id);
-
-  this.userDepartmentForm.reset({
-    departments: user.departments?.map((d: any) => d.id) || []
-  });
-}
-
-assignDepartments(): void {
-  if (this.userDepartmentForm.invalid || !this.selectedUserIdForDepartments) {
-    this.toastr.error('Please select at least one department');
-    return;
+    setTimeout(() => {
+      if (select.isOpen) {
+        select.close();
+      } else {
+        select.open();
+      }
+    }, 100);
   }
-  console.log(this.userDepartmentForm.value);
-  
-  const payload = {
-    userId: this.selectedUserIdForDepartments,
-    departmentIds: this.userDepartmentForm.value?.departmentIds
+  // assign department to user
+  getDepartments() {
+    this.departmentService.getDepartments(0, 600).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.departments = res?.results
+      },
+      error: (err) => {
+        console.log(err);
+
+      }
+    })
+  }
+  openAssignDepartmentsModal(user: any): void {
+    this.selectedUserIdForDepartments = user.id;
+
+    if (!this.departments?.length) this.getDepartments();
+    this.getUserDepartments(user.id);
+
+    this.userDepartmentForm.reset({
+      departments: user.departments?.map((d: any) => d.id) || []
+    });
+  }
+
+  assignDepartments(): void {
+    if (this.userDepartmentForm.invalid || !this.selectedUserIdForDepartments) {
+      this.toastr.error('Please select at least one department');
+      return;
+    }
+    console.log(this.userDepartmentForm.value);
+
+    const payload = {
+      userId: this.selectedUserIdForDepartments,
+      departmentIds: this.userDepartmentForm.value?.departmentIds
+    };
+
+    this.spinnerService.show();
+
+    this.userService.assignDepartments(payload).subscribe({
+      next: () => {
+        this.toastr.success(this.translate.instant('TOAST.DEPARTMENTS_ASSIGNED'));
+        this.spinnerService.hide();
+        const closeBtn = document.querySelector('.closeDepartment.btn-close') as HTMLElement;
+        console.log(closeBtn);
+
+        closeBtn?.click();
+        this.getUsers(this.currentPage); // refresh table
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('TOAST.DEPARTMENTS_ASSIGN_FAILED'));
+        this.spinnerService.hide();
+      }
+    });
+  }
+
+  getUserDepartments(userId: string): void {
+    this.userService.getUserDepartments({ userId }).subscribe({
+      next: (res: any) => {
+        const selected = res?.data?.map((d: any) => d?.departmentId.toString()) || [];
+        this.userDepartmentForm.patchValue({ departmentIds: selected });
+      },
+      error: (err) => {
+        console.error('Failed to load user departments', err);
+      }
+    });
+  }
+
+  // assign entity to user
+  getEntitys() {
+    this.entityService.getEntities(0, 600).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.entities = res?.data
+        console.log(res, this.entities);
+
+      },
+      error: (err) => {
+        console.log(err);
+
+      }
+    })
   };
 
-  this.spinnerService.show();
+  openAssignIntitiesModal(user: any): void {
+    console.log(user);
 
-  this.userService.assignDepartments(payload).subscribe({
-    next: () => {
-      this.toastr.success(this.translate.instant('TOAST.DEPARTMENTS_ASSIGNED'));
-      this.spinnerService.hide();
-      const closeBtn = document.querySelector('.closeDepartment.btn-close') as HTMLElement;
-      console.log(closeBtn);
-      
-    closeBtn?.click();
-      this.getUsers(this.currentPage); // refresh table
-    },
-    error: () => {
-      this.toastr.error(this.translate.instant('TOAST.DEPARTMENTS_ASSIGN_FAILED'));
-      this.spinnerService.hide();
-    }
-  });
-}
+    this.selectedUserIdForDepartments = user.id;
 
-getUserDepartments(userId: string): void {
-  this.userService.getUserDepartments({ userId }).subscribe({
-    next: (res:any) => {
-      const selected = res?.data?.map((d: any) => d?.departmentId.toString()) || [];
-      this.userDepartmentForm.patchValue({ departmentIds: selected });
-    },
-    error: (err) => {
-      console.error('Failed to load user departments', err);
-    }
-  });
-}
+    if (!this.entities?.length) this.getEntitys();
 
-// assign entity to user
-getEntitys(){
-  this.entityService.getEntities(0,600).subscribe({
-    next: (res)=>{
-      console.log(res);
-      this.entities = res?.data
-      console.log(res,this.entities);
-      
-    },
-    error: (err)=>{
-      console.log(err);
-      
-    }
-  })
-};
+    this.getUserIntities(user.id);
 
-openAssignIntitiesModal(user: any): void {
-  console.log(user);
-  
-  this.selectedUserIdForDepartments = user.id;
-
-  if (!this.entities?.length) this.getEntitys();
-
-  this.getUserIntities(user.id);
-
-  this.userEntityForm.reset({
-    entityIds: user.departments?.map((d: any) => d.id) || []
-  });
-}
-
-getUserIntities(userId: string): void {
-  console.log("entity calling the service");
-  
-  this.userService.getUserIntities({ userId }).subscribe({
-    next: (res:any) => {
-      console.log("user entit = ",res);
-      
-      const selected = res?.map((d: any) => d?.entityId) || [];
-      console.log("userentity ids = ",selected);
-      
-      this.userEntityForm.patchValue({ entityIds: selected });
-    },
-    error: (err) => {
-      console.error('Failed to load user entities', err);
-    }
-  });
-}
-
-assignIntities(): void {
-  if (this.userEntityForm.invalid || !this.selectedUserIdForDepartments) {
-    this.toastr.error('Please select at least one entity');
-    return;
+    this.userEntityForm.reset({
+      entityIds: user.departments?.map((d: any) => d.id) || []
+    });
   }
-  console.log(this.userEntityForm.value);
-  
-  const payload = {
-    userId: this.selectedUserIdForDepartments,
-    entityIds: this.userEntityForm.value?.entityIds
-  };
 
-  this.spinnerService.show();
+  getUserIntities(userId: string): void {
+    console.log("entity calling the service");
 
-  this.userService.assignEntities(payload).subscribe({
-    next: () => {
-      this.toastr.success(this.translate.instant('ENTITIES_ASSIGNED'));
-      this.spinnerService.hide();
-      const closeBtn = document.querySelector('.closeEntity.btn-close') as HTMLElement;
-      console.log(closeBtn);
-      
-    closeBtn?.click();
-      this.getUsers(this.currentPage); // refresh table
-    },
-    error: () => {
-      this.toastr.error(this.translate.instant('ENTITIES_ASSIGN_FAILED'));
-      this.spinnerService.hide();
+    this.userService.getUserIntities({ userId }).subscribe({
+      next: (res: any) => {
+        console.log("user entit = ", res);
+
+        const selected = res?.map((d: any) => d?.entityId) || [];
+        console.log("userentity ids = ", selected);
+
+        this.userEntityForm.patchValue({ entityIds: selected });
+      },
+      error: (err) => {
+        console.error('Failed to load user entities', err);
+      }
+    });
+  }
+
+  assignIntities(): void {
+    if (this.userEntityForm.invalid || !this.selectedUserIdForDepartments) {
+      this.toastr.error('Please select at least one entity');
+      return;
     }
-  });
-}
+    console.log(this.userEntityForm.value);
+
+    const payload = {
+      userId: this.selectedUserIdForDepartments,
+      entityIds: this.userEntityForm.value?.entityIds
+    };
+
+    this.spinnerService.show();
+
+    this.userService.assignEntities(payload).subscribe({
+      next: () => {
+        this.toastr.success(this.translate.instant('ENTITIES_ASSIGNED'));
+        this.spinnerService.hide();
+        const closeBtn = document.querySelector('.closeEntity.btn-close') as HTMLElement;
+        console.log(closeBtn);
+
+        closeBtn?.click();
+        this.getUsers(this.currentPage); // refresh table
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('ENTITIES_ASSIGN_FAILED'));
+        this.spinnerService.hide();
+      }
+    });
+  }
 
   // Delete user
-  selectUserToDelete(user:any){
+  selectUserToDelete(user: any) {
     this.selectedUserIdForDepartments = user.id
   }
 
   deleteUser(): void {
     if (this.selectedUserIdForDepartments) {
-      this.spinnerService.show();  
+      this.spinnerService.show();
       this.userService.deleteUser(this.selectedUserIdForDepartments).subscribe(
         (response) => {
           this.selectedUserIdForDepartments = null;
           this.spinnerService.hide();  // Hide spinner after deletion
           const closeBtn = document.querySelector('.btn-delete.btn-close') as HTMLElement;
-         console.log(closeBtn);
+          console.log(closeBtn);
 
-        closeBtn?.click();
+          closeBtn?.click();
         },
         (error) => {
-          this.spinnerService.hide();  
+          this.spinnerService.hide();
           console.error('Error deleting role:', error);
         }
       );
     }
   }
+
+
+
+  // user permissions  start
+
+  getUserPermissions(userId: string): void {
+    this.selectedUserIdForDepartments = userId;
+    console.log(this.selectedUserIdForDepartments);
+
+    this.userService.getUserPermission(userId).subscribe({
+      next: (res: any) => {
+        this.userPermissions = res || [];
+        console.log(this.userPermissions);
+
+        this.originalPermissions = res
+          .flatMap((module: any) => module.screenPermissions)
+          .flatMap((screen: any) =>
+            screen.permissionValues
+              .filter((p: any) => p.isAllowed)
+              .map((p: any) => p.value)
+          );
+
+      },
+      error: () => {
+        this.toastr.error('Failed to load permissions');
+      }
+    });
+  }
+  hasPermission(perms: any[], type: string): boolean {
+    return perms.some(p => p.permissionName.toLowerCase() === type.toLowerCase() && p.isAllowed);
+  }
+  onTogglePermission(event: any, screenName: string, permission: string): void {
+    const isChecked = event.target.checked;
+
+    // دوري على screen الحقيقي داخل الـ this.userPermissions
+    for (const module of this.userPermissions) {
+      const screen = module.screenPermissions.find((s: any) => s.screenName === screenName);
+      if (screen) {
+        const perm = screen.permissionValues.find((p: any) => p.permissionName === permission);
+        if (perm) {
+          perm.isAllowed = isChecked;
+        }
+      }
+    }
+
+    console.log(`Toggle: ${screenName}.${permission} = ${isChecked}`);
+  }
+
+
+  isPermissionAvailable(screen: any, action: string): boolean {
+    return screen.permissionValues.some((p: any) => p.permissionName === action);
+  }
+
+  saveUserPermissions(): void {
+    console.log("Start 1");
+
+    const currentPermissions: string[] = this.userPermissions
+      .flatMap((module: any) => module.screenPermissions)
+      .flatMap((screen: any) =>
+        this.availablePermissionActions
+          .filter((action: string) => this.isPermissionAvailable(screen, action))
+          .filter((action: string) => this.hasPermission(screen.permissionValues, action))
+          .map((action: string) => `${screen.screenName}.${action}`)
+      );
+    console.log("currentPermissions = ", currentPermissions);
+    console.log("originalPermissions = ", this.originalPermissions);
+
+    const uniqueOriginal = Array.from(new Set(this.originalPermissions));
+    const uniqueCurrent = Array.from(new Set(currentPermissions));
+
+    const toCreate = uniqueCurrent.filter(p => !uniqueOriginal.includes(p));
+    console.log("toCreate", toCreate);
+
+    const toDelete = uniqueOriginal.filter(p => !uniqueCurrent.includes(p));
+    console.log("toDelete", toDelete);
+
+    // const toCreate = currentPermissions.filter(p => !this.originalPermissions.includes(p));
+    console.log("toCreate", toCreate);
+
+    // const toDelete = this.originalPermissions.filter(p => !currentPermissions.includes(p));
+    console.log("toDelete", toDelete);
+
+    const createPayload = {
+      userId: this.selectedUserIdForDepartments,
+      permissions: toCreate.map(p => ({
+        type: p.split('.')[0],
+        value: p
+      }))
+    };
+    console.log("createPayload", createPayload);
+
+    const deletePayload = {
+      userId: this.selectedUserIdForDepartments,
+      permissions: toDelete.map(p => ({
+        type: p.split('.')[0],
+        value: p
+      }))
+    };
+    console.log("deletePayload", deletePayload);
+
+
+    // this.spinnerService.show();
+
+    // forkJoin([
+    //   toCreate.length ? this.userService.createUserPermission(createPayload) : of(null),
+    //   toDelete.length ? this.userService.deleteUserPermission(deletePayload) : of(null)
+    // ]).subscribe({
+    //   next: () => {
+    //     this.toastr.success(this.translate.instant('TOAST.PERMISSIONS_UPDATED'));
+    //     this.spinnerService.hide();
+    //     const closeBtn = document.querySelector('.btn-close-user-permissions') as HTMLElement;
+    //     closeBtn?.click();
+    //   },
+    //   error: () => {
+    //     this.toastr.error(this.translate.instant('TOAST.PERMISSIONS_UPDATE_FAILED'));
+    //     this.spinnerService.hide();
+    //   },
+    //   complete: () => {
+    //     this.selectedUserIdForDepartments = '';
+    //   }
+    // });
+  }
+
 
 }

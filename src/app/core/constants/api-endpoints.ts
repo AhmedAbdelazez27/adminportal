@@ -4,7 +4,12 @@ export class ApiEndpoints {
     GetAll: '/GetAll',
     GetById: (id: string) => `/User/${id}`,
     Delete: (id: string) => `/User/Delete/${id}`,
-    GetUsersSelect2List: '/User/GetUsersSelect2List'
+    GetUsersSelect2List: '/User/GetUsersSelect2List',
+    GetUserPermissionList: (id: string) => `/Permission/GetAll/${id}`,
+    AssignActionPermission: '/Permission/CreateUserPermission',
+    DeleteActionPermission: '/Permission/DeleteUserPermission',
+
+
   };
 
   static readonly Roles = {

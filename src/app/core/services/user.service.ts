@@ -33,7 +33,7 @@ export class UserService {
   }
 
   deleteUser(id: string): Observable<any> {
-    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Delete(id)}`,{});
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Delete(id)}`, {});
   }
 
   getUsersForSelect2(payload: {
@@ -60,9 +60,19 @@ export class UserService {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersDepartments.Base}`, payload);
   }
 
-   getUserIntities(payload: { userId?: any,roleId?: any }) {
+  getUserIntities(payload: { userId?: any, roleId?: any }) {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.UsersEntities.Base}${ApiEndpoints.UsersEntities.GetUsersEntitiesSelect2List}`, payload);
   }
 
+  getUserPermission(userId: string) {
+    return this.http.get(`${this.BASE_URL}${ApiEndpoints.User.GetUserPermissionList(userId)}`);
+  }
+  deleteUserPermission(payload: any) :Observable<any>{
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.DeleteActionPermission}`,payload);
+  }
+  createUserPermission(payload :any) {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.AssignActionPermission}`,payload);
+    
+  }
 
 }
