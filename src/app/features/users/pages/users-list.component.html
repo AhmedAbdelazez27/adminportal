@@ -806,7 +806,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="UsersLabel">User Permissions</h1>
-                    <button type="button" class="btn-close btn-close-user-permissions" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-user-permissions" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <!-- <div class="modal-body">
                     <table class="table new-table mb-3">
@@ -879,7 +880,32 @@
                     </table>
                 </div> -->
                 <div class="modal-body">
-                    
+                    <div >
+                        <form [formGroup]="filterForm" class="row mb-3">
+                            <!-- 1. Filter by Modules -->
+                            <div class="mb-3 col-xl-5">
+                                <!-- <label class="form-label">Filter by Module(s)</label> -->
+                                <ng-select [items]="moduleOptions" bindLabel="label" bindValue="value" [multiple]="true"
+                                    [closeOnSelect]="false" formControlName="selectedModules" class="ng-select-custom" [placeholder]="filterForm.get('selectedModules')?'Filter by Module(s)':''">
+                                </ng-select>
+                            </div>
+
+                            <!-- 2. Filter by Screens -->
+                            <div class="mb-3 col-xl-5">
+                                <!-- <label class="form-label">Filter by Screen(s)</label> -->
+                                <ng-select [items]="filteredScreens" bindLabel="label" bindValue="value"
+                                    [multiple]="true" [closeOnSelect]="false" formControlName="selectedScreens"
+                                    class="ng-select-custom" placeholder="Filter by Screen(s)">
+                                </ng-select>
+                            </div>
+                            <div class="text-end mb-3 col-xl-2">
+                                <button type="button" class="btn btn-gold" (click)="applySearch()">
+                                    Apply Filter
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
                     <table class="table new-table mb-3">
                         <thead>
                             <tr>
@@ -889,7 +915,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <ng-container *ngFor="let module of userPermissions">
+                            <ng-container *ngFor="let module of filteredPermissions">
                                 <ng-container *ngFor="let screen of module.screenPermissions">
                                     <tr>
                                         <!-- <td>{{ module.moduleName }}</td> -->
@@ -906,10 +932,10 @@
                                                 <input class="form-check-input" type="checkbox" role="switch"
                                                     *ngIf="isPermissionAvailable(screen, p); else disabledSwitch"
                                                     [checked]="hasPermission(screen.permissionValues, p)"
-                                                   (change)="onTogglePermission( $event, screen.screenName, p )" />
+                                                    (change)="onTogglePermission( $event, screen.screenName, p )" />
                                                 <ng-template #disabledSwitch>
                                                     <input class="form-check-input" type="checkbox" role="switch"
-                                                         style="cursor: not-allowed !important;" [disabled]="true"/>
+                                                        style="cursor: not-allowed !important;" [disabled]="true" />
                                                 </ng-template>
                                             </div>
                                         </td>

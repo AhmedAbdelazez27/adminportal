@@ -14,7 +14,7 @@ import { forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'app-users-list',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, NgSelectModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, NgSelectModule, FormsModule],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss'
 })
@@ -45,6 +45,13 @@ export class UsersListComponent implements OnInit {
     'Create', 'View', 'Update', 'Delete', 'Post', 'UnPost'
   ];
   originalPermissions: string[] = [];
+  filterForm: FormGroup;
+
+  moduleOptions: { label: string, value: string }[] = [];
+  screenOptions: { module: string, label: string, value: string }[] = [];
+
+  filteredScreens: { label: string, value: string }[] = [];
+  filteredPermissions: any[] = [];
 
 
 
@@ -98,11 +105,30 @@ export class UsersListComponent implements OnInit {
       validators: confirmPasswordValidator('password', 'confirmPassword')
     });
 
+
+    this.filterForm = this.fb.group({
+      selectedModules: [[]],
+      selectedScreens: [[]]
+    });
+
+
   }
   ngOnInit(): void {
     this.getUsers(1, '');
     this.getDepartments();
     this.getEntitys();
+
+    // watch for changes in selectedModules to filter screens accordingly
+    this.filterForm.get('selectedModules')?.valueChanges.subscribe(modules => {
+      this.filteredScreens = this.screenOptions
+        .filter(screen => modules.includes(screen.module));
+
+      // optional: clear selectedScreens if not in filtered list
+      const selected = this.filterForm.get('selectedScreens')?.value || [];
+      const allowed = this.filteredScreens.map(s => s.value);
+      const updated = selected.filter((s: string) => allowed.includes(s));
+      this.filterForm.get('selectedScreens')?.setValue(updated);
+    });
   }
 
 
@@ -500,7 +526,8 @@ export class UsersListComponent implements OnInit {
               .filter((p: any) => p.isAllowed)
               .map((p: any) => p.value)
           );
-
+           this.filteredPermissions = [...this.userPermissions];
+        this.populateModuleAndScreenOptions();
       },
       error: () => {
         this.toastr.error('Failed to load permissions');
@@ -513,7 +540,7 @@ export class UsersListComponent implements OnInit {
   onTogglePermission(event: any, screenName: string, permission: string): void {
     const isChecked = event.target.checked;
 
-    // دوري على screen الحقيقي داخل الـ this.userPermissions
+
     for (const module of this.userPermissions) {
       const screen = module.screenPermissions.find((s: any) => s.screenName === screenName);
       if (screen) {
@@ -580,27 +607,66 @@ export class UsersListComponent implements OnInit {
     console.log("deletePayload", deletePayload);
 
 
-    // this.spinnerService.show();
+    this.spinnerService.show();
 
-    // forkJoin([
-    //   toCreate.length ? this.userService.createUserPermission(createPayload) : of(null),
-    //   toDelete.length ? this.userService.deleteUserPermission(deletePayload) : of(null)
-    // ]).subscribe({
-    //   next: () => {
-    //     this.toastr.success(this.translate.instant('TOAST.PERMISSIONS_UPDATED'));
-    //     this.spinnerService.hide();
-    //     const closeBtn = document.querySelector('.btn-close-user-permissions') as HTMLElement;
-    //     closeBtn?.click();
-    //   },
-    //   error: () => {
-    //     this.toastr.error(this.translate.instant('TOAST.PERMISSIONS_UPDATE_FAILED'));
-    //     this.spinnerService.hide();
-    //   },
-    //   complete: () => {
-    //     this.selectedUserIdForDepartments = '';
-    //   }
-    // });
+    forkJoin([
+      toCreate.length ? this.userService.createUserPermission(createPayload) : of(null),
+      toDelete.length ? this.userService.deleteUserPermission(deletePayload) : of(null)
+    ]).subscribe({
+      next: () => {
+        this.toastr.success(this.translate.instant('TOAST.PERMISSIONS_UPDATED'));
+        this.spinnerService.hide();
+        const closeBtn = document.querySelector('.btn-close-user-permissions') as HTMLElement;
+        closeBtn?.click();
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('TOAST.PERMISSIONS_UPDATE_FAILED'));
+        this.spinnerService.hide();
+      },
+      complete: () => {
+        this.selectedUserIdForDepartments = '';
+      }
+    });
   }
 
+
+  populateModuleAndScreenOptions(): void {
+    const allModulesSet = new Set<string>();
+
+    this.userPermissions.forEach(module => {
+      allModulesSet.add(module.moduleName);
+
+      module.screenPermissions.forEach((screen: any) => {
+        this.screenOptions.push({
+          module: module.moduleName,
+          label: screen.screenName,
+          value: screen.screenName
+        });
+      });
+    });
+
+    this.moduleOptions = Array.from(allModulesSet).map(name => ({
+      label: name,
+      value: name
+    }));
+
+    this.filteredScreens = [...this.screenOptions]; // default all
+  }
+
+  applySearch(): void {
+  const selectedModules = this.filterForm.get('selectedModules')?.value || [];
+  const selectedScreens = this.filterForm.get('selectedScreens')?.value || [];
+
+  
+  this.filteredPermissions = this.userPermissions
+    .filter(m => selectedModules.length === 0 || selectedModules.includes(m.moduleName))
+    .map(m => ({
+      ...m,
+      screenPermissions: m.screenPermissions.filter((s:any) =>
+        selectedScreens.length === 0 || selectedScreens.includes(s.screenName)
+      )
+    }))
+    .filter(m => m.screenPermissions.length > 0);
+}
 
 }
