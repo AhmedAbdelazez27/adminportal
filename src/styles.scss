@@ -480,18 +480,10 @@
     border-bottom: #dee2e6 solid 1.5px;
 }
 
-
-
-
-
-
-
-
-
-
-
-/* ✅ داخل styles.scss أو component-specific SCSS */
-
+.custom-modal-width {
+  max-width: 95% !important;
+  width: 95% !important;}
+  
 .ng-select.ng-select-custom {
   min-height: 45px;
   border: 1px solid #ced4da;

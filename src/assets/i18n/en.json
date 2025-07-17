@@ -20,7 +20,7 @@
     "TITLE": {
       "SUCCESS": "Success",
       "ERROR": "Error"
-    },
+  },
     "VALIDATION_ERROR": "Please fill in the required fields correctly.",
     "FETCH_ROLES": "Error while fetching users",
     "USER_CREATED": "User added successfully.",
@@ -112,5 +112,78 @@
   "PASSWORDS_MATCH": "Passwords match!",
   "PASSWORD_GUIDELINES": "Password must be at least 6 characters and include uppercase, lowercase, numbers, and special characters.",
   "ENTITIES_ASSIGNED": "Entities assigned successfully.",
-  "ENTITIES_ASSIGN_FAILED": "Failed to assign entities."
+  "ENTITIES_ASSIGN_FAILED": "Failed to assign entities.",
+
+
+  "Common": {
+    "Action": "Action",
+    "Clear": "Clear",
+    "Search": "Apply",
+    "Data": " Search Result",
+    "Close": "Close",
+    "NoData": "No data available to display",
+    "SearchTitle": "Filter",
+    "Select": "Select"
+  },
+
+
+  "ArMiscReceiptHeaderResourceName": {
+    "EntityId": "Entity Name",
+    "DocumentNumber": "Document No",
+    "ChequeNo": "Cheque No",
+    "BeneficiaryName": "Beneficiary Name",
+    "Status": "Status",
+    "ProjectName": "Project Name",
+    "Sponsor": "Sponsor",
+    "Amount": "Amount",
+    "MISC_RECEIPT_DATE": "Document Date",
+    "TRANSACTION_TYPE_DESC": "Document Type",
+    "COLLECTION_TYPE_DESC": "Collection Type",
+    "BENEFICIARY_NAME": "Collected From",
+    "HEADER_AMOUNT": "Document Amount",
+    "BANK_ACCOUNT_NAME": "Account",
+    "HEADER_NOTES": "Notes",
+    "AMOUNT": "Value",
+    "RECEIPT_TYPE_DESC": "Payment Method",
+    "Accountnumber": "Account No",
+    "AccountNameAr": "Account Name",
+    "PROJECT_NUMBER": "Project No",
+    "CASENAME": "Case Name",
+    "BENEFICENTNAME": "Sponsor",
+    "MISC_RECEIPT_AMOUNT": "Value",
+    "ADMINISTRATIVE_PERCENT": "Admin Percent",
+    "TotaPercent": "Admin Amount",
+    "TotalAmount": "Total",
+    "CHECK_NUMBER": "Cheque No",
+    "BANK_NAME": "Bank Name",
+    "MATURITY_DATE": "Maturity Date",
+    "NOTES": "Notes",
+    "Title": "Receipts",
+    "LiscReceiptDetailsTitle": "Cheque Details",
+    "LiscReceiptLinesTitle": "Document Details",
+    "ACTION": "Action",
+    "Clear": "Clear",
+    "Search": "Apply",
+    "Data": " Search Result",
+    "Close": "Close",
+    "NoData": "No data available to display",
+    "SearchTitle": "Filter"
+  },
+
+  "ApPaymentsTransactionHDRResourceName": {
+    "EntityId": "Entity Name",
+    "PaymentNumber": "Document No",
+    "PaymentDate": "Document Date",
+    "VendorNumber": "Vendor No",
+    "VendorName": "Vendor Name",
+    "PaymentTypeDesc": "Document Type",
+    "Amount": "Value",
+    "PaymentAmount": "Total Value",
+    "BankAccount": "Bank Name",
+    "MaturityDate": "Maturity Date",
+    "ChequeNumber": "Cheque No",
+    "Notes": "Notes",
+    "Title": "Payment Details"
+  }
+
 }
