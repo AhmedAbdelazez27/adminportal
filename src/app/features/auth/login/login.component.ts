@@ -37,6 +37,11 @@ submit(): void {
       console.log(res?.token );
       
       this.auth.saveToken(res?.token);
+      const decodedData = this.auth.decodeToken();
+        if (decodedData) {
+          console.log(decodedData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']); 
+          console.log(decodedData); 
+        }
       this.toastr.success(this.translate.instant('LOGIN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
       this.spinnerService.hide();
       this.router.navigate(['/home']);

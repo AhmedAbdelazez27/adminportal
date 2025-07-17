@@ -740,17 +740,92 @@ p, span, a, td, li {
     overflow-y: auto;
 }
 
+.header {
+    display: flex;
+    padding: 16px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    border-radius: 15px;
+    background: var(--Color-15, #FFF);
+}
+
+.btn-notification {
+    display: flex;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    background: var(--Color-21, #F7F7F7);
+    border:none;
+}
+
+.btn-profile-img {
+    background-image: url('./assets/images/pi.png');
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background-size:cover;
+    background-repeat:no-repeat;
+}
+
+.btn-lang {
+    height: 44px;
+    width: max-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    font-size: 16px;
+    color: var(--Color-17, #252525);
+    font-family: 'Cairo-bold';
+    background-color:transparent;
+}
+
+.header .logo  {
+  
+    gap: 32px;
+    display: flex;
+    align-items: center;
+}
+
+.header .logo img {
+    width: 100px;
+
+}
+
+@media(max-width:991px){
+    .header .logo {
+        gap: 16px;
+        display: flex;
+        align-items: center;
+    }
+    .header .logo img {
+        width: 70px;
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 /*=========================================================== Print ============================================================================*/
-
 @media print {
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
         text-shadow: none !important;
         box-shadow: none !important;
     }
@@ -871,6 +946,7 @@ p, span, a, td, li {
     }
 
 }
+
 
 
 

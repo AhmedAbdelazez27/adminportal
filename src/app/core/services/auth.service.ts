@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginDto } from '../dtos/login.dto';
 import { environment } from '../../../environments/environment';
+import { jwtDecode } from "jwt-decode";
+
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -25,4 +27,21 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('access_token');
   }
+    isLoggedIn(): boolean {
+    const token = localStorage.getItem('access_token');
+    return token ? true : false;
+  }
+  decodeToken(): any {
+    const token = localStorage.getItem('access_token');
+    if (!token) return null;
+
+    try {
+      const decodedToken = jwtDecode(token);
+      return decodedToken;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
 }

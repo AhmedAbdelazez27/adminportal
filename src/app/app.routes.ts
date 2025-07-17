@@ -28,6 +28,7 @@ export const routes: Routes = [
       {
         path: 'authentication',
         children: [
+          { path: '', redirectTo: 'roles', pathMatch: 'full' },
           {
             path: 'roles',
             loadChildren: () =>
