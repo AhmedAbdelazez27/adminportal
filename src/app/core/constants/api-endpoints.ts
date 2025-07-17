@@ -21,8 +21,11 @@ export class ApiEndpoints {
     GetRoleUsers: (roleId: string) => `/GetRoleUsers/${roleId}`,
     GetRolesSelect2List: '/GetRolesSelect2List',
     Assign: '/AssignRole',
+    unAssign: '/UnAssignRole',
     GetScreensList: '/GetScreensList',
     AssignScreenPermission: '/AssignScreenPermission',
+    GetUserOfRole: (id: string) => `/GetRoleUsers/${id}`,
+
 
   };
 

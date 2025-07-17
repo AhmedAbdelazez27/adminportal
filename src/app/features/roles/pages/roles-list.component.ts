@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { EntityService } from '../../../core/services/entit.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'app-roles-list',
@@ -33,11 +34,14 @@ export class RolesListComponent {
   userDropdowns: any[] = [{ selectedUserIds: [] }];
   selectedUserIds: string[] = [];
   userEntityForm: FormGroup;
+  usersForm: FormGroup;
   entities: any[] = [];
   modules: any[] = [];
   searchKeyword: string = '';
   selectedModuleFilter: string = 'all';
   originalModules: any[] = [];
+  selectedUsers: any[] = [];
+  originalUsers: any[] = [];
 
   constructor(
     private roleService: RoleService,
@@ -50,6 +54,9 @@ export class RolesListComponent {
   ) {
     this.userEntityForm = this.fb.group({
       entityIds: [[], Validators.required]
+    });
+    this.usersForm = this.fb.group({
+      userIds: [[], Validators.required]
     });
   }
 
@@ -140,13 +147,14 @@ export class RolesListComponent {
       (response) => {
         this.toastr.success(this.translate.instant('ROLE.UPDATED.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
         this.spinnerService.hide();  // Hide spinner after updating role
-        console.log('Role updated successfully', response);
+        const closeBtn = document.querySelector('.closeUpdate.btn-close') as HTMLElement;
+        closeBtn?.click();
         this.getRoles(1);
+
       },
       (error) => {
         this.toastr.error(this.translate.instant('ROLE.UPDATED.FAIL'), this.translate.instant('TOAST.TITLE.ERROR'));
-        this.spinnerService.hide();  // Hide spinner on failure
-        console.error('Error updating role:', error);
+        this.spinnerService.hide();
       }
     );
   }
@@ -173,7 +181,8 @@ export class RolesListComponent {
     }
   }
 
-  // Get users list for the dropdown
+  // assign users to some role start
+
   getUsersList() {
     this._UserService.getUsersForSelect2({
       searchValue: '', skip: 0, take: 10000,
@@ -192,55 +201,86 @@ export class RolesListComponent {
     });
   }
 
-  // Handle selection changes
-  onOptionChange(option: any, index: number): void {
-    if (option.selected) {
-      this.userDropdowns[index].selectedUserIds.push(option.id);
-    } else {
-      const idx = this.userDropdowns[index].selectedUserIds.indexOf(option.id);
-      if (idx !== -1) {
-        this.userDropdowns[index].selectedUserIds.splice(idx, 1);
-      }
-    }
-  }
+  getUsersRoleById(role: any) {
+    this.selectedRoleId = role?.id;
+    this.roleService.getUsersRoleById(role.id).subscribe({
+      next: (res) => {
+        const selected = res?.map((d: any) => d?.id) || [];
+        console.log(selected);
+        this.originalUsers = selected;
+        this.usersForm.patchValue({ userIds: selected });
+      },
+      error: (err) => {
 
-  // Get selected user labels
-  getSelectedOptionsLabel(selectedUserIds: string[]): string {
-    const selectedUserNames = this.userList
-      .filter(user => selectedUserIds.includes(user.id))
-      .map(user => user.text);
-    return selectedUserNames.length > 0 ? selectedUserNames.join(', ') : 'Select Users';
+      },
+      complete: () => {
+
+      }
+    })
   }
 
   assignRole(): void {
-    const payload: AssignRoleDto = {
-      userIds: this.userDropdowns.map(dropdown => dropdown.selectedUserIds).flat(),
-      roleId: this.roleToSelected.id
+
+    if (this.usersForm.invalid || !this.selectedRoleId) {
+      this.toastr.error('Please select at least one User');
+      return;
+    }
+    console.log(this.usersForm.value);
+    
+     const currentUsers = this.usersForm.value.userIds;
+     // Determine which users to add and which ones to remove
+    const toAdd = currentUsers.filter((userId:any) => !this.originalUsers.includes(userId));
+    const toRemove = this.originalUsers.filter(userId => !currentUsers.includes(userId));
+
+       const addPayload = {
+      roleId: this.selectedRoleId,
+      userIds: toAdd
     };
+
+    const removePayload = {
+      roleId: this.selectedRoleId,
+      userIds: toRemove
+    };
+
     this.spinnerService.show();  // Show spinner before assigning role
-    this.roleService.assignRole(payload).subscribe(
-      {
-        next: (response) => {
-          this.toastr.success(this.translate.instant('ASSIGN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
-          this.spinnerService.hide();  // Hide spinner after assigning role
-          console.log('Role assigned successfully', response);
-        },
-        error: (error) => {
-          this.toastr.error(this.translate.instant('ASSIGN.FAIL'), this.translate.instant('TOAST.TITLE.ERROR'));
-          this.spinnerService.hide();  // Hide spinner on failure
-          console.error('Error assigning role:', error);
-        },
-        complete: () => {
-          this.clearSelectedUsers();
-        }
+    // this.roleService.assignRole(payload).subscribe(
+    //   {
+    //     next: (response) => {
+    //       this.toastr.success(this.translate.instant('ASSIGN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
+    //       this.spinnerService.hide();  // Hide spinner after assigning role
+    //       console.log('Role assigned successfully', response);
+    //     },
+    //     error: (error) => {
+    //       this.toastr.error(this.translate.instant('ASSIGN.FAIL'), this.translate.instant('TOAST.TITLE.ERROR'));
+    //       this.spinnerService.hide();  // Hide spinner on failure
+    //       console.error('Error assigning role:', error);
+    //     },
+    //     complete: () => {
+
+    //     }
+    //   },
+    // );
+  forkJoin([
+      toAdd.length ? this.roleService.assignRole(addPayload) : of(null),
+      toRemove.length ? this.roleService.unAssignRole(removePayload) : of(null)
+    ]).subscribe({
+      next: () => {
+        this.toastr.success('Role updated successfully');
+        this.spinnerService.hide();
+        const closeBtn = document.querySelector('.btn-close-user-permissions') as HTMLElement;
+        closeBtn?.click();
+        this.getRoles(1)
       },
-    );
-  }
-  clearSelectedUsers(): void {
-    this.userDropdowns.forEach(dropdown => {
-      dropdown.selectedUserIds = [];  // Clear selected userIds in each dropdown
+      error: () => {
+        this.toastr.error('Failed to update the role');
+        this.spinnerService.hide();
+      },
+      complete: () => {
+        this.usersForm.reset();
+      }
     });
   }
+  
 
 
   // assign entity to user
@@ -291,9 +331,6 @@ export class RolesListComponent {
   }
 
   assignIntities(): void {
-    console.log(this.roleToSelected);
-    console.log(this.userEntityForm);
-
 
     if (this.userEntityForm.invalid || !this.selectedRoleId) {
       this.toastr.error('Please select at least one entity');
@@ -313,8 +350,6 @@ export class RolesListComponent {
         this.toastr.success(this.translate.instant('ENTITIES_ASSIGNED'));
         this.spinnerService.hide();
         const closeBtn = document.querySelector('.closeEntity.btn-close') as HTMLElement;
-        console.log(closeBtn);
-
         closeBtn?.click();
         this.getRoles(this.currentPage); // refresh table
       },
@@ -348,15 +383,15 @@ export class RolesListComponent {
 
     this.modules = this.originalModules
       .filter(module => {
-        // فلترة حسب الموديول
+
         const matchesModule = selectedModule === 'all' || module.module.toString() === selectedModule;
 
-        // فلترة الشاشات حسب الكلمة
+
         const filteredScreens = module.screens.filter((screen: any) =>
           screen.name.toLowerCase().includes(keyword)
         );
 
-        // احتفظ فقط بالموديولات اللي فيها نتائج
+
         return matchesModule && filteredScreens.length > 0;
       }).map(module => {
         const filteredScreens = module.screens.filter((screen: any) =>
