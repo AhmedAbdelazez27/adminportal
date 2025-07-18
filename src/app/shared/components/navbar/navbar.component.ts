@@ -16,7 +16,6 @@ export class NavbarComponent {
 open = false;
 private timeoutId: any;
  constructor(public translation: TranslationService, private authService: AuthService,private toastr:ToastrService){
-  console.log(this.hasPermission("Role.View"));
   
  }
 

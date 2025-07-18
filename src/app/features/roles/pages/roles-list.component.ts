@@ -89,8 +89,6 @@ export class RolesListComponent {
 
 
   changePage(event: any): void {
-    console.log(event);
-    console.log(typeof event);
 
 
     if (event < 1) event = 1;
@@ -124,7 +122,6 @@ export class RolesListComponent {
       (response) => {
         this.toastr.success(this.translate.instant('ROLE.CREATED.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
         this.spinnerService.hide();  // Hide spinner after saving role
-        console.log('Role saved successfully', response);
         this.getRoles(1);
         this.newRole = { name: '' };
       },
@@ -190,13 +187,10 @@ export class RolesListComponent {
     }).subscribe({
       next: (res) => {
         this.userList = res?.results;
-        console.log(this.userList);
       },
       error: (err) => {
-        console.log(err);
       },
       complete: () => {
-        console.log("complete");
       }
     });
   }
@@ -206,7 +200,6 @@ export class RolesListComponent {
     this.roleService.getUsersRoleById(role.id).subscribe({
       next: (res) => {
         const selected = res?.map((d: any) => d?.id) || [];
-        console.log(selected);
         this.originalUsers = selected;
         this.usersForm.patchValue({ userIds: selected });
       },
@@ -225,7 +218,6 @@ export class RolesListComponent {
       this.toastr.error('Please select at least one User');
       return;
     }
-    console.log(this.usersForm.value);
     
      const currentUsers = this.usersForm.value.userIds;
      // Determine which users to add and which ones to remove
@@ -248,7 +240,6 @@ export class RolesListComponent {
     //     next: (response) => {
     //       this.toastr.success(this.translate.instant('ASSIGN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
     //       this.spinnerService.hide();  // Hide spinner after assigning role
-    //       console.log('Role assigned successfully', response);
     //     },
     //     error: (error) => {
     //       this.toastr.error(this.translate.instant('ASSIGN.FAIL'), this.translate.instant('TOAST.TITLE.ERROR'));
@@ -287,20 +278,16 @@ export class RolesListComponent {
   getEntitys() {
     this.entityService.getEntities(0, 600).subscribe({
       next: (res) => {
-        console.log(res);
         this.entities = res?.data
-        console.log(res, this.entities);
 
       },
       error: (err) => {
-        console.log(err);
 
       }
     })
   };
 
   openAssignIntitiesModal(role: any): void {
-    console.log(role);
     this.selectedRoleId = role.id;
 
     if (!this.entities?.length) this.getEntitys();
@@ -313,14 +300,11 @@ export class RolesListComponent {
   }
 
   getUserIntities(roleId: string): void {
-    console.log("entity calling the service");
 
     this._UserService.getUserIntities({ userId: null, roleId }).subscribe({
       next: (res: any) => {
-        console.log("role entit = ", res);
 
         const selected = res?.map((d: any) => d?.entityId) || [];
-        console.log("roleentity ids = ", selected);
 
         this.userEntityForm.patchValue({ entityIds: selected });
       },
@@ -336,7 +320,6 @@ export class RolesListComponent {
       this.toastr.error('Please select at least one entity');
       return;
     }
-    console.log(this.userEntityForm.value);
 
     const payload = {
       roleId: this.selectedRoleId,
@@ -364,15 +347,12 @@ export class RolesListComponent {
     this.selectedRoleId = roleId
     this.roleService.getScreensList({ roleId }).subscribe({
       next: (res) => {
-        console.log(res);
         this.originalModules = res?.data || [];
         this.modules = [...this.originalModules];
       },
       error: (err) => {
-        console.log(err);
       },
       complete: () => {
-        console.log("complete");
       }
     })
   }
@@ -406,7 +386,6 @@ export class RolesListComponent {
 
 
   onScreenToggle(screen: any) {
-    console.log(`${screen.name} selected = ${screen.selected}`);
   }
 
   saveScreensPermissions(): void {

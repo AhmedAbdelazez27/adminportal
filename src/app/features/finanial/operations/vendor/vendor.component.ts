@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { vendorService } from '../../core/services/vendor.service';
+import { vendorService } from '../../../../core/services/vendor.service';
 import { vendorList,VendorIDList,VendorStatusList,vendorFilter,Entity,selectedvendor } from './Models/vendor.models';
 @Component({
   selector: 'app-vendor',

@@ -1,15 +1,19 @@
 import { Data } from "@angular/router";
 
 export class FilterApPaymentsTransactionHDRDto {
-  EntityId: string = '';
-  PaymentNumber: string = '';
+  EntityId: string | null = null;
+  PaymentNumber: string | null = null;
   PaymentDate: Date | null = null;
-  VendorNumber: string = '';
-  VendorName: string = '';
-  PaymentTypeDesc: string = '';
+  VendorNumber: string | null = null;
+  VendorName: string | null = null;
+  PaymentTypeDesc: string | null = null;
   OrderByValue: string = 'PAYMENT_ID asc';
   Take: number = 10;
   Skip: number = 0;
+
+  EntityIdstr: string | null = null;
+  VendorNamestr: string | null = null;
+  PaymentTypeDescstr: string | null = null;
 }
 
 
@@ -25,7 +29,7 @@ export class ApPaymentsTransactionHDRDto {
   paymenT_TYPE_DESC: string | null = null;
   vendoR_NUMBER: string | null = null;
   vendoR_NAME: string | null = null;
-  paymenT_AMOUNT: string | null = null;
+  paymenT_AMOUNT: number | null = null;
   paymenT_AMOUNTstr: string | null = null;
   vendoR_ID: string | null = null;
   notes: string | null = null;

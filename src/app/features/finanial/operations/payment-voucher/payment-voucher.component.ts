@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
-import { PaymentVoucherServiceService } from '../../core/services/payment-voucher-service.service';
+import { PaymentVoucherServiceService } from '../../../../core/services/payment-voucher-service.service';
 
 @Component({
   selector: 'app-payment-voucher',

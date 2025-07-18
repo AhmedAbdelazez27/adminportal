@@ -123,7 +123,8 @@
     "Close": "Close",
     "NoData": "No data available to display",
     "SearchTitle": "Filter",
-    "Select": "Select"
+    "Select": "-- Select --",
+    "PrintExcel": "Print Excel"
   },
 
 

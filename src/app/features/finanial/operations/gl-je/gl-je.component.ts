@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { gljeService } from '../../core/services/gl-je.service';
+import { gljeService } from '../../../../core/services/gl-je.service';
 import { GljeFilter, GljeList, Entity,Je_SoureList,Je_StateList,Je_CurrList,GlJe_trList,gljeHeaderData} from './Models/gl-je.models';
 import { forkJoin } from 'rxjs';
 

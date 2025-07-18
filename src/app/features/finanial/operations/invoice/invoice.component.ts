@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { InvoiceService } from '../../core/services/invoice.service';
+import { InvoiceService } from '../../../../core/services/invoice.service';
 import { Invoice, InvoiceTransaction, InvoiceHeader, Vendor, Entity, InvoiceType, InvoiceFilter } from './models/invoice.models';
 import { ToastrService } from 'ngx-toastr';
 
@@ -77,7 +77,9 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: Invoice[]) => {
+
           this.ApInvoiceList = (response || []).map((item: Invoice) => {
+
             if (item.hD_DATE) {
               const date = new Date(item.hD_DATE);
               const day = ('0' + date.getDate()).slice(-2);
@@ -87,6 +89,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
             }
             return item;
           });
+          console.log(this.ApInvoiceList , "response ",response);
+          
           this.loading = false;
         },
         error: (err) => {

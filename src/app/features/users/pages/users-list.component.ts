@@ -158,8 +158,6 @@ export class UsersListComponent implements OnInit {
 
 
   changePage(event: any): void {
-    console.log(event);
-    console.log(typeof event);
 
 
     if (event < 1) event = 1;
@@ -192,7 +190,6 @@ export class UsersListComponent implements OnInit {
 
   //   if (this.userForm.invalid) {
   //     this.userForm.markAllAsTouched();
-  //     console.log(this.userForm.value);
   //     this.toastr.error(this.translate.instant('TOAST.VALIDATION_ERROR'));
   //     return;
   //   }
@@ -201,7 +198,6 @@ export class UsersListComponent implements OnInit {
 
   //   this.userService.createUser(formData).subscribe({
   //     next: (res) => {
-  //       console.log('User created successfully', res);
   //       this.toastr.success(this.translate.instant('TOAST.USER_CREATED'));
   //       this.userForm.reset();
   //       this.submitted = false;
@@ -339,11 +335,9 @@ export class UsersListComponent implements OnInit {
   getDepartments() {
     this.departmentService.getDepartments(0, 600).subscribe({
       next: (res) => {
-        console.log(res);
         this.departments = res?.results
       },
       error: (err) => {
-        console.log(err);
 
       }
     })
@@ -364,7 +358,6 @@ export class UsersListComponent implements OnInit {
       this.toastr.error('Please select at least one department');
       return;
     }
-    console.log(this.userDepartmentForm.value);
 
     const payload = {
       userId: this.selectedUserIdForDepartments,
@@ -378,7 +371,6 @@ export class UsersListComponent implements OnInit {
         this.toastr.success(this.translate.instant('TOAST.DEPARTMENTS_ASSIGNED'));
         this.spinnerService.hide();
         const closeBtn = document.querySelector('.closeDepartment.btn-close') as HTMLElement;
-        console.log(closeBtn);
 
         closeBtn?.click();
         this.getUsers(this.currentPage); // refresh table
@@ -406,20 +398,16 @@ export class UsersListComponent implements OnInit {
   getEntitys() {
     this.entityService.getEntities(0, 600).subscribe({
       next: (res) => {
-        console.log(res);
         this.entities = res?.data
-        console.log(res, this.entities);
 
       },
       error: (err) => {
-        console.log(err);
 
       }
     })
   };
 
   openAssignIntitiesModal(user: any): void {
-    console.log(user);
 
     this.selectedUserIdForDepartments = user.id;
 
@@ -433,14 +421,11 @@ export class UsersListComponent implements OnInit {
   }
 
   getUserIntities(userId: string): void {
-    console.log("entity calling the service");
 
     this.userService.getUserIntities({ userId }).subscribe({
       next: (res: any) => {
-        console.log("user entit = ", res);
 
         const selected = res?.map((d: any) => d?.entityId) || [];
-        console.log("userentity ids = ", selected);
 
         this.userEntityForm.patchValue({ entityIds: selected });
       },
@@ -455,7 +440,6 @@ export class UsersListComponent implements OnInit {
       this.toastr.error('Please select at least one entity');
       return;
     }
-    console.log(this.userEntityForm.value);
 
     const payload = {
       userId: this.selectedUserIdForDepartments,
@@ -469,7 +453,6 @@ export class UsersListComponent implements OnInit {
         this.toastr.success(this.translate.instant('ENTITIES_ASSIGNED'));
         this.spinnerService.hide();
         const closeBtn = document.querySelector('.closeEntity.btn-close') as HTMLElement;
-        console.log(closeBtn);
 
         closeBtn?.click();
         this.getUsers(this.currentPage); // refresh table
@@ -494,7 +477,6 @@ export class UsersListComponent implements OnInit {
           this.selectedUserIdForDepartments = null;
           this.spinnerService.hide();  // Hide spinner after deletion
           const closeBtn = document.querySelector('.btn-delete.btn-close') as HTMLElement;
-          console.log(closeBtn);
 
           closeBtn?.click();
         },
@@ -512,12 +494,10 @@ export class UsersListComponent implements OnInit {
 
   getUserPermissions(userId: string): void {
     this.selectedUserIdForDepartments = userId;
-    console.log(this.selectedUserIdForDepartments);
 
     this.userService.getUserPermission(userId).subscribe({
       next: (res: any) => {
         this.userPermissions = res || [];
-        console.log(this.userPermissions);
 
         this.originalPermissions = res
           .flatMap((module: any) => module.screenPermissions)
@@ -551,7 +531,6 @@ export class UsersListComponent implements OnInit {
       }
     }
 
-    console.log(`Toggle: ${screenName}.${permission} = ${isChecked}`);
   }
 
 
@@ -560,7 +539,6 @@ export class UsersListComponent implements OnInit {
   }
 
   saveUserPermissions(): void {
-    console.log("Start 1");
 
     const currentPermissions: string[] = this.userPermissions
       .flatMap((module: any) => module.screenPermissions)
@@ -570,23 +548,17 @@ export class UsersListComponent implements OnInit {
           .filter((action: string) => this.hasPermission(screen.permissionValues, action))
           .map((action: string) => `${screen.screenName}.${action}`)
       );
-    console.log("currentPermissions = ", currentPermissions);
-    console.log("originalPermissions = ", this.originalPermissions);
 
     const uniqueOriginal = Array.from(new Set(this.originalPermissions));
     const uniqueCurrent = Array.from(new Set(currentPermissions));
 
     const toCreate = uniqueCurrent.filter(p => !uniqueOriginal.includes(p));
-    console.log("toCreate", toCreate);
 
     const toDelete = uniqueOriginal.filter(p => !uniqueCurrent.includes(p));
-    console.log("toDelete", toDelete);
 
     // const toCreate = currentPermissions.filter(p => !this.originalPermissions.includes(p));
-    console.log("toCreate", toCreate);
 
     // const toDelete = this.originalPermissions.filter(p => !currentPermissions.includes(p));
-    console.log("toDelete", toDelete);
 
     const createPayload = {
       userId: this.selectedUserIdForDepartments,
@@ -595,7 +567,6 @@ export class UsersListComponent implements OnInit {
         value: p
       }))
     };
-    console.log("createPayload", createPayload);
 
     const deletePayload = {
       userId: this.selectedUserIdForDepartments,
@@ -604,7 +575,6 @@ export class UsersListComponent implements OnInit {
         value: p
       }))
     };
-    console.log("deletePayload", deletePayload);
 
 
     this.spinnerService.show();

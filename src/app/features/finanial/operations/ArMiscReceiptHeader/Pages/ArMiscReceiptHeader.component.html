@@ -37,16 +37,17 @@
           <form #filterForm="ngForm">
             <div class="row mb-3">
               <div class="col-xl-4 mb-3">
-                <label for="EntityId" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.EntityId' | translate }}</label>
-
-                <select class="form-select" id="EntityId" name="EntityId"
-                        [(ngModel)]="FilterArMiscReceiptHeaderObj.EntityId"
-                        autocomplete="off"
-                        aria-label="Default select example">
-                  <option value="" disabled selected>{{ 'Common.Select' | translate }}</option>
-
+                <label for="entityId" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.EntityId' | translate }}</label>
+                <select class="form-select"
+                        id="entityId" name="entityId"
+                        [(ngModel)]="selectedEntityObj"
+                        (ngModelChange)="onEntityChange($event)"
+                        autocomplete="off">
+                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
                   <ng-container *ngIf="EntityList.length > 0; else noData">
-                    <option *ngFor="let entity of EntityList" [value]="entity.id">{{ entity.text }}</option>
+                    <option *ngFor="let entity of EntityList" [ngValue]="entity">
+                      {{ entity.text }}
+                    </option>
                   </ng-container>
                   <ng-template #noData>
                     <option disabled>No Data</option>
@@ -55,30 +56,32 @@
               </div>
 
               <div class="col-xl-4 mb-3">
-                <label for="receitpNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate}}</label>
-                <input type="text" name="ReceitpNumber" class="form-control" [(ngModel)]="FilterArMiscReceiptHeaderObj.ReceitpNumber" placeholder="Search">
+                <label for="receiptNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate}}</label>
+                <input type="text" name="receiptNumber" class="form-control" [(ngModel)]="filterArMiscReceiptHeaderObj.receiptNumber" placeholder="Search">
               </div>
 
               <div class="col-xl-4 mb-3">
                 <label for="checkNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.ChequeNo' | translate }}</label>
-                <input type="text" name="CheckNumber" class="form-control" [(ngModel)]="FilterArMiscReceiptHeaderObj.CheckNumber" placeholder="Search">
+                <input type="text" name="checkNumber" class="form-control" [(ngModel)]="filterArMiscReceiptHeaderObj.checkNumber" placeholder="Search">
               </div>
 
               <div class="col-xl-4 mb-3">
                 <label for="benificaryName" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.BeneficiaryName' | translate }}</label>
-                <input type="text" name="BenificaryName" class="form-control" [(ngModel)]="FilterArMiscReceiptHeaderObj.BenificaryName" placeholder="Search">
+                <input type="text" name="benificaryName" class="form-control" [(ngModel)]="filterArMiscReceiptHeaderObj.benificaryName" placeholder="Search">
               </div>
 
               <div class="col-xl-4 mb-3">
                 <label for="status" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Status' | translate }}</label>
                 <select class="form-select"
-                        id="status" name="Status"
-                        [(ngModel)]="FilterArMiscReceiptHeaderObj.Status"
-                        autocomplete="off"
-                        aria-label="Default select example">
-                  <option value="" disabled selected>{{ 'Common.Select' | translate }}</option>
+                        id="status" name="status"
+                        [(ngModel)]="selectedStatusObj"
+                        (ngModelChange)="onStatusChange($event)"
+                        autocomplete="off">
+                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
                   <ng-container *ngIf="StatusList.length > 0; else noData">
-                    <option *ngFor="let status of StatusList" [value]="status.id">{{ status.text }}</option>
+                    <option *ngFor="let status of StatusList" [ngValue]="status">
+                      {{ status.text }}
+                    </option>
                   </ng-container>
                   <ng-template #noData>
                     <option disabled>No Data</option>
@@ -89,13 +92,15 @@
               <div class="col-xl-4 mb-3">
                 <label for="projectName" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.ProjectName' | translate }}</label>
                 <select class="form-select"
-                        id="projectName" name="ProjectName"
-                        [(ngModel)]="FilterArMiscReceiptHeaderObj.ProjectName"
-                        autocomplete="off"
-                        aria-label="Default select example">
-                  <option value="" disabled selected>{{ 'Common.Select' | translate }}</option>
-                  <ng-container *ngIf="ProjectNameList.length > 0; else noData">
-                    <option *ngFor="let projectName of ProjectNameList" [value]="projectName.id">{{ projectName.text }}</option>
+                        id="projectName" name="projectName"
+                        [(ngModel)]="selectedProjectNameObj"
+                        (ngModelChange)="onProjectNameChange($event)"
+                        autocomplete="off">
+                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
+                  <ng-container *ngIf="EntityList.length > 0; else noData">
+                    <option *ngFor="let projectName of EntityList" [ngValue]="projectName">
+                      {{ projectName.text }}
+                    </option>
                   </ng-container>
                   <ng-template #noData>
                     <option disabled>No Data</option>
@@ -104,15 +109,17 @@
               </div>
 
               <div class="col-xl-4 mb-3">
-                <label for="benName" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Sponsor' | translate }}</label>
+                <label for="benName" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.Sponsor' | translate }}</label>
                 <select class="form-select"
-                        id="benName" name="BenName"
-                        [(ngModel)]="FilterArMiscReceiptHeaderObj.BenName"
-                        autocomplete="off"
-                        aria-label="Default select example">
-                  <option value="" disabled selected>{{ 'Common.Select' | translate }}</option>
+                        id="benName" name="benName"
+                        [(ngModel)]="selectedBenNameObj"
+                        (ngModelChange)="onBenNameChange($event)"
+                        autocomplete="off">
+                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
                   <ng-container *ngIf="BenNameList.length > 0; else noData">
-                    <option *ngFor="let benName of BenNameList" [value]="benName.id">{{ benName.text }}</option>
+                    <option *ngFor="let benName of BenNameList" [ngValue]="benName">
+                      {{ benName.text }}
+                    </option>
                   </ng-container>
                   <ng-template #noData>
                     <option disabled>No Data</option>
@@ -121,7 +128,7 @@
               </div>
               <div class="col-xl-4 mb-3">
                 <label for="amount" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Amount' | translate }}</label>
-                <input type="text" name="Amount" class="form-control" [(ngModel)]="FilterArMiscReceiptHeaderObj.Amount" placeholder="Search">
+                <input type="text" name="amount" class="form-control" [(ngModel)]="filterArMiscReceiptHeaderObj.amount" placeholder="Search">
               </div>
             </div>
           </form>
@@ -138,6 +145,12 @@
                 <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
               </svg>
               {{ 'Common.Search' | translate }}
+            </button>
+            <button class="btn btn-success" (click)="printExcel()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
+              </svg>
+              {{ 'Common.PrintExcel' | translate }}
             </button>
           </div>
         </div>
@@ -156,27 +169,41 @@
           <th>{{ 'Common.Action' | translate }}</th>
         </tr>
       </thead>
-      <tbody *ngIf="ArMiscReceiptHeaderListData && ArMiscReceiptHeaderListData.length > 0; else noData">
-        <tr *ngFor="let rowData_ArMiscReceiptHeader of ArMiscReceiptHeaderListData; let i = index">
+      <tbody *ngIf="arMiscReceiptHeaderListData && arMiscReceiptHeaderListData.length > 0; else noData">
+        <tr *ngFor="let rowData_ArMiscReceiptHeader of arMiscReceiptHeaderListData; let i = index">
           <td>{{ i + 1 }}</td>
           <td>{{rowData_ArMiscReceiptHeader.receipT_NUMBER}}</td>
           <td>{{rowData_ArMiscReceiptHeader.misC_RECEIPT_DATEstr}}</td>
           <td>{{rowData_ArMiscReceiptHeader.beneficiarY_NAME}}</td>
-          <td>{{rowData_ArMiscReceiptHeader.posted}}</td>
           <td>{{rowData_ArMiscReceiptHeader.amounTstr}}</td>
+          <td>{{rowData_ArMiscReceiptHeader.posted}}</td>
           <td class="text-end">
-            <a class="dropdown-item d-flex align-items-center gap-2"
-               href="#"
-               (click)="getArMiscReceiptHeaderDetailById(rowData_ArMiscReceiptHeader.misC_RECEIPT_ID ?? '', rowData_ArMiscReceiptHeader.entitY_ID ?? '')"
-               data-bs-toggle="modal"
-               data-bs-target="#edit">
-
-              <!-- View Icon -->
-              <i class="fa fa-eye" style="font-size: 1rem; color: #6c757d;"></i>
-
-              <!-- View Text -->
-              <span>View</span>
-            </a>
+            <div class="dropdown">
+              <button class="btn table-more dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <g clip-path="url(#clip0_206_13784)">
+                    <path d="M22 14C20.8954 14 20 13.1046 20 12C20 10.8954 20.8954 10 22 10C23.1046 10 24 10.8954 24 12C24 13.1046 23.1046 14 22 14Z" fill="#374957"></path>
+                    <path d="M12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14Z" fill="#374957"></path>
+                    <path d="M1.99999 14C0.895413 14 -2.28882e-05 13.1046 -2.28882e-05 12C-2.28882e-05 10.8954 0.895413 10 1.99999 10C3.10456 10 4 10.8954 4 12C4 13.1046 3.10456 14 1.99999 14Z" fill="#374957"></path>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_206_13784">
+                      <rect width="24" height="24" fill="white" transform="matrix(-1 0 0 1 24 0)"></rect>
+                    </clipPath>
+                  </defs>
+                </svg>
+              </button>
+              <ul class="dropdown-menu">
+                <li class="mb-1">
+                  <a class="dropdown-item d-flex gap-2 align-items-center" href="#" (click)="getArMiscReceiptHeaderDetailById(rowData_ArMiscReceiptHeader.misC_RECEIPT_ID ?? '', rowData_ArMiscReceiptHeader.entitY_ID ?? '')" data-bs-toggle="modal" data-bs-target="#details">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M13.4917 1.6665H6.50841C3.47508 1.6665 1.66675 3.47484 1.66675 6.50817V13.4832C1.66675 16.5248 3.47508 18.3332 6.50841 18.3332H13.4834C16.5167 18.3332 18.3251 16.5248 18.3251 13.4915V6.50817C18.3334 3.47484 16.5251 1.6665 13.4917 1.6665ZM14.1667 14.3748H5.83341C5.49175 14.3748 5.20841 14.0915 5.20841 13.7498C5.20841 13.4082 5.49175 13.1248 5.83341 13.1248H14.1667C14.5084 13.1248 14.7917 13.4082 14.7917 13.7498C14.7917 14.0915 14.5084 14.3748 14.1667 14.3748ZM14.1667 10.6248H5.83341C5.49175 10.6248 5.20841 10.3415 5.20841 9.99984C5.20841 9.65817 5.49175 9.37484 5.83341 9.37484H14.1667C14.5084 9.37484 14.7917 9.65817 14.7917 9.99984C14.7917 10.3415 14.5084 10.6248 14.1667 10.6248ZM14.1667 6.87484H5.83341C5.49175 6.87484 5.20841 6.5915 5.20841 6.24984C5.20841 5.90817 5.49175 5.62484 5.83341 5.62484H14.1667C14.5084 5.62484 14.7917 5.90817 14.7917 6.24984C14.7917 6.5915 14.5084 6.87484 14.1667 6.87484Z" fill="#A6A6A6" />
+                    </svg>
+                    View Details
+                  </a>
+                </li>
+              </ul>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -248,8 +275,8 @@
     </div>
 
 
-    <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl custom-modal-width">
+    <div class="modal fade" id="details" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="editLabel">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h1>
@@ -257,47 +284,58 @@
           </div>
 
           <div class="modal-body">
-            <div class="row">
-              <div class="col-xl-4 mb-3">
-                <label for="inputrECEIPT_NUMBER" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate }}</label>
-                <input type="text" class="form-control" id="RECEIPT_NUMBER" [value]="arMiscReceiptHeaderData.receipT_NUMBER" readonly>
+            <div class="border-bottom mb-4">
+              <h4 class="gold bold">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h4>
+
+              <div class="row">
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputreceipT_NUMBER" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate }}</label>
+                  <p id="receipT_NUMBER">{{ arMiscReceiptHeaderData.receipT_NUMBER }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputtransactioN_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.TRANSACTION_TYPE_DESC' | translate }}</label>
+                  <p id="transactioN_TYPE_DESC">{{ arMiscReceiptHeaderData.transactioN_TYPE_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputmisC_RECEIPT_DATEstr" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE' | translate }}</label>
+                  <p id="misC_RECEIPT_DATEstr">{{ arMiscReceiptHeaderData.misC_RECEIPT_DATEstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputreceipT_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.RECEIPT_TYPE_DESC' | translate }}</label>
+                  <p id="receipT_TYPE_DESC">{{ arMiscReceiptHeaderData.receipT_TYPE_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcollectioN_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.COLLECTION_TYPE_DESC' | translate }}</label>
+                  <p id="collectioN_TYPE_DESC">{{ arMiscReceiptHeaderData.collectioN_TYPE_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputbeneficiarY_NAME" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.BENEFICIARY_NAME' | translate }}</label>
+                  <p id="beneficiarY_NAME">{{ arMiscReceiptHeaderData.beneficiarY_NAME }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputamounTstr" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.HEADER_AMOUNT' | translate }}</label>
+                  <p id="amounTstr">{{ arMiscReceiptHeaderData.amounTstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputbanK_ACCOUNT_NAME" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.BANK_ACCOUNT_NAME' | translate }}</label>
+                  <p id="banK_ACCOUNT_NAME">{{ arMiscReceiptHeaderData.banK_ACCOUNT_NAME }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputnotes" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.HEADER_NOTES' | translate }}</label>
+                  <p id="notes">{{ arMiscReceiptHeaderData.notes }}</p>
+                </div>
               </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputTRANSACTION_TYPE_DESC" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.TRANSACTION_TYPE_DESC' | translate }}</label>
-                <input type="text" class="form-control" id="TRANSACTION_TYPE_DESC" [value]="arMiscReceiptHeaderData.transactioN_TYPE_DESC" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputMISC_RECEIPT_DATEstr" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE' | translate }}</label>
-                <input type="text" class="form-control" id="MISC_RECEIPT_DATEstr" [value]="arMiscReceiptHeaderData.misC_RECEIPT_DATEstr" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputRECEIPT_TYPE_DESC" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.RECEIPT_TYPE_DESC' | translate }}</label>
-                <input type="text" class="form-control" id="RECEIPT_TYPE_DESC" [value]="arMiscReceiptHeaderData.receipT_TYPE_DESC" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputCOLLECTION_TYPE_DESC" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.COLLECTION_TYPE_DESC' | translate }}</label>
-                <input type="text" class="form-control" id="COLLECTION_TYPE_DESC" [value]="arMiscReceiptHeaderData.collectioN_TYPE_DESC" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputBENEFICIARY_NAME" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.BENEFICIARY_NAME' | translate }}</label>
-                <input type="text" class="form-control" id="BENEFICIARY_NAME" [value]="arMiscReceiptHeaderData.beneficiarY_NAME" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputAMOUNT" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.HEADER_AMOUNT' | translate }}</label>
-                <input type="text" class="form-control" id="AMOUNT" [value]="arMiscReceiptHeaderData.amounTstr" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputBANK_ACCOUNT_NAME" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.BANK_ACCOUNT_NAME' | translate }}</label>
-                <input type="text" class="form-control" id="BANK_ACCOUNT_NAME" [value]="arMiscReceiptHeaderData.banK_ACCOUNT_NAME" readonly>
-              </div>
-              <div class="col-xl-4 mb-6">
-                <label for="inputNOTES" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.HEADER_NOTES' | translate }}</label>
-                <textarea  class="form-control" id="NOTES" [value]="arMiscReceiptHeaderData.notes" readonly></textarea>
-              </div>
+
             </div>
           </div>
-
-
 
           <div class="row">
             <div class="col-md-12">
@@ -405,13 +443,14 @@
               </div>
             </div>
           </div>
+
           <div class="modal-footer">
             <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
           </div>
         </div>
+        </div>
       </div>
     </div>
-  </div>
 
   <script src="js/bootstrap.bundle.min.js"></script>
 </body>

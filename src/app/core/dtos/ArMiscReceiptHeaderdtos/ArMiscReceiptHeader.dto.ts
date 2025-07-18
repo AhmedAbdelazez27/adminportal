@@ -1,34 +1,30 @@
-import { Data } from "@angular/router";
-
 export class FilterArMiscReceiptHeaderDto {
-  EntityId: string = '';
-  ReceitpNumber: string = '';
-  CheckNumber: string = '';
-  BenificaryName: string = '';
-  Status: string = '';
-  ProjectName: string = '';
-  BenName: string = '';
-  Amount: string = '';
-  OrderByValue: string = 'RECEIPT_NUMBER asc';
-  Take: number = 10;
-  Skip: number = 0;
+  entityId: string | null = null;
+  receiptNumber: string | null = null;
+  checkNumber: string | null = null;
+  benificaryName: string | null = null;
+  status: string | null = null;
+  projectName: string | null = null;
+  benName: string | null = null;
+  amount: string | null = null;
+  orderByValue: string = 'RECEIPT_NUMBER asc';
+  take: number = 10;
+  skip: number = 0;
+
+  entityIdStr: string | null = null;
+  benNameStr: string | null = null;
+  projectNameStr: string | null = null;
+  statusStr: string | null = null;
 }
-
-
-export class FilterArMiscReceiptHeaderByIdDto {
-  MiscReciptId: string | null = null;
-  EntityId: string | null = null;
-}
-
 
 export class ArMiscReceiptHeaderDto {
-  RowsCount: string | null = null;
+  rowsCount: string | null = null;
   composeKey: string | null = null;
   composeKeystr: string | null = null;
   misC_RECEIPT_ID: string | null = null;
   entitY_ID: string | null = null;
   receipT_NUMBER: string | null = null;
-  misC_RECEIPT_DATE: Data | null = null;
+  misC_RECEIPT_DATE: Date | null = null;
   misC_RECEIPT_DATEstr: string | null = null;
   posted: string | null = null;
   postedAr: string | null = null;
@@ -55,7 +51,7 @@ export class ArMiscReceiptDetailsDto {
   entitY_ID: string | null = null;
   misC_RECEIPT_ID: string | null = null;
   checK_NUMBER: string | null = null;
-  maturitY_DATE: Data | null = null;
+  maturitY_DATE: Date | null = null;
   maturitY_DATEstr: string | null = null;
   banK_NAME: string | null = null;
   amount: number | null = null;
@@ -107,4 +103,9 @@ export class ArMiscReceiptLinesDto {
 export interface PagedResult<T> {
   items: T[];
   totalCount: number;
+}
+
+export class FilterArMiscReceiptHeaderByIdDto {
+  miscReceiptId: string | null = null;
+  entityId: string | null = null;
 }

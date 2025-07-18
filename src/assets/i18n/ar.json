@@ -119,7 +119,8 @@
     "Close": "اغلاق",
     "NoData": "لا توجد بيانات متاحة للعرض,",
     "SearchTitle": "بحث فى عمليات الصرف",
-    "Select": "Select"
+    "Select": "-- تحديد --",
+    "PrintExcel": "تنزيل ملف اكسل"
   },
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "اسم الجمعية",

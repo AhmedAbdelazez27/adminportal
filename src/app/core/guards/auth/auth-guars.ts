@@ -14,12 +14,26 @@ export const authGuard: CanActivateFn = (route) => {
   }
 
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
-  const requiredPermission = route.data['permission'];  
+  const permissionsPages = JSON.parse(localStorage.getItem('pages') || '[]');
+  const requiredPermission = route.data['permission'] || null;
+  const requiredpagePermission = route.data['pagePermission'] || null;
 
-  if (permissions.includes(requiredPermission)) {
-    return true;
-  } else {
-    router.navigate(['/no-permission']);
+  if (requiredpagePermission) {
+    if (permissionsPages.includes(requiredpagePermission)) {
+      return true;
+    } else {
+      router.navigate(['/no-permission']);
+      return false;
+    }
+  } else if (requiredPermission) {
+
+    if (permissions.includes(requiredPermission)) {
+      return true;
+    } else {
+      router.navigate(['/no-permission']);
+      return false;
+    }
+  } else{
     return false;
   }
 };

@@ -37,16 +37,17 @@
           <form #filterForm="ngForm">
             <div class="row mb-3">
               <div class="col-xl-4 mb-3">
-                <label for="EntityId" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.EntityId' | translate }}</label>
-
-                <select class="form-select" id="EntityId" name="EntityId"
-                        [(ngModel)]="filterApPaymentsTransactionHDRObj.EntityId"
-                        autocomplete="off"
-                        aria-label="Default select example">
-                  <option value="" disabled selected>{{ 'Common.Select' | translate }}</option>
-
+                <label for="entityId" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.EntityId' | translate }}</label>
+                <select class="form-select"
+                        id="entityId" name="EntityId"
+                        [(ngModel)]="selectedEntityObj"
+                        (ngModelChange)="onEntityChange($event)"
+                        autocomplete="off">
+                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
                   <ng-container *ngIf="EntityList.length > 0; else noData">
-                    <option *ngFor="let entity of EntityList" [value]="entity.id">{{ entity.text }}</option>
+                    <option *ngFor="let entity of EntityList" [ngValue]="entity">
+                      {{ entity.text }}
+                    </option>
                   </ng-container>
                   <ng-template #noData>
                     <option disabled>No Data</option>
@@ -73,12 +74,14 @@
                 <label for="vendorName" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.VendorName' | translate }}</label>
                 <select class="form-select"
                         id="vendorName" name="VendorName"
-                        [(ngModel)]="filterApPaymentsTransactionHDRObj.VendorName"
-                        autocomplete="off"
-                        aria-label="Default select example">
-                  <option value="" disabled selected>{{ 'Common.Select' | translate }}</option>
+                        [(ngModel)]="selectedVendorObj"
+                        (ngModelChange)="onVendorNameChange($event)"
+                        autocomplete="off">
+                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
                   <ng-container *ngIf="VendorNameList.length > 0; else noData">
-                    <option *ngFor="let vendorName of VendorNameList" [value]="vendorName.id">{{ vendorName.text }}</option>
+                    <option *ngFor="let vendorName of VendorNameList" [ngValue]="vendorName">
+                      {{ vendorName.text }}
+                    </option>
                   </ng-container>
                   <ng-template #noData>
                     <option disabled>No Data</option>
@@ -90,12 +93,14 @@
                 <label for="paymentTypeDesc" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.PaymentTypeDesc' | translate }}</label>
                 <select class="form-select"
                         id="paymentTypeDesc" name="PaymentTypeDesc"
-                        [(ngModel)]="filterApPaymentsTransactionHDRObj.PaymentTypeDesc"
-                        autocomplete="off"
-                        aria-label="Default select example">
-                  <option value="" disabled selected>{{ 'Common.Select' | translate }}</option>
+                        [(ngModel)]="selectedPaymentTypeObj"
+                        (ngModelChange)="onPaymentTypeChange($event)"
+                        autocomplete="off">
+                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
                   <ng-container *ngIf="PaymentTypeDescList.length > 0; else noData">
-                    <option *ngFor="let paymentTypeDesc of PaymentTypeDescList" [value]="paymentTypeDesc.id">{{ paymentTypeDesc.text }}</option>
+                    <option *ngFor="let paymentTypeDesc of PaymentTypeDescList" [ngValue]="paymentTypeDesc">
+                      {{ paymentTypeDesc.text }}
+                    </option>
                   </ng-container>
                   <ng-template #noData>
                     <option disabled>No Data</option>
@@ -117,6 +122,12 @@
                 <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
               </svg>
               {{ 'Common.Search' | translate }}
+            </button>
+            <button class="btn btn-success" (click)="printExcel()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
+              </svg>
+              {{ 'Common.PrintExcel' | translate }}
             </button>
           </div>
         </div>
@@ -145,19 +156,37 @@
           <td>{{rowData_ApPaymentsTransactionHDR.vendoR_NUMBER}}</td>
           <td>{{rowData_ApPaymentsTransactionHDR.vendoR_NAME}}</td>
           <td>{{rowData_ApPaymentsTransactionHDR.paymenT_AMOUNTstr}}</td>
+
+
           <td class="text-end">
-            <a class="dropdown-item d-flex align-items-center gap-2"
-               href="#"
-               (click)="getApPaymentsTransactionHDRDetailById(rowData_ApPaymentsTransactionHDR.paymenT_ID ?? '', rowData_ApPaymentsTransactionHDR.entitY_ID ?? '')"
-               data-bs-toggle="modal"
-               data-bs-target="#edit">
+            <div class="dropdown">
+              <button class="btn table-more dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <g clip-path="url(#clip0_206_13784)">
+                    <path d="M22 14C20.8954 14 20 13.1046 20 12C20 10.8954 20.8954 10 22 10C23.1046 10 24 10.8954 24 12C24 13.1046 23.1046 14 22 14Z" fill="#374957"></path>
+                    <path d="M12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14Z" fill="#374957"></path>
+                    <path d="M1.99999 14C0.895413 14 -2.28882e-05 13.1046 -2.28882e-05 12C-2.28882e-05 10.8954 0.895413 10 1.99999 10C3.10456 10 4 10.8954 4 12C4 13.1046 3.10456 14 1.99999 14Z" fill="#374957"></path>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_206_13784">
+                      <rect width="24" height="24" fill="white" transform="matrix(-1 0 0 1 24 0)"></rect>
+                    </clipPath>
+                  </defs>
+                </svg>
+              </button>
+              <ul class="dropdown-menu">
 
-              <!-- View Icon -->
-              <i class="fa fa-eye" style="font-size: 1rem; color: #6c757d;"></i>
 
-              <!-- View Text -->
-              <span>View</span>
-            </a>
+                <li class="mb-1">
+                  <a class="dropdown-item d-flex gap-2 align-items-center" href="#" (click)="getApPaymentsTransactionHDRDetailById(rowData_ApPaymentsTransactionHDR.paymenT_ID ?? '', rowData_ApPaymentsTransactionHDR.entitY_ID ?? '')" data-bs-toggle="modal" data-bs-target="#details">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M13.4917 1.6665H6.50841C3.47508 1.6665 1.66675 3.47484 1.66675 6.50817V13.4832C1.66675 16.5248 3.47508 18.3332 6.50841 18.3332H13.4834C16.5167 18.3332 18.3251 16.5248 18.3251 13.4915V6.50817C18.3334 3.47484 16.5251 1.6665 13.4917 1.6665ZM14.1667 14.3748H5.83341C5.49175 14.3748 5.20841 14.0915 5.20841 13.7498C5.20841 13.4082 5.49175 13.1248 5.83341 13.1248H14.1667C14.5084 13.1248 14.7917 13.4082 14.7917 13.7498C14.7917 14.0915 14.5084 14.3748 14.1667 14.3748ZM14.1667 10.6248H5.83341C5.49175 10.6248 5.20841 10.3415 5.20841 9.99984C5.20841 9.65817 5.49175 9.37484 5.83341 9.37484H14.1667C14.5084 9.37484 14.7917 9.65817 14.7917 9.99984C14.7917 10.3415 14.5084 10.6248 14.1667 10.6248ZM14.1667 6.87484H5.83341C5.49175 6.87484 5.20841 6.5915 5.20841 6.24984C5.20841 5.90817 5.49175 5.62484 5.83341 5.62484H14.1667C14.5084 5.62484 14.7917 5.90817 14.7917 6.24984C14.7917 6.5915 14.5084 6.87484 14.1667 6.87484Z" fill="#A6A6A6" />
+                    </svg>
+                    View Details
+                  </a>
+                </li>
+              </ul>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -228,51 +257,63 @@
       </nav>
     </div>
 
-    <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl custom-modal-width">
+    <div class="modal fade" id="details" tabindex="-1" aria-labelledby="viewLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="editLabel">{{ 'ApPaymentsTransactionHDRResourceName.Title' | translate }}</h1>
+            <h1 class="modal-title fs-5" id="viewLabel">{{ 'ApPaymentsTransactionHDRResourceName.Title' | translate }}</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
           <div class="modal-body">
-            <div class="row">
-              <div class="col-xl-4 mb-3">
-                <label for="inputPAYMENT_NUMBER" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.PaymentNumber' | translate }}</label>
-                <input type="text" class="form-control" id="PAYMENT_NUMBER" [value]="apPaymentsTransactionHDRData.paymenT_NUMBER" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputPAYMENT_DATE" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.PaymentDate' | translate }}</label>
-                <input type="text" class="form-control" id="PAYMENT_DATEstr" [value]="apPaymentsTransactionHDRData.paymenT_DATEstr" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputPAYMENT_TYPE_DESC" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.PaymentTypeDesc' | translate }}</label>
-                <input type="text" class="form-control" id="PAYMENT_TYPE_DESC" [value]="apPaymentsTransactionHDRData.paymenT_TYPE_DESC" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputVENDOR_NAME" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.VendorName' | translate }}</label>
-                <input type="text" class="form-control" id="VENDOR_NAME" [value]="apPaymentsTransactionHDRData.vendoR_NAME" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputAMOUNTstr" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.PaymentAmount' | translate }}</label>
-                <input type="text" class="form-control" id="AMOUNTstr" [value]="apPaymentsTransactionHDRData.amounTstr" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputBANK_ACCOUNT" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.BankAccount' | translate }}</label>
-                <input type="text" class="form-control" id="BANK_ACCOUNT" [value]="apPaymentsTransactionHDRData.banK_ACCOUNT" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputCHEQUE_NUMBER" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.ChequeNumber' | translate }}</label>
-                <input type="text" class="form-control" id="CHEQUE_NUMBER" [value]="apPaymentsTransactionHDRData.chequE_NUMBER" readonly>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="inputMATURITY_DATEstr" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.MaturityDate' | translate }}</label>
-                <input type="text" class="form-control" id="MATURITY_DATEstr" [value]="apPaymentsTransactionHDRData.maturitY_DATEstr" readonly>
-              </div>
-              <div class="col-xl-8 mb-3">
-                <label for="inputNOTES" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.Notes' | translate }}</label>
-                <textarea  class="form-control" id="NOTES" [value]="apPaymentsTransactionHDRData.notes" readonly></textarea>
+            <div class="border-bottom mb-4">
+              <h4 class="gold bold">{{ 'ApPaymentsTransactionHDRResourceName.Title' | translate }}</h4>
+
+              <div class="row">
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputPAYMENT_NUMBER" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.PaymentNumber' | translate }}</label>
+                  <p id="paymenT_NUMBER">{{ apPaymentsTransactionHDRData.paymenT_NUMBER }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputpaymenT_DATEstr" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.PaymentDate' | translate }}</label>
+                  <p id="paymenT_DATEstr">{{ apPaymentsTransactionHDRData.paymenT_DATEstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputpaymenT_TYPE_DESC" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.PaymentTypeDesc' | translate }}</label>
+                  <p id="paymenT_TYPE_DESC">{{ apPaymentsTransactionHDRData.paymenT_TYPE_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputvendoR_NAME" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.VendorName' | translate }}</label>
+                  <p id="vendoR_NAME">{{ apPaymentsTransactionHDRData.vendoR_NAME }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputamounTstr" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.PaymentAmount' | translate }}</label>
+                  <p id="amounTstr">{{ apPaymentsTransactionHDRData.amounTstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputbanK_ACCOUNT" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.BankAccount' | translate }}</label>
+                  <p id="banK_ACCOUNT">{{ apPaymentsTransactionHDRData.banK_ACCOUNT }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputchequE_NUMBER" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.ChequeNumber' | translate }}</label>
+                  <p id="chequE_NUMBER">{{ apPaymentsTransactionHDRData.chequE_NUMBER }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputmaturitY_DATEstr" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.MaturityDate' | translate }}</label>
+                  <p id="maturitY_DATEstr">{{ apPaymentsTransactionHDRData.maturitY_DATEstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputnotes" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.Notes' | translate }}</label>
+                  <p id="NOTES">{{ apPaymentsTransactionHDRData.notes }}</p>
+                </div>
               </div>
             </div>
           </div>

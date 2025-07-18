@@ -34,7 +34,6 @@ export class LoginComponent {
 
     this.auth.login(this.form.value).subscribe({
       next: (res) => {
-        console.log(res?.token);
 
         this.auth.saveToken(res?.token);
         const decodedData = this.auth.decodeToken();
