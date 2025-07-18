@@ -25,7 +25,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item align-items-center d-flex gap-2 pt-2 pb-2" href="#">
+                        <a class="dropdown-item align-items-center d-flex gap-2 pt-2 pb-2" (click)="logout()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                 <path d="M16.8 2H14.2C11 2 9 4 9 7.2V11.25H15.25C15.66 11.25 16 11.59 16 12C16 12.41 15.66 12.75 15.25 12.75H9V16.8C9 20 11 22 14.2 22H16.79C19.99 22 21.99 20 21.99 16.8V7.2C22 4 20 2 16.8 2Z" fill="#A6A6A6" />
                                 <path d="M4.56043 11.2498L6.63043 9.17984C6.78043 9.02984 6.85043 8.83984 6.85043 8.64984C6.85043 8.45984 6.78043 8.25984 6.63043 8.11984C6.34043 7.82984 5.86043 7.82984 5.57043 8.11984L2.22043 11.4698C1.93043 11.7598 1.93043 12.2398 2.22043 12.5298L5.57043 15.8798C5.86043 16.1698 6.34043 16.1698 6.63043 15.8798C6.92043 15.5898 6.92043 15.1098 6.63043 14.8198L4.56043 12.7498H9.00043V11.2498H4.56043V11.2498Z" fill="#A6A6A6" />
@@ -84,7 +84,7 @@
       <ul class="navbar-nav m-auto">
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
 
-          <a class="nav-link active" aria-current="page" routerLink="/home">
+          <a class="nav-link " aria-current="page" routerLink="/home">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
               <path
                 d="M12.9466 1.3335H11.68C10.2266 1.3335 9.45996 2.10016 9.45996 3.5535V4.82016C9.45996 6.2735 10.2266 7.04016 11.68 7.04016H12.9466C14.4 7.04016 15.1666 6.2735 15.1666 4.82016V3.5535C15.1666 2.10016 14.4 1.3335 12.9466 1.3335Z"
@@ -105,9 +105,10 @@
 
 
 
-        <li class="nav-item dropdown" routerLinkActive="active">
+        <li class="nav-item dropdown" routerLinkActive="active" *ngIf="hasPagePermission('Permission')">
 
-          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" routerLink="/authentication">
+          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
+            <!-- routerLink="/authentication" -->
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
               <path
                 d="M12.86 2.74689L9.19337 1.37355C8.81337 1.23355 8.19337 1.23355 7.81337 1.37355L4.1467 2.74689C3.44003 3.01355 2.8667 3.84022 2.8667 4.59355V9.99355C2.8667 10.5336 3.22003 11.2469 3.65337 11.5669L7.32003 14.3069C7.9667 14.7936 9.0267 14.7936 9.67337 14.3069L13.34 11.5669C13.7734 11.2402 14.1267 10.5336 14.1267 9.99355V4.59355C14.1334 3.84022 13.56 3.01355 12.86 2.74689ZM10.82 6.48022L7.95337 9.34689C7.85337 9.44689 7.7267 9.49355 7.60003 9.49355C7.47337 9.49355 7.3467 9.44689 7.2467 9.34689L6.18003 8.26689C5.9867 8.07355 5.9867 7.75355 6.18003 7.56022C6.37337 7.36689 6.69337 7.36689 6.8867 7.56022L7.6067 8.28022L10.12 5.76689C10.3134 5.57355 10.6334 5.57355 10.8267 5.76689C11.02 5.96022 11.02 6.28689 10.82 6.48022Z"
@@ -129,7 +130,7 @@
                   Authentication
                 </div>
                 <ul class="mega-list">
-                  <li>
+                  <li *ngIf="hasPermission('Role.View')">
                     <a routerLink="/authentication/roles">
                       Roles
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -139,7 +140,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li>
+                  <li *ngIf="hasPermission('User.View')">
                     <a routerLink="/authentication/users">
                       Users
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">

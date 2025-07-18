@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { LoginDto } from '../dtos/login.dto';
 import { environment } from '../../../environments/environment';
 import { jwtDecode } from "jwt-decode";
+import { Router } from '@angular/router';
 
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly BASE_URL = `${environment.apiBaseUrl}/Login`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient , private router: Router) {}
 
   login(payload: LoginDto): Observable<any> {
     return this.http.post(this.BASE_URL, payload);
@@ -26,6 +27,10 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('permissions');
+    localStorage.removeItem('pages');
+    this.router.navigate(['/login']);
+
   }
     isLoggedIn(): boolean {
     const token = localStorage.getItem('access_token');

@@ -10,50 +10,52 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule,NgxSpinnerModule,CommonModule,FormsModule],
+  imports: [ReactiveFormsModule, NgxSpinnerModule, CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
 
-form !:FormGroup;
-submitted:boolean = false;
+  form !: FormGroup;
+  submitted: boolean = false;
 
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router, private spinnerService: SpinnerService, private toastr: ToastrService, private translate: TranslateService) {
     this.form = this.fb.group({
-    userName: ['', Validators.required],
-    password: ['', Validators.required],
-  });
+      userName: ['', Validators.required],
+      password: ['', Validators.required],
+    });
 
   }
 
-submit(): void {
-  this.submitted = true;
-  if (this.form.invalid) return;
-  this.spinnerService.show();
+  submit(): void {
+    this.submitted = true;
+    if (this.form.invalid) return;
+    this.spinnerService.show();
 
-  this.auth.login(this.form.value).subscribe({
-    next: (res) => {
-      console.log(res?.token );
-      
-      this.auth.saveToken(res?.token);
-      const decodedData = this.auth.decodeToken();
-        if (decodedData) {
-          console.log(decodedData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']); 
-          console.log(decodedData); 
+    this.auth.login(this.form.value).subscribe({
+      next: (res) => {
+        console.log(res?.token);
+
+        this.auth.saveToken(res?.token);
+        const decodedData = this.auth.decodeToken();
+        if (decodedData && decodedData.Permissions) {
+          const permissions = decodedData.Permissions;
+          localStorage.setItem('permissions', JSON.stringify(permissions));
+          localStorage.setItem('pages', JSON.stringify(decodedData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']));
         }
-      this.toastr.success(this.translate.instant('LOGIN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
-      this.spinnerService.hide();
-      this.router.navigate(['/home']);
-    },
-    error: () => {
-      this.toastr.error(this.translate.instant('LOGIN.FAILED'), this.translate.instant('TOAST.TITLE.ERROR'));
-      this.spinnerService.hide();
-    },
-    complete: () => {
-      this.spinnerService.hide();
-    }
-  });
-}
+
+        this.toastr.success(this.translate.instant('LOGIN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
+        this.spinnerService.hide();
+        this.router.navigate(['/home']);
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('LOGIN.FAILED'), this.translate.instant('TOAST.TITLE.ERROR'));
+        this.spinnerService.hide();
+      },
+      complete: () => {
+        this.spinnerService.hide();
+      }
+    });
+  }
 
 }

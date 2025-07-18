@@ -11,6 +11,7 @@ import { ApPaymentsTransactionHDRComponent } from './features/ApPaymentsTransact
 import { PaymentVoucherComponent } from './features/payment-voucher/payment-voucher.component';
 
 import { VendorComponent } from './features/vendor/vendor.component';
+import { NoPermissionComponent } from './shared/components/no-permission/no-permission.component';
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -33,19 +34,24 @@ export const routes: Routes = [
             path: 'roles',
             loadChildren: () =>
               import('./features/roles/roles.routes').then((m) => m.rolesRoutes),
+            canActivate: [authGuard],
+            data: { permission: 'Role.View' }
           },
           {
             path: 'users',
             loadChildren: () =>
               import('./features/users/users.routes').then((m) => m.usersRoutes),
+            canActivate: [authGuard],
+            data: { permission: 'User.View' }
           }
         ]
       }
     ],
   },
-    { path: 'GL_JE', component: GLJEComponent },
+  { path: 'GL_JE', component: GLJEComponent },
 
   { path: 'vendor', component: VendorComponent },
 
-  { path: '**', component: PageNotFoundComponent }
+  { path: 'no-permission', component: NoPermissionComponent },
+  { path: '**', component: PageNotFoundComponent },
 ];
