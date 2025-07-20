@@ -1,19 +1,19 @@
 import { Data } from "@angular/router";
 
 export class FilterApPaymentsTransactionHDRDto {
-  EntityId: string | null = null;
-  PaymentNumber: string | null = null;
-  PaymentDate: Date | null = null;
-  VendorNumber: string | null = null;
-  VendorName: string | null = null;
-  PaymentTypeDesc: string | null = null;
-  OrderByValue: string = 'PAYMENT_ID asc';
-  Take: number = 10;
-  Skip: number = 0;
+  entityId: string | null = null;
+  paymentNumber: string | null = null;
+  paymentDate: Date | null = null;
+  vendorNumber: string | null = null;
+  vendorName: string | null = null;
+  paymentTypeDesc: string | null = null;
+  orderByValue: string = 'PAYMENT_ID asc';
+  take: number = 10;
+  skip: number = 0;
 
-  EntityIdstr: string | null = null;
-  VendorNamestr: string | null = null;
-  PaymentTypeDescstr: string | null = null;
+  entityIdstr: string | null = null;
+  vendorNamestr: string | null = null;
+  paymentTypeDescstr: string | null = null;
 }
 
 
@@ -45,8 +45,8 @@ export class ApPaymentsTransactionHDRDto {
 
 
 export class FilterApPaymentsTransactionHDRByIdDto {
-  PaymentId: string | null = null;
-  EntityId: string | null = null;
+  paymentId: string | null = null;
+  entityId: string | null = null;
 }
 
 export class PagedResult<T> {

@@ -12,6 +12,7 @@ export class FilterArMiscReceiptHeaderDto {
   skip: number = 0;
 
   entityIdStr: string | null = null;
+  benificaryNamestr: string | null = null;
   benNameStr: string | null = null;
   projectNameStr: string | null = null;
   statusStr: string | null = null;

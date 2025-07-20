@@ -3,9 +3,10 @@ import { InvoiceComponent } from './invoice/invoice.component';
 import { PaymentVoucherComponent } from './payment-voucher/payment-voucher.component';
 import { GLJEComponent } from './gl-je/gl-je.component';
 import { ArMiscReceiptHeaderComponent } from './ArMiscReceiptHeader/Pages/ArMiscReceiptHeader.component';
-import { ApPaymentsTransactionHDRComponent } from './ApPaymentsTransactionHDR/Pages/ApPaymentsTransactionHDR.component';
+// import { ApPaymentsTransactionHDRComponent } from './ApPaymentsTransactionHDR/Pages/ApPaymentsTransactionHDR.component';
 import { VendorComponent } from './vendor/vendor.component';
 import { authGuard } from '../../../core/guards/auth/auth-guars';
+import { ApPaymentsTransactionHDRComponent } from '../../ApPaymentsTransactionHDR/Pages/ApPaymentsTransactionHDR.component';
 
 export const operationsRoutes: Routes = [
     {

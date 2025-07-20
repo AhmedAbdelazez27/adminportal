@@ -32,7 +32,7 @@ export class ApPaymentsTransactionHDRService {
   }
 
   getApPaymentsTransactionHDRDatabyId(params: FilterApPaymentsTransactionHDRByIdDto): Observable<ApPaymentsTransactionHDRDto> {
-    const apiUrl = `${environment.apiBaseUrl}/ApPaymentTransactionsHdr/Get/${params.PaymentId ?? ''}/${params.EntityId ?? ''}`;
+    const apiUrl = `${environment.apiBaseUrl}/ApPaymentTransactionsHdr/Get/${params.paymentId ?? ''}/${params.entityId ?? ''}`;
     return this.http.get<ApPaymentsTransactionHDRDto>(apiUrl);
   }
 }

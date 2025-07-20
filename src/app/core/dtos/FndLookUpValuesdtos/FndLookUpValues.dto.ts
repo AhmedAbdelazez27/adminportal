@@ -25,6 +25,11 @@ export class SelectdropdownResultResults {
   altText?: string | null = null;
 }
 
+export class PagedResult<T> {
+  items?: T[];
+  totalCount?: number;
+}
+
 export class Pagination {
   totalCount: number = 0;
   currentPage: number = 1;
@@ -32,3 +37,27 @@ export class Pagination {
   pages: number[] = [];
   searchValue = '';
 }
+
+export class reportField {
+  label?: string | null = null;
+  value: any;
+}
+
+export class reportColumn {
+  label?: string | null = null;
+  title?: string | null = null;
+  key?: string | null = null;
+}
+
+export class reportPrintConfig {
+  title?: string | null = null;
+  reportTitle?: string | null = null;
+  fields?: reportField[];
+  columns?: reportColumn[];
+  data?: any[];
+  totalLabel?: string | null = null;
+  totalKeys?: string[];
+  fileName?: string | null = null;
+}
+
+

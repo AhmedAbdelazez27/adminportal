@@ -1,7 +1,8 @@
 
+
   <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h1 class="title">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h1>
+      <h1 class="title">{{ 'ApPaymentsTransactionHDRResourceName.Title' | translate }}</h1>
     </div>
 
     <div class="filter mb-3">
@@ -24,98 +25,42 @@
           <form #filterForm="ngForm">
             <div class="row mb-3">
               <div class="col-xl-4 mb-3">
-                <label for="entityId" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.EntityId' | translate }}</label>
-                <select class="form-select"
-                        id="entityId" name="entityId"
-                        [(ngModel)]="selectedEntityObj"
-                        (ngModelChange)="onEntityChange($event)"
-                        autocomplete="off">
+                <label class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.EntityId' | translate }}</label>
+                <select class="form-select" [(ngModel)]="selectedentitySelect2Obj" (ngModelChange)="onentitySelect2Change($event)" name="entityId">
                   <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
-                  <ng-container *ngIf="EntityList.length > 0; else noData">
-                    <option *ngFor="let entity of EntityList" [ngValue]="entity">
-                      {{ entity.text }}
-                    </option>
-                  </ng-container>
-                  <ng-template #noData>
-                    <option disabled>No Data</option>
-                  </ng-template>
+                  <option *ngFor="let item of entitySelect2" [ngValue]="item">{{ item.text }}</option>
                 </select>
               </div>
 
               <div class="col-xl-4 mb-3">
-                <label for="receiptNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate}}</label>
-                <input type="text" name="receiptNumber" class="form-control" [(ngModel)]="filterArMiscReceiptHeaderObj.receiptNumber" placeholder="Search">
+                <label for="paymentNumber" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.PaymentNumber' | translate}}</label>
+                <input type="text" name="PaymentNumber" class="form-control" [(ngModel)]="filterApPaymentsTransactionHDRObj.paymentNumber" placeholder="Search">
+              </div>
+
+              <div class="col-xl-4 mb-3"> 
+                <label for="paymentDate" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.PaymentDate' | translate }}</label>
+                <input type="date" name="PaymentDate" class="form-control" [(ngModel)]="filterApPaymentsTransactionHDRObj.paymentDate" placeholder="Select date">
               </div>
 
               <div class="col-xl-4 mb-3">
-                <label for="checkNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.ChequeNo' | translate }}</label>
-                <input type="text" name="checkNumber" class="form-control" [(ngModel)]="filterArMiscReceiptHeaderObj.checkNumber" placeholder="Search">
+                <label for="vendorNumber" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.VendorNumber' | translate }}</label>
+                <input type="text" name="VendorNumber" class="form-control" [(ngModel)]="filterApPaymentsTransactionHDRObj.vendorNumber" placeholder="Search">
               </div>
 
               <div class="col-xl-4 mb-3">
-                <label for="benificaryName" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.BeneficiaryName' | translate }}</label>
-                <input type="text" name="benificaryName" class="form-control" [(ngModel)]="filterArMiscReceiptHeaderObj.benificaryName" placeholder="Search">
-              </div>
-
-              <div class="col-xl-4 mb-3">
-                <label for="status" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Status' | translate }}</label>
-                <select class="form-select"
-                        id="status" name="status"
-                        [(ngModel)]="selectedStatusObj"
-                        (ngModelChange)="onStatusChange($event)"
-                        autocomplete="off">
+                <label class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.VendorName' | translate }}</label>
+                <select class="form-select" [(ngModel)]="selectedvendorSelect2Obj" (ngModelChange)="onvendorSelect2Change($event)" name="vendorName">
                   <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
-                  <ng-container *ngIf="StatusList.length > 0; else noData">
-                    <option *ngFor="let status of StatusList" [ngValue]="status">
-                      {{ status.text }}
-                    </option>
-                  </ng-container>
-                  <ng-template #noData>
-                    <option disabled>No Data</option>
-                  </ng-template>
+                  <option *ngFor="let item of vendorSelect2" [ngValue]="item">{{ item.text }}</option>
                 </select>
               </div>
 
               <div class="col-xl-4 mb-3">
-                <label for="projectName" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.ProjectName' | translate }}</label>
-                <select class="form-select"
-                        id="projectName" name="projectName"
-                        [(ngModel)]="selectedProjectNameObj"
-                        (ngModelChange)="onProjectNameChange($event)"
-                        autocomplete="off">
+                <label class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.PaymentTypeDesc' | translate }}</label>
+                <select class="form-select" [(ngModel)]="selectpaymentTypeSelect2Obj" (ngModelChange)="onpaymentTypeSelect2Change($event)" name="entityId">
                   <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
-                  <ng-container *ngIf="EntityList.length > 0; else noData">
-                    <option *ngFor="let projectName of EntityList" [ngValue]="projectName">
-                      {{ projectName.text }}
-                    </option>
-                  </ng-container>
-                  <ng-template #noData>
-                    <option disabled>No Data</option>
-                  </ng-template>
+                  <option *ngFor="let item of paymentTypeSelect2" [ngValue]="item">{{ item.text }}</option>
                 </select>
-              </div>
-
-              <div class="col-xl-4 mb-3">
-                <label for="benName" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.Sponsor' | translate }}</label>
-                <select class="form-select"
-                        id="benName" name="benName"
-                        [(ngModel)]="selectedBenNameObj"
-                        (ngModelChange)="onBenNameChange($event)"
-                        autocomplete="off">
-                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
-                  <ng-container *ngIf="BenNameList.length > 0; else noData">
-                    <option *ngFor="let benName of BenNameList" [ngValue]="benName">
-                      {{ benName.text }}
-                    </option>
-                  </ng-container>
-                  <ng-template #noData>
-                    <option disabled>No Data</option>
-                  </ng-template>
-                </select>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="amount" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Amount' | translate }}</label>
-                <input type="text" name="amount" class="form-control" [(ngModel)]="filterArMiscReceiptHeaderObj.amount" placeholder="Search">
               </div>
             </div>
           </form>
@@ -148,22 +93,26 @@
       <thead>
         <tr>
           <th>#</th>
-          <th>{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate }}</th>
-          <th>{{ 'ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE' | translate }}</th>
-          <th>{{ 'ArMiscReceiptHeaderResourceName.BeneficiaryName' | translate }}</th>
-          <th>{{ 'ArMiscReceiptHeaderResourceName.AMOUNT' | translate }}</th>
-          <th>{{ 'ArMiscReceiptHeaderResourceName.Status' | translate }}</th>
+          <th>{{ 'ApPaymentsTransactionHDRResourceName.PaymentNumber' | translate }}</th>
+          <th>{{ 'ApPaymentsTransactionHDRResourceName.PaymentDate' | translate }}</th>
+          <th>{{ 'ApPaymentsTransactionHDRResourceName.PaymentTypeDesc' | translate }}</th>
+          <th>{{ 'ApPaymentsTransactionHDRResourceName.VendorNumber' | translate }}</th>
+          <th>{{ 'ApPaymentsTransactionHDRResourceName.VendorName' | translate }}</th>
+          <th>{{ 'ApPaymentsTransactionHDRResourceName.Amount' | translate }}</th>
           <th>{{ 'Common.Action' | translate }}</th>
         </tr>
       </thead>
-      <tbody *ngIf="arMiscReceiptHeaderListData && arMiscReceiptHeaderListData.length > 0; else noData">
-        <tr *ngFor="let rowData_ArMiscReceiptHeader of arMiscReceiptHeaderListData; let i = index">
+      <tbody *ngIf="apPaymentsTransactionHDRListData && apPaymentsTransactionHDRListData.length > 0; else noData">
+        <tr *ngFor="let rowData_ApPaymentsTransactionHDR of apPaymentsTransactionHDRListData; let i = index">
           <td>{{ i + 1 }}</td>
-          <td>{{rowData_ArMiscReceiptHeader.receipT_NUMBER}}</td>
-          <td>{{rowData_ArMiscReceiptHeader.misC_RECEIPT_DATEstr}}</td>
-          <td>{{rowData_ArMiscReceiptHeader.beneficiarY_NAME}}</td>
-          <td>{{rowData_ArMiscReceiptHeader.amounTstr}}</td>
-          <td>{{rowData_ArMiscReceiptHeader.posted}}</td>
+          <td>{{rowData_ApPaymentsTransactionHDR.paymenT_NUMBER}}</td>
+          <td>{{rowData_ApPaymentsTransactionHDR.paymenT_DATEstr}}</td>
+          <td>{{rowData_ApPaymentsTransactionHDR.paymenT_TYPE_DESC}}</td>
+          <td>{{rowData_ApPaymentsTransactionHDR.vendoR_NUMBER}}</td>
+          <td>{{rowData_ApPaymentsTransactionHDR.vendoR_NAME}}</td>
+          <td>{{rowData_ApPaymentsTransactionHDR.paymenT_AMOUNTstr}}</td>
+
+
           <td class="text-end">
             <div class="dropdown">
               <button class="btn table-more dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -181,8 +130,10 @@
                 </svg>
               </button>
               <ul class="dropdown-menu">
+
+
                 <li class="mb-1">
-                  <a class="dropdown-item d-flex gap-2 align-items-center" href="#" (click)="getArMiscReceiptHeaderDetailById(rowData_ArMiscReceiptHeader.misC_RECEIPT_ID ?? '', rowData_ArMiscReceiptHeader.entitY_ID ?? '')" data-bs-toggle="modal" data-bs-target="#details">
+                  <a class="dropdown-item d-flex gap-2 align-items-center" href="#" (click)="getApPaymentsTransactionHDRDetailById(rowData_ApPaymentsTransactionHDR.paymenT_ID ?? '', rowData_ApPaymentsTransactionHDR.entitY_ID ?? '')" data-bs-toggle="modal" data-bs-target="#details">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <path d="M13.4917 1.6665H6.50841C3.47508 1.6665 1.66675 3.47484 1.66675 6.50817V13.4832C1.66675 16.5248 3.47508 18.3332 6.50841 18.3332H13.4834C16.5167 18.3332 18.3251 16.5248 18.3251 13.4915V6.50817C18.3334 3.47484 16.5251 1.6665 13.4917 1.6665ZM14.1667 14.3748H5.83341C5.49175 14.3748 5.20841 14.0915 5.20841 13.7498C5.20841 13.4082 5.49175 13.1248 5.83341 13.1248H14.1667C14.5084 13.1248 14.7917 13.4082 14.7917 13.7498C14.7917 14.0915 14.5084 14.3748 14.1667 14.3748ZM14.1667 10.6248H5.83341C5.49175 10.6248 5.20841 10.3415 5.20841 9.99984C5.20841 9.65817 5.49175 9.37484 5.83341 9.37484H14.1667C14.5084 9.37484 14.7917 9.65817 14.7917 9.99984C14.7917 10.3415 14.5084 10.6248 14.1667 10.6248ZM14.1667 6.87484H5.83341C5.49175 6.87484 5.20841 6.5915 5.20841 6.24984C5.20841 5.90817 5.49175 5.62484 5.83341 5.62484H14.1667C14.5084 5.62484 14.7917 5.90817 14.7917 6.24984C14.7917 6.5915 14.5084 6.87484 14.1667 6.87484Z" fill="#A6A6A6" />
                     </svg>
@@ -197,7 +148,7 @@
       <ng-template #noData>
         <tbody>
           <tr>
-            <td colspan="8" class="text-center text-muted">{{ 'ArMiscReceiptHeaderResourceName.NoData' | translate }}</td>
+            <td colspan="8" class="text-center text-muted">{{ 'Common.NoData' | translate }}</td>
           </tr>
         </tbody>
       </ng-template>
@@ -261,171 +212,62 @@
       </nav>
     </div>
 
-
-    <div class="modal fade" id="details" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    <div class="modal fade" id="details" tabindex="-1" aria-labelledby="viewLabel" aria-hidden="true">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="editLabel">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h1>
+            <h1 class="modal-title fs-5" id="viewLabel">{{ 'ApPaymentsTransactionHDRResourceName.Title' | translate }}</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
           <div class="modal-body">
             <div class="border-bottom mb-4">
-              <h4 class="gold bold">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h4>
+              <h4 class="gold bold">{{ 'ApPaymentsTransactionHDRResourceName.Title' | translate }}</h4>
 
               <div class="row">
                 <div class="col-xxl-4 col-xl-6">
-                  <label for="inputreceipT_NUMBER" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate }}</label>
-                  <p id="receipT_NUMBER">{{ arMiscReceiptHeaderData.receipT_NUMBER }}</p>
+                  <label for="inputPAYMENT_NUMBER" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.PaymentNumber' | translate }}</label>
+                  <p id="paymenT_NUMBER">{{ apPaymentsTransactionHDRData.paymenT_NUMBER }}</p>
                 </div>
 
                 <div class="col-xxl-4 col-xl-6">
-                  <label for="inputtransactioN_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.TRANSACTION_TYPE_DESC' | translate }}</label>
-                  <p id="transactioN_TYPE_DESC">{{ arMiscReceiptHeaderData.transactioN_TYPE_DESC }}</p>
+                  <label for="inputpaymenT_DATEstr" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.PaymentDate' | translate }}</label>
+                  <p id="paymenT_DATEstr">{{ apPaymentsTransactionHDRData.paymenT_DATEstr }}</p>
                 </div>
 
                 <div class="col-xxl-4 col-xl-6">
-                  <label for="inputmisC_RECEIPT_DATEstr" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE' | translate }}</label>
-                  <p id="misC_RECEIPT_DATEstr">{{ arMiscReceiptHeaderData.misC_RECEIPT_DATEstr }}</p>
+                  <label for="inputpaymenT_TYPE_DESC" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.PaymentTypeDesc' | translate }}</label>
+                  <p id="paymenT_TYPE_DESC">{{ apPaymentsTransactionHDRData.paymenT_TYPE_DESC }}</p>
                 </div>
 
                 <div class="col-xxl-4 col-xl-6">
-                  <label for="inputreceipT_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.RECEIPT_TYPE_DESC' | translate }}</label>
-                  <p id="receipT_TYPE_DESC">{{ arMiscReceiptHeaderData.receipT_TYPE_DESC }}</p>
+                  <label for="inputvendoR_NAME" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.VendorName' | translate }}</label>
+                  <p id="vendoR_NAME">{{ apPaymentsTransactionHDRData.vendoR_NAME }}</p>
                 </div>
 
                 <div class="col-xxl-4 col-xl-6">
-                  <label for="inputcollectioN_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.COLLECTION_TYPE_DESC' | translate }}</label>
-                  <p id="collectioN_TYPE_DESC">{{ arMiscReceiptHeaderData.collectioN_TYPE_DESC }}</p>
+                  <label for="inputamounTstr" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.PaymentAmount' | translate }}</label>
+                  <p id="amounTstr">{{ apPaymentsTransactionHDRData.amounTstr }}</p>
                 </div>
 
                 <div class="col-xxl-4 col-xl-6">
-                  <label for="inputbeneficiarY_NAME" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.BENEFICIARY_NAME' | translate }}</label>
-                  <p id="beneficiarY_NAME">{{ arMiscReceiptHeaderData.beneficiarY_NAME }}</p>
+                  <label for="inputbanK_ACCOUNT" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.BankAccount' | translate }}</label>
+                  <p id="banK_ACCOUNT">{{ apPaymentsTransactionHDRData.banK_ACCOUNT }}</p>
                 </div>
 
                 <div class="col-xxl-4 col-xl-6">
-                  <label for="inputamounTstr" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.HEADER_AMOUNT' | translate }}</label>
-                  <p id="amounTstr">{{ arMiscReceiptHeaderData.amounTstr }}</p>
+                  <label for="inputchequE_NUMBER" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.ChequeNumber' | translate }}</label>
+                  <p id="chequE_NUMBER">{{ apPaymentsTransactionHDRData.chequE_NUMBER }}</p>
                 </div>
 
                 <div class="col-xxl-4 col-xl-6">
-                  <label for="inputbanK_ACCOUNT_NAME" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.BANK_ACCOUNT_NAME' | translate }}</label>
-                  <p id="banK_ACCOUNT_NAME">{{ arMiscReceiptHeaderData.banK_ACCOUNT_NAME }}</p>
+                  <label for="inputmaturitY_DATEstr" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.MaturityDate' | translate }}</label>
+                  <p id="maturitY_DATEstr">{{ apPaymentsTransactionHDRData.maturitY_DATEstr }}</p>
                 </div>
 
                 <div class="col-xxl-4 col-xl-6">
-                  <label for="inputnotes" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.HEADER_NOTES' | translate }}</label>
-                  <p id="notes">{{ arMiscReceiptHeaderData.notes }}</p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-12">
-              <div class="tabbable-line boxless tabbable-reversed">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="document-details-tab" data-bs-toggle="tab" data-bs-target="#document-details" type="button" role="tab" aria-controls="document-details" aria-selected="true">
-                      <i class="fa fa-file"></i>{{ 'ArMiscReceiptHeaderResourceName.LiscReceiptLinesTitle' | translate }}
-                    </button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="cheque-details-tab" data-bs-toggle="tab" data-bs-target="#cheque-details" type="button" role="tab" aria-controls="cheque-details" aria-selected="false">
-                      <i class="fa fa-address-card"></i>{{ 'ArMiscReceiptHeaderResourceName.LiscReceiptDetailsTitle' | translate }}
-                    </button>
-                  </li>
-                </ul>
-
-                <div class="tab-content" id="myTabContent">
-                  <div class="tab-pane fade show active" id="document-details" role="tabpanel" aria-labelledby="document-details-tab">
-                    <!-- Document Details Table -->
-                    <div class="form">
-                      <div class="form-horizontal">
-                        <div class="form-body">
-                          <div class="portlet box red">
-                            <div class="portlet-body">
-                              <div id="details1" class="table-responsive tablecontainer">
-                                <table class="table new-table mb-3">
-                                  <thead>
-                                    <tr>
-                                      <th>#</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.RECEIPT_TYPE_DESC' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.Accountnumber' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.AccountNameAr' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.PROJECT_NUMBER' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.BENEFICENTNAME' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.CASENAME' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.MISC_RECEIPT_AMOUNT' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.ADMINISTRATIVE_PERCENT' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.TotaPercent' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.TotalAmount' | translate }}</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr *ngFor="let receiptLineData of arMiscReceiptLineData; let i = index">
-                                      <td>{{ i + 1 }}</td>
-                                      <td>{{ receiptLineData.receipT_TYPE_DESC }}</td>
-                                      <td>{{ receiptLineData.accountnumber }}</td>
-                                      <td>{{ receiptLineData.accountNameAr }}</td>
-                                      <td>{{ receiptLineData.projecT_NUMBER }}</td>
-                                      <td>{{ receiptLineData.beneficentname }}</td>
-                                      <td>{{ receiptLineData.casename }}</td>
-                                      <td>{{ receiptLineData.misC_RECEIPT_AMOUNTstr }}</td>
-                                      <td>{{ receiptLineData.administrativE_PERCENTstr }}</td>
-                                      <td>{{ receiptLineData.totaPercentstr }}</td>
-                                      <td>{{ receiptLineData.totalAmountstr }}</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="tab-pane fade" id="cheque-details" role="tabpanel" aria-labelledby="cheque-details-tab">
-                    <!-- Cheque Details Table -->
-                    <div class="form">
-                      <div class="form-horizontal">
-                        <div class="form-body">
-                          <div class="portlet box red">
-                            <div class="portlet-body">
-                              <div id="details2" class="table-responsive tablecontainer">
-                                <table class="table new-table mb-3">
-                                  <thead>
-                                    <tr>
-                                      <th>#</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.CHECK_NUMBER' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.BANK_NAME' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.MATURITY_DATE' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.AMOUNT' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.NOTES' | translate }}</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr *ngFor="let receiptDetailsData of arMiscReceiptDetailsData; let i = index">
-                                      <td>{{ i + 1 }}</td>
-                                      <td>{{ receiptDetailsData.checK_NUMBER }}</td>
-                                      <td>{{ receiptDetailsData.banK_NAME }}</td>
-                                      <td>{{ receiptDetailsData.maturitY_DATEstr }}</td>
-                                      <td>{{ receiptDetailsData.amounTstr }}</td>
-                                      <td>{{ receiptDetailsData.notes }}</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <label for="inputnotes" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.Notes' | translate }}</label>
+                  <p id="NOTES">{{ apPaymentsTransactionHDRData.notes }}</p>
                 </div>
               </div>
             </div>
@@ -435,6 +277,6 @@
             <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
           </div>
         </div>
-        </div>
       </div>
     </div>
+  </div>
