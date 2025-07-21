@@ -50,5 +50,34 @@ export class ApiEndpoints {
     Base: '/Entity'
   };
 
+
+  static readonly ArMiscReceiptHeader = {
+    Base: '/ArMiscReciptHeader',
+    GetAll: '/GetAll',
+    GetById: (miscReceiptId: string, entityId: string) => `/Get/${miscReceiptId}/${entityId}`,
+    GetReceiptDetailsById: (miscReceiptId: string, entityId: string) => `/Get/${miscReceiptId}/${entityId}`,
+    GetReceiptLinesById: (miscReceiptId: string, entityId: string) => `/Get/${miscReceiptId}/${entityId}`,
+  };
+
+
+  static readonly ApMiscPaymentTransactionHDR = {
+    Base: '/ApPaymentTransactionsHdr',
+    GetAll: '/GetAll',
+    GetDetailById: '/Get',
+    GetById: (paymentId: string, entityId: string) => `/Get/${paymentId}/${entityId}`,
+  };
+
+  static readonly FinancialReports = {
+    Base: '/FinancialReports',
+    CachReceiptRptEndPoint: '/GetCachReceiptRpt',
+    GetGeneralLJournalRptEndPoint: '/GetGeneralLJournalRpt',
+    GetReceiptRptEndPoint: '/GetReceiptRpt',
+    GetVendorsPayRptEndPoint: '/GetVendorsPayRpt',
+    GetGeneralProLosRptEndPoint: '/GetGeneralProLosRpt',
+    GetTotalBenDonationsRptEndPoint: '/GetTotalBenDonationsRpt',
+    GetGetGlTrialBalancesRptEndPoint: '/GetGlTrialBalancesRpt',
+    GetGeneralBalanceSheetRptEndPoint: '/GetGeneralBalanceSheetRpt',
+  }
+
 }
 

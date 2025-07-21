@@ -126,7 +126,8 @@
     "Select": "-- Select --",
     "PrintExcel": "Print Excel",
     "Total": "Total",
-    "Print": " Print"
+    "Print": " Print",
+    "Required": "This Field is Required"
   },
 
 

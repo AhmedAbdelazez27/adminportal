@@ -6,7 +6,7 @@ import { ArMiscReceiptHeaderComponent } from './ArMiscReceiptHeader/Pages/ArMisc
 // import { ApPaymentsTransactionHDRComponent } from './ApPaymentsTransactionHDR/Pages/ApPaymentsTransactionHDR.component';
 import { VendorComponent } from './vendor/vendor.component';
 import { authGuard } from '../../../core/guards/auth/auth-guars';
-import { ApPaymentsTransactionHDRComponent } from '../../ApPaymentsTransactionHDR/Pages/ApPaymentsTransactionHDR.component';
+import { ApPaymentsTransactionHDRComponent } from './ApPaymentsTransactionHDR/Pages/ApPaymentsTransactionHDR.component';
 
 export const operationsRoutes: Routes = [
     {

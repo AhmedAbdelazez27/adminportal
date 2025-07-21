@@ -1,3 +1,4 @@
+
 export class catchReceiptRptInputDto {
   entityId?: string | null = null;
   collectorName?: string | null = null;
@@ -8,7 +9,8 @@ export class catchReceiptRptInputDto {
   fromNo?: string | null = null;
   toNo?: string | null = null;
   type?: string | null = null;
-
+  take: number | number = 10;
+  skip?: number;
   typestr?: string | null = null;
   entityIdstr?: string | null = null;
   collectorNamestr?: string | null = null;
@@ -24,7 +26,8 @@ export class generalLJournalRptInputDto {
   fromDate?: string | null = null;
   toDate?: string | null = null;
   att5To?: string | null = null;
-
+  take: number | number = 10;
+  skip?: number;
   entityIdstr?: string | null = null;
   att1str?: string | null = null;
   att2str?: string | null = null;
@@ -42,7 +45,8 @@ export class receiptRPTInputDto {
   toDate?: string | null = null;
   fromNo?: string | null = null;
   toNo?: string | null = null;
-
+  take: number | number = 10;
+  skip?: number;
   entityIdstr?: string | null = null;
   fromDatestr?: string | null = null;
   toDatestr?: string | null = null;
@@ -53,7 +57,8 @@ export class vendorsPayTransRPTInputDto {
   vendorId?: string | null = null;
   fromDate?: string | null = null;
   toDate?: string | null = null;
-
+  take: number | number = 10;
+  skip?: number;
   entityIdstr?: string | null = null;
   vendorIdstr?: string | null = null;
   fromDatestr?: string | null = null;
@@ -65,7 +70,8 @@ export class getTotlaBenDonationsRPTInputDto {
   beneficenT_ID?: string | null = null;
   fromDate?: string | null = null;
   toDate?: string | null = null;
-
+  take: number | number = 10;
+  skip?: number;
   entityIdstr?: string | null = null;
   beneficentIdstr?: string | null = null;
   fromDatestr?: string | null = null;

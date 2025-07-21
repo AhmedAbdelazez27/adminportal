@@ -36,6 +36,8 @@ export class Pagination {
   itemsPerPage: number = 2;
   pages: number[] = [];
   searchValue = '';
+  take: number|number = 10;
+  skip?: number;
 }
 
 export class reportField {

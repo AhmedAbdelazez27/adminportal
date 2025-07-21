@@ -3,19 +3,22 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { Observable, Subject, combineLatest } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { Pagination, SelectdropdownResultResults, FndLookUpValuesSelect2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { getTotlaBenDonationsRPTInputDto } from '../../../../core/dtos/Reports/FinancialReportsInput.dto';
 import { getTotlaBenDonationsRPTOutputDto } from '../../../../core/dtos/Reports/FinancialReportsOutput.dto';
 import { FinancialReportService } from '../../../../core/services/FinancialReport.service';
 import { openStandardReportService } from '../../../../core/services/openStandardReportService.service'
+import { SpinnerService } from '../../../../core/services/spinner.service';
+import { Select2Service } from '../../../../core/services/Select2.service';
+import { CustomTableComponent } from '../../../../../shared/custom-table/custom-table.component';
 
 @Component({
   selector: 'app-getTotlaBenDonationsRPT',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, CustomTableComponent],
   templateUrl: './getTotlaBenDonationsRPT.component.html',
   styleUrls: ['./getTotlaBenDonationsRPT.component.scss']
 })
@@ -37,12 +40,17 @@ export class getTotlaBenDonationsRPTComponent {
   selectedentitySelect2Obj: any = null
   selectedbeneficentIdSelect2Obj: any = null;
 
+  translatedHeaders$: Observable<string[]> | undefined;
+  headerKeys: string[] = [];
   constructor(
     private financialReportService: FinancialReportService,
     private toastr: ToastrService,
     private translate: TranslateService,
-    private openStandardReportService: openStandardReportService
-  ) {
+    private openStandardReportService: openStandardReportService,
+    private spinnerService: SpinnerService,
+    private Select2Service: Select2Service
+  )
+  {
     this.translate.setDefaultLang('en');
     this.translate.use('en');
   }
@@ -55,10 +63,33 @@ export class getTotlaBenDonationsRPTComponent {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+
+    this.translatedHeaders$ = combineLatest([
+      this.translate.get('FinancialReportResourceName.beneficentName'),
+      this.translate.get('FinancialReportResourceName.beneficentNo'),
+      this.translate.get('FinancialReportResourceName.receiptNumber'),
+      this.translate.get('FinancialReportResourceName.miscReceiptDate'),
+      this.translate.get('FinancialReportResourceName.receiptTypeDesc'),
+      this.translate.get('FinancialReportResourceName.notes'),
+      this.translate.get('FinancialReportResourceName.administrative'),
+    ]).pipe(
+      map(translations => translations)
+    );
+
+    this.headerKeys = [
+      'beneficentName',
+      'beneficenT_NO',
+      'receipT_NUMBER',
+      'misC_RECEIPT_DATEstr',
+      'receipT_TYPE_DESC',
+      'notes',
+      'misC_RECEIPT_AMOUNTstr',
+      'administrativEstr'
+    ];
   }
 
   fetchentitySelect2(): void {
-    this.financialReportService.getEntitySelect2(this.searchSelect2Params)
+    this.Select2Service.getEntitySelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
           this.entitySelect2 = response?.results || [];
@@ -70,7 +101,7 @@ export class getTotlaBenDonationsRPTComponent {
   }
 
   fetchbeneficentIdSelect2(): void {
-    this.financialReportService.getBeneficentIdSelect2(this.searchSelect2Params)
+    this.Select2Service.getBeneficentIdSelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
           this.beneficentIdSelect2 = response?.results || [];
@@ -82,45 +113,23 @@ export class getTotlaBenDonationsRPTComponent {
   }
 
 
-  getAllgetTotlaBenDonationsRPT(page: number, searchValue: string = ''): void {
+  getLoadDataGrid(page: number, searchValue: string = ''): void {
     const skip = (page - 1) * this.pagination.itemsPerPage;
     if (!this.searchParams.entityId) return;
-    this.loading = true;
+    this.spinnerService.show();
 
     this.financialReportService.getgetTotlaBenDonationsRPTData(this.searchParams)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.getAllDataForReports = response || [];
           this.pagination.totalCount = response?.totalCount || 0;
-          this.calculatePages();
-          this.loading = false;
+          this.spinnerService.hide();
         },
         error: (error) => {
-          this.loading = false;
+          this.spinnerService.hide();
           this.toastr.error('Error fetching Data.', 'Error');
         }
       });
-  }
-
-  calculatePages(): void {
-    const totalPages = Math.ceil(this.pagination.totalCount / this.pagination.itemsPerPage);
-    this.pagination.pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-  }
-
-  changePage(event: any): void {
-    if (event < 1) event = 1;
-    if (event > this.pagination.pages.length) event = this.pagination.pages.length;
-    this.pagination.currentPage = event;
-    this.getAllgetTotlaBenDonationsRPT(event, this.pagination.searchValue);
-  }
-
-  changePerPage(event: any): void {
-    const perPage = parseInt(event.target.value, 10);
-    if (!isNaN(perPage)) {
-      this.pagination.itemsPerPage = perPage;
-      this.calculatePages();
-      this.getAllgetTotlaBenDonationsRPT(1, this.pagination.searchValue);
-    }
   }
 
   onentitySelect2Change(selectedVendor: any): void {
@@ -144,26 +153,7 @@ export class getTotlaBenDonationsRPTComponent {
   }
 
   onSearch(): void {
-    this.pagination.currentPage = 1;
-
-    const cleanedFilters = this.cleanFilterObject(this.searchParams);
-    if (!this.searchParams.entityId) {
-      this.toastr.warning('Please Select Entity', 'Warning');
-      return;
-    }
-    this.loading = true;
-    this.financialReportService.getgetTotlaBenDonationsRPTData(cleanedFilters)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-        next: (response: any) => {
-          this.getAllDataForReports = response || [];
-          this.pagination.totalCount = response?.totalCount || 0;
-          this.calculatePages();
-          this.loading = false;
-        },
-        error: (error) => {
-          this.toastr.error('Error fetching Data.', 'Error');
-        }
-      });
+    this.getLoadDataGrid(1);
   }
 
   private cleanFilterObject(obj: any): any {
@@ -185,103 +175,138 @@ export class getTotlaBenDonationsRPTComponent {
     }
   }
 
-
-
   printExcel(): void {
-    this.loading = true;
+    this.spinnerService.show();
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
     if (!this.searchParams.entityId) {
+      this.spinnerService.hide();
       this.toastr.warning('Please Select Entity', 'Warning');
       return;
     }
-    this.financialReportService.getgetTotlaBenDonationsRPTData(cleanedFilters)
+    this.financialReportService.getgetTotlaBenDonationsRPTData({ ...cleanedFilters })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: any) => {
-          const data = response?.items || response || [];
+        next: (initialResponse: any) => {
+          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
 
-          const reportConfig: reportPrintConfig = {
-            title: this.translate.instant('FinancialReportResourceName.totlaBenDonationsRPT_Title'),
-            reportTitle: this.translate.instant('FinancialReportResourceName.totlaBenDonationsRPT_Title'),
-            fileName: `${this.translate.instant('FinancialReportResourceName.totlaBenDonationsRPT_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-            fields: [
-              { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
-              { label: this.translate.instant('FinancialReportResourceName.beneficentId'), value: this.searchParams.beneficentIdstr },
-              { label: this.translate.instant('FinancialReportResourceName.fromDate'), value: this.searchParams.fromDate },
-              { label: this.translate.instant('FinancialReportResourceName.toDate'), value: this.searchParams.toDate },
-            ],
-            columns: [
-              { label: '#', key: 'rowNo', title: '#' },
-              { label: this.translate.instant('FinancialReportResourceName.beneficentName'), key: 'beneficentName' },
-              { label: this.translate.instant('FinancialReportResourceName.beneficentNo'), key: 'beneficenT_NO' },
-              { label: this.translate.instant('FinancialReportResourceName.receiptNumber'), key: 'receipT_NUMBER' },
-              { label: this.translate.instant('FinancialReportResourceName.miscReceiptDate'), key: 'misC_RECEIPT_DATEstr' },
-              { label: this.translate.instant('FinancialReportResourceName.receiptTypeDesc'), key: 'receipT_TYPE_DESC' },
-              { label: this.translate.instant('FinancialReportResourceName.notes'), key: 'notes' },
-              { label: this.translate.instant('FinancialReportResourceName.miscReceiptAmount'), key: 'misC_RECEIPT_AMOUNTstr' },
-              { label: this.translate.instant('FinancialReportResourceName.administrative'), key: 'administrativEstr' },
-            ],
-            data: data.map((item: any, index: number) => ({
-              ...item,
-              rowNo: index + 1
-            })),
-            totalLabel: this.translate.instant('Common.Total'),
-            totalKeys: ['miscReceiptAmountstr', 'administrativestr']
-          };
+          this.financialReportService.getgetTotlaBenDonationsRPTData({ ...cleanedFilters, skip: 0, take: totalCount })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (response: any) => {
+                const data = response?.data || response || [];
 
-          this.openStandardReportService.openStandardReportExcel(reportConfig);
-          this.loading = false;
+
+                const reportConfig: reportPrintConfig = {
+                  title: this.translate.instant('FinancialReportResourceName.totlaBenDonationsRPT_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.totlaBenDonationsRPT_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.totlaBenDonationsRPT_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
+                    { label: this.translate.instant('FinancialReportResourceName.beneficentId'), value: this.searchParams.beneficentIdstr },
+                    { label: this.translate.instant('FinancialReportResourceName.fromDate'), value: this.searchParams.fromDate },
+                    { label: this.translate.instant('FinancialReportResourceName.toDate'), value: this.searchParams.toDate },
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('FinancialReportResourceName.beneficentName'), key: 'beneficentName' },
+                    { label: this.translate.instant('FinancialReportResourceName.beneficentNo'), key: 'beneficenT_NO' },
+                    { label: this.translate.instant('FinancialReportResourceName.receiptNumber'), key: 'receipT_NUMBER' },
+                    { label: this.translate.instant('FinancialReportResourceName.miscReceiptDate'), key: 'misC_RECEIPT_DATEstr' },
+                    { label: this.translate.instant('FinancialReportResourceName.receiptTypeDesc'), key: 'receipT_TYPE_DESC' },
+                    { label: this.translate.instant('FinancialReportResourceName.notes'), key: 'notes' },
+                    { label: this.translate.instant('FinancialReportResourceName.miscReceiptAmount'), key: 'misC_RECEIPT_AMOUNTstr' },
+                    { label: this.translate.instant('FinancialReportResourceName.administrative'), key: 'administrativEstr' },
+                  ],
+
+
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: ['miscReceiptAmountstr', 'administrativestr']
+                };
+
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();
+              },
+              error: () => {
+                this.spinnerService.hide();
+                this.toastr.error('Failed to export Excel');
+              }
+            });
         },
         error: () => {
-          this.loading = false;
-          this.toastr.error('Failed to export Excel');
-        }
+          this.spinnerService.hide();
+          this.toastr.error('Failed to retrieve data count');
+        },
+
       });
   }
 
-
   printPDF(): void {
+    this.spinnerService.show();
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
     if (!this.searchParams.entityId) {
+      this.spinnerService.hide();
       this.toastr.warning('Please Select Entity', 'Warning');
       return;
     }
-    this.financialReportService.getgetTotlaBenDonationsRPTData(cleanedFilters).subscribe({
-      next: (response: any) => {
-        const data = response?.items || response || [];
-        const reportConfig: reportPrintConfig = {
-          title: this.translate.instant('FinancialReportResourceName.getotlaBenDonationsRPT_Title'),
-          reportTitle: this.translate.instant('FinancialReportResourceName.getotlaBenDonationsRPT_Title'),
-          fields: [
-            { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
-            { label: this.translate.instant('FinancialReportResourceName.beneficentId'), value: this.searchParams.beneficentIdstr },
-            { label: this.translate.instant('FinancialReportResourceName.fromDate'), value: this.searchParams.fromDate },
-            { label: this.translate.instant('FinancialReportResourceName.toDate'), value: this.searchParams.toDate },
-          ],
-          columns: [
-            { label: '#', key: 'rowNo', title: '#' },
-            { label: '#', key: 'rowNo', title: '#' },
-            { label: this.translate.instant('FinancialReportResourceName.beneficentName'), key: 'beneficentName' },
-            { label: this.translate.instant('FinancialReportResourceName.beneficentNo'), key: 'beneficenT_NO' },
-            { label: this.translate.instant('FinancialReportResourceName.receiptNumber'), key: 'receipT_NUMBER' },
-            { label: this.translate.instant('FinancialReportResourceName.miscReceiptDate'), key: 'misC_RECEIPT_DATEstr' },
-            { label: this.translate.instant('FinancialReportResourceName.receiptTypeDesc'), key: 'receipT_TYPE_DESC' },
-            { label: this.translate.instant('FinancialReportResourceName.notes'), key: 'notes' },
-            { label: this.translate.instant('FinancialReportResourceName.miscReceiptAmount'), key: 'misC_RECEIPT_AMOUNTstr' },
-            { label: this.translate.instant('FinancialReportResourceName.administrative'), key: 'administrativEstr' },
-          ],
-          data,
-          totalLabel: this.translate.instant('Common.Total'),
-          totalKeys: ['misC_RECEIPT_AMOUNTstr', 'administrativestr']
-        };
+    this.financialReportService.getgetTotlaBenDonationsRPTData({ ...cleanedFilters })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (initialResponse: any) => {
+          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
 
-        this.openStandardReportService.openStandardReportPDF(reportConfig);
-      },
-      error: (error) => {
-        this.toastr.error('Failed to fetch data for report');
-        console.error('Error fetching data for report:', error);
-      }
-    });
+          this.financialReportService.getgetTotlaBenDonationsRPTData({ ...cleanedFilters, skip: 0, take: totalCount })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (response: any) => {
+                const data = response?.data || response || [];
+
+                const reportConfig: reportPrintConfig = {
+                  title: this.translate.instant('FinancialReportResourceName.totlaBenDonationsRPT_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.totlaBenDonationsRPT_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.totlaBenDonationsRPT_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
+                    { label: this.translate.instant('FinancialReportResourceName.beneficentId'), value: this.searchParams.beneficentIdstr },
+                    { label: this.translate.instant('FinancialReportResourceName.fromDate'), value: this.searchParams.fromDate },
+                    { label: this.translate.instant('FinancialReportResourceName.toDate'), value: this.searchParams.toDate },
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('FinancialReportResourceName.beneficentName'), key: 'beneficentName' },
+                    { label: this.translate.instant('FinancialReportResourceName.beneficentNo'), key: 'beneficenT_NO' },
+                    { label: this.translate.instant('FinancialReportResourceName.receiptNumber'), key: 'receipT_NUMBER' },
+                    { label: this.translate.instant('FinancialReportResourceName.miscReceiptDate'), key: 'misC_RECEIPT_DATEstr' },
+                    { label: this.translate.instant('FinancialReportResourceName.receiptTypeDesc'), key: 'receipT_TYPE_DESC' },
+                    { label: this.translate.instant('FinancialReportResourceName.notes'), key: 'notes' },
+                    { label: this.translate.instant('FinancialReportResourceName.miscReceiptAmount'), key: 'misC_RECEIPT_AMOUNTstr' },
+                    { label: this.translate.instant('FinancialReportResourceName.administrative'), key: 'administrativEstr' },
+                  ],
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: ['miscReceiptAmountstr', 'administrativestr']
+                };
+
+                this.openStandardReportService.openStandardReportPDF(reportConfig);
+              },
+              error: () => {
+                this.spinnerService.hide();
+                this.toastr.error('Failed to export Excel');
+              }
+            });
+        },
+        error: () => {
+          this.spinnerService.hide();
+          this.toastr.error('Failed to retrieve data count');
+        },
+
+      });
   }
 }
 

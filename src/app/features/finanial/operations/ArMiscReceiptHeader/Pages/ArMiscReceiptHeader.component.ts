@@ -1,20 +1,25 @@
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, Subject } from 'rxjs';
-import {ArMiscReceiptDetailsDto, ArMiscReceiptHeaderDto, ArMiscReceiptLinesDto, FilterArMiscReceiptHeaderByIdDto,FilterArMiscReceiptHeaderDto} from '../../../../../core/dtos/ArMiscReceiptHeaderdtos/ArMiscReceiptHeader.dto';
-import { ArMiscReceiptHeaderService } from '../../../../../core/services/ArMiscReceiptHeader.service';
-import {FndLookUpValuesSelect2RequestDto,Pagination,SelectdropdownResult,SelectdropdownResultResults} from '../../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import * as XLSX from 'xlsx';
 import { takeUntil } from 'rxjs/operators';
-import { ExcelExportService } from '../../../../../core/services/excel-export.service';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { CustomTableComponent } from '../../../../../../shared/custom-table/custom-table.component';
+import { ArMiscReceiptHeaderDto, ArMiscReceiptLinesDto, ArMiscReceiptDetailsDto, FilterArMiscReceiptHeaderDto, FilterArMiscReceiptHeaderByIdDto } from '../../../../../core/dtos/ArMiscReceiptHeaderdtos/ArMiscReceiptHeader.dto';
+import { Pagination, SelectdropdownResultResults, FndLookUpValuesSelect2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { ArMiscReceiptHeaderService } from '../../../../../core/services/ArMiscReceiptHeader.service';
+import { SpinnerService } from '../../../../../core/services/spinner.service';
+import { openStandardReportService } from '../../../../../core/services/openStandardReportService.service';
+import { Select2Service } from '../../../../../core/services/Select2.service';
 
 @Component({
   selector: 'app-ArMiscReceiptHeader',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, CustomTableComponent],
   templateUrl: './ArMiscReceiptHeader.component.html',
   styleUrls: ['./ArMiscReceiptHeader.component.scss']
 })
@@ -24,39 +29,66 @@ export class ArMiscReceiptHeaderComponent {
   private destroy$ = new Subject<void>();
 
   pagination = new Pagination();
-  EntityList: SelectdropdownResultResults[] = [];
-  StatusList: SelectdropdownResultResults[] = [];
-  ProjectNameList: SelectdropdownResultResults[] = [];
-  BenNameList: SelectdropdownResultResults[] = [];
-  arMiscReceiptHeaderListData: ArMiscReceiptHeaderDto[] = [];
-  arMiscReceiptHeaderData: ArMiscReceiptHeaderDto = {} as ArMiscReceiptHeaderDto;
-  arMiscReceiptLineData: ArMiscReceiptLinesDto[] = [];
-  arMiscReceiptDetailsData: ArMiscReceiptDetailsDto[] = [];
-  filterArMiscReceiptHeaderObj = new FilterArMiscReceiptHeaderDto();
-  searchFndLookUpValuesSelect2RequestDto = new FndLookUpValuesSelect2RequestDto();
-  filterArMiscReceiptHeaderByIdObj = new FilterArMiscReceiptHeaderByIdDto();
+  entitySelect2: SelectdropdownResultResults[] = [];
+  statusSelect2: SelectdropdownResultResults[] = [];
+  projectNameSelect2: SelectdropdownResultResults[] = [];
+  benNameSelect2: SelectdropdownResultResults[] = [];
 
-  loading = false;
-  selectedEntityObj: any = null;
-  selectedStatusObj: any = null;
-  selectedProjectNameObj: any = null;
-  selectedBenNameObj: any = null;
+  loadgridData: ArMiscReceiptHeaderDto[] = [];
+  loadformData: ArMiscReceiptHeaderDto = {} as ArMiscReceiptHeaderDto;
+  loadformLineData: ArMiscReceiptLinesDto[] = [];
+  loadformDetailsData: ArMiscReceiptDetailsDto[] = [];
 
+  searchParams = new FilterArMiscReceiptHeaderDto();
+  searchSelect2RequestDto = new FndLookUpValuesSelect2RequestDto();
+  searchParamsById = new FilterArMiscReceiptHeaderByIdDto();
+
+  selectedentitySelect2Obj: any = null;
+  selectedstatusSelect2Obj: any = null;
+  selectedprojectNameSelect2Obj: any = null;
+  selectedbenNameSelect2Obj: any = null;
+  userEntityForm: FormGroup | undefined;
+  translatedHeaders$: Observable<string[]> | undefined;
+  headerKeys: string[] = [];
   constructor(
-    private ArMiscReceiptHeaderService: ArMiscReceiptHeaderService,
+    private arMiscReceiptHeaderService: ArMiscReceiptHeaderService,
     private toastr: ToastrService,
     private translate: TranslateService,
-    private excelExportService: ExcelExportService
+    private openStandardReportService: openStandardReportService,
+    private spinnerService: SpinnerService,
+    private Select2Service: Select2Service,
+    private fb: FormBuilder
   )
   {
     this.translate.setDefaultLang('en');
     this.translate.use('en');
+    this.userEntityForm = this.fb.group({
+      entityIds: [[], Validators.required]
+    });
   }
 
   ngOnInit(): void {
     this.fetchEntityList();
     this.fetchStatusList();
     this.fetchProjectNameList();
+
+    this.translatedHeaders$ = combineLatest([
+      this.translate.get('ArMiscReceiptHeaderResourceName.DocumentNumber'),
+      this.translate.get('ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE'),
+      this.translate.get('ArMiscReceiptHeaderResourceName.beneficiarY_NAME'),
+      this.translate.get('ArMiscReceiptHeaderResourceName.AMOUNT'),
+      this.translate.get('ArMiscReceiptHeaderResourceName.Status'),
+    ]).pipe(
+      map(translations => translations)
+    );
+
+    this.headerKeys = [
+      'receipT_NUMBER',
+      'misC_RECEIPT_DATEstr',
+      'beneficiarY_NAME',
+      'amounTstr',
+      'posted'
+    ];
   }
 
   ngOnDestroy(): void {
@@ -65,174 +97,116 @@ export class ArMiscReceiptHeaderComponent {
   }
 
   fetchEntityList(): void {
-    this.ArMiscReceiptHeaderService.getEntityList(this.searchFndLookUpValuesSelect2RequestDto)
+    this.Select2Service.getEntitySelect2(this.searchSelect2RequestDto)
       .pipe(takeUntil(this.destroy$)).subscribe({
       next: (response: SelectdropdownResult) => {
-        this.EntityList = response?.results || [];
+        this.entitySelect2 = response?.results || [];
       },
-      error: (err) => {
-        console.error('Entity list load error', err);
-      }
     });
   }
 
   fetchStatusList(): void {
-    this.ArMiscReceiptHeaderService.getStatusList(this.searchFndLookUpValuesSelect2RequestDto)
+    this.Select2Service.getArMiscStatusSelect2(this.searchSelect2RequestDto)
       .pipe(takeUntil(this.destroy$)).subscribe({
       next: (response: SelectdropdownResult) => {
-        this.StatusList = response?.results || [];
+        this.statusSelect2 = response?.results || [];
       },
-      error: (err) => {
-        console.error('Status list load error', err);
-      }
     });
   } 
 
   fetchProjectNameList(): void {
-    this.ArMiscReceiptHeaderService.getProjectNameList(this.searchFndLookUpValuesSelect2RequestDto)
+    this.Select2Service.getProjectNameSelect2(this.searchSelect2RequestDto)
       .pipe(takeUntil(this.destroy$)).subscribe({
       next: (response: SelectdropdownResult) => {
-        this.ProjectNameList = response?.results || [];
+        this.projectNameSelect2 = response?.results || [];
       },
-      error: (err) => {
-        console.error('Project name list load error', err);
-      }
     });
   }
 
   fetchBenNameList(): void {
-    this.ArMiscReceiptHeaderService.getBenNameList(this.searchFndLookUpValuesSelect2RequestDto)
+    this.Select2Service.getBenNameSelect2(this.searchSelect2RequestDto)
       .pipe(takeUntil(this.destroy$)).subscribe({
       next: (response: SelectdropdownResult) => {
-        this.BenNameList = response?.results || [];
+        this.benNameSelect2 = response?.results || [];
       },
-      error: (err) => {
-        console.error('Ben name list load error', err);
-      }
     });
   }
 
-
-  focused(event: any): void {
-    const label = event.target.parentElement.querySelector('label');
-    if (label && !label.classList.contains('label-over')) {
-      label.classList.add('label-over');
-    }
-  }
-
-  blured(event: FocusEvent, value: string | null): void {
-    const target = event.target as HTMLElement;
-    const label = target.parentElement?.querySelector('label');
-    if (label && label.classList.contains('label-over') && (!value || value === '')) {
-      label.classList.remove('label-over');
-    }
-  }
-
-  getArMiscReceiptHeader(page: number, searchValue: string = ''): void {
-    const skip = (page - 1) * this.pagination.itemsPerPage;
-    if (!this.filterArMiscReceiptHeaderObj.entityId) return;
-    this.loading = true;
-    this.ArMiscReceiptHeaderService.getArMiscReceiptHeaders(this.filterArMiscReceiptHeaderObj)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response: any) => {
-        this.arMiscReceiptHeaderListData = response || [];
-        this.pagination.totalCount = response?.totalCount || 0;
-          this.calculatePages();
-          this.loading = false;
-      },
-        error: (error) => {
-          this.loading = false;
-          console.error('Error fetching ArMiscReceiptHeaders:', error);
-          this.toastr.error('Error fetching ArMiscReceiptHeaders details.', 'Error');
-      }
-    });
-  }
-
-  calculatePages(): void {
-    const totalPages = Math.ceil(this.pagination.totalCount / this.pagination.itemsPerPage);
-    this.pagination.pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-  }
-
-  changePage(event: any): void {
-    if (event < 1) event = 1;
-    if (event > this.pagination.pages.length) event = this.pagination.pages.length;
-    this.pagination.currentPage = event;
-    this.getArMiscReceiptHeader(event, this.pagination.searchValue);
-  }
-
-  changePerPage(event: any): void {
-    const perPage = parseInt(event.target.value, 10);
-    if (!isNaN(perPage)) {
-      this.pagination.itemsPerPage = perPage;
-      this.calculatePages();
-      this.getArMiscReceiptHeader(1, this.pagination.searchValue);
-    }
-  }
-
-  onStatusChange(selectedVendor: any): void {
+  onstatusSelect2Change(selectedVendor: any): void {
     if (selectedVendor) {
-      this.filterArMiscReceiptHeaderObj.status = selectedVendor.id;
-      this.filterArMiscReceiptHeaderObj.statusStr = selectedVendor.text;
+      this.searchParams.status = selectedVendor.id;
+      this.searchParams.statusStr = selectedVendor.text;
     } else {
-      this.filterArMiscReceiptHeaderObj.status = null;
-      this.filterArMiscReceiptHeaderObj.statusStr = null;
+      this.searchParams.status = null;
+      this.searchParams.statusStr = null;
     }
   }
 
-  onEntityChange(selectedVendor: any): void {
+  onentitySelect2Change(selectedVendor: any): void {
     if (selectedVendor) {
-      this.filterArMiscReceiptHeaderObj.entityId = selectedVendor.id;
-      this.filterArMiscReceiptHeaderObj.entityIdStr = selectedVendor.text;
+      this.searchParams.entityId = selectedVendor.id;
+      this.searchParams.entityIdStr = selectedVendor.text;
     } else {
-      this.filterArMiscReceiptHeaderObj.entityId = null;
-      this.filterArMiscReceiptHeaderObj.entityIdStr = null;
+      this.searchParams.entityId = null;
+      this.searchParams.entityIdStr = null;
     }
   }
 
-  onProjectNameChange(selectedVendor: any): void {
+  onprojectNameSelect2Change(selectedVendor: any): void {
     if (selectedVendor) {
-      this.filterArMiscReceiptHeaderObj.projectName = selectedVendor.id;
-      this.filterArMiscReceiptHeaderObj.projectNameStr = selectedVendor.text;
+      this.searchParams.projectName = selectedVendor.id;
+      this.searchParams.projectNameStr = selectedVendor.text;
     } else {
-      this.filterArMiscReceiptHeaderObj.projectName = null;
-      this.filterArMiscReceiptHeaderObj.projectNameStr = null;
+      this.searchParams.projectName = null;
+      this.searchParams.projectNameStr = null;
     }
   }
 
-  onBenNameChange(selectedVendor: any): void {
+  onbenNameSelect2Change(selectedVendor: any): void {
     if (selectedVendor) {
-      this.filterArMiscReceiptHeaderObj.benName = selectedVendor.id;
-      this.filterArMiscReceiptHeaderObj.benNameStr = selectedVendor.text;
+      this.searchParams.benName = selectedVendor.id;
+      this.searchParams.benNameStr = selectedVendor.text;
     } else {
-      this.filterArMiscReceiptHeaderObj.benName = null;
-      this.filterArMiscReceiptHeaderObj.benNameStr = null;
+      this.searchParams.benName = null;
+      this.searchParams.benNameStr = null;
     }
   }
 
   onSearch(): void {
-    this.pagination.currentPage = 1;
-    const cleanedFilters = this.cleanFilterObject(this.filterArMiscReceiptHeaderObj);
-    if (!this.filterArMiscReceiptHeaderObj.entityId) {
-      this.toastr.warning('Please Select EntityID', 'Warning');
+    this.getLoadDataGrid(1);
+
+  }
+
+  getLoadDataGrid(page: number, searchValue: string = ''): void {
+    if (!this.searchParams.entityId) {
+      this.translate.get(['ArMiscReceiptHeaderResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(`${translations['ArMiscReceiptHeaderResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
+        });
       return;
     }
-    this.loading = true;
+    const skip = (page - 1) * this.pagination.take;
+    this.searchParams.skip = skip;
+    this.searchParams.take = this.pagination.take;
 
-    this.ArMiscReceiptHeaderService.getArMiscReceiptHeaders(cleanedFilters)
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+    this.spinnerService.show();
+
+    this.arMiscReceiptHeaderService.getAll(cleanedFilters)
       .pipe(takeUntil(this.destroy$)).subscribe({
       next: (response: any) => {
-        this.arMiscReceiptHeaderListData = response || [];
-        this.pagination.totalCount = response?.totalCount || 0;
-          this.calculatePages();
-          this.loading = false;
+          this.loadgridData = response?.data || [];
+          this.pagination = { ...this.pagination, totalCount: response.totalCount || 0 };
+          this.spinnerService.hide();
       },
         error: (error) => {
-          this.loading = false;
-          this.toastr.error('Failed to fetch data for ArMiscReceiptHeader');
-        console.error('Error fetching ArMiscReceiptHeaders:', error);
+          this.spinnerService.hide();;
+          this.toastr.error('Error fetching Data.', 'Error');
       }
     });
   }
+
+
 
   private cleanFilterObject(obj: any): any {
     const cleaned = { ...obj };
@@ -245,100 +219,109 @@ export class ArMiscReceiptHeaderComponent {
   }
 
   clear(): void {
-    this.filterArMiscReceiptHeaderObj = new FilterArMiscReceiptHeaderDto();
-    this.arMiscReceiptHeaderListData = [];
+    this.searchParams = new FilterArMiscReceiptHeaderDto();
+    this.loadgridData = [];
 
     if (this.filterForm) {
       this.filterForm.resetForm();
     }
   }
 
-  getArMiscReceiptHeaderDetailById(tr_Id: string, entitY_ID: string): void {
+  getFormDatabyId(tr_Id: string, entitY_ID: string): void {
     const params: FilterArMiscReceiptHeaderByIdDto = {
       entityId: entitY_ID,
       miscReceiptId: tr_Id
     };
-    this.loading = true;
+    this.spinnerService.show();;
     forkJoin({
-      mischeaderdata: this.ArMiscReceiptHeaderService.getArMiscReceiptHeaderDatabyId(params) as Observable<ArMiscReceiptHeaderDto | ArMiscReceiptHeaderDto[]>,
-      miscdetaildata: this.ArMiscReceiptHeaderService.getArMiscReceiptDetailDatabyId(params) as Observable<ArMiscReceiptDetailsDto[]>,
-      misclinedata: this.ArMiscReceiptHeaderService.getArMiscReceiptLineDatabyId(params) as Observable<ArMiscReceiptLinesDto[]>
+      mischeaderdata: this.arMiscReceiptHeaderService.getDetailById(params) as Observable<ArMiscReceiptHeaderDto | ArMiscReceiptHeaderDto[]>,
+      miscdetaildata: this.arMiscReceiptHeaderService.getReceiptDetailsListDataById(params) as Observable<ArMiscReceiptDetailsDto[]>,
+      misclinedata: this.arMiscReceiptHeaderService.getReceiptLinesListDataById(params) as Observable<ArMiscReceiptLinesDto[]>
     }).pipe(takeUntil(this.destroy$)).subscribe({
       next: (result) => {
-        this.arMiscReceiptDetailsData = result.miscdetaildata ?? [];
-        this.arMiscReceiptLineData = result.misclinedata ?? [];
-        this.arMiscReceiptHeaderData = Array.isArray(result.mischeaderdata)
+        this.loadformDetailsData = result.miscdetaildata ?? [];
+        this.loadformLineData = result.misclinedata ?? [];
+        this.loadformData = Array.isArray(result.mischeaderdata)
           ? result.mischeaderdata[0] ?? ({} as ArMiscReceiptHeaderDto)
           : result.mischeaderdata;
-        this.loading = false
+        this.spinnerService.hide();
       },
       error: (err) => {
-        this.loading = false;
-        this.toastr.error('Failed to fetch data for ArMiscReceiptHeader'); 
-        console.error('Error fetching ArMiscReceiptHeader details:', err);
-      }
+        this.spinnerService.hide();;
+        this.toastr.error('Error fetching Data.', 'Error');
+     }
     });
   }
 
 
   printExcel(): void {
-    this.loading = true;
-    const cleanedFilters = this.cleanFilterObject(this.filterArMiscReceiptHeaderObj);
-
-    this.ArMiscReceiptHeaderService.getArMiscReceiptHeaders(cleanedFilters)
+    if (!this.searchParams.entityId) {
+      this.translate.get(['ArMiscReceiptHeaderResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(`${translations['ArMiscReceiptHeaderResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
+        });
+      return;
+    }
+    this.spinnerService.show();;
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+   
+    this.arMiscReceiptHeaderService.getAll({ ...cleanedFilters, skip: 0, take: 1 })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: any) => {
-          const data = response?.items || response || [];
+        next: (initialResponse: any) => {
+          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
 
-          const title = this.translate.instant('ArMiscReceiptHeaderResourceName.Title');
+          this.arMiscReceiptHeaderService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (response: any) => {
+                const data = response?.data || [];
 
-          const filterFields = [
-            { key: 'entityIdStr', label: this.translate.instant('ArMiscReceiptHeaderResourceName.EntityId') },
-            { key: 'receiptNumber', label: this.translate.instant('ArMiscReceiptHeaderResourceName.DocumentNumber') },
-            { key: 'checkNumber', label: this.translate.instant('ArMiscReceiptHeaderResourceName.ChequeNo') },
-            { key: 'benificaryNameStr', label: this.translate.instant('ArMiscReceiptHeaderResourceName.BeneficiaryName') },
-            { key: 'statusStr', label: this.translate.instant('ArMiscReceiptHeaderResourceName.Status') },
-            { key: 'projectNameStr', label: this.translate.instant('ArMiscReceiptHeaderResourceName.ProjectName') },
-            { key: 'benNameStr', label: this.translate.instant('ArMiscReceiptHeaderResourceName.Sponsor') },
-            { key: 'amount', label: this.translate.instant('ArMiscReceiptHeaderResourceName.Amount') }
-          ];
+                const reportConfig: reportPrintConfig = {
+                  title: this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceipt_Title'),
+                  reportTitle: this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceipt_Title'),
+                  fileName: `${this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceipt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.EntityId'), value: this.searchParams.entityIdStr },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.DocumentNumber'), value: this.searchParams.receiptNumber },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.ChequeNo'), value: this.searchParams.checkNumber },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.BeneficiaryName'), value: this.searchParams.benificaryNamestr },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.Status'), value: this.searchParams.statusStr },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.ProjectName'), value: this.searchParams.projectNameStr },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.Sponsor'), value: this.searchParams.benNameStr },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.Amount'), value: this.searchParams.amount },
+                  ],
 
-          const tableHeader = [
-            '#',
-            this.translate.instant('ArMiscReceiptHeaderResourceName.DocumentNumber'),
-            this.translate.instant('ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE'),
-            this.translate.instant('ArMiscReceiptHeaderResourceName.beneficiarY_NAME'),
-            this.translate.instant('ArMiscReceiptHeaderResourceName.AMOUNT'),
-            this.translate.instant('ArMiscReceiptHeaderResourceName.Status')
-          ];
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.DocumentNumber'), key: 'receipT_NUMBER' },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE'), key: 'misC_RECEIPT_DATEstr' },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.beneficiarY_NAME'), key: 'beneficiarY_NAME' },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.AMOUNT'), key: 'amounTstr' },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.Status'), key: 'posted' },
+                  ],
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: ['receiptAmountstr', 'chequeAmountstr', 'cashAmountstr', 'administrativeAmountstr']
+                };
 
-          const tableRows = data.map((item: any, index: number) => [
-            (index + 1).toString(),
-            item.receipT_NUMBER || '',
-            item.misC_RECEIPT_DATEstr || '',
-            item.beneficiarY_NAME || '',
-            item.amounTstr || '',
-            item.posted || ''
-          ]);
-          const fileName = `${this.translate.instant('ArMiscReceiptHeaderResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
-          this.excelExportService.generateExcel({
-            title,
-            filterFields: filterFields,
-            filterObj: this.filterArMiscReceiptHeaderObj,
-            tableHeader,
-            tableRows,
-            fileName
-          });
-
-          this.loading = false;
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();;
+              },
+              error: () => {
+                this.spinnerService.hide();
+                this.toastr.error('Failed to export Excel');
+              }
+            });
         },
         error: () => {
-          this.loading = false;
-          this.toastr.error('Failed to fetch data for Excel export');
+          this.spinnerService.hide();
+          this.toastr.error('Failed to retrieve data count');
         }
       });
   }
-
 }
 

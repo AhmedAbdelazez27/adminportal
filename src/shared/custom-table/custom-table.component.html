@@ -1,0 +1,102 @@
+<table class="table new-table mb-3">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th *ngFor="let header of headers">{{ header }}</th>
+      <th *ngIf="showAction">{{ 'Common.Action' | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody *ngIf="rows && rows.length > 0; else noData">
+    <tr *ngFor="let row of rows; let i = index">
+      <td>{{ getSerialNumber(i) }}</td>
+      <td *ngFor="let key of headerKeys">{{ row[key] }}</td>
+
+      <td class="text-end" *ngIf="showAction">
+        <div class="dropdown">
+          <button class="btn table-more dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            ⋮
+          </button>
+          <ul class="dropdown-menu">
+
+            <li *ngIf="actionTypes.includes('view')" class="mb-1">
+              <a class="dropdown-item d-flex gap-2 align-items-center" href="#"
+                 (click)="onViewDetails.emit(row)" data-bs-toggle="modal" data-bs-target="#details">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M13.4917 1.6665H6.50841C3.47508 1.6665 1.66675 3.47484 1.66675 6.50817V13.4832C1.66675 16.5248 3.47508 18.3332 6.50841 18.3332H13.4834C16.5167 18.3332 18.3251 16.5248 18.3251 13.4915V6.50817C18.3334 3.47484 16.5251 1.6665 13.4917 1.6665ZM14.1667 14.3748H5.83341C5.49175 14.3748 5.20841 14.0915 5.20841 13.7498C5.20841 13.4082 5.49175 13.1248 5.83341 13.1248H14.1667C14.5084 13.1248 14.7917 13.4082 14.7917 13.7498C14.7917 14.0915 14.5084 14.3748 14.1667 14.3748ZM14.1667 10.6248H5.83341C5.49175 10.6248 5.20841 10.3415 5.20841 9.99984C5.20841 9.65817 5.49175 9.37484 5.83341 9.37484H14.1667C14.5084 9.37484 14.7917 9.65817 14.7917 9.99984C14.7917 10.3415 14.5084 10.6248 14.1667 10.6248ZM14.1667 6.87484H5.83341C5.49175 6.87484 5.20841 6.5915 5.20841 6.24984C5.20841 5.90817 5.49175 5.62484 5.83341 5.62484H14.1667C14.5084 5.62484 14.7917 5.90817 14.7917 6.24984C14.7917 6.5915 14.5084 6.87484 14.1667 6.87484Z" fill="#A6A6A6" />
+                </svg>
+                View Details
+              </a>
+            </li>
+
+            <li *ngIf="actionTypes.includes('edit')" class="mb-1">
+              <a class="dropdown-item d-flex gap-2 align-items-center" href="#"
+                 (click)="onEdit.emit(row)">
+                Edit
+              </a>
+            </li>
+
+            <li *ngIf="actionTypes.includes('delete')" class="mb-1">
+              <a class="dropdown-item d-flex gap-2 align-items-center text-danger" href="#"
+                 (click)="onDelete.emit(row)">
+                Delete
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+
+  <ng-template #noData>
+    <tbody>
+      <tr>
+        <td [attr.colspan]="headers.length + (showAction ? 2 : 1)" class="text-center text-muted">
+          {{ 'Common.NoData' | translate }}
+        </td>
+      </tr>
+    </tbody>
+  </ng-template>
+</table>
+
+<!-- Pagination & Page Size -->
+<div class="d-flex justify-content-between align-items-center">
+  <div class="row g-3 align-items-center">
+    <div class="col-auto">
+      <label class="col-form-label">{{ 'Common.Show' | translate }}</label>
+    </div>
+    <div class="col-auto">
+      <select class="form-select page-select" (change)="changePerPage($event)">
+        <option>5</option>
+        <option>10</option>
+        <option>20</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <span class="form-text">{{ 'Common.Entries' | translate }}</span>
+    </div>
+  </div>
+
+  <nav>
+    <ul class="pagination mb-0">
+      <li class="page-item" [class.disabled]="pagination.currentPage === 1">
+        <a class="page-link" (click)="changePage(1)">«</a>
+      </li>
+      <li class="page-item" [class.disabled]="pagination.currentPage === 1">
+        <a class="page-link" (click)="changePage(pagination.currentPage - 1)">‹</a>
+      </li>
+
+      <li class="page-item" *ngFor="let page of pagination.pages" [ngClass]="{ 'active': pagination.currentPage === page }">
+        <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+      </li>
+
+      <li class="page-item" [class.disabled]="pagination.currentPage === totalPages">
+        <a class="page-link" (click)="changePage(pagination.currentPage + 1)">›</a>
+      </li>
+      <li class="page-item" [class.disabled]="pagination.currentPage === totalPages">
+        <a class="page-link" (click)="changePage(totalPages)">»</a>
+      </li>
+    </ul>
+  </nav>
+</div>

@@ -6,105 +6,58 @@ import { FndLookUpValuesSelect2RequestDto, PagedResult, SelectdropdownResult } f
 import { catchReceiptRptInputDto, generalLJournalRptInputDto, getTotlaBenDonationsRPTInputDto, receiptRPTInputDto, vendorsPayTransRPTInputDto } from '../dtos/Reports/FinancialReportsInput.dto';
 import { catchReceiptRptOutputDto, generalLJournalRptOutputDto, getTotlaBenDonationsRPTOutputDto, receiptRPTOutputDto, vendorsPayTransRPTOutputDto } from '../dtos/Reports/FinancialReportsOutput.dto';
 import * as XLSX from 'xlsx';
+import { ApiEndpoints } from '../constants/api-endpoints';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FinancialReportService {
+
+  private readonly BASE_URL = `${environment.apiBaseUrl}${ApiEndpoints.FinancialReports.Base}`;
   constructor(private http: HttpClient) { }
 
-  getEntitySelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/Entity/GetSelect2List`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getCollectorSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/ApMiscPaymentHeader/GetCollectorsSelect2List`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getCategorySelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/Lookup/ReceiptIdentifier`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getCountrySelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/FndCountry/GetSelect2List`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getBranchSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/FinancialReports/GetBranchSelect2List`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getDeptSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/Department/Select2`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getAccountSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/GlAccount/GetGlAccountSelect2List`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getBeneficentIdSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/SpBeneficents/GetSpBeneficentsSelect2List`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getGlPeriodSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/GlPeriodDetails/GetGlPeriodDetailSelect2List`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getVendorSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/ApVendor/GetvendorSelect2List`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
   getcatchReceiptRptData(params: catchReceiptRptInputDto): Observable<PagedResult<catchReceiptRptOutputDto[]>> {
-    const apiUrl = `${environment.apiBaseUrl}/FinancialReports/GetCachReceiptRpt`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.CachReceiptRptEndPoint}`;
     return this.http.post<PagedResult<catchReceiptRptOutputDto[]>>(apiUrl, params);
   }
 
   getgeneralLJournalRptData(params: generalLJournalRptInputDto): Observable<PagedResult<generalLJournalRptOutputDto[]>> {
-    const apiUrl = `${environment.apiBaseUrl}/FinancialReports/GetGeneralLJournalRpt`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetGeneralLJournalRptEndPoint}`;
     return this.http.post<PagedResult<generalLJournalRptOutputDto[]>>(apiUrl, params);
   }
 
   getreceiptRPTData(params: receiptRPTInputDto): Observable<PagedResult<receiptRPTOutputDto[]>> {
-    const apiUrl = `${environment.apiBaseUrl}/FinancialReports/GetReceiptRpt`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetReceiptRptEndPoint}`;
     return this.http.post<PagedResult<receiptRPTOutputDto[]>>(apiUrl, params);
   }
 
   getvendorsPayTransRPTData(params: vendorsPayTransRPTInputDto): Observable<PagedResult<vendorsPayTransRPTOutputDto[]>> {
-    const apiUrl = `${environment.apiBaseUrl}/FinancialReports/GetVendorsPayRpt`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetVendorsPayRptEndPoint}`;
     return this.http.post<PagedResult<vendorsPayTransRPTOutputDto[]>>(apiUrl, params);
   }
 
   getgetTotlaBenDonationsRPTData(params: getTotlaBenDonationsRPTInputDto): Observable<PagedResult<getTotlaBenDonationsRPTOutputDto[]>> {
-    const apiUrl = `${environment.apiBaseUrl}/FinancialReports/GetTotalBenDonationsRpt`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetTotalBenDonationsRptEndPoint}`;
     return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
   }
 
   getupdateGlAccountSelection(params: getTotlaBenDonationsRPTInputDto): Observable<PagedResult<getTotlaBenDonationsRPTOutputDto[]>> {
-    const apiUrl = `${environment.apiBaseUrl}/FinancialReports/GetTotalBenDonationsRpt`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetTotalBenDonationsRptEndPoint}`;
     return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
   }
 
   getgetgltrialbalancesRPTData(params: getTotlaBenDonationsRPTInputDto): Observable<PagedResult<getTotlaBenDonationsRPTOutputDto[]>> {
-    const apiUrl = `${environment.apiBaseUrl}/FinancialReports/GetGlTrialBalancesRpt`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetGetGlTrialBalancesRptEndPoint}`;
     return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
   }
 
   getgetGeneralBalanceSheetRptData(params: getTotlaBenDonationsRPTInputDto): Observable<PagedResult<getTotlaBenDonationsRPTOutputDto[]>> {
-    const apiUrl = `${environment.apiBaseUrl}/FinancialReports/GetGeneralBalanceSheetRpt`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetGeneralBalanceSheetRptEndPoint}`;
     return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
   }
 
   getgetGeneralProLosRPTData(params: getTotlaBenDonationsRPTInputDto): Observable<PagedResult<getTotlaBenDonationsRPTOutputDto[]>> {
-    const apiUrl = `${environment.apiBaseUrl}/FinancialReports/GetGeneralProLosRpt`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetGeneralProLosRptEndPoint}`;
     return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
   }
 }

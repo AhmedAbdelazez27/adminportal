@@ -5,50 +5,42 @@ import { Observable } from 'rxjs';
 import { FilterArMiscReceiptHeaderByIdDto, FilterArMiscReceiptHeaderDto } from '../dtos/ArMiscReceiptHeaderdtos/ArMiscReceiptHeader.dto';
 import { FndLookUpValuesSelect2RequestDto, SelectdropdownResult } from '../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { ArMiscReceiptDetailsDto, ArMiscReceiptHeaderDto, ArMiscReceiptLinesDto, PagedResult } from '../dtos/ArMiscReceiptHeaderdtos/ArMiscReceiptHeader.dto';
+import { ApiEndpoints } from '../constants/api-endpoints';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArMiscReceiptHeaderService {
+  private readonly BASE_URL = `${environment.apiBaseUrl}${ApiEndpoints.ArMiscReceiptHeader.Base}`;
+
   constructor(private http: HttpClient) { }
 
-  getEntityList(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/Entity/GetSelect2List`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getStatusList(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/Lookup/ArMiscPosted`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getBenNameList(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/SpBeneficents/GetSpBeneficentsSelect2List`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getProjectNameList(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
-    const apiUrl = `${environment.apiBaseUrl}/ScProject/GetScProjectSelect2List`;
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
-  }
-
-  getArMiscReceiptHeaders(params: FilterArMiscReceiptHeaderDto): Observable<PagedResult<ArMiscReceiptHeaderDto>> {
-    const apiUrl = `${environment.apiBaseUrl}/ArMiscReciptHeader/GetAll`;
+  getAll(params: FilterArMiscReceiptHeaderDto): Observable<PagedResult<ArMiscReceiptHeaderDto>> {
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ArMiscReceiptHeader.GetAll}`;
     return this.http.post<PagedResult<ArMiscReceiptHeaderDto>>(apiUrl, params);
   }
 
-  getArMiscReceiptHeaderDatabyId(params: FilterArMiscReceiptHeaderByIdDto): Observable<ArMiscReceiptHeaderDto> {
-    const apiUrl = `${environment.apiBaseUrl}/ArMiscReciptHeader/GetReceiptHeader/${params.miscReceiptId ?? ''}/${params.entityId ?? ''}`;
+  getDetailById(params: FilterArMiscReceiptHeaderByIdDto): Observable<ArMiscReceiptHeaderDto> {
+    if (!params.miscReceiptId || !params.entityId) {
+      throw new Error('miscReceiptId and entityId must not be null');
+    }
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ArMiscReceiptHeader.GetById(params.miscReceiptId, params.entityId)}`;
     return this.http.get<ArMiscReceiptHeaderDto>(apiUrl);
   }
 
-  getArMiscReceiptDetailDatabyId(params: FilterArMiscReceiptHeaderByIdDto): Observable<ArMiscReceiptDetailsDto[]> {
-    const apiUrl = `${environment.apiBaseUrl}/ArMiscReciptHeader/GetReceiptDetails/${params.miscReceiptId ?? ''}/${params.entityId ?? ''}`;
+  getReceiptDetailsListDataById(params: FilterArMiscReceiptHeaderByIdDto): Observable<ArMiscReceiptDetailsDto[]> {
+    if (!params.miscReceiptId || !params.entityId) {
+      throw new Error('miscReceiptId and entityId must not be null');
+    }
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ArMiscReceiptHeader.GetReceiptDetailsById(params.miscReceiptId, params.entityId)}`;
     return this.http.get<ArMiscReceiptDetailsDto[]>(apiUrl);
   }
 
-  getArMiscReceiptLineDatabyId(params: FilterArMiscReceiptHeaderByIdDto): Observable<ArMiscReceiptLinesDto[]> {
-    const apiUrl = `${environment.apiBaseUrl}/ArMiscReciptHeader/GetReceiptLines/${params.miscReceiptId ?? ''}/${params.entityId ?? ''}`;
+  getReceiptLinesListDataById(params: FilterArMiscReceiptHeaderByIdDto): Observable<ArMiscReceiptLinesDto[]> {
+    if (!params.miscReceiptId || !params.entityId) {
+      throw new Error('miscReceiptId and entityId must not be null');
+    }
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ArMiscReceiptHeader.GetReceiptLinesById(params.miscReceiptId, params.entityId)}`;
     return this.http.get<ArMiscReceiptLinesDto[]>(apiUrl);
   }
 }

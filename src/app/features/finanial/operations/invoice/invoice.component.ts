@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { InvoiceService } from '../../../../core/services/invoice.service';
 import { Invoice, InvoiceTransaction, InvoiceHeader, Vendor, Entity, InvoiceType, InvoiceFilter } from './models/invoice.models';
 import { ToastrService } from 'ngx-toastr';
+import { InvoiceService } from '../../../../core/services/invoice.service';
 
 @Component({
   selector: 'app-invoice',
@@ -29,9 +29,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   constructor(private apiService: InvoiceService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
-    this.fetchEntities();
-    this.fetchVendors();
-    this.fetchInvoiceTypes();
+ 
   }
 
   ngOnDestroy(): void {
@@ -52,7 +50,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     return {
       entityId: '',
       invoiceNo: '',
-      invoiceDate: '',
+invoiceDate: null,
       vendorNo: '',
       vendorName: '',
       type: '',
@@ -66,20 +64,15 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       this.toastr.warning('Please select an entity before searching.', 'Warning');
       return;
     }
-    if (filter.invoiceDate) {
-      const date = new Date(filter.invoiceDate);
-      filter.invoiceDate = date.toISOString();
-    } else {
-      filter.invoiceDate = '';
-    }
+  filter.invoiceDate = filter.invoiceDate && filter.invoiceDate.trim() !== '' 
+    ? filter.invoiceDate 
+    : null;
     this.loading = true;
     this.apiService.GetApInvoice(filter)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: Invoice[]) => {
-
           this.ApInvoiceList = (response || []).map((item: Invoice) => {
-
             if (item.hD_DATE) {
               const date = new Date(item.hD_DATE);
               const day = ('0' + date.getDate()).slice(-2);
@@ -89,8 +82,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
             }
             return item;
           });
-          console.log(this.ApInvoiceList , "response ",response);
-          
           this.loading = false;
         },
         error: (err) => {

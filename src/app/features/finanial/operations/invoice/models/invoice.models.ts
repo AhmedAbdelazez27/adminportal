@@ -54,8 +54,8 @@ export interface InvoiceType {
 export interface InvoiceFilter {
   entityId: string;
   invoiceNo: string;
-  invoiceDate: string;
-  vendorNo: string;
+  invoiceDate: string | null; 
+    vendorNo: string;
   vendorName: string;
   type: string;
   OrderbyValue: string;

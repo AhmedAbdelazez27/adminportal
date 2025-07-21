@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { PaymentVoucherServiceService } from '../../../../core/services/payment-voucher-service.service';
 
 @Component({
@@ -32,7 +33,7 @@ export class PaymentVoucherComponent implements OnInit {
     orderByValue: 'MISC_PAYMENT_ID'
   };
 
-  constructor(private readonly apiService: PaymentVoucherServiceService) {}
+  constructor(private readonly apiService: PaymentVoucherServiceService,private toastr: ToastrService) {}
 
   ngOnInit(): void {
   }
@@ -40,10 +41,11 @@ export class PaymentVoucherComponent implements OnInit {
 
   getApMiscPaymentHeaders(): void {
     const filter = { ...this.filterModel };
-    if (!filter.entityId) {
-      alert('Please select an entity before searching.');
+      if (!filter.entityId || filter.entityId.trim() === '') {
+      this.toastr.warning('Please select an entity before searching.', 'Warning');
       return;
     }
+ 
     this.apiService.getApMiscPaymentHeaders(filter).subscribe({
       next: (response: any[]) => {
         this.apMiscPaymentList = (response || []).map((item: any) => {
