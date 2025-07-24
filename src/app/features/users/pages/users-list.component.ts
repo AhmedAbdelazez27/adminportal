@@ -9,7 +9,11 @@ import { confirmPasswordValidator } from '../../../shared/customValidators/confi
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DepartmentService } from '../../../core/services/department.service';
 import { EntityService } from '../../../core/services/entit.service';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, take } from 'rxjs';
+import { EntityInfoService } from '../../../core/services/entitIfo.service';
+import { FndLookUpValuesSelect2RequestDto } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { Select2Service } from '../../../core/services/Select2.service';
+import { FilterUserDto } from '../../../core/dtos/search-user.dto';
 
 
 @Component({
@@ -30,11 +34,12 @@ export class UsersListComponent implements OnInit {
   submitted: boolean = false;
   countries: any[] = [];
   entities: any[] = [];
+  entitiesInfo: any[] = [];
   roles: any[] = [];
   mode: 'add' | 'edit' = 'add';
   editingUserId: any | null = null;
   showPassword: boolean = false;
-  showConfirmPassword: boolean = false;
+  showCPassword: boolean = false;
   departments: any[] = [];
   userDepartmentForm: FormGroup;
   userEntityForm: FormGroup;
@@ -52,6 +57,12 @@ export class UsersListComponent implements OnInit {
 
   filteredScreens: { label: string, value: string }[] = [];
   filteredPermissions: any[] = [];
+  searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
+  countrySelect2: any[] = [];
+  filterUserCriteria = new FilterUserDto();
+  userStatusOptions: any[] = [];
+  userTypesOptions: any[] = [];
+  userRoles: any[] = [];
 
 
 
@@ -64,7 +75,12 @@ export class UsersListComponent implements OnInit {
     private toastr: ToastrService,
     private translate: TranslateService,
     private fb: FormBuilder,
+    private entityInfoService: EntityInfoService,
+    private select2Service: Select2Service,
   ) {
+
+
+
     this.userDepartmentForm = this.fb.group({
       departmentIds: [[], Validators.required]
     });
@@ -96,7 +112,7 @@ export class UsersListComponent implements OnInit {
       boxNo: [null, [Validators.maxLength(50)]],
       entityId: [null, [Validators.maxLength(20)]],
       applyDate: [null],
-      userStatus: [null],
+      userStatus: ["2"],
       serviceType: [null],
       roles: [null],
       id: [null],
@@ -114,9 +130,13 @@ export class UsersListComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    this.getUsers(1, '');
+    this.getUsers(1);
     this.getDepartments();
     this.getEntitys();
+    this.getEntitysInfo();
+    this.fetchcountrySelect2();
+    this.fetchUsersStatusSelect2();
+    this.fetchUsersTypesSelect2();
 
     // watch for changes in selectedModules to filter screens accordingly
     this.filterForm.get('selectedModules')?.valueChanges.subscribe(modules => {
@@ -132,10 +152,10 @@ export class UsersListComponent implements OnInit {
   }
 
 
-  getUsers(page: number, searchValue: string = ''): void {
+  getUsers(page: number): void {
     const skip = (page - 1) * this.itemsPerPage;
     this.spinnerService.show();
-    this.userService.getUsers(skip, this.itemsPerPage, searchValue).subscribe({
+    this.userService.getUsers({ ...this.filterUserCriteria, skip,take:this.itemsPerPage }).subscribe({
 
       next: (data: any) => {
         this.users = data.data;
@@ -164,7 +184,7 @@ export class UsersListComponent implements OnInit {
     if (event > this.pages.length) event = this.pages.length;
 
     this.currentPage = event;
-    this.getUsers(event, this.searchValue);
+    this.getUsers(event);
 
   }
 
@@ -173,15 +193,15 @@ export class UsersListComponent implements OnInit {
     if (!isNaN(perPage)) {
       this.itemsPerPage = perPage;
       this.calculatePages();
-      this.getUsers(1, this.searchValue);
+      this.getUsers(1);
     }
   }
   onSearch(): void {
-    this.getUsers(1, this.searchValue);
+    this.getUsers(1);
   }
 
   clear() {
-    this.searchValue = '';
+    this.filterUserCriteria = new FilterUserDto();
     this.onSearch();
   }
 
@@ -239,7 +259,7 @@ export class UsersListComponent implements OnInit {
       this.userService.createUser(formData).subscribe({
         next: (res) => {
           this.toastr.success(this.translate.instant('TOAST.USER_CREATED'));
-          this.getUsers(1, this.searchValue);
+          this.getUsers(1);
           this.closeModal();
         },
         error: (err) => {
@@ -252,7 +272,7 @@ export class UsersListComponent implements OnInit {
       this.userService.updateUser(formData).subscribe({
         next: (res) => {
           this.toastr.success(this.translate.instant('TOAST.USER_UPDATED'));
-          this.getUsers(this.currentPage, this.searchValue);
+          this.getUsers(this.currentPage);
           this.closeModal();
         },
         error: (err) => {
@@ -506,7 +526,7 @@ export class UsersListComponent implements OnInit {
               .filter((p: any) => p.isAllowed)
               .map((p: any) => p.value)
           );
-           this.filteredPermissions = [...this.userPermissions];
+        this.filteredPermissions = [...this.userPermissions];
         this.populateModuleAndScreenOptions();
       },
       error: () => {
@@ -624,19 +644,77 @@ export class UsersListComponent implements OnInit {
   }
 
   applySearch(): void {
-  const selectedModules = this.filterForm.get('selectedModules')?.value || [];
-  const selectedScreens = this.filterForm.get('selectedScreens')?.value || [];
+    const selectedModules = this.filterForm.get('selectedModules')?.value || [];
+    const selectedScreens = this.filterForm.get('selectedScreens')?.value || [];
 
-  
-  this.filteredPermissions = this.userPermissions
-    .filter(m => selectedModules.length === 0 || selectedModules.includes(m.moduleName))
-    .map(m => ({
-      ...m,
-      screenPermissions: m.screenPermissions.filter((s:any) =>
-        selectedScreens.length === 0 || selectedScreens.includes(s.screenName)
-      )
-    }))
-    .filter(m => m.screenPermissions.length > 0);
-}
+
+    this.filteredPermissions = this.userPermissions
+      .filter(m => selectedModules.length === 0 || selectedModules.includes(m.moduleName))
+      .map(m => ({
+        ...m,
+        screenPermissions: m.screenPermissions.filter((s: any) =>
+          selectedScreens.length === 0 || selectedScreens.includes(s.screenName)
+        )
+      }))
+      .filter(m => m.screenPermissions.length > 0);
+  }
+
+  // updates 
+  getEntitysInfo() {
+    this.entityInfoService.getEntitiesInfoSelect2(0, 6000).subscribe({
+      next: (res) => {
+        this.entitiesInfo = res?.results
+        console.log(this.entitiesInfo);
+
+      },
+      error: (err) => {
+
+      }
+    })
+  };
+
+  fetchcountrySelect2(): void {
+    this.select2Service.getCountrySelect2(this.searchSelect2Params).subscribe({
+      next: (response: any) => {
+        this.countrySelect2 = response?.results || [];
+      },
+      error: (err: any) => {
+        this.toastr.error('Failed to load Country.', 'Error');
+      }
+    });
+  }
+
+  fetchUsersStatusSelect2(): void {
+    this.userService.getUserStatusSelect2(0, 2000).subscribe({
+      next: (response: any) => {
+         let ress= response?.results || [];
+        this.userStatusOptions = ress.map((item:any) => ({
+          id: Number(item.id),
+          text: item.text
+        }));
+      },
+      error: (err: any) => {
+        this.toastr.error('Failed to load Country.', 'Error');
+      }
+    });
+  }
+
+  fetchUsersTypesSelect2(): void {
+    this.userService.getUserTypes().subscribe({
+      next: (response: any) => {
+        this.userTypesOptions = response || [];
+        console.log(this.userTypesOptions, response);
+
+      },
+      error: (err: any) => {
+        this.toastr.error('Failed to load Country.', 'Error');
+      }
+    });
+  }
+
+  // show user roles 
+   openRolesModal(roles:any) {
+    this.userRoles =roles
+  }
 
 }

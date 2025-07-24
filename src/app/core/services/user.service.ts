@@ -19,9 +19,9 @@ export class UserService {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Base}`, payload);
   }
 
-  getUsers(skip: number, take: number, searchValue: string): Observable<any> {
+  getUsers(payload: any): Observable<any> {
     // const params = new HttpParams().set('skip', skip).set('take', take).set('searchValue', searchValue);
-    return this.http.post<any>(`${this.BASE_URL}${ApiEndpoints.User.Base}${ApiEndpoints.User.GetAll}`, { searchValue, take, skip });
+    return this.http.post<any>(`${this.BASE_URL}${ApiEndpoints.User.Base}${ApiEndpoints.User.GetAll}`, { ...payload });
   }
 
   updateUser(payload: any): Observable<any> {
@@ -30,6 +30,10 @@ export class UserService {
 
   getUserById(id: string): Observable<any> {
     return this.http.get(`${this.BASE_URL}${ApiEndpoints.User.GetById(id)}`);
+  }
+
+  getUserTypes(): Observable<any> {
+    return this.http.get(`${this.BASE_URL}${ApiEndpoints.User.Base}${ApiEndpoints.User.UserType}`);
   }
 
   deleteUser(id: string): Observable<any> {
@@ -67,12 +71,21 @@ export class UserService {
   getUserPermission(userId: string) {
     return this.http.get(`${this.BASE_URL}${ApiEndpoints.User.GetUserPermissionList(userId)}`);
   }
-  deleteUserPermission(payload: any) :Observable<any>{
-    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.DeleteActionPermission}`,payload);
+  deleteUserPermission(payload: any): Observable<any> {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.DeleteActionPermission}`, payload);
   }
-  createUserPermission(payload :any) {
-    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.AssignActionPermission}`,payload);
-    
+  createUserPermission(payload: any) {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.AssignActionPermission}`, payload);
+
   }
 
+  getUserStatusSelect2(skip: number = 0, take: number = 10000): Observable<any> {
+
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.UserStatus.Base}`, { skip, take });
+  }
+
+  changeUserPassword(payload: any): Observable<any> {
+
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Base}${ApiEndpoints.User.ChangePassword}`, payload);
+  }
 }

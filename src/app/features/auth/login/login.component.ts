@@ -37,10 +37,13 @@ export class LoginComponent {
 
         this.auth.saveToken(res?.token);
         const decodedData = this.auth.decodeToken();
+        console.log(decodedData);
+        
         if (decodedData && decodedData.Permissions) {
           const permissions = decodedData.Permissions;
           localStorage.setItem('permissions', JSON.stringify(permissions));
           localStorage.setItem('pages', JSON.stringify(decodedData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']));
+          localStorage.setItem('userId', decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']);
         }
 
         this.toastr.success(this.translate.instant('LOGIN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));

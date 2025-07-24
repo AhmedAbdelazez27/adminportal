@@ -8,7 +8,8 @@ export class ApiEndpoints {
     GetUserPermissionList: (id: string) => `/Permission/GetAll/${id}`,
     AssignActionPermission: '/Permission/CreateUserPermission',
     DeleteActionPermission: '/Permission/DeleteUserPermission',
-
+    UserType: '/UserTypes',
+    ChangePassword: '/ChangePassword'
 
   };
 
@@ -48,6 +49,13 @@ export class ApiEndpoints {
 
   static readonly Entity = {
     Base: '/Entity'
+  };
+
+    static readonly EntityInfo = {
+    Base: '/Lookup/EntityInfo'
+  };
+  static readonly UserStatus = {
+    Base: '/Lookup/UserStatus'
   };
 
 
