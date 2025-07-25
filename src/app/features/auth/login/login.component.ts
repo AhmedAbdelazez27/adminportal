@@ -60,4 +60,7 @@ export class LoginComponent {
     });
   }
 
+  routeToForgetPassword(){
+    this.router.navigate(['/forgot-password']);
+  }
 }

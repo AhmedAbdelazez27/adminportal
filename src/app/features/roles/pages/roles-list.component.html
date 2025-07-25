@@ -414,7 +414,7 @@
                     <form [formGroup]="userEntityForm">
                         <div class="mb-3">
                             <label for="departments" class="form-label">Add Entities</label>
-                            <ng-select [items]="entities" bindLabel="entitY_NAME" bindValue="entitY_ID"
+                            <ng-select [items]="entities" bindLabel="text" bindValue="id"
                                 [multiple]="true" [closeOnSelect]="true" formControlName="entityIds"
                                 class="ng-select-custom">
                             </ng-select>

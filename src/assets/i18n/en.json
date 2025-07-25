@@ -261,6 +261,14 @@
     "receiptTypeDesc": "Receipt Type",
     "miscReceiptAmount": "MiscReceipt Amount",
     "administrative": "Administrative Amount"
-  }
+  },
+  "CORECT_EMAIL": "Please enter a valid email address",
+  "OTP": {
+    "VERIFY_SUCCESS": "OTP Verified Successfully!",
+    "VERIFY_FAILED": "Invalid OTP. Please try again."
+  },
+  "RESET_PASSWORD": "Reset Password",
+  "ENTER_NEW_PASSWORD": "Enter your new password",
+  "CONFIRM": "Confirm"
 
 }

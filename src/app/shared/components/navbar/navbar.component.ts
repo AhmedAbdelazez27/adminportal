@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { UserService } from '../../../core/services/user.service';
+import { confirmPasswordValidator } from '../../customValidators/confirmPasswordValidator';
 
 @Component({
   selector: 'app-navbar',
@@ -31,7 +32,9 @@ export class NavbarComponent {
       currentPassword: ['', [Validators.required, Validators.minLength(1)]],
       newPassword: ['', [Validators.required, Validators.minLength(1)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(1)]]
-    });
+    }, {
+          validators: confirmPasswordValidator('newPassword', 'confirmPassword')
+        });
 
   }
 

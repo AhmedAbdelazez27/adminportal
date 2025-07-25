@@ -9,7 +9,11 @@ export class ApiEndpoints {
     AssignActionPermission: '/Permission/CreateUserPermission',
     DeleteActionPermission: '/Permission/DeleteUserPermission',
     UserType: '/UserTypes',
-    ChangePassword: '/ChangePassword'
+    ChangePassword: '/ChangePassword',
+    ForgotPassword : '/ForgotPassword ',
+    verifyOtp : '/Otp/Verify',
+    OtpSendViaEmail : '/Otp/SendViaEmail',
+    ResetPassword : '/ResetPassword',
 
   };
 
@@ -48,7 +52,8 @@ export class ApiEndpoints {
   };
 
   static readonly Entity = {
-    Base: '/Entity'
+    Base: '/Entity',
+    GetSelect2List : '/GetSelect2List',
   };
 
     static readonly EntityInfo = {

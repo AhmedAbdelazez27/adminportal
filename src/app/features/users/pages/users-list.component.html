@@ -70,7 +70,7 @@
                     <!-- Entity ID -->
                     <div class="col-xl-4 mb-3">
                         <label class="form-label">Entity</label>
-                        <ng-select [items]="entities" bindLabel="entitY_NAME" bindValue="entitY_ID" [multiple]="false"
+                        <ng-select [items]="entities" bindLabel="text" bindValue="id" [multiple]="false"
                             [closeOnSelect]="true" [(ngModel)]="filterUserCriteria.entityId" class="ng-select-custom">
                         </ng-select>
                     </div>
@@ -630,10 +630,10 @@
 
                             <!-- Entity ID -->
                             <!-- <div class="col-xl-6 mb-3">
-                                <label for="entityId" class="form-label">{{ 'ENTITY_ID' | translate }}</label>
+                                <label for="entityId" class="form-label">{{ 'id' | translate }}</label>
                                 <input type="text" id="entityId" class="form-control"
                                     [ngClass]="{'is-invalid': userForm.get('entityId')?.invalid && (userForm.get('entityId')?.touched || submitted)}"
-                                    formControlName="entityId" placeholder="{{ 'ENTER_ENTITY_ID' | translate }}" />
+                                    formControlName="entityId" placeholder="{{ 'ENTER_id' | translate }}" />
                             </div> -->
 
                             <!-- Apply Date -->
@@ -736,7 +736,7 @@
                     <form [formGroup]="userEntityForm">
                         <div class="mb-3">
                             <label for="departments" class="form-label">Add Entities</label>
-                            <ng-select [items]="entities" bindLabel="entitY_NAME" bindValue="entitY_ID"
+                            <ng-select [items]="entities" bindLabel="text" bindValue="id"
                                 [multiple]="true" [closeOnSelect]="true" formControlName="entityIds"
                                 class="ng-select-custom">
                             </ng-select>

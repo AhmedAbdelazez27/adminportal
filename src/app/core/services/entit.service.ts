@@ -20,4 +20,10 @@ export class EntityService {
         return this.http.get(`${this.BASE_URL}${ApiEndpoints.Entity.Base}`, { params });
     }
 
+    GetSelect2List(skip: number=0, take: number=2000): Observable<any> {
+        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Entity.Base}${ApiEndpoints.Entity.GetSelect2List}`, { take,skip });
+    }
+
+
+
 }

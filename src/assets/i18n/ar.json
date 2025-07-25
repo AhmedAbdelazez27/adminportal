@@ -259,5 +259,14 @@
     "receiptTypeDesc": "نوع السند",
     "miscReceiptAmount": "القيمه",
     "administrative": "القيمه الاداريه"
-  }
+  },
+   "CORECT_EMAIL": "الرجاء إدخال بريد إلكتروني صحيح",
+   "OTP": {
+    "VERIFY_SUCCESS": "تم التحقق من OTP بنجاح!",
+    "VERIFY_FAILED": "OTP غير صالح. يرجى المحاولة مرة أخرى."
+  },
+   "RESET_PASSWORD": "إعادة تعيين كلمة المرور",
+  "ENTER_NEW_PASSWORD": "أدخل كلمة المرور الجديدة",
+  "PASSWORD_GUIDELINES": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل وأن تحتوي على حرف خاص.",
+  "CONFIRM": "تأكيد"
 }

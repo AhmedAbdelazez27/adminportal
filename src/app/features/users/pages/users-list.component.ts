@@ -416,9 +416,9 @@ export class UsersListComponent implements OnInit {
 
   // assign entity to user
   getEntitys() {
-    this.entityService.getEntities(0, 600).subscribe({
+    this.entityService.GetSelect2List(0, 6000).subscribe({
       next: (res) => {
-        this.entities = res?.data
+        this.entities = res?.results
 
       },
       error: (err) => {

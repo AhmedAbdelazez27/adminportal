@@ -5,13 +5,14 @@ import { LoginDto } from '../dtos/login.dto';
 import { environment } from '../../../environments/environment';
 import { jwtDecode } from "jwt-decode";
 import { Router } from '@angular/router';
+import { ApiEndpoints } from '../constants/api-endpoints';
 
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly BASE_URL = `${environment.apiBaseUrl}/Login`;
 
-  constructor(private http: HttpClient , private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(payload: LoginDto): Observable<any> {
     return this.http.post(this.BASE_URL, payload);
@@ -32,7 +33,7 @@ export class AuthService {
     this.router.navigate(['/login']);
 
   }
-    isLoggedIn(): boolean {
+  isLoggedIn(): boolean {
     const token = localStorage.getItem('access_token');
     return token ? true : false;
   }
@@ -47,6 +48,22 @@ export class AuthService {
       console.error('Error decoding token:', error);
       return null;
     }
+  }
+
+  sendOtpToEmail(payload: any): Observable<any> {
+    return this.http.post(`${environment.apiBaseUrl}${ApiEndpoints.User.Base}${ApiEndpoints.User.ForgotPassword}`, payload);
+  }
+
+  verifyOtp(payload: any): Observable<any> {
+    return this.http.post(`${environment.apiBaseUrl}${ApiEndpoints.User.verifyOtp}`, payload);
+  }
+
+    otpSendViaEmail(payload: any): Observable<any> {
+    return this.http.post(`${environment.apiBaseUrl}${ApiEndpoints.User.OtpSendViaEmail}`, payload);
+  }
+
+    resetPassword(payload: any): Observable<any> {
+    return this.http.post(`${environment.apiBaseUrl}${ApiEndpoints.User.Base}${ApiEndpoints.User.ResetPassword}`, payload);
   }
 
 }
