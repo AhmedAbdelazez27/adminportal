@@ -1,0 +1,364 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="title">Departments</h1>
+    <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#Department" (click)="openAddModal()">Add
+      New</button>
+  </div>
+
+  <div class="filter mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="filter-title mb-0">Filter</h4>
+      <button class="btn btn-filter" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+        aria-expanded="false" aria-controls="collapseExample">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z"
+            fill="" />
+          <path
+            d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z"
+            fill="" />
+          <path
+            d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z"
+            fill="" />
+          <path
+            d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z"
+            fill="" />
+          <path
+            d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z"
+            fill="" />
+          <path
+            d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z"
+            fill="" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body">
+        <div class="row mb-3">
+          <div class="col-xl-4 mb-3">
+            <label for="searchName" class="form-label">Search Name</label>
+            <input type="text" class="form-control" id="searchName" placeholder="Search by Arabic or English name"
+              [(ngModel)]="searchValue">
+          </div>
+          <div class="col-xl-4 mb-3">
+            <label for="statusFilter" class="form-label">Status</label>
+            <select class="form-select" id="statusFilter" [(ngModel)]="isActiveFilter">
+              <option [ngValue]="undefined">All</option>
+              <option [ngValue]="true">Active</option>
+              <option [ngValue]="false">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-center">
+          <button class="btn btn-outline" (click)="clear()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
+                fill="#5B5B5B" />
+            </svg>
+            Clear
+          </button>
+          <button class="btn btn-gold" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+                fill="white" />
+            </svg>
+            Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Department Table -->
+  <div *ngIf="isLoading" class="text-center py-4">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <table *ngIf="!isLoading" class="table new-table mb-3">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Arabic Name</th>
+        <th>English Name</th>
+        <th>Status</th>
+        <th>Last Modified</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let department of departments; let i = index">
+        <td>{{ getSerialNumber(i) }}</td>
+        <td>{{ department.aname }}</td>
+        <td>{{ department.ename }}</td>
+        <td>
+          <span [class]="getStatusBadgeClass(department.isActive)">
+            {{ getStatusText(department.isActive) }}
+          </span>
+        </td>
+        <td>{{ formatDate(department.last_Modify) }}</td>
+        <td>
+          <div class="dropdown">
+            <button class="btn table-more dropdown-toggle" type="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <g clip-path="url(#clip0_206_13784)">
+                  <path
+                    d="M22 14C20.8954 14 20 13.1046 20 12C20 10.8954 20.8954 10 22 10C23.1046 10 24 10.8954 24 12C24 13.1046 23.1046 14 22 14Z"
+                    fill="#374957"></path>
+                  <path
+                    d="M12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14Z"
+                    fill="#374957"></path>
+                  <path
+                    d="M1.99999 14C0.895413 14 -2.28882e-05 13.1046 -2.28882e-05 12C-2.28882e-05 10.8954 0.895413 10 1.99999 10C3.10456 10 4 10.8954 4 12C4 13.1046 3.10456 14 1.99999 14Z"
+                    fill="#374957"></path>
+                </g>
+                <defs>
+                  <clipPath id="clip0_206_13784">
+                    <rect width="24" height="24" fill="white" transform="matrix(-1 0 0 1 24 0)"></rect>
+                  </clipPath>
+                </defs>
+              </svg>
+            </button>
+            <ul class="dropdown-menu">
+              <li class="mb-1">
+                <a class="dropdown-item d-flex gap-2 align-items-center" href="#" (click)="onViewDetails(department)"
+                  data-bs-toggle="modal" data-bs-target="#Department">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path
+                      d="M9 1.5C4.8675 1.5 1.5 4.8675 1.5 9C1.5 13.1325 4.8675 16.5 9 16.5C13.1325 16.5 16.5 13.1325 16.5 9C16.5 4.8675 13.1325 1.5 9 1.5ZM9 15C5.6925 15 3 12.3075 3 9C3 5.6925 5.6925 3 9 3C12.3075 3 15 5.6925 15 9C15 12.3075 12.3075 15 9 15Z"
+                      fill="#A6A6A6" />
+                    <path
+                      d="M9 4.5C7.345 4.5 6 5.845 6 7.5C6 9.155 7.345 10.5 9 10.5C10.655 10.5 12 9.155 12 7.5C12 5.845 10.655 4.5 9 4.5ZM9 9C8.175 9 7.5 8.325 7.5 7.5C7.5 6.675 8.175 6 9 6C9.825 6 10.5 6.675 10.5 7.5C10.5 8.325 9.825 9 9 9Z"
+                      fill="#A6A6A6" />
+                  </svg>
+                  View
+                </a>
+              </li>
+              <li class="mb-1">
+                <a class="dropdown-item d-flex gap-2 align-items-center" href="#" (click)="onEdit(department)"
+                  data-bs-toggle="modal" data-bs-target="#Department">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path
+                      d="M15.75 16.5H2.25C1.9425 16.5 1.6875 16.245 1.6875 15.9375C1.6875 15.63 1.9425 15.375 2.25 15.375H15.75C16.0575 15.375 16.3125 15.63 16.3125 15.9375C16.3125 16.245 16.0575 16.5 15.75 16.5Z"
+                      fill="#A6A6A6" />
+                    <path
+                      d="M14.265 2.61C12.81 1.155 11.385 1.1175 9.89249 2.61L8.98499 3.5175C8.90999 3.5925 8.87999 3.7125 8.90999 3.8175C9.47999 5.805 11.07 7.395 13.0575 7.965C13.0875 7.9725 13.1175 7.98 13.1475 7.98C13.23 7.98 13.305 7.95 13.365 7.89L14.265 6.9825C15.0075 6.2475 15.3675 5.535 15.3675 4.815C15.375 4.0725 15.015 3.3525 14.265 2.61Z"
+                      fill="#A6A6A6" />
+                    <path
+                      d="M11.7075 8.6476C11.49 8.5426 11.28 8.4376 11.0775 8.3176C10.9125 8.2201 10.755 8.1151 10.5975 8.0026C10.47 7.9201 10.32 7.8001 10.1775 7.6801C10.1625 7.6726 10.11 7.6276 10.05 7.5676C9.8025 7.3576 9.525 7.0876 9.2775 6.7876C9.255 6.7726 9.2175 6.7201 9.165 6.6526C9.09 6.5626 8.9625 6.4126 8.85 6.2401C8.76 6.1276 8.655 5.9626 8.5575 5.7976C8.4375 5.5951 8.3325 5.3926 8.2275 5.1826V5.1826C8.08983 4.88759 7.70264 4.79996 7.47244 5.03015L3.255 9.2476C3.1575 9.3451 3.06749 9.5326 3.04499 9.6601L2.63999 12.5326C2.56499 13.0426 2.7075 13.5226 3.0225 13.8451C3.2925 14.1076 3.66749 14.2501 4.07249 14.2501C4.16249 14.2501 4.2525 14.2426 4.3425 14.2276L7.2225 13.8226C7.3575 13.8001 7.545 13.7101 7.635 13.6126L11.8594 9.38819C12.085 9.1626 12.0002 8.77445 11.7075 8.6476V8.6476Z"
+                      fill="#A6A6A6" />
+                  </svg>
+                  Edit
+                </a>
+              </li>
+              <li class="mb-1">
+                <a class="dropdown-item d-flex gap-2 align-items-center" href="#"
+                  (click)="onViewUsersInDepartment(department)" data-bs-toggle="modal"
+                  data-bs-target="#usersInDepartmentModal">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path
+                      d="M9 1.5C4.8675 1.5 1.5 4.8675 1.5 9C1.5 13.1325 4.8675 16.5 9 16.5C13.1325 16.5 16.5 13.1325 16.5 9C16.5 4.8675 13.1325 1.5 9 1.5ZM9 15C5.6925 15 3 12.3075 3 9C3 5.6925 5.6925 3 9 3C12.3075 3 15 5.6925 15 9C15 12.3075 12.3075 15 9 15Z"
+                      fill="#A6A6A6" />
+                    <path
+                      d="M9 4.5C7.345 4.5 6 5.845 6 7.5C6 9.155 7.345 10.5 9 10.5C10.655 10.5 12 9.155 12 7.5C12 5.845 10.655 4.5 9 4.5ZM9 9C8.175 9 7.5 8.325 7.5 7.5C7.5 6.675 8.175 6 9 6C9.825 6 10.5 6.675 10.5 7.5C10.5 8.325 9.825 9 9 9Z"
+                      fill="#A6A6A6" />
+                  </svg>
+                  Users in Department
+                </a>
+              </li>
+              <li class="mb-1">
+                <a class="dropdown-item d-flex gap-2 align-items-center text-danger" href="#"
+                  (click)="onDelete(department)" data-bs-toggle="modal" data-bs-target="#deleteDepartmentModal">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path
+                      d="M15.8025 3.9225C14.595 3.8025 13.3875 3.7125 12.1725 3.645V3.6375L12.0075 2.6625C11.895 1.9725 11.73 0.9375 9.975 0.9375H8.01C6.2625 0.9375 6.0975 1.9275 5.9775 2.655L5.82 3.615C5.1225 3.66 4.425 3.705 3.7275 3.7725L2.1975 3.9225C1.8825 3.9525 1.6575 4.23 1.6875 4.5375C1.7175 4.845 1.9875 5.07 2.3025 5.04L3.8325 4.89C7.7625 4.5 11.7225 4.65 15.6975 5.0475C15.72 5.0475 15.735 5.0475 15.7575 5.0475C16.0425 5.0475 16.29 4.83 16.32 4.5375C16.3425 4.23 16.1175 3.9525 15.8025 3.9225Z"
+                      fill="#A6A6A6" />
+                    <path
+                      d="M14.4225 6.105C14.2425 5.9175 13.995 5.8125 13.74 5.8125H4.26C4.005 5.8125 3.75 5.9175 3.5775 6.105C3.405 6.2925 3.3075 6.5475 3.3225 6.81L3.7875 14.505C3.87 15.645 3.975 17.07 6.5925 17.07H11.4075C14.025 17.07 14.13 15.6525 14.2125 14.505L14.6775 6.8175C14.6925 6.5475 14.595 6.2925 14.4225 6.105ZM10.245 13.3125H7.74749C7.43999 13.3125 7.18499 13.0575 7.18499 12.75C7.18499 12.4425 7.43999 12.1875 7.74749 12.1875H10.245C10.5525 12.1875 10.8075 12.4425 10.8075 12.75C10.8075 13.0575 10.5525 13.3125 10.245 13.3125ZM10.875 10.3125H7.125C6.8175 10.3125 6.5625 10.0575 6.5625 9.75C6.5625 9.4425 6.8175 9.1875 7.125 9.1875H10.875C11.1825 9.1875 11.4375 9.4425 11.4375 9.75C11.4375 10.0575 11.1825 10.3125 10.875 10.3125Z"
+                      fill="#A6A6A6" />
+                  </svg>
+                  Delete
+                </a>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="!isLoading && departments.length === 0">
+        <td colspan="6" class="text-center">No departments found</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="d-flex justify-content-between align-items-center pagination-container">
+    <div class="d-flex align-items-center gap-2 entries-info">
+      <span class="text-muted">Show</span>
+      <select class="form-select form-select-sm entries-select" (change)="changePerPage($event)">
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+      <span class="text-muted">entries</span>
+      <span class="text-muted ms-3">
+        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ Math.min(currentPage * itemsPerPage, totalCount) }} of
+        {{ totalCount }} entries
+      </span>
+    </div>
+    <nav aria-label="Department pagination">
+      <ul class="pagination pagination-sm mb-0">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" type="button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+        </li>
+        <li class="page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
+          <button class="page-link" type="button" (click)="changePage(page)">{{ page }}</button>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === pages.length">
+          <button class="page-link" type="button" (click)="changePage(currentPage + 1)"
+            [disabled]="currentPage === pages.length">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<!-- Department Modal -->
+<div class="modal fade" id="Department" tabindex="-1" aria-labelledby="DepartmentLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DepartmentLabel">
+          {{ mode === 'add' ? 'Add New Department' : mode === 'edit' ? 'Edit Department' : 'View Department' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form [formGroup]="departmentForm" (ngSubmit)="submit()">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="aname" class="form-label">Arabic Name *</label>
+              <input type="text" class="form-control" id="aname" formControlName="aname" maxlength="100"
+                [class.is-invalid]="submitted && departmentForm.get('aname')?.errors">
+              <div class="invalid-feedback" *ngIf="submitted && departmentForm.get('aname')?.errors?.['required']">
+                Arabic name is required
+              </div>
+              <div class="invalid-feedback" *ngIf="submitted && departmentForm.get('aname')?.errors?.['minlength']">
+                Arabic name must be at least 1 character
+              </div>
+              <div class="invalid-feedback" *ngIf="submitted && departmentForm.get('aname')?.errors?.['maxlength']">
+                {{ translate.instant('NAME_AR_MAXLENGTH') }}
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="ename" class="form-label">English Name *</label>
+              <input type="text" class="form-control" id="ename" formControlName="ename" maxlength="100"
+                [class.is-invalid]="submitted && departmentForm.get('ename')?.errors">
+              <div class="invalid-feedback" *ngIf="submitted && departmentForm.get('ename')?.errors?.['required']">
+                English name is required
+              </div>
+              <div class="invalid-feedback" *ngIf="submitted && departmentForm.get('ename')?.errors?.['minlength']">
+                English name must be at least 1 character
+              </div>
+              <div class="invalid-feedback" *ngIf="submitted && departmentForm.get('ename')?.errors?.['maxlength']">
+                {{ translate.instant('NAME_EN_MAXLENGTH') }}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="isActive" class="form-label">Status</label>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="isActive" formControlName="isActive">
+                <label class="form-check-label" for="isActive">
+                  Active
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" *ngIf="mode !== 'view'">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-gold" [disabled]="submitted">
+            {{ mode === 'add' ? 'Create' : 'Update' }}
+          </button>
+        </div>
+        <div class="modal-footer" *ngIf="mode === 'view'">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteDepartmentModal" tabindex="-1" aria-labelledby="deleteDepartmentModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteDepartmentModalLabel">Confirm Delete</h5>
+        <button type="button" class="btn-close btn-delete" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this department? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-delete" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="deleteDepartment()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Users in Department Modal -->
+<div class="modal fade" id="usersInDepartmentModal" tabindex="-1" aria-labelledby="usersInDepartmentModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="usersInDepartmentModalLabel">
+          Users in {{ selectedDepartment?.ename || 'Department' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="isLoadingUsers" class="text-center py-4">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!isLoadingUsers && usersInDepartment.length === 0" class="text-center py-4">
+          <p class="text-muted">No users found in this department.</p>
+        </div>
+
+        <div *ngIf="!isLoadingUsers && usersInDepartment.length > 0" class="user-tags-container">
+          <div class="row">
+            <div class="col-12">
+              <div class="user-tags">
+                <span *ngFor="let user of usersInDepartment" class="badge bg-primary me-2 mb-2 p-2"
+                  style="font-size: 0.9rem;">
+                  {{ user.userName }} - {{ user.departmentNameEn }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

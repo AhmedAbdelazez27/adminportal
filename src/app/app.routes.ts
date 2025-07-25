@@ -28,45 +28,72 @@ export const routes: Routes = [
           {
             path: 'roles',
             loadChildren: () =>
-              import('./features/roles/roles.routes').then((m) => m.rolesRoutes),
+              import('./features/roles/roles.routes').then(
+                (m) => m.rolesRoutes
+              ),
             canActivate: [authGuard],
-            data: { permission: 'Role.View' }
+            data: { permission: 'Role.View' },
           },
           {
             path: 'users',
             loadChildren: () =>
-              import('./features/users/users.routes').then((m) => m.usersRoutes),
+              import('./features/users/users.routes').then(
+                (m) => m.usersRoutes
+              ),
             canActivate: [authGuard],
-            data: { permission: 'User.View' }
-          }
-        ]
+            data: { permission: 'User.View' },
+          },
+          {
+            path: 'department',
+            loadChildren: () =>
+              import(
+                './features/Authentication/department/department.routes'
+              ).then((m) => m.departmentRoutes),
+            //canActivate: [authGuard],
+            data: { permission: 'Department.View' },
+          },
+          // this for entity
+          {
+            path: 'entity',
+            loadChildren: () =>
+              import('./features/Authentication/entity/entity.routes').then(
+                (m) => m.entityRoutes
+              ),
+            //canActivate: [authGuard],
+            data: { permission: 'Entity.View' },
+          },
+        ],
       },
+      // {
+      //   path: 'settings',
+      //   children: [],
+      // },
       {
         path: 'financial',
         children: [
           {
             path: 'operations',
             loadChildren: () =>
-              import('./features/finanial/operations/operations.routes').then((m) => m.operationsRoutes),
+              import('./features/finanial/operations/operations.routes').then(
+                (m) => m.operationsRoutes
+              ),
             // canActivate: [authGuard],
             // data: { permission: 'Financial.View' }
           },
           {
             path: 'reports',
             loadChildren: () =>
-              import('./features/finanial/reports/reports.routes').then((m) => m.reportsRoutes),
+              import('./features/finanial/reports/reports.routes').then(
+                (m) => m.reportsRoutes
+              ),
             // canActivate: [authGuard],
             // data: { permission: 'Financial.View' }
-          }
-        ]
-      }
+          },
+        ],
+      },
     ],
   },
 
-  
- 
-  
-  
   { path: 'no-permission', component: NoPermissionComponent },
-  { path: '**', component: PageNotFoundComponent }
+  { path: '**', component: PageNotFoundComponent },
 ];

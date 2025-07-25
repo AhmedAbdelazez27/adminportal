@@ -16,6 +16,9 @@
     "SUCCESS": "Role assigned successfully",
     "FAIL": "Error assigning role"
   },
+  "ERROR": {
+    "FETCH_DEPARTMENTS": "Error while fetching departments"
+  },
   "TOAST": {
     "TITLE": {
       "SUCCESS": "Success",
@@ -31,7 +34,70 @@
     "DEPARTMENTS_ASSIGN_FAILED": "Failed to assign departments. Please try again.",
     "SCREENS_ASSIGNED": "Screens assigned successfully.",
     "SCREENS_ASSIGN_FAILED": "Failed to assign screens.",
-    "ROLE_REQUIRED": "Please select a role first."
+    "ROLE_REQUIRED": "Please select a role first.",
+    "DEPARTMENT_CREATED": "Department created successfully.",
+    "DEPARTMENT_UPDATED": "Department updated successfully.",
+    "DEPARTMENT_DELETED": "Department deleted successfully.",
+    "ENTITY_CREATED": "Entity created successfully.",
+    "ENTITY_UPDATED": "Entity updated successfully.",
+    "ENTITY_DELETED": "Entity deleted successfully.",
+    "FETCH_ENTITIES": "Error while fetching entities"
+  },
+  "VALIDATION": {
+    "REQUIRED": "This field is required",
+    "MIN_LENGTH": "Minimum length is {{min}} characters",
+    "MAX_LENGTH": "Maximum length is {{max}} characters",
+    "INVALID_EMAIL": "Please enter a valid email address",
+    "NO_WHITESPACE": "This field cannot contain only whitespace",
+    "INVALID_PHONE": "Please enter a valid phone number",
+    "INVALID_WEBSITE": "Please enter a valid website URL",
+    "ARABIC_NAME_REQUIRED": "Arabic name is required",
+    "ENGLISH_NAME_REQUIRED": "English name is required",
+    "ARABIC_NAME_MIN_LENGTH": "Arabic name must be at least 1 character",
+    "ENGLISH_NAME_MIN_LENGTH": "English name must be at least 1 character",
+    "ARABIC_NAME_MAX_LENGTH": "Arabic name must not exceed 4000 characters",
+    "ENGLISH_NAME_MAX_LENGTH": "English name must not exceed 4000 characters",
+    "LOCATION_MAX_LENGTH": "Location must not exceed 4000 characters",
+    "PHONE_MAX_LENGTH": "Phone must not exceed 100 characters",
+    "WEBSITE_MAX_LENGTH": "Website must not exceed 100 characters",
+    "EMAIL_MAX_LENGTH": "Email must not exceed 100 characters",
+    "LOOKS_GOOD": "Looks good!",
+    "FORM_ERRORS": "Please fix the following errors:",
+    "ERROR_COUNT": "error(s) found",
+    "MANDATORY_FIELDS_REQUIRED": "Please fill in the required fields (Arabic Name and English Name)"
+  },
+  "COMMON": {
+    "ACTIONS": "Actions",
+    "VIEW": "View",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "CANCEL": "Cancel",
+    "CLOSE": "Close",
+    "CREATE": "Create",
+    "UPDATE": "Update",
+    "SAVE": "Save",
+    "CONFIRM": "Confirm"
+  },
+  "ENTITY": {
+    "TITLE": "Entities",
+    "ARABIC_NAME": "Arabic Name",
+    "ENGLISH_NAME": "English Name",
+    "LOCATION": "Location",
+    "PHONE": "Phone",
+    "WEBSITE": "Website",
+    "EMAIL": "Email",
+    "ACCOUNT_DETAILS": "Account Details",
+    "ENTER_ARABIC_NAME": "Enter Arabic name",
+    "ENTER_ENGLISH_NAME": "Enter English name",
+    "ENTER_LOCATION": "Enter location",
+    "ENTER_PHONE": "Enter phone number",
+    "ENTER_WEBSITE": "Enter website URL",
+    "ENTER_EMAIL": "Enter email address",
+    "SELECT_ACCOUNT_DETAILS": "Select Account Details",
+    "ADD_NEW": "Add New Entity",
+    "EDIT": "Edit Entity",
+    "VIEW": "View Entity",
+    "DELETE_CONFIRMATION": "Are you sure you want to delete this entity? This action cannot be undone."
   },
   "ROLE": {
     "CREATED": {
@@ -53,6 +119,8 @@
   "NAME_EN": "Name (English)",
   "ENTER_NAME_EN": "Enter English name",
   "NAME_EN_REQUIRED": "English name is required",
+  "NAME_AR_MAXLENGTH": "Arabic name cannot exceed 100 characters",
+  "NAME_EN_MAXLENGTH": "English name cannot exceed 100 characters",
   "USERNAME": "Username",
   "ENTER_USERNAME": "Enter username",
   "USERNAME_REQUIRED": "Username is required",
@@ -114,7 +182,6 @@
   "ENTITIES_ASSIGNED": "Entities assigned successfully.",
   "ENTITIES_ASSIGN_FAILED": "Failed to assign entities.",
 
-
   "Common": {
     "Action": "Action",
     "ViewInfo": "View Info",
@@ -130,7 +197,6 @@
     "Print": " Print",
     "Required": "This Field is Required"
   },
-
 
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "Entity Name",
@@ -296,5 +362,4 @@
 
 
   }
-
 }

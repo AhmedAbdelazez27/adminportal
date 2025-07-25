@@ -30,18 +30,21 @@ export class ApiEndpoints {
     GetScreensList: '/GetScreensList',
     AssignScreenPermission: '/AssignScreenPermission',
     GetUserOfRole: (id: string) => `/GetRoleUsers/${id}`,
-
-
   };
 
   static readonly Departments = {
     Base: '/Department',
-    Select2: '/Select2'
+    Create: '/Create',
+    Update: '/Update',
+    Get: (id: number) => `/Get/${id}`,
+    GetAll: '/GetAll',
+    Delete: (id: number) => `/Delete/${id}`,
+    Select2: '/Select2',
   };
 
   static readonly UsersDepartments = {
     Base: '/UsersDepartments',
-    Assign: '/Assign'
+    Assign: '/Assign',
   };
 
   static readonly UsersEntities = {
@@ -54,6 +57,8 @@ export class ApiEndpoints {
   static readonly Entity = {
     Base: '/Entity',
     GetSelect2List : '/GetSelect2List',
+     GetAll: '/Entity/GetAll',
+    GetById: (id: string) => `/Entity/${id}`,
   };
 
     static readonly EntityInfo = {
@@ -63,21 +68,23 @@ export class ApiEndpoints {
     Base: '/Lookup/UserStatus'
   };
 
-
   static readonly ArMiscReceiptHeader = {
     Base: '/ArMiscReciptHeader',
     GetAll: '/GetAll',
-    GetById: (miscReceiptId: string, entityId: string) => `/Get/${miscReceiptId}/${entityId}`,
-    GetReceiptDetailsById: (miscReceiptId: string, entityId: string) => `/Get/${miscReceiptId}/${entityId}`,
-    GetReceiptLinesById: (miscReceiptId: string, entityId: string) => `/Get/${miscReceiptId}/${entityId}`,
+    GetById: (miscReceiptId: string, entityId: string) =>
+      `/Get/${miscReceiptId}/${entityId}`,
+    GetReceiptDetailsById: (miscReceiptId: string, entityId: string) =>
+      `/Get/${miscReceiptId}/${entityId}`,
+    GetReceiptLinesById: (miscReceiptId: string, entityId: string) =>
+      `/Get/${miscReceiptId}/${entityId}`,
   };
-
 
   static readonly ApMiscPaymentTransactionHDR = {
     Base: '/ApPaymentTransactionsHdr',
     GetAll: '/GetAll',
     GetDetailById: '/Get',
-    GetById: (paymentId: string, entityId: string) => `/Get/${paymentId}/${entityId}`,
+    GetById: (paymentId: string, entityId: string) =>
+      `/Get/${paymentId}/${entityId}`,
   };
 
   static readonly FinancialReports = {
@@ -99,4 +106,3 @@ export class ApiEndpoints {
   };
 
 }
-
