@@ -1066,3 +1066,94 @@ p, span, a, td, li {
     }
   }
 }
+
+.ag-grid-toolbar select.form-select { padding: 8px 32px 8px 12px; }
+.ag-grid-toolbar {
+  background-color: #F7F7F7;
+  border: 1px solid #E6E6E6;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.ag-grid-toolbar .input-group {
+  border: 1px solid #CED4DA;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.ag-grid-toolbar .input-group-text {
+  background-color: transparent;
+  border: 0;
+  padding-right: 0;
+  color: #A6A6A6;
+}
+.ag-grid-toolbar .form-control.border-start-0 {
+  border: 0;
+  box-shadow: none;
+}
+.ag-grid-toolbar .form-control::placeholder {
+  color: #A6A6A6;
+}
+.ag-grid-toolbar select.form-select-sm {
+  padding: 4px 28px 4px 8px;
+  font-size: 0.875rem;
+  border-radius: 6px;
+}
+
+.ag-theme-admin {
+ 
+
+  --ag-font-family: 'Cairo-reg';
+  --ag-font-size: 14px;
+  --ag-header-font-size: 15px;
+  --ag-header-font-weight: 700;
+
+  --ag-background-color: #ffffff;
+  --ag-header-background-color: #F2F2F2;
+  --ag-header-foreground-color: #000;
+  --ag-odd-row-background-color: #FDFDFD;
+  --ag-row-hover-background-color: #F6F8FC;
+  --ag-selected-row-background-color: #EAF2FF;
+  --ag-border-color: #E6E6E6;
+
+  --ag-grid-size: 8px;
+  --ag-row-height: 46px;
+  --ag-header-height: 50px;
+  --ag-border-radius: 8px;
+}
+
+.ag-paging-row-summary-panel select {
+  display: none !important;
+}
+.ag-paging-row-summary-panel .ag-paging-page-size-panel {
+  display: none !important;
+}
+span.ag-paging-page-size {
+    display: none !important;
+}
+.ag-theme-admin .ag-paging-panel {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  color: #636363;
+  border-top: 1px solid #E6E6E6;
+}
+.ag-theme-admin .ag-paging-button {
+  width: 28px;
+  height: 28px;
+  line-height: 26px;
+  text-align: center;
+  border: 1px solid #E6E6E6;
+  border-radius: 4px;
+  background-color: #FFF;
+  cursor: pointer;
+  user-select: none;
+}
+.ag-theme-admin .ag-paging-button:hover:not(.ag-disabled) {
+  background-color: #F2F2F2;
+}
+.ag-theme-admin .ag-disabled {
+  opacity: 0.4;
+  cursor: default;
+}

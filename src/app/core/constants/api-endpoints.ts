@@ -91,6 +91,12 @@ export class ApiEndpoints {
     GetGetGlTrialBalancesRptEndPoint: '/GetGlTrialBalancesRpt',
     GetGeneralBalanceSheetRptEndPoint: '/GetGeneralBalanceSheetRpt',
   }
+  static readonly beneficent = {
+    Base: '/SpBeneficents',
+    GetAll: '/GetAll',
+    GetDetailById: '/Get',
+    GetById: (beneficentId: string, entityId: string) => `/GetCasesSearch/${beneficentId}/${entityId}`,
+  };
 
 }
 

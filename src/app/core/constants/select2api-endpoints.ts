@@ -15,6 +15,8 @@ export class Select2APIEndpoint {
     GetGlAccountSelect2List: '/GlAccount/GetGlAccountSelect2List',
     GetSpBeneficentsSelect2List: '/SpBeneficents/GetSpBeneficentsSelect2List',
     GetGlPeriodDetailSelect2List: '/GlPeriodDetails/GetGlPeriodDetailSelect2List',
+    GetSpBenSelect2ListBYEntityID: '/SpBeneficents/GetSpBeneficentsSelect2List',
+
   };
 
 }

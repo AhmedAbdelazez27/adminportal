@@ -117,6 +117,7 @@
 
   "Common": {
     "Action": "Action",
+    "ViewInfo": "View Info",
     "Clear": "Clear",
     "Search": "Apply",
     "Data": " Search Result",
@@ -262,13 +263,38 @@
     "miscReceiptAmount": "MiscReceipt Amount",
     "administrative": "Administrative Amount"
   },
-  "CORECT_EMAIL": "Please enter a valid email address",
+    "CORECT_EMAIL": "Please enter a valid email address",
   "OTP": {
     "VERIFY_SUCCESS": "OTP Verified Successfully!",
     "VERIFY_FAILED": "Invalid OTP. Please try again."
   },
   "RESET_PASSWORD": "Reset Password",
   "ENTER_NEW_PASSWORD": "Enter your new password",
-  "CONFIRM": "Confirm"
+  "CONFIRM": "Confirm",
+  "beneficentResourceName":{
+    "Title": "Beneficent",
+        "EntityId": "Entity Name",
+        "beneficentName":"Donator Name",
+        "beneficentNumber":"Donator No",
+        "phoneNumber":"Tel",
+        "beneficentAddress":"Donator Address",
+        "mobile":"Mobile",
+        "homeTel":"HomeTel",
+        "workTel":"WorkTel",
+        "Naat":"Label",
+        "status":"Status",
+        "fax":"Fax",
+        "email":"Email",
+        "website":"Website",
+        "box":"Box",
+        "startDate":"Start Date",
+        "job":"Job",
+        "address":"Address",
+        "gender":"Gender",
+        "city":"City",
+        "titleDto":"Title"
+
+
+  }
 
 }

@@ -1,16 +1,4 @@
-<!doctype html>
-<html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ 'FinancialReportResourceName.vendorsPayTransRPT_Title' | translate }}</title>
-  <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
-</head>
-
-<body>
-
-  <div class="header"></div>
 
   <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -93,18 +81,21 @@
         </div>
       </div>
     </div>
-    <ng-container *ngIf="translatedHeaders$ | async as headers">
-      <app-custom-table [headers]="headers"
-                        [headerKeys]="headerKeys"
-                        [rows]="getAllDataForReports"
-                        [pagination]="pagination"
-                        [showAction]="false"
-                        [actionTypes]="[]"
-                        (onChangePage)="getLoadDataGrid($event)">
-      </app-custom-table>
-    </ng-container>
-  </div>
 
-  <script src="js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+ <app-generic-data-table
+  [columnDefs]="columnDefs"
+  [rowData]="getAllDataForReports"
+  [totalCount]="pagination.totalCount"
+  [pageSize]="pagination.take"
+  [currentPage]="pagination.currentPage - 1"
+  [columnHeaderMap]="columnHeaderMap"
+  [rowActions]="rowActions"
+  (actionClick)="onTableAction($event)"
+  (pageChange)="onPageChange($event)"
+  [showActionColumn]="true"
+  (search)="onTableSearch($event)"
+></app-generic-data-table>
+ 
+
+  </div> 

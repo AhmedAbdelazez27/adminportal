@@ -16,7 +16,7 @@ export const routes: Routes = [
   { path: 'verify-otp', component: VerifyotpComponent },
   { path: 'reset-password', component: ResetpasswordComponent },
   {
-    path: '',
+    path: '', 
     component: MainLayoutComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },

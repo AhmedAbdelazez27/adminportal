@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Invoice, InvoiceTransaction, InvoiceHeader, Vendor, Entity, InvoiceType, InvoiceFilter } from './models/invoice.models';
 import { ToastrService } from 'ngx-toastr';
 import { InvoiceService } from '../../../../core/services/invoice.service';
+import { ColDef } from 'ag-grid-community';
 
 @Component({
   selector: 'app-invoice',
@@ -25,6 +26,15 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   public filterModel: InvoiceFilter = this.createDefaultFilter();
   public loading = false;
   private destroy$ = new Subject<void>();
+
+  public columnDefs: ColDef[] = [
+    { headerName: 'Invoice Number', field: 'hD_INNO' },
+    { headerName: 'Invoice Date', field: 'hD_DATE' },
+    { headerName: 'Vendor Number', field: 'vendoR_NUMBER' },
+    { headerName: 'Vendor Name', field: 'vendoR_NAME' },
+    { headerName: 'Genre', field: 'hD_TYPE_DESC' },
+    { headerName: 'Value', field: 'totalVal' },
+  ];
 
   constructor(private apiService: InvoiceService, private toastr: ToastrService) {}
 
@@ -163,6 +173,13 @@ invoiceDate: null,
             console.error('Invoice type list load error', err);
           }
         });
+    }
+  }
+
+  onInvoiceRowClicked(event: any): void {
+    const data = event?.data;
+    if (data) {
+      this.getApInvoice_tr(data.hd_id ?? '', data.entitY_ID ?? '');
     }
   }
 

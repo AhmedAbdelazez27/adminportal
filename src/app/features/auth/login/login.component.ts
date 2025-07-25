@@ -37,7 +37,6 @@ export class LoginComponent {
 
         this.auth.saveToken(res?.token);
         const decodedData = this.auth.decodeToken();
-        console.log(decodedData);
         
         if (decodedData && decodedData.Permissions) {
           const permissions = decodedData.Permissions;

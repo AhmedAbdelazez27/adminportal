@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { FilterApPaymentsTransactionHDRByIdDto, FilterApPaymentsTransactionHDRDto, ApPaymentsTransactionHDRDto, PagedResult } from '../dtos/ApPaymentsTransactionHDRdtos/ApPaymentsTransactionHDR.dto';
 import { FndLookUpValuesSelect2RequestDto, SelectdropdownResult } from '../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2APIEndpoint } from '../constants/select2api-endpoints';
+import { loadBeneficentNameDto } from '../dtos/sponsorship/operations/beneficent.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -88,4 +89,9 @@ export class Select2Service {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetApVendorSelect2List}`
     return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
+  getBeneficentNamebyEntityID(loadBeneficentNameDto: loadBeneficentNameDto): Observable<SelectdropdownResult> {
+   const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetSpBenSelect2ListBYEntityID}`
+    return this.http.post<SelectdropdownResult>(apiUrl, loadBeneficentNameDto);
+  }
+
 }

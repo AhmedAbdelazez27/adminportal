@@ -268,5 +268,27 @@
    "RESET_PASSWORD": "إعادة تعيين كلمة المرور",
   "ENTER_NEW_PASSWORD": "أدخل كلمة المرور الجديدة",
   "PASSWORD_GUIDELINES": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل وأن تحتوي على حرف خاص.",
-  "CONFIRM": "تأكيد"
+  "CONFIRM": "تأكيد",
+  "beneficentResourceName":{
+    "Title": "بحث فى المتبرعين,",
+        "EntityId": "اسم الجمعية",
+         "beneficentName":"اسم المتبرع",
+        "beneficentNumber":"رقم المتبرع",
+        "phoneNumber":"رقم الهاتف",
+        "beneficentAddress":"عنوان المتبرع",
+        "mobile":"هاتف متحرك",
+        "homeTel":"هاتف منزل",
+        "workTel":"هاتف عمل",
+        "Naat":"النعت",
+        "status":"الحالة",
+        "fax":"فاكس",
+        "email":"البريد اليكتروني",
+        "website":"موقع الكترونى",
+        "box":"ص.الكترونى",
+        "startDate":"تاريخ البدء",
+        "job":"الوظيفة",
+        "address":"العنوان",
+        "gender":"الجنس",
+        "city":"الإمارة"
+  }
 }

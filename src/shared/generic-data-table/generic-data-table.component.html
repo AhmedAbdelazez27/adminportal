@@ -1,0 +1,108 @@
+<div class="card shadow-sm border-0 mb-4 p-3 bg-light">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <div class="form-group mb-0">
+      <label for="pageSizeSelect" class="form-label me-2 fw-semibold">Page Size:</label>
+      <select id="pageSizeSelect" class="form-select d-inline-block w-auto" [(ngModel)]="pageSize" (change)="onPageSizeChanged(pageSize.toString())">
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+        <option [value]="100">100</option>
+        <option [value]="500">500</option>
+      </select>
+    </div>
+    <div class="form-group mb-0">
+      <input type="text" class="form-control" style="min-width: 220px;" placeholder="Search..." [(ngModel)]="searchText" (input)="onSearchInput()">
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive rounded shadow-sm">
+  <div class="ag-theme-alpine" style="position: relative;">
+    <ag-grid-angular
+      class="ag-theme-alpine w-100 modern-table"
+      style="min-width: 100%;"
+      [rowData]="rowData"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [gridOptions]="gridOptions"
+      [context]="{ componentParent: this }"
+      [pagination]="false"
+      domLayout="autoHeight"
+      (gridReady)="onGridReady($event)"
+    >
+    </ag-grid-angular>
+
+    <!-- Custom context menu for row actions -->
+    <div *ngIf="openMenuRowId !== null"
+         [ngStyle]="{ position: 'absolute', left: menuX + 'px', top: menuY + 'px', zIndex: 20000, minWidth: '10px', borderRadius: '1rem', boxShadow: '0 8px 32px rgba(0,0,0,0.12)', background: '#fff', padding: '0.5rem 0', border: 'none' }">
+      <button *ngFor="let a of rowActions"
+              class="dropdown-item d-flex align-items-center gap-2"
+              style="border-radius:0.5rem; color:#495057; font-size:1rem; padding:0.5rem 1.2rem; background:none; border:none; width:100%; text-align:left;"
+              (click)="onMenuAction(a.action)">
+        <i *ngIf="a.icon" [class]="a.icon + ' fs-5'" style="color:#adb5bd; min-width:1.5em; text-align:center;"></i>
+        <span>{{ a.label }}</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Info Modal -->
+<div class="modal fade show" tabindex="-1" [ngStyle]="{ display: showInfoModal ? 'block' : 'none', background: 'rgba(0,0,0,0.3)' }" *ngIf="showInfoModal">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow-lg" style="background: linear-gradient(135deg, #f8fafc 80%, #e0e7ef 100%);">
+      <div class="modal-header bg-primary text-white rounded-top-4 border-0" style="padding: 1.2rem 2rem;">
+        <h5 class="modal-title fs-4 fw-bold">Row Information</h5>
+        <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeInfoModal()"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="row g-3">
+          <div class="col-12 col-md-6" *ngFor="let key of selectedRowKeysArr">
+            <div class="d-flex flex-column p-3 rounded-3 bg-white shadow-sm h-100">
+              <span class="fw-semibold text-secondary small mb-1" style="letter-spacing:0.5px;">{{ columnHeaderMap[key] || key }}</span>
+              <span class="text-dark fs-6">{{ selectedRowData[key] }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0 rounded-bottom-4 justify-content-center" style="padding: 1.2rem 2rem;">
+        <button type="button" class="btn btn-lg btn-primary px-5 rounded-pill shadow-sm" (click)="closeInfoModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pagination-container d-flex flex-wrap justify-content-between align-items-center gap-3 p-4 bg-light rounded-4 shadow-sm mt-4">
+  <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 flex-grow-1">
+    <button class="btn btn-outline-primary rounded-pill px-4 fw-semibold"
+            [disabled]="currentPage === 0"
+            (click)="goToPage(0)">
+      « First
+    </button>
+    <button class="btn btn-primary rounded-pill px-4 fw-semibold"
+            [disabled]="currentPage === 0"
+            (click)="prevPage()">
+      Previous
+    </button>
+    <span class="fs-5 fw-semibold mx-2">
+      Page <input type="number"
+                  min="1"
+                  [max]="totalPages"
+                  [(ngModel)]="inputPage"
+                  (keyup.enter)="goToPage(inputPage - 1)"
+                  class="page-input"
+                  style="width: 3rem; text-align: center; border-radius: 0.5rem; border: 1px solid #ddd; margin: 0 0.5rem;"
+                  /> of {{ totalPages }}
+    </span>
+    <button class="btn btn-primary rounded-pill px-4 fw-semibold"
+            [disabled]="currentPage + 1 >= totalPages"
+            (click)="nextPage()">
+      Next
+    </button>
+    <button class="btn btn-outline-primary rounded-pill px-4 fw-semibold"
+            [disabled]="currentPage + 1 >= totalPages"
+            (click)="goToPage(totalPages - 1)">
+      Last »
+    </button>
+  </div>
+   
+</div>
