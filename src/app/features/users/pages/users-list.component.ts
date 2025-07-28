@@ -86,6 +86,7 @@ export class UsersListComponent implements OnInit {
   userStatusOptions: any[] = [];
   userTypesOptions: any[] = [];
   userRoles: any[] = [];
+  user: any
 
   constructor(
     private userService: UserService,
@@ -175,7 +176,7 @@ export class UsersListComponent implements OnInit {
   getUsers(page: number): void {
     const skip = (page - 1) * this.itemsPerPage;
     this.spinnerService.show();
-    this.userService.getUsers({ ...this.filterUserCriteria, skip,take:this.itemsPerPage }).subscribe({
+    this.userService.getUsers({ ...this.filterUserCriteria, skip, take: this.itemsPerPage }).subscribe({
 
       next: (data: any) => {
         this.users = data.data;
@@ -383,7 +384,7 @@ export class UsersListComponent implements OnInit {
       next: (res) => {
         this.departments = res?.results;
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
   openAssignDepartmentsModal(user: any): void {
@@ -452,7 +453,7 @@ export class UsersListComponent implements OnInit {
         this.entities = res?.results
 
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
@@ -732,8 +733,8 @@ export class UsersListComponent implements OnInit {
   fetchUsersStatusSelect2(): void {
     this.userService.getUserStatusSelect2(0, 2000).subscribe({
       next: (response: any) => {
-         let ress= response?.results || [];
-        this.userStatusOptions = ress.map((item:any) => ({
+        let ress = response?.results || [];
+        this.userStatusOptions = ress.map((item: any) => ({
           id: Number(item.id),
           text: item.text
         }));
@@ -758,8 +759,58 @@ export class UsersListComponent implements OnInit {
   }
 
   // show user roles 
-   openRolesModal(roles:any) {
-    this.userRoles =roles
+  openRolesModal(roles: any) {
+    this.userRoles = roles || []
   }
+
+  // view details
+  onViewDetails(user: any) {
+    console.log(user);
+    this.user = user
+
+  }
+
+updateUserStatus(status: number) {
+  if (!this.user.id || !status) {
+    return;
+  }
+
+  this.spinnerService.show();
+
+  this.userService.updateUserStatus({ userStatus: status, userId: this.user.id }).subscribe({
+    next: (res) => {
+      this.spinnerService.hide();
+
+      let messageKey = '';
+      switch (status) {
+        case 2:
+          messageKey = 'TOAST.USER_STATUS_UPDATED.ACTIVATED';
+          break;
+        case 3:
+          messageKey = 'TOAST.USER_STATUS_UPDATED.REJECTED';
+          break;
+        case 4:
+          messageKey = 'TOAST.USER_STATUS_UPDATED.BLOCKED';
+          break;
+        default:
+          messageKey = 'TOAST.USER_STATUS_UPDATED.GENERIC';
+      }
+
+      this.toastr.success(this.translate.instant(messageKey));
+
+      const closeBtn = document.querySelector('.viewDetailsbtn') as HTMLElement;
+      closeBtn?.click();
+    },
+    error: (err) => {
+      this.spinnerService.hide();
+      this.toastr.error(this.translate.instant('TOAST.USER_STATUS_UPDATED.ERROR'));
+      const closeBtn = document.querySelector('.viewDetailsbtn') as HTMLElement;
+      closeBtn?.click();
+    },
+    complete: () => {
+      this.spinnerService.hide();
+    }
+  });
+}
 
 }

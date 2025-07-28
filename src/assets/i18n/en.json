@@ -24,6 +24,13 @@
       "SUCCESS": "Success",
       "ERROR": "Error"
     },
+    "USER_STATUS_UPDATED": {
+      "ACTIVATED": "User account has been activated successfully.",
+      "REJECTED": "User account has been rejected.",
+      "BLOCKED": "User account has been blocked.",
+      "GENERIC": "User status updated.",
+      "ERROR": "Failed to update user status."
+    },
     "VALIDATION_ERROR": "Please fill in the required fields correctly.",
     "FETCH_ROLES": "Error while fetching users",
     "USER_CREATED": "User added successfully.",
@@ -181,7 +188,6 @@
   "PASSWORD_GUIDELINES": "Password must be at least 6 characters and include uppercase, lowercase, numbers, and special characters.",
   "ENTITIES_ASSIGNED": "Entities assigned successfully.",
   "ENTITIES_ASSIGN_FAILED": "Failed to assign entities.",
-
   "Common": {
     "Action": "Action",
     "ViewInfo": "View Info",
@@ -197,7 +203,6 @@
     "Print": " Print",
     "Required": "This Field is Required"
   },
-
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "Entity Name",
     "DocumentNumber": "Document No",
@@ -240,7 +245,6 @@
     "NoData": "No data available to display",
     "SearchTitle": "Filter"
   },
-
   "ApPaymentsTransactionHDRResourceName": {
     "EntityId": "Entity Name",
     "PaymentNumber": "Document No",
@@ -256,7 +260,6 @@
     "Notes": "Notes",
     "Title": "Payment Details"
   },
-
   "FinancialReportResourceName": {
     "catchReceipt_Title": "Receipt Voucher",
     "generalLJournalRpt_Title": "Balance Sheet",
@@ -264,7 +267,6 @@
     "receiptRpt_Title": "Payment Voucher",
     "vendorsPayTransRPT_Title": "Vendor Balance Sheet",
     "totlaBenDonationsRPT_Title": "Beneficent Total Donation",
-
     "entityId": "Entity Name",
     "collectorId": "Collector",
     "fromDate": "From Date",
@@ -329,7 +331,7 @@
     "miscReceiptAmount": "MiscReceipt Amount",
     "administrative": "Administrative Amount"
   },
-    "CORECT_EMAIL": "Please enter a valid email address",
+  "CORECT_EMAIL": "Please enter a valid email address",
   "OTP": {
     "VERIFY_SUCCESS": "OTP Verified Successfully!",
     "VERIFY_FAILED": "Invalid OTP. Please try again."
@@ -337,29 +339,52 @@
   "RESET_PASSWORD": "Reset Password",
   "ENTER_NEW_PASSWORD": "Enter your new password",
   "CONFIRM": "Confirm",
-  "beneficentResourceName":{
+  "beneficentResourceName": {
     "Title": "Beneficent",
-        "EntityId": "Entity Name",
-        "beneficentName":"Donator Name",
-        "beneficentNumber":"Donator No",
-        "phoneNumber":"Tel",
-        "beneficentAddress":"Donator Address",
-        "mobile":"Mobile",
-        "homeTel":"HomeTel",
-        "workTel":"WorkTel",
-        "Naat":"Label",
-        "status":"Status",
-        "fax":"Fax",
-        "email":"Email",
-        "website":"Website",
-        "box":"Box",
-        "startDate":"Start Date",
-        "job":"Job",
-        "address":"Address",
-        "gender":"Gender",
-        "city":"City",
-        "titleDto":"Title"
-
-
-  }
+    "EntityId": "Entity Name",
+    "beneficentName": "Donator Name",
+    "beneficentNumber": "Donator No",
+    "phoneNumber": "Tel",
+    "beneficentAddress": "Donator Address",
+    "mobile": "Mobile",
+    "homeTel": "HomeTel",
+    "workTel": "WorkTel",
+    "Naat": "Label",
+    "status": "Status",
+    "fax": "Fax",
+    "email": "Email",
+    "website": "Website",
+    "box": "Box",
+    "startDate": "Start Date",
+    "job": "Job",
+    "address": "Address",
+    "gender": "Gender",
+    "city": "City",
+    "titleDto": "Title"
+  },
+  "foundation_name": "Foundation Name",
+  "foundation_type": "Foundation Type",
+  "license_number": "License Number",
+  "license_end_date": "License End Date",
+  "name_ar": "Arabic Name",
+  "name_en": "Latin Name",
+  "gender": "Gender",
+  "box_number": "Box Number",
+  "civil_id": "Civil ID",
+  "email": "Email",
+  "mobile_number": "Mobile Number",
+  "tel_number": "Telephone Number",
+  "fax": "Fax",
+  "city": "City",
+  "country": "Country",
+  "association": "Association",
+  "address": "Address",
+  "attachments": "Attachments",
+  "id_image": "User ID Image",
+  "foundation_decree": "Foundation Decree",
+  "assignment_letter": "Assignment Letter",
+  "download": "Download",
+  "activate_account": "Activate Account",
+  "reject_account": "Reject Account",
+  "block_account": "Block Account"
 }

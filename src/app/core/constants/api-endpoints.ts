@@ -14,6 +14,7 @@ export class ApiEndpoints {
     verifyOtp : '/Otp/Verify',
     OtpSendViaEmail : '/Otp/SendViaEmail',
     ResetPassword : '/ResetPassword',
+    UpdateUserStatus : '/UpdateUserStatus'
 
   };
 

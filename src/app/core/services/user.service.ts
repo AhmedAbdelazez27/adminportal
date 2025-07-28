@@ -88,4 +88,9 @@ export class UserService {
 
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Base}${ApiEndpoints.User.ChangePassword}`, payload);
   }
+
+  updateUserStatus(payload: any): Observable<any> {
+
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Base}${ApiEndpoints.User.UpdateUserStatus}`, payload);
+  }
 }

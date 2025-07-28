@@ -24,6 +24,13 @@
       "SUCCESS": "نجاح",
       "ERROR": "خطأ"
     },
+    "USER_STATUS_UPDATED": {
+      "ACTIVATED": "تم تفعيل حساب المستخدم بنجاح.",
+      "REJECTED": "تم رفض حساب المستخدم.",
+      "BLOCKED": "تم حظر حساب المستخدم.",
+      "GENERIC": "تم تحديث حالة المستخدم.",
+      "ERROR": "فشل في تحديث حالة المستخدم."
+    },
     "VALIDATION_ERROR": "يرجى ملء جميع الحقول المطلوبة.",
     "USER_CREATED": "تمت إضافة المستخدم بنجاح.",
     "USER_UPDATED": "تم تعديل المستخدم بنجاح.",
@@ -179,7 +186,6 @@
   "PASSWORDS_MATCH": "كلمتا المرور متطابقتان!",
   "ENTITIES_ASSIGNED": "تم تعيين الجمعيات بنجاح.",
   "ENTITIES_ASSIGN_FAILED": "فشل في تعيين الجمعيات.",
-
   "Common": {
     "Action": "العمليات",
     "Clear": "مسح",
@@ -194,7 +200,6 @@
     "Print": " طباعه",
     "Required": "هذا الحقل مطلوب"
   },
-
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "اسم الجمعية",
     "DocumentNumber": "رقم السند",
@@ -252,7 +257,6 @@
     "Notes": "ملاحظات",
     "Title": "تفاصيل عمليات الصرف"
   },
-
   "FinancialReportResourceName": {
     "catchReceiptRpt_Title": "سندات القبض",
     "generalLJournalRpt_Title": "كشف حركه حساب",
@@ -281,7 +285,6 @@
     "income": "قائمه الدخل",
     "vendorId": "اسم المورد",
     "DonatorId": "اسم المحسن",
-
     "bankAccountName": "اسم البنك",
     "beneficiaryName": "اسم المستفيد",
     "notes": "ملاحظات",
@@ -328,35 +331,60 @@
     "miscReceiptAmount": "القيمه",
     "administrative": "القيمه الاداريه"
   },
-   "CORECT_EMAIL": "الرجاء إدخال بريد إلكتروني صحيح",
-   "OTP": {
+  "CORECT_EMAIL": "الرجاء إدخال بريد إلكتروني صحيح",
+  "OTP": {
     "VERIFY_SUCCESS": "تم التحقق من OTP بنجاح!",
     "VERIFY_FAILED": "OTP غير صالح. يرجى المحاولة مرة أخرى."
   },
-   "RESET_PASSWORD": "إعادة تعيين كلمة المرور",
+  "RESET_PASSWORD": "إعادة تعيين كلمة المرور",
   "ENTER_NEW_PASSWORD": "أدخل كلمة المرور الجديدة",
   "PASSWORD_GUIDELINES": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل وأن تحتوي على حرف خاص.",
   "CONFIRM": "تأكيد",
-  "beneficentResourceName":{
+  "beneficentResourceName": {
     "Title": "بحث فى المتبرعين,",
-        "EntityId": "اسم الجمعية",
-         "beneficentName":"اسم المتبرع",
-        "beneficentNumber":"رقم المتبرع",
-        "phoneNumber":"رقم الهاتف",
-        "beneficentAddress":"عنوان المتبرع",
-        "mobile":"هاتف متحرك",
-        "homeTel":"هاتف منزل",
-        "workTel":"هاتف عمل",
-        "Naat":"النعت",
-        "status":"الحالة",
-        "fax":"فاكس",
-        "email":"البريد اليكتروني",
-        "website":"موقع الكترونى",
-        "box":"ص.الكترونى",
-        "startDate":"تاريخ البدء",
-        "job":"الوظيفة",
-        "address":"العنوان",
-        "gender":"الجنس",
-        "city":"الإمارة"
-  }
+    "EntityId": "اسم الجمعية",
+    "beneficentName": "اسم المتبرع",
+    "beneficentNumber": "رقم المتبرع",
+    "phoneNumber": "رقم الهاتف",
+    "beneficentAddress": "عنوان المتبرع",
+    "mobile": "هاتف متحرك",
+    "homeTel": "هاتف منزل",
+    "workTel": "هاتف عمل",
+    "Naat": "النعت",
+    "status": "الحالة",
+    "fax": "فاكس",
+    "email": "البريد اليكتروني",
+    "website": "موقع الكترونى",
+    "box": "ص.الكترونى",
+    "startDate": "تاريخ البدء",
+    "job": "الوظيفة",
+    "address": "العنوان",
+    "gender": "الجنس",
+    "city": "الإمارة"
+  },
+  "foundation_name": "اسم المؤسسة",
+  "foundation_type": "نوع المؤسسة",
+  "license_number": "رقم الترخيص",
+  "license_end_date": "تاريخ انتهاء الترخيص",
+  "name_ar": "الاسم العربي",
+  "name_en": "الاسم اللاتيني",
+  "gender": "النوع",
+  "box_number": "رقم الصندوق",
+  "civil_id": "رقم الهوية",
+  "email": "البريد الإلكتروني",
+  "mobile_number": "رقم الجوال",
+  "tel_number": "رقم الهاتف",
+  "fax": "فاكس",
+  "city": "المدينة",
+  "country": "الدولة",
+  "association": "الجمعية",
+  "address": "العنوان",
+  "attachments": "المرفقات",
+  "id_image": "صورة هوية المستخدم",
+  "foundation_decree": "مرسوم الإنشاء",
+  "assignment_letter": "خطاب التكليف من المؤسسة",
+  "download": "تحميل",
+  "activate_account": "تفعيل الحساب",
+  "reject_account": "رفض الحساب",
+  "block_account": "حظر الحساب"
 }
