@@ -23,7 +23,7 @@
     "TITLE": {
       "SUCCESS": "Success",
       "ERROR": "Error"
-    },
+    },    
     "USER_STATUS_UPDATED": {
       "ACTIVATED": "User account has been activated successfully.",
       "REJECTED": "User account has been rejected.",
@@ -188,6 +188,7 @@
   "PASSWORD_GUIDELINES": "Password must be at least 6 characters and include uppercase, lowercase, numbers, and special characters.",
   "ENTITIES_ASSIGNED": "Entities assigned successfully.",
   "ENTITIES_ASSIGN_FAILED": "Failed to assign entities.",
+
   "Common": {
     "Action": "Action",
     "ViewInfo": "View Info",
@@ -203,6 +204,7 @@
     "Print": " Print",
     "Required": "This Field is Required"
   },
+
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "Entity Name",
     "DocumentNumber": "Document No",
@@ -245,6 +247,7 @@
     "NoData": "No data available to display",
     "SearchTitle": "Filter"
   },
+
   "ApPaymentsTransactionHDRResourceName": {
     "EntityId": "Entity Name",
     "PaymentNumber": "Document No",
@@ -260,6 +263,37 @@
     "Notes": "Notes",
     "Title": "Payment Details"
   },
+
+  "InvoiceHdResourceName": {
+    "Title": "Invoice",
+    "TrTitle": "Invoice Details",
+    "entityId": "Entity Name",
+    "invoiceNo": "Invoice No",
+    "invoiceDate": "Invoice Date",
+    "vendorNo": "Vendor No",
+    "vendorName": "vendor Name",
+    "type": "Type",
+    "hD_INNO": "Invoice No",
+    "hD_DATE": "Invoice Date",
+    "vendoR_NUMBER": "Vendor No",
+    "vendoR_NAME": "Vendor Name",
+    "hD_TYPE_DESC": "Type",
+    "totalVal": "Value",
+    "tR_ITEM": "Description",
+    "tR_TOTL": "Value",
+    "vaT_AMOUNT": "Vat",
+    "totla": "Total",
+    "amounT_INCLUDES_VAT": "Invlude VAT",
+    "accountnumber": "Account No",
+    "hD_STATUS_DESC": "Status",
+    "accountNameEn": "Account NameEn",
+    "accountNameAr": "Account NameAr",
+    "hD_CURR_DESC": "Currency",
+    "hD_RATE": "Rate",
+    "total_Amount": "Total Amount",
+    "total_TR": "Total Tax"
+  },
+
   "FinancialReportResourceName": {
     "catchReceipt_Title": "Receipt Voucher",
     "generalLJournalRpt_Title": "Balance Sheet",
@@ -267,6 +301,7 @@
     "receiptRpt_Title": "Payment Voucher",
     "vendorsPayTransRPT_Title": "Vendor Balance Sheet",
     "totlaBenDonationsRPT_Title": "Beneficent Total Donation",
+
     "entityId": "Entity Name",
     "collectorId": "Collector",
     "fromDate": "From Date",
@@ -331,14 +366,91 @@
     "miscReceiptAmount": "MiscReceipt Amount",
     "administrative": "Administrative Amount"
   },
+
   "CORECT_EMAIL": "Please enter a valid email address",
   "OTP": {
     "VERIFY_SUCCESS": "OTP Verified Successfully!",
     "VERIFY_FAILED": "Invalid OTP. Please try again."
   },
+
   "RESET_PASSWORD": "Reset Password",
   "ENTER_NEW_PASSWORD": "Enter your new password",
   "CONFIRM": "Confirm",
+
+  "PaymentVoucherResourceName": {
+    "Title": "Payment Voucher",
+    "PaymentDetailTitle": "Cheque Details",
+    "PaymentLineTitle": "Details",
+    "entityId": "Entity Name",
+    "paymentNumber": "Document No",
+    "benifetaryName": "Benefeciary Name",
+    "checkNumber": "Cheque No",
+    "amount": "Value",
+    "total": "Total Value",
+    "status": "Status",
+    "paymenT_NUMBER": "Document No",
+    "beneficiarY_NAME": "Beneficiary Name",
+    "misC_PAYMENT_DATE": "Document Date",
+    "posted": "Status",
+    "banK_ACCOUNT_DESC": "Account No",
+    "notes": "Notes",
+    "paymenT_TYPE": "Document Type",
+    "paymenT_TYPE_DESC": "Document Type",
+    "checK_NUMBER": "Cheque No",
+    "maturitY_DATE": "Maturity Date",
+    "tR_TAX": "TRN",
+    "receipT_TYPE": "Document Type",
+    "receipT_TYPE_DESC": "Document Type",
+    "taX_PERCENT": "Vat Percent",
+    "totaPercent": "Var Amount",
+    "totalAmount": "Total",
+    "accountnumber": "Account No",
+    "accountNameEn": "Account Name",
+    "accountNameAr": "Account Name"
+  },
+
+  "vendorResourceName": {
+    "entityId": "EntityId",
+    "vendorName": "Vendor Name",
+    "title": "Vendor",
+    "status": "Status",
+    "vendorNo": "VendorNo",
+    "category": "Category",
+    "notes": "Notes",
+    "address": "Address",
+    "fax": "Fax",
+    "email": "Email",
+    "website": "Website",
+    "mobile": "Mobile",
+    "workTEL": "Work Tel"
+  },
+
+  "glJEResourceName": {
+    "title": "GL_JE",
+    "entityId": "EntityId",
+    "jvNo": "JV No",
+    "jvName": "JV Name",
+    "jvManualNo": "JV Manual No",
+    "value": "Value",
+    "referenceNo": "Reference No",
+    "jvStatus": "JV Status",
+    "currency": "Currency",
+    "jvDate": "Jv Date",
+    "date": "Date",
+    "period": "Period",
+    "name": "Name",
+    "rate": "Rate",
+    "description": "Description",
+    "status": "Status",
+    "accountNo": "Account No",
+    "accountName": "Account Name",
+    "jvDesc": "JV Desc",
+    "credit": "Credit",
+    "debit": "Debit",
+    "totalDebit": "Total Debit",
+    "totalCredit": "Total Credit"
+  },
+
   "beneficentResourceName": {
     "Title": "Beneficent",
     "EntityId": "Entity Name",

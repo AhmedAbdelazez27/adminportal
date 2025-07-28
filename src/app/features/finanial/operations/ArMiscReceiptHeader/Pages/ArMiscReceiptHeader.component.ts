@@ -4,52 +4,77 @@ import { FormBuilder, FormGroup, FormsModule, NgForm, Validators } from '@angula
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, Subject } from 'rxjs';
-import * as XLSX from 'xlsx';
-import { takeUntil } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { CustomTableComponent } from '../../../../../../shared/custom-table/custom-table.component';
-import { ArMiscReceiptHeaderDto, ArMiscReceiptLinesDto, ArMiscReceiptDetailsDto, FilterArMiscReceiptHeaderDto, FilterArMiscReceiptHeaderByIdDto } from '../../../../../core/dtos/ArMiscReceiptHeaderdtos/ArMiscReceiptHeader.dto';
-import { Pagination, SelectdropdownResultResults, FndLookUpValuesSelect2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { ArMiscReceiptHeaderService } from '../../../../../core/services/ArMiscReceiptHeader.service';
+import { debounceTime, takeUntil } from 'rxjs/operators';
+import { Pagination, SelectdropdownResultResults, FndLookUpValuesSelect2RequestDto, SelectdropdownResult, reportPrintConfig, Select2RequestDto } from '../../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { SpinnerService } from '../../../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../../../core/services/openStandardReportService.service';
 import { Select2Service } from '../../../../../core/services/Select2.service';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FilterArMiscReceiptHeaderDto, FilterArMiscReceiptHeaderByIdDto, ArMiscReceiptHeaderDto, ArMiscReceiptLinesDto, ArMiscReceiptDetailsDto } from '../../../../../core/dtos/FinancialDtos/OperationDtos/ArMiscReceiptHeader.dto';
+import { ArMiscReceiptHeaderService } from '../../../../../core/services/Financial/Operation/ArMiscReceiptHeader.service';
+import { ColDef, GridOptions } from 'ag-grid-community';
+import { GenericDataTableComponent } from '../../../../../../shared/generic-data-table/generic-data-table.component';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-ArMiscReceiptHeader',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, CustomTableComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent],
   templateUrl: './ArMiscReceiptHeader.component.html',
   styleUrls: ['./ArMiscReceiptHeader.component.scss']
 })
 
 export class ArMiscReceiptHeaderComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
-  private destroy$ = new Subject<void>();
+  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
 
+  private destroy$ = new Subject<void>();
+  userEntityForm!: FormGroup;
+  searchInput$ = new Subject<string>();
+  translatedHeaders: string[] = [];
   pagination = new Pagination();
-  entitySelect2: SelectdropdownResultResults[] = [];
-  statusSelect2: SelectdropdownResultResults[] = [];
-  projectNameSelect2: SelectdropdownResultResults[] = [];
-  benNameSelect2: SelectdropdownResultResults[] = [];
+
+  columnDefs: ColDef[] = [];
+  gridOptions: GridOptions = { pagination: false };
+  searchText: string = '';
+  columnHeaderMap: { [key: string]: string } = {};
+  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
+
+
+  searchParams = new FilterArMiscReceiptHeaderDto();
+  searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
+  searchParamsById = new FilterArMiscReceiptHeaderByIdDto();
 
   loadgridData: ArMiscReceiptHeaderDto[] = [];
   loadformData: ArMiscReceiptHeaderDto = {} as ArMiscReceiptHeaderDto;
   loadformLineData: ArMiscReceiptLinesDto[] = [];
   loadformDetailsData: ArMiscReceiptDetailsDto[] = [];
 
-  searchParams = new FilterArMiscReceiptHeaderDto();
-  searchSelect2RequestDto = new FndLookUpValuesSelect2RequestDto();
-  searchParamsById = new FilterArMiscReceiptHeaderByIdDto();
-
+  entitySelect2: SelectdropdownResultResults[] = [];
+  loadingentity = false;
+  entitysearchParams = new Select2RequestDto();
   selectedentitySelect2Obj: any = null;
+  entitySearchInput$ = new Subject<string>();
+
+  statusSelect2: SelectdropdownResultResults[] = [];
+  loadingstatus = false;
+  statussearchParams = new Select2RequestDto();
   selectedstatusSelect2Obj: any = null;
+  statusSearchInput$ = new Subject<string>();
+
+  projectNameSelect2: SelectdropdownResultResults[] = [];
+  loadingprojectName = false;
+  projectNamesearchParams = new Select2RequestDto();
   selectedprojectNameSelect2Obj: any = null;
+  projectNameSearchInput$ = new Subject<string>();
+
+  benNameSelect2: SelectdropdownResultResults[] = [];
+  loadingbenName = false;
+  benNamesearchParams = new Select2RequestDto();
   selectedbenNameSelect2Obj: any = null;
-  userEntityForm: FormGroup | undefined;
-  translatedHeaders$: Observable<string[]> | undefined;
-  headerKeys: string[] = [];
+  benNameSearchInput$ = new Subject<string>();
+
   constructor(
     private arMiscReceiptHeaderService: ArMiscReceiptHeaderService,
     private toastr: ToastrService,
@@ -68,27 +93,197 @@ export class ArMiscReceiptHeaderComponent {
   }
 
   ngOnInit(): void {
-    this.fetchEntityList();
-    this.fetchStatusList();
-    this.fetchProjectNameList();
-
-    this.translatedHeaders$ = combineLatest([
-      this.translate.get('ArMiscReceiptHeaderResourceName.DocumentNumber'),
-      this.translate.get('ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE'),
-      this.translate.get('ArMiscReceiptHeaderResourceName.beneficiarY_NAME'),
-      this.translate.get('ArMiscReceiptHeaderResourceName.AMOUNT'),
-      this.translate.get('ArMiscReceiptHeaderResourceName.Status'),
-    ]).pipe(
-      map(translations => translations)
-    );
-
-    this.headerKeys = [
-      'receipT_NUMBER',
-      'misC_RECEIPT_DATEstr',
-      'beneficiarY_NAME',
-      'amounTstr',
-      'posted'
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
     ];
+
+    this.entitySearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchentitySelect2());
+
+    this.statusSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchstatusSelect2());
+
+    this.projectNameSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchprojectNameSelect2());
+
+    this.benNameSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchbenNameSelect2());
+
+    this.fetchentitySelect2();
+    this.fetchstatusSelect2();
+    this.fetchbenNameSelect2();
+    this.fetchprojectNameSelect2();
+  }
+
+
+  onentitySearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    const searchVal = event.term?.trim() || null;
+
+    this.entitysearchParams.skip = 0;
+    this.entitysearchParams.searchValue = searchVal;
+    this.entitySelect2 = [];
+    this.entitySearchInput$.next(search);
+  }
+
+  loadMoreentity(): void {
+    this.entitysearchParams.skip++;
+    this.fetchentitySelect2();
+  }
+
+  fetchentitySelect2(): void {
+    this.loadingentity = true;
+    this.searchSelect2Params.searchValue = this.entitysearchParams.searchValue;
+    this.searchSelect2Params.skip = this.entitysearchParams.skip;
+    this.searchSelect2Params.take = this.entitysearchParams.take;
+
+    this.Select2Service.getEntitySelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: SelectdropdownResult) => {
+          const newItems = response?.results || [];
+          this.entitySelect2 = [...this.entitySelect2, ...newItems];
+          this.loadingentity = false;
+        },
+        error: () => this.loadingentity = false
+      });
+  }
+
+  onentitySelect2Change(slelectedentity: any): void {
+    if (slelectedentity) {
+      this.searchParams.entityId = slelectedentity.id;
+      this.searchParams.entityIdstr = slelectedentity.text;
+    } else {
+      this.searchParams.entityId = null;
+      this.searchParams.entityIdstr = null;
+    }
+  }
+
+
+  onstatusSearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    const searchVal = event.term?.trim() || null;
+    this.statussearchParams.skip = 0;
+    this.statussearchParams.searchValue = searchVal;
+    this.statusSelect2 = [];
+    this.statusSearchInput$.next(search);
+  }
+
+  loadMorestatus(): void {
+    this.statussearchParams.skip++;
+    this.fetchstatusSelect2();
+  }
+
+  fetchstatusSelect2(): void {
+    this.loadingstatus = true;
+    this.searchSelect2Params.searchValue = this.statussearchParams.searchValue;
+    this.searchSelect2Params.skip = this.statussearchParams.skip;
+    this.searchSelect2Params.take = this.statussearchParams.take;
+
+    this.Select2Service.getArMiscStatusSelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: SelectdropdownResult) => {
+          this.statusSelect2 = response?.results || [];
+          this.loadingstatus = false;
+        },
+        error: () => this.loadingstatus = false
+      });
+  }
+
+  onstatusSelect2Change(selectedstatus: any): void {
+    if (selectedstatus) {
+      this.searchParams.status = selectedstatus.id;
+      this.searchParams.statusstr = selectedstatus.text;
+    } else {
+      this.searchParams.status = null;
+      this.searchParams.statusstr = null;
+    }
+  }
+
+  onprojectNameSearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    const searchVal = event.term?.trim() || null;
+    this.searchSelect2Params.searchValue = searchVal;
+    this.projectNamesearchParams.skip = 0;
+    this.projectNamesearchParams.searchValue = search;
+    this.projectNameSelect2 = [];
+    this.projectNameSearchInput$.next(search);
+  }
+
+  loadMoreprojectName(): void {
+    this.projectNamesearchParams.skip++;
+    this.fetchprojectNameSelect2();
+  }
+
+  fetchprojectNameSelect2(): void {
+    this.loadingprojectName = true;
+    this.searchSelect2Params.searchValue = this.projectNamesearchParams.searchValue;
+    this.searchSelect2Params.skip = this.projectNamesearchParams.skip;
+    this.searchSelect2Params.take = this.projectNamesearchParams.take;
+    this.Select2Service.getProjectNameSelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: SelectdropdownResult) => {
+          this.projectNameSelect2 = response?.results || [];
+          this.loadingprojectName = false;
+        },
+        error: () => this.loadingprojectName = false
+      });
+  }
+
+  onprojectNameSelect2Change(selectedprojectName: any): void {
+    if (selectedprojectName) {
+      this.searchParams.projectName = selectedprojectName.id;
+      this.searchParams.projectNamestr = selectedprojectName.text;
+    } else {
+      this.searchParams.projectName = null;
+      this.searchParams.projectNamestr = null;
+    }
+  }
+
+  onbenNameSearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    const searchVal = event.term?.trim() || null;
+    this.searchSelect2Params.searchValue = searchVal;
+    this.benNamesearchParams.skip = 0;
+    this.benNamesearchParams.searchValue = search;
+    this.benNameSelect2 = [];
+    this.benNameSearchInput$.next(search);
+  }
+
+  loadMorebenName(): void {
+    this.benNamesearchParams.skip++;
+    this.fetchbenNameSelect2();
+  }
+
+  fetchbenNameSelect2(): void {
+    this.loadingbenName = true;
+    this.searchSelect2Params.searchValue = this.benNamesearchParams.searchValue;
+    this.searchSelect2Params.skip = this.benNamesearchParams.skip;
+    this.searchSelect2Params.take = this.benNamesearchParams.take;
+
+    this.Select2Service.getBenNameSelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: SelectdropdownResult) => {
+          this.benNameSelect2 = response?.results || [];
+          this.loadingbenName = false;
+        },
+        error: () => this.loadingbenName = false
+      });
+  }
+
+  onbenNameSelect2Change(selectbenName: any): void {
+    if (selectbenName) {
+      this.searchParams.benName = selectbenName.id;
+      this.searchParams.benNamestr = selectbenName.text;
+    } else {
+      this.searchParams.benName = null;
+      this.searchParams.benNamestr = null;
+    }
   }
 
   ngOnDestroy(): void {
@@ -96,117 +291,20 @@ export class ArMiscReceiptHeaderComponent {
     this.destroy$.complete();
   }
 
-  fetchEntityList(): void {
-    this.Select2Service.getEntitySelect2(this.searchSelect2RequestDto)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response: SelectdropdownResult) => {
-        this.entitySelect2 = response?.results || [];
-      },
-    });
-  }
-
-  fetchStatusList(): void {
-    this.Select2Service.getArMiscStatusSelect2(this.searchSelect2RequestDto)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response: SelectdropdownResult) => {
-        this.statusSelect2 = response?.results || [];
-      },
-    });
-  } 
-
-  fetchProjectNameList(): void {
-    this.Select2Service.getProjectNameSelect2(this.searchSelect2RequestDto)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response: SelectdropdownResult) => {
-        this.projectNameSelect2 = response?.results || [];
-      },
-    });
-  }
-
-  fetchBenNameList(): void {
-    this.Select2Service.getBenNameSelect2(this.searchSelect2RequestDto)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response: SelectdropdownResult) => {
-        this.benNameSelect2 = response?.results || [];
-      },
-    });
-  }
-
-  onstatusSelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.status = selectedVendor.id;
-      this.searchParams.statusStr = selectedVendor.text;
-    } else {
-      this.searchParams.status = null;
-      this.searchParams.statusStr = null;
-    }
-  }
-
-  onentitySelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.entityId = selectedVendor.id;
-      this.searchParams.entityIdStr = selectedVendor.text;
-    } else {
-      this.searchParams.entityId = null;
-      this.searchParams.entityIdStr = null;
-    }
-  }
-
-  onprojectNameSelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.projectName = selectedVendor.id;
-      this.searchParams.projectNameStr = selectedVendor.text;
-    } else {
-      this.searchParams.projectName = null;
-      this.searchParams.projectNameStr = null;
-    }
-  }
-
-  onbenNameSelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.benName = selectedVendor.id;
-      this.searchParams.benNameStr = selectedVendor.text;
-    } else {
-      this.searchParams.benName = null;
-      this.searchParams.benNameStr = null;
-    }
-  }
-
   onSearch(): void {
-    this.getLoadDataGrid(1);
-
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
-  getLoadDataGrid(page: number, searchValue: string = ''): void {
-    if (!this.searchParams.entityId) {
-      this.translate.get(['ArMiscReceiptHeaderResourceName.EntityId', 'Common.Required'])
-        .subscribe(translations => {
-          this.toastr.warning(`${translations['ArMiscReceiptHeaderResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
-        });
-      return;
-    }
-    const skip = (page - 1) * this.pagination.take;
-    this.searchParams.skip = skip;
-    this.searchParams.take = this.pagination.take;
-
-    const cleanedFilters = this.cleanFilterObject(this.searchParams);
-    this.spinnerService.show();
-
-    this.arMiscReceiptHeaderService.getAll(cleanedFilters)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response: any) => {
-          this.loadgridData = response?.data || [];
-          this.pagination = { ...this.pagination, totalCount: response.totalCount || 0 };
-          this.spinnerService.hide();
-      },
-        error: (error) => {
-          this.spinnerService.hide();;
-          this.toastr.error('Error fetching Data.', 'Error');
-      }
-    });
+  onPageChange(event: { pageNumber: number; pageSize: number }): void {
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
   }
 
-
+  onTableSearch(text: string): void {
+    this.searchText = text;
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
 
   private cleanFilterObject(obj: any): any {
     const cleaned = { ...obj };
@@ -227,6 +325,40 @@ export class ArMiscReceiptHeaderComponent {
     }
   }
 
+
+  getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
+    if (!this.searchParams.entityId) {
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
+      return;
+    }
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    const skip = (event.pageNumber - 1) * event.pageSize;
+    this.searchParams.skip = skip;
+   
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+    this.spinnerService.show();
+
+    this.arMiscReceiptHeaderService.getAll(cleanedFilters)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+      next: (response: any) => {
+          this.loadgridData = response || [];
+          this.pagination.totalCount = response[0]?.rowsCount || 0;
+          this.spinnerService.hide();
+      },
+        error: (error) => {
+          this.spinnerService.hide();;
+      }
+    });
+  }
+
   getFormDatabyId(tr_Id: string, entitY_ID: string): void {
     const params: FilterArMiscReceiptHeaderByIdDto = {
       entityId: entitY_ID,
@@ -244,14 +376,44 @@ export class ArMiscReceiptHeaderComponent {
         this.loadformData = Array.isArray(result.mischeaderdata)
           ? result.mischeaderdata[0] ?? ({} as ArMiscReceiptHeaderDto)
           : result.mischeaderdata;
+        const modalElement = document.getElementById('viewdetails');;
+        if (modalElement) {
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
+        };
         this.spinnerService.hide();
       },
       error: (err) => {
         this.spinnerService.hide();;
-        this.toastr.error('Error fetching Data.', 'Error');
      }
     });
   }
+
+  private buildColumnDefs(): void {
+    this.columnDefs = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.DocumentNumber'), field: 'receipT_NUMBER', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE'), field: 'misC_RECEIPT_DATEstr', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.BENEFICIARY_NAME'), field: 'beneficiarY_NAME', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.AMOUNT'), field: 'amounTstr', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.Status'), field: 'posted', width: 200 },
+    ];
+  }
+
+  onTableAction(event: { action: string, row: any }) {
+    if (event.action === 'onViewInfo') {
+      this.getFormDatabyId(event.row.misC_RECEIPT_ID, event.row.entitY_ID);
+    }
+    if (event.action === 'edit') {
+    }
+  }
+
 
 
   printExcel(): void {
@@ -282,13 +444,13 @@ export class ArMiscReceiptHeaderComponent {
                   reportTitle: this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceipt_Title'),
                   fileName: `${this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceipt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
-                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.EntityId'), value: this.searchParams.entityIdStr },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.EntityId'), value: this.searchParams.entityIdstr },
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.DocumentNumber'), value: this.searchParams.receiptNumber },
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.ChequeNo'), value: this.searchParams.checkNumber },
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.BeneficiaryName'), value: this.searchParams.benificaryNamestr },
-                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.Status'), value: this.searchParams.statusStr },
-                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.ProjectName'), value: this.searchParams.projectNameStr },
-                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.Sponsor'), value: this.searchParams.benNameStr },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.Status'), value: this.searchParams.statusstr },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.ProjectName'), value: this.searchParams.projectNamestr },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.Sponsor'), value: this.searchParams.benNamestr },
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.Amount'), value: this.searchParams.amount },
                   ],
 
@@ -296,7 +458,7 @@ export class ArMiscReceiptHeaderComponent {
                     { label: '#', key: 'rowNo', title: '#' },
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.DocumentNumber'), key: 'receipT_NUMBER' },
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE'), key: 'misC_RECEIPT_DATEstr' },
-                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.beneficiarY_NAME'), key: 'beneficiarY_NAME' },
+                    { label: this.translate.instant('ArMiscReceiptHeaderResourceName.BENEFICIARY_NAME'), key: 'beneficiarY_NAME' },
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.AMOUNT'), key: 'amounTstr' },
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.Status'), key: 'posted' },
                   ],
@@ -313,13 +475,11 @@ export class ArMiscReceiptHeaderComponent {
               },
               error: () => {
                 this.spinnerService.hide();
-                this.toastr.error('Failed to export Excel');
               }
             });
         },
         error: () => {
           this.spinnerService.hide();
-          this.toastr.error('Failed to retrieve data count');
         }
       });
   }

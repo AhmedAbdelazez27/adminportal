@@ -69,23 +69,48 @@ export class ApiEndpoints {
     Base: '/Lookup/UserStatus'
   };
 
+
+  static readonly ApMiscPaymentHeader = {
+    Base: '/ApMiscPaymentHeader',
+    GetAll: '/GetAll',
+    GetById: (paymentId: string, entityId: string) => `/GetDetailById/${paymentId}/${entityId}`,
+    GetPaymentDetailsById: (paymentId: string, entityId: string) => `/GetPaymentDetails/${paymentId}/${entityId}`,
+    GetPaymentLinesById: (paymentId: string, entityId: string) => `/GetPaymentLines/${paymentId}/${entityId}`,
+  };
+
   static readonly ArMiscReceiptHeader = {
     Base: '/ArMiscReciptHeader',
     GetAll: '/GetAll',
-    GetById: (miscReceiptId: string, entityId: string) =>
-      `/Get/${miscReceiptId}/${entityId}`,
-    GetReceiptDetailsById: (miscReceiptId: string, entityId: string) =>
-      `/Get/${miscReceiptId}/${entityId}`,
-    GetReceiptLinesById: (miscReceiptId: string, entityId: string) =>
-      `/Get/${miscReceiptId}/${entityId}`,
+    GetById: (miscReceiptId: string, entityId: string) => `/GetReceiptHeader/${miscReceiptId}/${entityId}`,
+    GetReceiptDetailsById: (miscReceiptId: string, entityId: string) => `/GetReceiptDetails/${miscReceiptId}/${entityId}`,
+    GetReceiptLinesById: (miscReceiptId: string, entityId: string) => `/GetReceiptLines/${miscReceiptId}/${entityId}`,
   };
 
   static readonly ApMiscPaymentTransactionHDR = {
     Base: '/ApPaymentTransactionsHdr',
     GetAll: '/GetAll',
-    GetDetailById: '/Get',
-    GetById: (paymentId: string, entityId: string) =>
-      `/Get/${paymentId}/${entityId}`,
+    GetById: (paymentId: string, entityId: string) => `/Get/${paymentId}/${entityId}`,
+  };
+
+  static readonly ApVendor = {
+    Base: '/ApVendor',
+    GetAll: '/GetAll',
+    GetById: (vendorId: string, entityId: string) => `/Get/${vendorId}/${entityId}`,
+  };
+
+  static readonly GlJeHeader = {
+    Base: '/GlJeHeader',
+    GetAll: '/GetAll',
+    GetById: (receiptId: string, entityId: string) => `/GetGeneralJournalHeaderDetails/${receiptId}/${entityId}`,
+    GetLineDetailsById: (receiptId: string, entityId: string) => `/GetGLLines/${receiptId}/${entityId}`,
+  };
+
+  static readonly InvoiceHd = {
+    Base: '/VwApInvoiceHd',
+    GetAll: '/GetAll',
+    GetDetailById: (tr_Id: string, entityId: string) => `/GetInvoiceheaderDetails/${tr_Id}/${entityId}`,
+    GetById: '/GetInvoiceheaderDetails',
+    GetTrDetailsById: '/GetInvoiceTr',
   };
 
   static readonly FinancialReports = {

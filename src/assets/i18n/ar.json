@@ -24,7 +24,7 @@
       "SUCCESS": "نجاح",
       "ERROR": "خطأ"
     },
-    "USER_STATUS_UPDATED": {
+        "USER_STATUS_UPDATED": {
       "ACTIVATED": "تم تفعيل حساب المستخدم بنجاح.",
       "REJECTED": "تم رفض حساب المستخدم.",
       "BLOCKED": "تم حظر حساب المستخدم.",
@@ -119,6 +119,8 @@
       "FAIL": "فشل في حذف الدور"
     }
   },
+
+
   "NAME": "الاسم",
   "ENTER_NAME": "ادخل الاسم",
   "NAME_REQUIRED": "الاسم مطلوب",
@@ -186,6 +188,7 @@
   "PASSWORDS_MATCH": "كلمتا المرور متطابقتان!",
   "ENTITIES_ASSIGNED": "تم تعيين الجمعيات بنجاح.",
   "ENTITIES_ASSIGN_FAILED": "فشل في تعيين الجمعيات.",
+
   "Common": {
     "Action": "العمليات",
     "Clear": "مسح",
@@ -200,6 +203,7 @@
     "Print": " طباعه",
     "Required": "هذا الحقل مطلوب"
   },
+
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "اسم الجمعية",
     "DocumentNumber": "رقم السند",
@@ -242,6 +246,7 @@
     "NoData": "لا توجد بيانات متاحة للعرض,",
     "SearchTitle": "بحث فى عمليات الصرف"
   },
+
   "ApPaymentsTransactionHDRResourceName": {
     "EntityId": "اسم الجمعية",
     "PaymentNumber": "رقم السند",
@@ -257,6 +262,36 @@
     "Notes": "ملاحظات",
     "Title": "تفاصيل عمليات الصرف"
   },
+
+  "InvoiceHdResourceName": {
+    "Title": "الفواتير",
+    "TrTitle": " تفاصيل الفاتوره",
+    "entityId": "اسم الجمعية",
+    "invoiceNo": "رقم الفاتوره",
+    "invoiceDate": "التاريخ",
+    "vendorNo": "رقم المورد",
+    "vendorName": "اسم المورد",
+    "type": "النوع",
+    "hD_INNO": "رقم الفاتوره",
+    "hD_DATE": "تاريخ الفاتوره",
+    "vendoR_NUMBER": "رقم المورد",
+    "vendoR_NAME": "المورد",
+    "hD_TYPE_DESC": "النوع",
+    "totalVal": "القيمه",
+    "tR_ITEM": "الشرح",
+    "tR_TOTL": "المبلغ",
+    "vaT_AMOUNT": "الضريبه",
+    "totla": "الاجمالى",
+    "accountnumber": " رقم الحساب",
+    "accountNameEn": "اسم الحساب",
+    "accountNameAr": "اسم الحساب",
+    "hD_CURR_DESC": "العمله",
+    "hD_RATE": "المعدل",
+    "hD_STATUS_DESC": "المورد",
+    "total_Amount": "اجمالى المبلغ",
+    "total_TR": "اجمالى الضريبه"
+  },
+
   "FinancialReportResourceName": {
     "catchReceiptRpt_Title": "سندات القبض",
     "generalLJournalRpt_Title": "كشف حركه حساب",
@@ -285,6 +320,7 @@
     "income": "قائمه الدخل",
     "vendorId": "اسم المورد",
     "DonatorId": "اسم المحسن",
+
     "bankAccountName": "اسم البنك",
     "beneficiaryName": "اسم المستفيد",
     "notes": "ملاحظات",
@@ -331,6 +367,7 @@
     "miscReceiptAmount": "القيمه",
     "administrative": "القيمه الاداريه"
   },
+
   "CORECT_EMAIL": "الرجاء إدخال بريد إلكتروني صحيح",
   "OTP": {
     "VERIFY_SUCCESS": "تم التحقق من OTP بنجاح!",
@@ -340,28 +377,106 @@
   "ENTER_NEW_PASSWORD": "أدخل كلمة المرور الجديدة",
   "PASSWORD_GUIDELINES": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل وأن تحتوي على حرف خاص.",
   "CONFIRM": "تأكيد",
-  "beneficentResourceName": {
-    "Title": "بحث فى المتبرعين,",
-    "EntityId": "اسم الجمعية",
-    "beneficentName": "اسم المتبرع",
-    "beneficentNumber": "رقم المتبرع",
-    "phoneNumber": "رقم الهاتف",
-    "beneficentAddress": "عنوان المتبرع",
-    "mobile": "هاتف متحرك",
-    "homeTel": "هاتف منزل",
-    "workTel": "هاتف عمل",
-    "Naat": "النعت",
-    "status": "الحالة",
-    "fax": "فاكس",
-    "email": "البريد اليكتروني",
-    "website": "موقع الكترونى",
-    "box": "ص.الكترونى",
-    "startDate": "تاريخ البدء",
-    "job": "الوظيفة",
-    "address": "العنوان",
-    "gender": "الجنس",
-    "city": "الإمارة"
+
+
+  "PaymentVoucherResourceName": {
+    "Title": "سندات صرف",
+    "PaymentDetailTitle": " تفاصيل الشيك",
+    "PaymentLineTitle": " تفاصيل السند",
+    "entityId": "Entity Name",
+    "paymentNumber": "رقم السند",
+    "benifetaryName": "اسم المستفيد",
+    "checkNumber": "رقم الشيك",
+    "amount": "القيمه",
+    "total": "مبلغ السند",
+    "status": "الحاله",
+    "paymenT_TYPE": "نوع السند",
+    "paymenT_TYPE_DESC": "نوع السند",
+    "paymenT_NUMBER": "رقم السند",
+    "beneficiarY_NAME": "اسم المستفيد",
+    "misC_PAYMENT_DATE": "تاريخ السند",
+    "posted": "الحاله",
+    "postedAr": "الحاله",
+    "postedEn": "الحاله",
+    "banK_ACCOUNT_DESC": "رقم الحساب",
+    "notes": "ملاحظات ",
+    "checK_NUMBER": "رقم الشيك",
+    "maturitY_DATE": "ت.الاستحقاق",
+    "receipT_TYPE": "نوع السند",
+    "receipT_TYPE_DESC": "نوع السند",
+    "projecT_ID": "",
+    "taX_PERCENT": "الضريبه%",
+    "totaPercent": "قيمه الضريبه",
+    "totalAmount": "الاجمالى",
+    "accountnumber": "رقم الحساب",
+    "accountNameEn": " اسم الحساب ",
+    "accountNameAr": " اسم الحساب "
   },
+
+  "vendorResourceName": {
+    "entityId": "اسم الجمعية",
+    "vendorName": "اسم المورد",
+    "title": "بحث فى الموردين",
+    "status": "الحاله",
+    "vendorNo": "رقم المورد",
+    "category": " الفئه",
+    "notes": "ملاحظات التقييم",
+    "address": "العنوان",
+    "fax": "فاكس",
+    "email": "بريد إلكتروني",
+    "website": "موقع إلكتروني",
+    "mobile": "موبايل",
+    "workTEL": "هاتف العمل"
+  },
+
+  "glJEResourceName": {
+    "title": "القيود",
+    "entityId": "اسم الجمعية",
+    "jvNo": "رقم القيد",
+    "jvName": "اسم القيد",
+    "jvManualNo": "رقم القيد اليدوى",
+    "value": "القيمه",
+    "referenceNo": "نوع المرجع",
+    "jvStatus": "حاله القيد",
+    "currency": "العمله",
+    "jvDate": "تاريخ القيد",
+    "date": "التاريخ",
+    "period": "الفتره",
+    "name": "الاسم",
+    "rate": "المعدل",
+    "description": "الشرح",
+    "status": "الحاله",
+    "accountNo": "رقم الحساب",
+    "accountName": "اسم الحساب",
+    "jvDesc": "شرح القيد",
+    "credit": "مدين",
+    "debit": "دائن",
+    "totalDebit": "اجمالى دائن",
+    "totalCredit": "اجمالى مدين"
+  },
+
+    "beneficentResourceName": {
+      "Title": "بحث فى المتبرعين,",
+      "EntityId": "اسم الجمعية",
+      "beneficentName": "اسم المتبرع",
+      "beneficentNumber": "رقم المتبرع",
+      "phoneNumber": "رقم الهاتف",
+      "beneficentAddress": "عنوان المتبرع",
+      "mobile": "هاتف متحرك",
+      "homeTel": "هاتف منزل",
+      "workTel": "هاتف عمل",
+      "Naat": "النعت",
+      "status": "الحالة",
+      "fax": "فاكس",
+      "email": "البريد اليكتروني",
+      "website": "موقع الكترونى",
+      "box": "ص.الكترونى",
+      "startDate": "تاريخ البدء",
+      "job": "الوظيفة",
+      "address": "العنوان",
+      "gender": "الجنس",
+      "city": "الإمارة"
+    },
   "foundation_name": "اسم المؤسسة",
   "foundation_type": "نوع المؤسسة",
   "license_number": "رقم الترخيص",
@@ -387,4 +502,4 @@
   "activate_account": "تفعيل الحساب",
   "reject_account": "رفض الحساب",
   "block_account": "حظر الحساب"
-}
+  }

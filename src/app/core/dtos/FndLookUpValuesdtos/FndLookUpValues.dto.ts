@@ -1,8 +1,15 @@
 export class FndLookUpValuesSelect2RequestDto {
   searchValue?: string | null = null;
   skip: number = 0;
-  take: number = 999;
+  take: number = 10;
   orderByValue?: string | null = null;
+}
+
+export class Select2RequestDto {
+  searchValue?: string | null = null;
+  skip: number = 0;
+  take: number = 10;
+  loader?:boolean
 }
 
 export class Selectdropdown {
@@ -35,9 +42,9 @@ export class Pagination {
   currentPage: number = 1;
   itemsPerPage: number = 2;
   pages: number[] = [];
-  searchValue = '';
+  searchValue? : string | null = null;
   take: number|number = 10;
-  skip?: number;
+  skip: number | number = 0;
 }
 
 export class reportField {

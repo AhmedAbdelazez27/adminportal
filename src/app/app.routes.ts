@@ -8,6 +8,7 @@ import { NoPermissionComponent } from './shared/components/no-permission/no-perm
 import { ForgetpasswordComponent } from './features/auth/forgetpassword/forgetpassword.component';
 import { VerifyotpComponent } from './features/auth/verifyotp/verifyotp.component';
 import { ResetpasswordComponent } from './features/auth/resetpassword/resetpassword.component';
+import { BeneficentComponent } from './features/sponsorship/operations/beneficent/beneficent.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -90,7 +91,7 @@ export const routes: Routes = [
             // data: { permission: 'Financial.View' }
           },
         ],
-      },
+      }
     ],
   },
 

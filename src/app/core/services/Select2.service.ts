@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { FilterApPaymentsTransactionHDRByIdDto, FilterApPaymentsTransactionHDRDto, ApPaymentsTransactionHDRDto, PagedResult } from '../dtos/ApPaymentsTransactionHDRdtos/ApPaymentsTransactionHDR.dto';
 import { FndLookUpValuesSelect2RequestDto, SelectdropdownResult } from '../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2APIEndpoint } from '../constants/select2api-endpoints';
-import { loadBeneficentNameDto } from '../dtos/sponsorship/operations/beneficent.dto';
+import { loadVendorNameDto } from '../dtos/FinancialDtos/OperationDtos/vendor.models';
+import { loadBeneficentNameDto } from '../dtos/Sponsorship/operations/beneficent.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -89,9 +89,43 @@ export class Select2Service {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetApVendorSelect2List}`
     return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
+
+  getInvoiceTypeSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetInvoiceTypeSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getMiscPaymentStatusSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetMiscPaymentStatusSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getVendorStatusSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetApVendorStatusSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getVendorIDSelect2(loadVendorNameDto: loadVendorNameDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetvendorSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, loadVendorNameDto);
+  }
+
+  getJe_SourceSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetJvSourceSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getGljeStatusSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetJeStatusSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getJe_CurrSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetCurrencySelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
   getBeneficentNamebyEntityID(loadBeneficentNameDto: loadBeneficentNameDto): Observable<SelectdropdownResult> {
    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetSpBenSelect2ListBYEntityID}`
     return this.http.post<SelectdropdownResult>(apiUrl, loadBeneficentNameDto);
   }
-
 }

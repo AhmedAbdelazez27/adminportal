@@ -23,13 +23,22 @@
           <form #filterForm="ngForm">
             <div class="row mb-3">
               <div class="col-xl-4 mb-3">
-                <label class="form-label">{{ 'ArMiscReceiptHeaderResourceName.EntityId' | translate }}</label>
-                <select class="form-select" [(ngModel)]="selectedentitySelect2Obj" (ngModelChange)="onentitySelect2Change($event)" name="entityId">
-                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
-                  <option *ngFor="let item of entitySelect2" [ngValue]="item">{{ item.text }}</option>
-                </select>
+                <label class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.EntityId' | translate }}</label>
+                <ng-select class="ng-select-custom"
+                           name="entitySelect2"
+                           [(ngModel)]="selectedentitySelect2Obj"
+                           [items]="entitySelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="searchInput$"
+                           [loading]="loadingentity"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMoreentity()"
+                           (change)="onentitySelect2Change($event)"
+                           (search)="onentitySearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
               </div>
-
               <div class="col-xl-4 mb-3">
                 <label for="receiptNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate}}</label>
                 <input type="text" name="receiptNumber" class="form-control" [(ngModel)]="searchParams.receiptNumber" placeholder="Search">
@@ -47,26 +56,56 @@
 
               <div class="col-xl-4 mb-3">
                 <label class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Status' | translate }}</label>
-                <select class="form-select" [(ngModel)]="selectedstatusSelect2Obj" (ngModelChange)="onstatusSelect2Change($event)" name="status">
-                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
-                  <option *ngFor="let item of statusSelect2" [ngValue]="item">{{ item.text }}</option>
-                </select>
+                <ng-select class="ng-select-custom"
+                           name="statusSelect2"
+                           [items]="statusSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [(ngModel)]="selectedstatusSelect2Obj"
+                           [typeahead]="searchInput$"
+                           [loading]="loadingstatus"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMorestatus()"
+                           (change)="onstatusSelect2Change($event)"
+                           (search)="onstatusSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
               </div>
 
               <div class="col-xl-4 mb-3">
                 <label class="form-label">{{ 'ArMiscReceiptHeaderResourceName.ProjectName' | translate }}</label>
-                <select class="form-select" [(ngModel)]="selectedprojectNameSelect2Obj" (ngModelChange)="onprojectNameSelect2Change($event)" name="projectName">
-                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
-                  <option *ngFor="let item of projectNameSelect2" [ngValue]="item">{{ item.text }}</option>
-                </select>
+                <ng-select class="ng-select-custom"
+                           name="projectNameSelect2"
+                           [items]="projectNameSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [(ngModel)]="selectedprojectNameSelect2Obj"
+                           [typeahead]="searchInput$"
+                           [loading]="loadingprojectName"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMoreprojectName()"
+                           (change)="onprojectNameSelect2Change($event)"
+                           (search)="onprojectNameSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
               </div>
 
               <div class="col-xl-4 mb-3">
                 <label class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Sponsor' | translate }}</label>
-                <select class="form-select" [(ngModel)]="selectedbenNameSelect2Obj" (ngModelChange)="onbenNameSelect2Change($event)" name="benName">
-                  <option [ngValue]="null">{{ 'Common.Select' | translate }}</option>
-                  <option *ngFor="let item of benNameSelect2" [ngValue]="item">{{ item.text }}</option>
-                </select>
+                <ng-select class="ng-select-custom"
+                           name="benNameSelect2"
+                           [items]="benNameSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [(ngModel)]="selectedbenNameSelect2Obj"
+                           [typeahead]="searchInput$"
+                           [loading]="loadingbenName"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMorebenName()"
+                           (change)="onbenNameSelect2Change($event)"
+                           (search)="onbenNameSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
               </div>
 
               <div class="col-xl-4 mb-3">
@@ -98,20 +137,21 @@
           </div>
         </div>
       </div>
+      <app-generic-data-table [columnDefs]="columnDefs"
+                              [rowData]="loadgridData"
+                              [totalCount]="pagination.totalCount"
+                              [pageSize]="pagination.take"
+                              [currentPage]="pagination.currentPage - 1"
+                              [columnHeaderMap]="columnHeaderMap"
+                              [rowActions]="rowActions"
+                              (actionClick)="onTableAction($event)"
+                              (pageChange)="onPageChange($event)"
+                              [showActionColumn]="true"
+                              (search)="onTableSearch($event)">
+      </app-generic-data-table>
     </div>
-    <ng-container *ngIf="translatedHeaders$ | async as headers">
-      <app-custom-table [headers]="headers"
-                        [headerKeys]="headerKeys"
-                        [rows]="loadgridData"
-                        [pagination]="pagination"
-                        [showAction]="true"
-                        [actionTypes]="['view']"
-                        (onViewDetails)="getFormDatabyId($event.paymenT_ID, $event.entitY_ID)"
-                        (onChangePage)="getLoadDataGrid($event)">
-      </app-custom-table>
-
-    </ng-container>
-    <div class="modal fade" id="details" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    
+    <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">

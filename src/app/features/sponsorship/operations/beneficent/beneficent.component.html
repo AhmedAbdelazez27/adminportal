@@ -1,409 +1,268 @@
 
 
-    <div class="header"></div>
-    <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="title">{{ 'beneficentResourceName.Title' | translate }}</h1>
-            <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#Users">Add New</button>
-        </div>
+<div class="header"></div>
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="title">{{ 'beneficentResourceName.Title' | translate }}</h1>
+  </div>
 
-        <div class="filter mb-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <h4 class="filter-title mb-0">{{ 'Common.SearchTitle' | translate }}</h4>
-                <button class="btn btn-filter" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-                    aria-expanded="false" aria-controls="collapseExample">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path
-                            d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z"
-                            fill="" />
-                        <path
-                            d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z"
-                            fill="" />
-                        <path
-                            d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z"
-                            fill="" />
-                        <path
-                            d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z"
-                            fill="" />
-                        <path
-                            d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z"
-                            fill="" />
-                        <path
-                            d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z"
-                            fill="" />
-                    </svg>
-                </button>
-            </div>
-
-            <div class="collapse" id="collapseExample">
-                <div class="card card-body">
-                    <form #filterForm="ngForm">
-                        <div class="row mb-3">
-                            <div class="col-xl-4 mb-3">
-                                <label for="entityId" class="form-label">{{ 'beneficentResourceName.EntityId' |
-                                    translate }}</label>
-                                <ng-select class="ng-select-custom" [items]="entitySelect2" bindLabel="text"
-                                    bindValue="id" [(ngModel)]="selectedentitySelect2Obj" name="entitySelect2"
-                                    [typeahead]="entitySearchInput$" [loading]="loadingEntity" [virtualScroll]="true"
-                                    (scrollToEnd)="loadMoreEntity()" (change)="onentitySelect2Change($event)"
-                                    (search)="onEntitySearch($event)" placeholder="{{ 'Common.Select' | translate }}">
-                                </ng-select>
-                            </div>
-                            <div class="col-xl-4 mb-3">
-                                <label for="beneficentName" class="form-label">{{
-                                    'beneficentResourceName.beneficentName' | translate }}</label>
-                                <ng-select class="ng-select-custom" [items]="beneficentNameSelect2" bindLabel="text"
-                                    bindValue="id" [(ngModel)]="selectedbeneficentNameSelect2Obj" name="beneficentNameSelect2"
-                                    [typeahead]="beneficentNameSearchInput$" [loading]="loadingbeneficentName"
-                                    [virtualScroll]="true" (scrollToEnd)="loadMoreBeneficentName()"
-                                    (change)="onBeneficentNameSelect2Change($event)"
-                                    (search)="onBeneficentNameSearch($event)"
-                                    placeholder="{{ 'Common.Select' | translate }}">
-                                </ng-select>
-                            </div>
-                            <div class="col-xl-4 mb-3">
-                                <label for="beneficentNumber" class="form-label">{{
-                                    'beneficentResourceName.beneficentNumber' | translate}}</label>
-                                <input type="text" name="beneficentNumber" class="form-control"
-                                    [(ngModel)]="searchParams.beneficentNumber" placeholder="Search">
-                            </div>
-
-                            <div class="col-xl-4 mb-3">
-                                <label for="phoneNumber" class="form-label">{{ 'beneficentResourceName.phoneNumber' |
-                                    translate }}</label>
-                                <input type="text" name="phoneNumber" class="form-control"
-                                    [(ngModel)]="searchParams.phoneNumber" placeholder="Search">
-                            </div>
-                        </div>
-                    </form>
-
-                    <div class="d-flex gap-2 justify-content-center">
-                        <button class="btn btn-outline" (click)="clear()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none">
-                                <path
-                                    d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
-                                    fill="#5B5B5B" />
-                            </svg>
-                            {{ 'Common.Clear' | translate }}
-                        </button>
-                        <button class="btn btn-gold" (click)="onSearch()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none">
-                                <path
-                                    d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-                                    fill="white" />
-                            </svg>
-                            {{ 'Common.Search' | translate }}
-                        </button>
-                        <button class="btn btn-success" (click)="printExcel()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none">
-                                <path
-                                    d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-                                    fill="white" />
-                            </svg>
-                            {{ 'Common.PrintExcel' | translate }}
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <table class="table new-table mb-3">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>{{ 'beneficentResourceName.beneficentNumber' | translate }}</th>
-                    <th>{{ 'beneficentResourceName.beneficentName' | translate }}</th>
-                    <th>{{ 'beneficentResourceName.beneficentAddress' | translate }}</th>
-                    <th>{{ 'beneficentResourceName.mobile' | translate }}</th>
-                    <th>{{ 'beneficentResourceName.homeTel' | translate }}</th>
-                    <th>{{ 'beneficentResourceName.workTel' | translate }}</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody *ngIf="loadgridData && loadgridData.length > 0; else noData">
-                <tr *ngFor="let rowData_beneficentHeader of loadgridData; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ rowData_beneficentHeader.beneficenT_NO }}</td>
-                    <td>{{ rowData_beneficentHeader.beneficentname }}</td>
-                    <td>{{ rowData_beneficentHeader.address }}</td>
-                    <td>{{ rowData_beneficentHeader.beneficentmobile }}</td>
-                    <td>{{ rowData_beneficentHeader.mobilE2 }}</td>
-                    <td>{{ rowData_beneficentHeader.mobilE3 }}</td>
-
-
-                    <td class="text-end">
-                        <div class="dropdown">
-                            <button class="btn table-more dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <!-- Three dot icon SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none">
-                                    <path
-                                        d="M22 14C20.8954 14 20 13.1046 20 12C20 10.8954 20.8954 10 22 10C23.1046 10 24 10.8954 24 12C24 13.1046 23.1046 14 22 14Z"
-                                        fill="#374957" />
-                                    <path
-                                        d="M12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14Z"
-                                        fill="#374957" />
-                                    <path
-                                        d="M2 14C0.895431 14 0 13.1046 0 12C0 10.8954 0.895431 10 2 10C3.10457 10 4 10.8954 4 12C4 13.1046 3.10457 14 2 14Z"
-                                        fill="#374957" />
-                                </svg>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li class="mb-1">
-                                    <a class="dropdown-item d-flex gap-2 align-items-center" href="#"
-                                        data-bs-toggle="modal" data-bs-target="#edit"
-                                        (click)="getFormDatabyId(rowData_beneficentHeader.beneficenT_ID,rowData_beneficentHeader.entitY_ID)">
-
-                                        <!-- Eye icon -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                            viewBox="0 0 24 24" fill="none">
-                                            <path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 5-5
-                       5 2.24 5 5-2.24 5-5 5zm0-8.5c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5
-                       3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5z" fill="#A6A6A6" />
-                                        </svg>
-                                        View
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-
-
-
-
-            </tbody>
-            <ng-template #noData>
-                <tbody>
-                    <tr>
-                        <td colspan="8" class="text-center text-muted">{{ 'Common.NoData' | translate }}</td>
-                    </tr>
-                </tbody>
-            </ng-template>
-        </table>
-
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label for="inputPassword6" class="col-form-label">Show</label>
-                </div>
-                <div class="col-auto">
-                    <select class="form-select page-select" aria-label="Default select example">
-                        <option selected="">1</option>
-                        <option value="1">2</option>
-                        <option value="2">3</option>
-                        <option value="3">4</option>
-                    </select>
-                </div>
-                <div class="col-auto">
-                    <span id="passwordHelpInline" class="form-text">
-                        Per Page
-                    </span>
-                </div>
-            </div>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination mb-0">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
-                                fill="none">
-                                <path
-                                    d="M7.26581 12.6669C7.39766 12.6663 7.52639 12.6267 7.63571 12.553C7.74503 12.4793 7.83004 12.3748 7.87999 12.2528C7.92994 12.1307 7.94259 11.9967 7.91633 11.8674C7.89008 11.7382 7.8261 11.6197 7.73248 11.5269L4.66581 8.47354C4.60332 8.41156 4.55373 8.33783 4.51988 8.25659C4.48604 8.17535 4.46861 8.08821 4.46861 8.0002C4.46861 7.9122 4.48604 7.82506 4.51988 7.74382C4.55373 7.66258 4.60332 7.58884 4.66581 7.52687L7.73248 4.47354C7.79497 4.41156 7.84456 4.33783 7.87841 4.25659C7.91226 4.17535 7.92968 4.08821 7.92968 4.0002C7.92968 3.91219 7.91226 3.82506 7.87841 3.74382C7.84456 3.66258 7.79497 3.58884 7.73248 3.52687C7.60757 3.4027 7.43861 3.33301 7.26248 3.33301C7.08636 3.33301 6.91739 3.4027 6.79248 3.52687L3.73247 6.58687C3.35794 6.96187 3.14756 7.4702 3.14756 8.0002C3.14756 8.5302 3.35794 9.03854 3.73247 9.41354L6.79248 12.4735C6.85477 12.5353 6.92865 12.5842 7.00988 12.6174C7.0911 12.6506 7.17808 12.6674 7.26581 12.6669Z"
-                                    fill="#5B5B5B"></path>
-                                <path
-                                    d="M11.9338 12.6669C12.0656 12.6663 12.1944 12.6267 12.3037 12.553C12.413 12.4793 12.498 12.3748 12.548 12.2528C12.5979 12.1307 12.6106 11.9967 12.5843 11.8674C12.558 11.7382 12.4941 11.6197 12.4005 11.5269L8.87378 8.0002L12.4005 4.47354C12.4629 4.41156 12.5125 4.33783 12.5464 4.25659C12.5802 4.17535 12.5977 4.08821 12.5977 4.0002C12.5977 3.91219 12.5802 3.82506 12.5464 3.74382C12.5125 3.66258 12.4629 3.58884 12.4005 3.52687C12.2755 3.4027 12.1066 3.33301 11.9305 3.33301C11.7543 3.33301 11.5854 3.4027 11.4605 3.52687L7.46045 7.52687C7.39796 7.58884 7.34837 7.66258 7.31452 7.74382C7.28068 7.82506 7.26325 7.9122 7.26325 8.0002C7.26325 8.08821 7.28068 8.17535 7.31452 8.25659C7.34837 8.33783 7.39796 8.41156 7.46045 8.47354L11.4605 12.4735C11.5227 12.5353 11.5966 12.5842 11.6778 12.6174C11.7591 12.6506 11.846 12.6674 11.9338 12.6669Z"
-                                    fill="#5B5B5B"></path>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
-                                fill="none">
-                                <path
-                                    d="M5.73249 6.58687L8.79249 3.52687C8.9174 3.4027 9.08636 3.33301 9.26249 3.33301C9.43861 3.33301 9.60758 3.4027 9.73249 3.52687C9.79497 3.58884 9.84457 3.66258 9.87842 3.74382C9.91226 3.82506 9.92969 3.9122 9.92969 4.0002C9.92969 4.08821 9.91226 4.17535 9.87842 4.25659C9.84457 4.33783 9.79497 4.41156 9.73249 4.47354L6.66582 7.52687C6.60334 7.58885 6.55374 7.66258 6.51989 7.74382C6.48605 7.82506 6.46862 7.9122 6.46862 8.0002C6.46862 8.08821 6.48605 8.17535 6.51989 8.25659C6.55374 8.33783 6.60334 8.41156 6.66582 8.47354L9.73249 11.5269C9.85802 11.6515 9.9289 11.8209 9.92953 11.9978C9.93015 12.1748 9.86047 12.3447 9.73582 12.4702C9.61117 12.5957 9.44175 12.6666 9.26485 12.6672C9.08794 12.6679 8.91802 12.5982 8.79249 12.4735L5.73249 9.41354C5.35795 9.03854 5.14758 8.53021 5.14758 8.0002C5.14758 7.4702 5.35795 6.96187 5.73249 6.58687Z"
-                                    fill="#5B5B5B"></path>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
-                                fill="none">
-                                <path
-                                    d="M10.2675 6.58687L7.20751 3.52687C7.0826 3.4027 6.91364 3.33301 6.73751 3.33301C6.56139 3.33301 6.39242 3.4027 6.26751 3.52687C6.20503 3.58884 6.15543 3.66258 6.12158 3.74382C6.08774 3.82506 6.07031 3.9122 6.07031 4.0002C6.07031 4.08821 6.08774 4.17535 6.12158 4.25659C6.15543 4.33783 6.20503 4.41156 6.26751 4.47354L9.33418 7.52687C9.39666 7.58885 9.44626 7.66258 9.48011 7.74382C9.51395 7.82506 9.53138 7.9122 9.53138 8.0002C9.53138 8.08821 9.51395 8.17535 9.48011 8.25659C9.44626 8.33783 9.39666 8.41156 9.33418 8.47354L6.26751 11.5269C6.14198 11.6515 6.0711 11.8209 6.07047 11.9978C6.06985 12.1748 6.13953 12.3447 6.26418 12.4702C6.38883 12.5957 6.55825 12.6666 6.73515 12.6672C6.91206 12.6679 7.08198 12.5982 7.20751 12.4735L10.2675 9.41354C10.642 9.03854 10.8524 8.53021 10.8524 8.0002C10.8524 7.4702 10.642 6.96187 10.2675 6.58687Z"
-                                    fill="#5B5B5B"></path>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
-                                fill="none">
-                                <path
-                                    d="M8.73419 12.6669C8.60234 12.6663 8.47361 12.6267 8.36429 12.553C8.25497 12.4793 8.16996 12.3748 8.12001 12.2528C8.07006 12.1307 8.05741 11.9967 8.08367 11.8674C8.10992 11.7382 8.1739 11.6197 8.26752 11.5269L11.3342 8.47354C11.3967 8.41156 11.4463 8.33783 11.4801 8.25659C11.514 8.17535 11.5314 8.08821 11.5314 8.0002C11.5314 7.9122 11.514 7.82506 11.4801 7.74382C11.4463 7.66258 11.3967 7.58884 11.3342 7.52687L8.26752 4.47354C8.20503 4.41156 8.15544 4.33783 8.12159 4.25659C8.08774 4.17535 8.07032 4.08821 8.07032 4.0002C8.07032 3.91219 8.08774 3.82506 8.12159 3.74382C8.15544 3.66258 8.20503 3.58884 8.26752 3.52687C8.39243 3.4027 8.56139 3.33301 8.73752 3.33301C8.91364 3.33301 9.08261 3.4027 9.20752 3.52687L12.2675 6.58687C12.6421 6.96187 12.8524 7.4702 12.8524 8.0002C12.8524 8.5302 12.6421 9.03854 12.2675 9.41354L9.20752 12.4735C9.14523 12.5353 9.07135 12.5842 8.99012 12.6174C8.9089 12.6506 8.82192 12.6674 8.73419 12.6669Z"
-                                    fill="#5B5B5B"></path>
-                                <path
-                                    d="M4.06622 12.6669C3.93437 12.6663 3.80564 12.6267 3.69632 12.553C3.587 12.4793 3.50199 12.3748 3.45204 12.2528C3.40209 12.1307 3.38944 11.9967 3.4157 11.8674C3.44195 11.7382 3.50593 11.6197 3.59955 11.5269L7.12622 8.0002L3.59955 4.47354C3.53706 4.41156 3.48747 4.33783 3.45362 4.25659C3.41978 4.17535 3.40235 4.08821 3.40235 4.0002C3.40235 3.91219 3.41978 3.82506 3.45362 3.74382C3.48747 3.66258 3.53706 3.58884 3.59955 3.52687C3.72446 3.4027 3.89342 3.33301 4.06955 3.33301C4.24567 3.33301 4.41464 3.4027 4.53955 3.52687L8.53955 7.52687C8.60204 7.58884 8.65163 7.66258 8.68548 7.74382C8.71932 7.82506 8.73675 7.9122 8.73675 8.0002C8.73675 8.08821 8.71932 8.17535 8.68548 8.25659C8.65163 8.33783 8.60204 8.41156 8.53955 8.47354L4.53955 12.4735C4.47726 12.5353 4.40338 12.5842 4.32215 12.6174C4.24093 12.6506 4.15395 12.6674 4.06622 12.6669Z"
-                                    fill="#5B5B5B"></path>
-                            </svg>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-
-
-
-
-
-
-
-        <!-- Modal -->
-
-
-
-
-
-
-
-
-
-        <!-- Modal -->
-        <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="editLabel">{{ 'beneficentResourceName.Title' | translate }}
-                        </h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="border-bottom mb-4">
-                            <h4 class="gold bold">Information</h4>
-
-                            <div class="row">
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.beneficentNumber' | translate
-                                        }}</label>
-                                    <p id="beneficenT_NO">{{loadformData.beneficenT_NO}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.Naat' | translate }}</label>
-                                    <p id="title">{{loadformData.title}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.beneficentName' | translate
-                                        }}</label>
-                                    <p id="beneficentname">{{loadformData.beneficentname}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.status' | translate }}</label>
-                                    <p id="statuS_DESC">{{loadformData.statuS_DESC}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.mobile' | translate }}</label>
-                                    <p id="beneficentmobile">{{loadformData.beneficentmobile}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.homeTel' | translate }}</label>
-                                    <p id="mobilE2">{{loadformData.mobilE2}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.workTel' | translate }}</label>
-                                    <p id="mobilE3">{{loadformData.mobilE3}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.fax' | translate }}</label>
-                                    <p id="fax">{{loadformData.fax}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.email' | translate }}</label>
-                                    <p id="email">{{loadformData.email}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.website' | translate }}</label>
-                                    <p id="website">{{loadformData.website}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{'beneficentResourceName.box' | translate }}</label>
-                                    <p id="mailbox">{{loadformData.mailbox}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.startDate' | translate
-                                        }}</label>
-                                    <p id="startinG_DATE">{{loadformData.startinG_DATE}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.job' | translate }}</label>
-                                    <p id="joB_DESC">{{loadformData.joB_DESC}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.address' | translate }}</label>
-                                    <p id="address">{{loadformData.address}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{'beneficentResourceName.gender' | translate }}</label>
-                                    <p id="gendeR_DESC">{{loadformData.gendeR_DESC}}</p>
-                                </div>
-                                <div class="col-xxl-4 col-xl-6">
-                                    <label class="bold black">{{ 'beneficentResourceName.city' | translate }}</label>
-                                    <p id="citY_DESC">{{loadformData.citY_DESC}}</p>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{
-                            'Common.Close' | translate }}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-        <!-- Modal -->
-        <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="deleteLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="deleteLabel">Delete</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"
-                                fill="none">
-                                <path
-                                    d="M87.7914 21.7916C81.0831 21.1249 74.3748 20.6249 67.6248 20.2499V20.2083L66.7081 14.7916C66.0831 10.9583 65.1664 5.20825 55.4164 5.20825H44.4998C34.7914 5.20825 33.8748 10.7083 33.2081 14.7499L32.3331 20.0833C28.4581 20.3333 24.5831 20.5833 20.7081 20.9583L12.2081 21.7916C10.4581 21.9583 9.20809 23.4999 9.37476 25.2083C9.54143 26.9166 11.0414 28.1666 12.7914 27.9999L21.2914 27.1666C43.1248 24.9999 65.1248 25.8333 87.2081 28.0416C87.3331 28.0416 87.4164 28.0416 87.5414 28.0416C89.1248 28.0416 90.4998 26.8333 90.6664 25.2083C90.7914 23.4999 89.5414 21.9583 87.7914 21.7916Z"
-                                    fill="#CA4832" />
-                                <path
-                                    d="M80.1248 33.9167C79.1248 32.8751 77.7498 32.2917 76.3331 32.2917H23.6664C22.2498 32.2917 20.8331 32.8751 19.8748 33.9167C18.9164 34.9584 18.3748 36.3751 18.4581 37.8334L21.0414 80.5834C21.4998 86.9167 22.0831 94.8334 36.6248 94.8334H63.3748C77.9164 94.8334 78.4998 86.9584 78.9581 80.5834L81.5414 37.8751C81.6248 36.3751 81.0831 34.9584 80.1248 33.9167ZM56.9164 73.9584H43.0414C41.3331 73.9584 39.9164 72.5417 39.9164 70.8334C39.9164 69.1251 41.3331 67.7084 43.0414 67.7084H56.9164C58.6248 67.7084 60.0414 69.1251 60.0414 70.8334C60.0414 72.5417 58.6248 73.9584 56.9164 73.9584ZM60.4164 57.2917H39.5831C37.8748 57.2917 36.4581 55.8751 36.4581 54.1667C36.4581 52.4584 37.8748 51.0417 39.5831 51.0417H60.4164C62.1248 51.0417 63.5414 52.4584 63.5414 54.1667C63.5414 55.8751 62.1248 57.2917 60.4164 57.2917Z"
-                                    fill="#CA4832" />
-                            </svg>
-                            <h4 class="mt-3">Are you sure you want delete <br /> <span>XXXXXX</span></h4>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-gold">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+  <div class="filter mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="filter-title mb-0">{{ 'Common.SearchTitle' | translate }}</h4>
+      <button class="btn btn-filter" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+              aria-expanded="false" aria-controls="collapseExample">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z"
+                fill="" />
+          <path d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z"
+                fill="" />
+          <path d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z"
+                fill="" />
+          <path d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z"
+                fill="" />
+          <path d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z"
+                fill="" />
+          <path d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z"
+                fill="" />
+        </svg>
+      </button>
     </div>
+
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body">
+        <form #filterForm="ngForm">
+          <div class="row mb-3">
+            <div class="col-xl-4 mb-3">
+              <label for="entityId" class="form-label">
+                {{
+ 'beneficentResourceName.EntityId' |
+                                    translate
+                }}
+              </label>
+              <ng-select class="ng-select-custom" [items]="entitySelect2" bindLabel="text"
+                         bindValue="id" [(ngModel)]="selectedentitySelect2Obj" name="entitySelect2"
+                         [typeahead]="entitySearchInput$" [loading]="loadingEntity" [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreEntity()" (change)="onentitySelect2Change($event)"
+                         (search)="onEntitySearch($event)" placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+            <div class="col-xl-4 mb-3">
+              <label for="beneficentName" class="form-label">
+                {{
+                                    'beneficentResourceName.beneficentName' | translate
+                }}
+              </label>
+              <ng-select class="ng-select-custom" [items]="beneficentNameSelect2" bindLabel="text"
+                         bindValue="id" [(ngModel)]="selectedbeneficentNameSelect2Obj" name="beneficentNameSelect2"
+                         [typeahead]="beneficentNameSearchInput$" [loading]="loadingbeneficentName"
+                         [virtualScroll]="true" (scrollToEnd)="loadMoreBeneficentName()"
+                         (change)="onBeneficentNameSelect2Change($event)"
+                         (search)="onBeneficentNameSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+            <div class="col-xl-4 mb-3">
+              <label for="beneficentNumber" class="form-label">
+                {{
+                                    'beneficentResourceName.beneficentNumber' | translate
+                }}
+              </label>
+              <input type="text" name="beneficentNumber" class="form-control"
+                     [(ngModel)]="searchParams.beneficentNumber" placeholder="Search">
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label for="phoneNumber" class="form-label">
+                {{
+ 'beneficentResourceName.phoneNumber' |
+                                    translate
+                }}
+              </label>
+              <input type="text" name="phoneNumber" class="form-control"
+                     [(ngModel)]="searchParams.phoneNumber" placeholder="Search">
+            </div>
+          </div>
+        </form>
+
+        <div class="d-flex gap-2 justify-content-center">
+          <button class="btn btn-outline" (click)="clear()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                 fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
+                    fill="#5B5B5B" />
+            </svg>
+            {{ 'Common.Clear' | translate }}
+          </button>
+          <button class="btn btn-gold" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                 fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+                    fill="white" />
+            </svg>
+            {{ 'Common.Search' | translate }}
+          </button>
+          <button class="btn btn-success" (click)="printExcel()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                 fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+                    fill="white" />
+            </svg>
+            {{ 'Common.PrintExcel' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <app-generic-data-table [columnDefs]="columnDefs"
+                            [rowData]="loadgridData"
+                            [totalCount]="pagination.totalCount"
+                            [pageSize]="pagination.take"
+                            [currentPage]="pagination.currentPage - 1"
+                            [columnHeaderMap]="columnHeaderMap"
+                            [rowActions]="rowActions"
+                            (actionClick)="onTableAction($event)"
+                            (pageChange)="onPageChange($event)"
+                            [showActionColumn]="true"
+                            (search)="onTableSearch($event)">
+    </app-generic-data-table>
+  </div>
+
+  <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editLabel">
+            {{ 'beneficentResourceName.Title' | translate }}
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="border-bottom mb-4">
+            <h4 class="gold bold">Information</h4>
+
+            <div class="row">
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">
+                  {{
+ 'beneficentResourceName.beneficentNumber' | translate
+                  }}
+                </label>
+                <p id="beneficenT_NO">{{loadformData.beneficenT_NO}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{ 'beneficentResourceName.Naat' | translate }}</label>
+                <p id="title">{{loadformData.title}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">
+                  {{
+ 'beneficentResourceName.beneficentName' | translate
+                  }}
+                </label>
+                <p id="beneficentname">{{loadformData.beneficentname}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{ 'beneficentResourceName.status' | translate }}</label>
+                <p id="statuS_DESC">{{loadformData.statuS_DESC}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{ 'beneficentResourceName.mobile' | translate }}</label>
+                <p id="beneficentmobile">{{loadformData.beneficentmobile}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{ 'beneficentResourceName.homeTel' | translate }}</label>
+                <p id="mobilE2">{{loadformData.mobilE2}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{ 'beneficentResourceName.workTel' | translate }}</label>
+                <p id="mobilE3">{{loadformData.mobilE3}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{ 'beneficentResourceName.fax' | translate }}</label>
+                <p id="fax">{{loadformData.fax}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{ 'beneficentResourceName.email' | translate }}</label>
+                <p id="email">{{loadformData.email}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{ 'beneficentResourceName.website' | translate }}</label>
+                <p id="website">{{loadformData.website}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{'beneficentResourceName.box' | translate }}</label>
+                <p id="mailbox">{{loadformData.mailbox}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">
+                  {{
+ 'beneficentResourceName.startDate' | translate
+                  }}
+                </label>
+                <p id="startinG_DATE">{{loadformData.startinG_DATE}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{ 'beneficentResourceName.job' | translate }}</label>
+                <p id="joB_DESC">{{loadformData.joB_DESC}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{ 'beneficentResourceName.address' | translate }}</label>
+                <p id="address">{{loadformData.address}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{'beneficentResourceName.gender' | translate }}</label>
+                <p id="gendeR_DESC">{{loadformData.gendeR_DESC}}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label class="bold black">{{ 'beneficentResourceName.city' | translate }}</label>
+                <p id="citY_DESC">{{loadformData.citY_DESC}}</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            {{
+                            'Common.Close' | translate
+            }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="deleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="deleteLabel">Delete</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"
+                 fill="none">
+              <path d="M87.7914 21.7916C81.0831 21.1249 74.3748 20.6249 67.6248 20.2499V20.2083L66.7081 14.7916C66.0831 10.9583 65.1664 5.20825 55.4164 5.20825H44.4998C34.7914 5.20825 33.8748 10.7083 33.2081 14.7499L32.3331 20.0833C28.4581 20.3333 24.5831 20.5833 20.7081 20.9583L12.2081 21.7916C10.4581 21.9583 9.20809 23.4999 9.37476 25.2083C9.54143 26.9166 11.0414 28.1666 12.7914 27.9999L21.2914 27.1666C43.1248 24.9999 65.1248 25.8333 87.2081 28.0416C87.3331 28.0416 87.4164 28.0416 87.5414 28.0416C89.1248 28.0416 90.4998 26.8333 90.6664 25.2083C90.7914 23.4999 89.5414 21.9583 87.7914 21.7916Z"
+                    fill="#CA4832" />
+              <path d="M80.1248 33.9167C79.1248 32.8751 77.7498 32.2917 76.3331 32.2917H23.6664C22.2498 32.2917 20.8331 32.8751 19.8748 33.9167C18.9164 34.9584 18.3748 36.3751 18.4581 37.8334L21.0414 80.5834C21.4998 86.9167 22.0831 94.8334 36.6248 94.8334H63.3748C77.9164 94.8334 78.4998 86.9584 78.9581 80.5834L81.5414 37.8751C81.6248 36.3751 81.0831 34.9584 80.1248 33.9167ZM56.9164 73.9584H43.0414C41.3331 73.9584 39.9164 72.5417 39.9164 70.8334C39.9164 69.1251 41.3331 67.7084 43.0414 67.7084H56.9164C58.6248 67.7084 60.0414 69.1251 60.0414 70.8334C60.0414 72.5417 58.6248 73.9584 56.9164 73.9584ZM60.4164 57.2917H39.5831C37.8748 57.2917 36.4581 55.8751 36.4581 54.1667C36.4581 52.4584 37.8748 51.0417 39.5831 51.0417H60.4164C62.1248 51.0417 63.5414 52.4584 63.5414 54.1667C63.5414 55.8751 62.1248 57.2917 60.4164 57.2917Z"
+                    fill="#CA4832" />
+            </svg>
+            <h4 class="mt-3">Are you sure you want delete <br /> <span>XXXXXX</span></h4>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gold">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 

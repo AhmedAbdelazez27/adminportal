@@ -1,45 +1,111 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { forkJoin, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { Invoice, InvoiceTransaction, InvoiceHeader, Vendor, Entity, InvoiceType, InvoiceFilter } from './models/invoice.models';
+import { FormBuilder, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
+import { forkJoin, Observable, Subject } from 'rxjs';
+import { debounceTime,takeUntil } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
-import { InvoiceService } from '../../../../core/services/invoice.service';
-import { ColDef } from 'ag-grid-community';
+import { FndLookUpValuesSelect2RequestDto, Pagination, Select2RequestDto, SelectdropdownResult, SelectdropdownResultResults, reportPrintConfig } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SpinnerService } from '../../../../core/services/spinner.service';
+import { openStandardReportService } from '../../../../core/services/openStandardReportService.service';
+import { Select2Service } from '../../../../core/services/Select2.service';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { InvoiceService } from '../../../../core/services/Financial/Operation/invoice.service';
+import { InvoiceFilter, FilterInvoiceByIdDto, Invoice, InvoiceHeader, InvoiceTransaction } from '../../../../core/dtos/FinancialDtos/OperationDtos/invoice.models';
+import { ColDef, GridOptions } from 'ag-grid-community';
+import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-invoice',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent],
   templateUrl: './invoice.component.html',
   styleUrls: ['./invoice.component.scss']
 })
+
 export class InvoiceComponent implements OnInit, OnDestroy {
-  public ApInvoiceList: Invoice[] = [];
-  public ApInvoice_trList: InvoiceTransaction[] = [];
-  public invoiceHeaderData: InvoiceHeader = {} as InvoiceHeader;
-  public vendorList: Vendor[] = [];
-  public entityList: Entity[] = [];
-  public invoiceTypeList: InvoiceType[] = [];
+  @ViewChild('filterForm') filterForm!: NgForm;
+  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
 
-  public filterModel: InvoiceFilter = this.createDefaultFilter();
-  public loading = false;
   private destroy$ = new Subject<void>();
+  userEntityForm!: FormGroup;
+  searchInput$ = new Subject<string>();
+  translatedHeaders: string[] = [];
+  pagination = new Pagination();
 
-  public columnDefs: ColDef[] = [
-    { headerName: 'Invoice Number', field: 'hD_INNO' },
-    { headerName: 'Invoice Date', field: 'hD_DATE' },
-    { headerName: 'Vendor Number', field: 'vendoR_NUMBER' },
-    { headerName: 'Vendor Name', field: 'vendoR_NAME' },
-    { headerName: 'Genre', field: 'hD_TYPE_DESC' },
-    { headerName: 'Value', field: 'totalVal' },
-  ];
+  columnDefs: ColDef[] = [];
+  gridOptions: GridOptions = { pagination: false };
+  searchText: string = '';
+  columnHeaderMap: { [key: string]: string } = {};
+  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
 
-  constructor(private apiService: InvoiceService, private toastr: ToastrService) {}
+  searchParams = new InvoiceFilter();
+  searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
+  searchParamsById = new FilterInvoiceByIdDto();
+
+  loadgridData: Invoice[] = [];
+  loadformData: InvoiceHeader = {} as InvoiceHeader;
+  loadformTrListData: InvoiceTransaction[] = [];
+
+  entitySelect2: SelectdropdownResultResults[] = [];
+  loadingentity = false;
+  entitysearchParams = new Select2RequestDto();
+  selectedentitySelect2Obj: any = null;
+  entitySearchInput$ = new Subject<string>();
+
+  vendorSelect2: SelectdropdownResultResults[] = [];
+  loadingvendors = false;
+  vendorsearchParams = new Select2RequestDto();
+  selectedvendorSelect2Obj: any = null;
+  vendorSearchInput$ = new Subject<string>();
+
+  invoiceTypeSelect2: SelectdropdownResultResults[] = [];
+  loadinginvoiceType = false;
+  invoiceTypesearchParams = new Select2RequestDto();
+  selectedinvoiceTypeSelect2Obj: any = null;
+  invoiceTypeSearchInput$ = new Subject<string>();
+
+  constructor(private apiService: InvoiceService,
+    private toastr: ToastrService,
+    private translate: TranslateService,
+    private openStandardReportService: openStandardReportService,
+    private spinnerService: SpinnerService,
+    private Select2Service: Select2Service,
+    private fb: FormBuilder)
+
+  {
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
+    this.userEntityForm = this.fb.group({
+      entityIds: [[], Validators.required]
+    });
+  }
+
 
   ngOnInit(): void {
- 
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
+    ];
+
+    this.entitySearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchentitySelect2());
+
+    this.vendorSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchApvendorSelect2());
+
+    this.invoiceTypeSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchinvoiceTypeSelect2());
+
+    this.fetchentitySelect2();
+    this.fetchApvendorSelect2();
+    this.fetchinvoiceTypeSelect2();
   }
 
   ngOnDestroy(): void {
@@ -47,145 +113,324 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  public applyFilter(): void {
-    this.getApInvoice();
+  onvendorSearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.vendorsearchParams.skip = 0;
+    this.vendorsearchParams.searchValue = search;
+    this.vendorSelect2 = [];
+    this.vendorSearchInput$.next(search);
   }
 
-  public clearFilter(): void {
-    this.filterModel = this.createDefaultFilter();
+  loadMorevendors(): void {
+    this.vendorsearchParams.skip++;
+    this.fetchApvendorSelect2();
   }
 
-  // TODO: Refactor filter to use FormGroup for better validation and control
-  private createDefaultFilter(): InvoiceFilter {
-    return {
-      entityId: '',
-      invoiceNo: '',
-invoiceDate: null,
-      vendorNo: '',
-      vendorName: '',
-      type: '',
-      OrderbyValue: 'hd_id'
-    };
+  fetchApvendorSelect2(): void {
+    this.loadingvendors = true;
+    const searchVal = this.vendorsearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.vendorsearchParams.skip;
+    this.searchSelect2Params.take = this.vendorsearchParams.take;
+
+    this.Select2Service.getApVendorSelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: SelectdropdownResult) => {
+          const newItems = response?.results || [];
+          this.vendorSelect2 = [...this.vendorSelect2, ...newItems];
+          this.loadingvendors = false;
+        },
+        error: () => this.loadingvendors = false
+      });
   }
 
-  public getApInvoice(): void {
-    const filter: InvoiceFilter = { ...this.filterModel };
-    if (!filter.entityId || filter.entityId.trim() === '') {
-      this.toastr.warning('Please select an entity before searching.', 'Warning');
+  onvendorSelect2Change(selectedvendor: any): void {
+    if (selectedvendor) {
+      this.searchParams.vendorName = selectedvendor.id;
+      this.searchParams.vendorNamestr = selectedvendor.text;
+    } else {
+      this.searchParams.vendorName = null;
+      this.searchParams.vendorNamestr = null;
+    }
+  }
+
+  onentitySearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.entitysearchParams.skip = 0;
+    this.entitysearchParams.searchValue = search;
+    this.entitySelect2 = [];
+    this.entitySearchInput$.next(search);
+  }
+
+  loadMoreentity(): void {
+    this.entitysearchParams.skip++;
+    this.fetchentitySelect2();
+  }
+
+  fetchentitySelect2(): void {
+    this.loadingentity = true;
+    const searchVal = this.entitysearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.entitysearchParams.skip;
+    this.searchSelect2Params.take = this.entitysearchParams.take;
+
+    this.Select2Service.getEntitySelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: SelectdropdownResult) => {
+          const newItems = response?.results || [];
+          this.entitySelect2 = [...this.entitySelect2, ...newItems];
+          this.loadingentity = false;
+        },
+        error: () => this.loadingentity = false
+      });
+  }
+
+  onentitySelect2Change(selectedvendor: any): void {
+    if (selectedvendor) {
+      this.searchParams.entityId = selectedvendor.id;
+      this.searchParams.entityIdstr = selectedvendor.text;
+    } else {
+      this.searchParams.entityId = null;
+      this.searchParams.entityIdstr = null;
+    }
+  }
+
+  oninvoiceTypeSearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.invoiceTypesearchParams.skip = 0;
+    this.invoiceTypesearchParams.searchValue = search;
+    this.invoiceTypeSelect2 = [];
+    this.invoiceTypeSearchInput$.next(search);
+  }
+
+  loadMoreinvoiceType(): void {
+    this.invoiceTypesearchParams.skip++;
+    this.fetchinvoiceTypeSelect2();
+  }
+
+  fetchinvoiceTypeSelect2(): void {
+    this.loadinginvoiceType = true;
+    const searchVal = this.invoiceTypesearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.invoiceTypesearchParams.skip;
+    this.searchSelect2Params.take = this.invoiceTypesearchParams.take;
+    this.Select2Service.getInvoiceTypeSelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: SelectdropdownResult) => {
+          const newItems = response?.results || [];
+          this.invoiceTypeSelect2 = [...this.invoiceTypeSelect2, ...newItems];
+          this.loadinginvoiceType = false;
+        },
+        error: () => this.loadinginvoiceType = false
+      });
+  }
+
+  oninvoiceTypeSelect2Change(selectedvendor: any): void {
+    if (selectedvendor) {
+      this.searchParams.type = selectedvendor.id;
+      this.searchParams.typestr = selectedvendor.text;
+    } else {
+      this.searchParams.type = null;
+      this.searchParams.typestr = null;
+    }
+  }
+
+
+  onSearch(): void {
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
+
+  onPageChange(event: { pageNumber: number; pageSize: number }): void {
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+  }
+
+  onTableSearch(text: string): void {
+    this.searchText = text;
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
+
+  private cleanFilterObject(obj: any): any {
+    const cleaned = { ...obj };
+    Object.keys(cleaned).forEach((key) => {
+      if (cleaned[key] === '') {
+        cleaned[key] = null;
+      }
+    });
+    return cleaned;
+  }
+
+  clear(): void {
+    this.searchParams = new InvoiceFilter();
+    this.selectedentitySelect2Obj = null;
+    this.selectedvendorSelect2Obj = null;
+    this.selectedinvoiceTypeSelect2Obj = null;
+    this.loadgridData = [];
+    if (this.filterForm) this.filterForm.resetForm();
+  }
+
+  getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
+    if (!this.searchParams.entityId) {
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
       return;
     }
-  filter.invoiceDate = filter.invoiceDate && filter.invoiceDate.trim() !== '' 
-    ? filter.invoiceDate 
-    : null;
-    this.loading = true;
-    this.apiService.GetApInvoice(filter)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: Invoice[]) => {
-          this.ApInvoiceList = (response || []).map((item: Invoice) => {
-            if (item.hD_DATE) {
-              const date = new Date(item.hD_DATE);
-              const day = ('0' + date.getDate()).slice(-2);
-              const month = ('0' + (date.getMonth() + 1)).slice(-2);
-              const year = date.getFullYear();
-              item.hD_DATE = `${day}-${month}-${year}`;
-            }
-            return item;
-          });
-          this.loading = false;
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    const skip = (event.pageNumber - 1) * event.pageSize;
+    this.searchParams.skip = skip;
+    this.searchParams.take = event.pageSize;
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+    this.spinnerService.show();
+
+    this.apiService.getAll(cleanedFilters)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: any) => {
+          this.loadgridData = response || [];
+          this.pagination.totalCount = response[0]?.rowsCount || 0;
+
+          this.spinnerService.hide();
         },
-        error: (err) => {
-          this.loading = false;
-          this.toastr.error('Failed to load invoices. Please try again.', 'Error');
-          console.error('API error:', err);
+        error: () => {
+          this.spinnerService.hide();
         }
       });
   }
 
-  public getApInvoice_tr(tr_Id: string, entitY_ID: string): void {
-    const params = { tr_Id, entityId: entitY_ID };
-    this.loading = true;
+  getFormDatabyId(tr_Id: string, entitY_ID: string): void {
+    const params: FilterInvoiceByIdDto = {
+      entityId: entitY_ID,
+      tr_Id: tr_Id
+    };
+    this.spinnerService.show();
     forkJoin({
-      trList: this.apiService.GetApInvoice_tr(params),
-      header: this.apiService.GetInvoiceheaderDetails(params)
+      invoiceheaderdata: this.apiService.getDetailById(params) as Observable<InvoiceHeader | InvoiceHeader[]>,
+      invoiceTrdata: this.apiService.getTrDetailById(params) as Observable<InvoiceTransaction[]>,
     })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (result: { trList: InvoiceTransaction[]; header: InvoiceHeader[] | InvoiceHeader }) => {
-          this.ApInvoice_trList = result.trList || [];
-          this.invoiceHeaderData = Array.isArray(result.header)
-            ? result.header[0] || ({} as InvoiceHeader)
-            : result.header;
-          this.loading = false;
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (result) => {
+          this.loadformTrListData = result.invoiceTrdata ?? [];
+          this.loadformData = Array.isArray(result.invoiceheaderdata)
+            ? result.invoiceheaderdata[0] ?? ({} as InvoiceHeader)
+            : result.invoiceheaderdata;
+          const modalElement = document.getElementById('viewdetails');;
+          if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+          };
+          this.spinnerService.hide();
         },
         error: (err) => {
-          this.loading = false;
-          this.toastr.error('Failed to fetch invoice details.', 'Error');
-          console.error('Error fetching invoice details:', err);
+          this.spinnerService.hide();
         }
       });
   }
+ 
+  private buildColumnDefs(): void {
+    this.columnDefs = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('InvoiceHdResourceName.hD_INNO'), field: 'hD_INNO', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.hD_DATE'), field: 'hD_DATEstr', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.vendoR_NUMBER'), field: 'vendoR_NUMBER', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.vendoR_NAME'), field: 'vendoR_NAME', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.hD_TYPE_DESC'), field: 'hD_TYPE_DESC', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.totalVal'), field: 'totalValstr', width: 200 },
+    ];
+  }
 
-  public fetchVendors(): void {
-    if (this.vendorList.length === 0) {
-      const request = { searchTerm: '', take: 100, skip: 0 };
-      this.apiService.getVendors(request)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (response: { results: Vendor[] }) => {
-            this.vendorList = response?.results || [];
-          },
-          error: (err) => {
-            this.toastr.error('Failed to load vendor list.', 'Error');
-            console.error('Vendor list load error', err);
-          }
-        });
+  onTableAction(event: { action: string, row: any }) {
+    if (event.action === 'onViewInfo') {
+      this.getFormDatabyId(event.row.hd_id, event.row.entitY_ID);
+    }
+    if (event.action === 'edit') {
     }
   }
 
-  public fetchEntities(): void {
-    if (this.entityList.length === 0) {
-      this.apiService.getEntities()
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (response: { data: Entity[] }) => {
-            this.entityList = response?.data || [];
-          },
-          error: (err) => {
-            this.toastr.error('Failed to load entity list.', 'Error');
-            console.error('Entity load error', err);
-          }
+  printExcel(): void {
+    if (!this.searchParams.entityId) {
+      this.translate.get(['InvoiceHdResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(`${translations['InvoiceHdResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
         });
+      return;
     }
-  }
+    this.spinnerService.show();;
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
 
-  public fetchInvoiceTypes(): void {
-    if (this.invoiceTypeList.length === 0) {
-      const request = { searchTerm: '', take: 100, skip: 0 };
-      this.apiService.getInvoiceTypes(request)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (response: { results: InvoiceType[] }) => {
-            this.invoiceTypeList = response?.results || [];
-          },
-          error: (err) => {
-            this.toastr.error('Failed to load invoice type list.', 'Error');
-            console.error('Invoice type list load error', err);
-          }
-        });
-    }
+    this.apiService.getAll({ ...cleanedFilters, skip: 0, take: 1 })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (initialResponse: any) => {
+          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+
+          this.apiService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (response: any) => {
+                const data = response?.data || [];
+
+                const reportConfig: reportPrintConfig = {
+                  title: this.translate.instant('InvoiceHdResourceName.Title'),
+                  reportTitle: this.translate.instant('InvoiceHdResourceName.Title'),
+                  fileName: `${this.translate.instant('InvoiceHdResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('InvoiceHdResourceName.EntityId'), value: this.searchParams.entityIdstr },
+                    { label: this.translate.instant('InvoiceHdResourceName.invoiceNo'), value: this.searchParams.invoiceNo },
+                    { label: this.translate.instant('InvoiceHdResourceName.invoiceDatestr'), value: this.searchParams.invoiceDatestr },
+                    { label: this.translate.instant('InvoiceHdResourceName.vendorNo'), value: this.searchParams.vendorNo },
+                    { label: this.translate.instant('InvoiceHdResourceName.vendorName'), value: this.searchParams.vendorNamestr },
+                    { label: this.translate.instant('InvoiceHdResourceName.type'), value: this.searchParams.typestr },
+                  ],
+
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('InvoiceHdResourceName.hD_INNO'), key: 'hD_INNO' },
+                    { label: this.translate.instant('InvoiceHdResourceName.hD_DATE'), key: 'hD_DATEstr' },
+                    { label: this.translate.instant('InvoiceHdResourceName.vendoR_NUMBER'), key: 'vendoR_NUMBER' },
+                    { label: this.translate.instant('InvoiceHdResourceName.vendoR_NAME'), key: 'vendoR_NAME' },
+                    { label: this.translate.instant('InvoiceHdResourceName.hD_TYPE_DESC'), key: 'hD_TYPE_DESC' },
+                    { label: this.translate.instant('InvoiceHdResourceName.totalVal'), key: 'totalValstr' },
+                  ],
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: ['receiptAmountstr', 'chequeAmountstr', 'cashAmountstr', 'administrativeAmountstr']
+                };
+
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();;
+              },
+              error: () => {
+                this.spinnerService.hide();
+              }
+            });
+        },
+        error: () => {
+          this.spinnerService.hide();
+        }
+      });
   }
 
   onInvoiceRowClicked(event: any): void {
     const data = event?.data;
     if (data) {
-      this.getApInvoice_tr(data.hd_id ?? '', data.entitY_ID ?? '');
+      this.getFormDatabyId(data.hd_id ?? '', data.entitY_ID ?? '');
     }
   }
-
-  // trackBy functions for *ngFor performance
-  public trackByInvoice = (_: number, item: Invoice) => item.hd_id;
-  public trackByVendor = (_: number, item: Vendor) => item.text;
-  public trackByEntity = (_: number, item: Entity) => item.entitY_ID;
-  public trackByInvoiceType = (_: number, item: InvoiceType) => item.id;
 }

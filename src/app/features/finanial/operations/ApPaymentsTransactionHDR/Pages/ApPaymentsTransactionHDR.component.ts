@@ -1,63 +1,82 @@
-import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { forkJoin, Observable, Subject, take } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
-import { CustomTableComponent } from '../../../../../../shared/custom-table/custom-table.component';
-import { ApPaymentsTransactionHDRService } from '../../../../../core/services/ApPaymentsTransactionHDR.service';
+import { forkJoin, Observable, Subject } from 'rxjs';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { SpinnerService } from '../../../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../../../core/services/openStandardReportService.service';
-import { FndLookUpValuesSelect2RequestDto, Pagination, Selectdropdown, SelectdropdownResult, SelectdropdownResultResults, reportPrintConfig } from '../../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { FilterApPaymentsTransactionHDRDto, FilterApPaymentsTransactionHDRByIdDto, ApPaymentsTransactionHDRDto } from '../../../../../core/dtos/ApPaymentsTransactionHDRdtos/ApPaymentsTransactionHDR.dto';
+import { FndLookUpValuesSelect2RequestDto, Pagination, Select2RequestDto, SelectdropdownResult, SelectdropdownResultResults, reportPrintConfig } from '../../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2Service } from '../../../../../core/services/Select2.service';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FilterApPaymentsTransactionHDRDto, FilterApPaymentsTransactionHDRByIdDto, ApPaymentsTransactionHDRDto } from '../../../../../core/dtos/FinancialDtos/OperationDtos/ApPaymentsTransactionHDR.dto';
+import { ApPaymentsTransactionHDRService } from '../../../../../core/services/Financial/Operation/ApPaymentsTransactionHDR.service';
+import { ColDef, GridOptions } from 'ag-grid-community';
+import { GenericDataTableComponent } from '../../../../../../shared/generic-data-table/generic-data-table.component';
+
+declare var bootstrap: any;
+
 
 @Component({
   selector: 'app-ApPaymentsTransactionHDR',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, CustomTableComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent],
   templateUrl: './ApPaymentsTransactionHDR.component.html',
   styleUrls: ['./ApPaymentsTransactionHDR.component.scss']
 })
 
 export class ApPaymentsTransactionHDRComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
+  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
+
   private destroy$ = new Subject<void>();
+  userEntityForm!: FormGroup;
+  searchInput$ = new Subject<string>();
+  translatedHeaders: string[] = [];
   pagination = new Pagination();
 
-  entitySelect2: SelectdropdownResultResults[] = [];
-  paymentTypeSelect2: SelectdropdownResultResults[] = [];
-  vendorSelect2: SelectdropdownResultResults[] = [];
+  columnDefs: ColDef[] = [];
+  gridOptions: GridOptions = { pagination: false };
+  searchText: string = '';
+  columnHeaderMap: { [key: string]: string } = {};
+  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
+
 
   searchParams = new FilterApPaymentsTransactionHDRDto();
-  searchSelect2RequestDto = new FndLookUpValuesSelect2RequestDto();
+  searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
   searchParamsById = new FilterApPaymentsTransactionHDRByIdDto();
 
   loadgridData: ApPaymentsTransactionHDRDto[] = [];
   loadformData: ApPaymentsTransactionHDRDto = {} as ApPaymentsTransactionHDRDto;
 
-  selectedvendorSelect2Obj: any = null;
+  entitySelect2: SelectdropdownResultResults[] = [];
+  loadingentity = false;
+  entitysearchParams = new Select2RequestDto();
   selectedentitySelect2Obj: any = null;
-  selectpaymentTypeSelect2Obj: any = null;
-  userEntityForm: FormGroup;
-  translatedHeaders$: Observable<string[]> | undefined;
-  headerKeys: string[] = [];
+  entitySearchInput$ = new Subject<string>();
 
-  @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
+  vendorSelect2: SelectdropdownResultResults[] = [];
+  loadingvendors = false;
+  vendorsearchParams = new Select2RequestDto();
+  selectedvendorSelect2Obj: any = null;
+  vendorSearchInput$ = new Subject<string>();
+
+  paymentTypeSelect2: SelectdropdownResultResults[] = [];
+  loadingpaymentType = false;
+  paymentTypesearchParams = new Select2RequestDto();
+  selectpaymentTypeSelect2Obj: any = null;
+  paymentTypeSearchInput$ = new Subject<string>();
 
   constructor(
     private apPaymentsTransactionHDRService: ApPaymentsTransactionHDRService,
     private toastr: ToastrService,
     private translate: TranslateService,
     private openStandardReportService: openStandardReportService,
-    private spinnerService:SpinnerService,
+    private spinnerService: SpinnerService,
     private Select2Service: Select2Service,
     private fb: FormBuilder
-  )
-  {
+  ) {
     this.translate.setDefaultLang('en');
     this.translate.use('en');
     this.userEntityForm = this.fb.group({
@@ -66,28 +85,27 @@ export class ApPaymentsTransactionHDRComponent {
   }
 
   ngOnInit(): void {
-    this.translatedHeaders$ = combineLatest([
-      this.translate.get('ApPaymentsTransactionHDRResourceName.PaymentNumber'),
-      this.translate.get('ApPaymentsTransactionHDRResourceName.PaymentDate'),
-      this.translate.get('ApPaymentsTransactionHDRResourceName.PaymentTypeDesc'),
-      this.translate.get('ApPaymentsTransactionHDRResourceName.VendorNumber'),
-      this.translate.get('ApPaymentsTransactionHDRResourceName.VendorName'),
-      this.translate.get('ApPaymentsTransactionHDRResourceName.Amount'),
-    ]).pipe(
-      map(translations => translations)
-    );
-
-    this.headerKeys = [
-      'paymenT_NUMBER',
-      'paymenT_DATEstr',
-      'paymenT_TYPE_DESC',
-      'vendoR_NUMBER',
-      'vendoR_NAME',
-      'paymenT_AMOUNTstr'
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
     ];
-    this.fetchEntitySelect2();
-    this.fetchApVendorSelect2();
-    this.fetchPaymentTypeSelect2();
+
+    this.vendorSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchApvendorSelect2());
+
+    this.paymentTypeSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchpaymentTypeSelect2());
+
+    this.entitySearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchentitySelect2());
+
+    this.fetchentitySelect2();
+    this.fetchApvendorSelect2();
+    this.fetchpaymentTypeSelect2();
   }
 
   ngOnDestroy(): void {
@@ -95,93 +113,143 @@ export class ApPaymentsTransactionHDRComponent {
     this.destroy$.complete();
   }
 
-  fetchEntitySelect2(): void {
-    this.Select2Service.getEntitySelect2(this.searchSelect2RequestDto)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response: SelectdropdownResult) => {
-        this.entitySelect2 = response?.results || [];
-      },
-    });
+  onvendorSearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.vendorsearchParams.skip = 0;
+    this.vendorsearchParams.searchValue = search;
+    this.vendorSelect2 = [];
+    this.vendorSearchInput$.next(search);
   }
 
-  fetchApVendorSelect2(): void {
-    this.Select2Service.getApVendorSelect2(this.searchSelect2RequestDto)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response: SelectdropdownResult) => {
-          this.vendorSelect2 = response?.results || [];
-      },
-    });
-  }
-  fetchPaymentTypeSelect2(): void {
-    this.Select2Service.getPaymentTypeSelect2(this.searchSelect2RequestDto)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response: SelectdropdownResult) => {
-        this.paymentTypeSelect2 = response?.results || [];
-      },
-    });
+  loadMorevendors(): void {
+    this.vendorsearchParams.skip++;
+    this.fetchApvendorSelect2();
   }
 
-  onSearch(): void {
-    this.getLoadDataGrid(1);
-  }
+  fetchApvendorSelect2(): void {
+    this.loadingvendors = true;
+    const searchVal = this.vendorsearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.vendorsearchParams.skip;
+    this.searchSelect2Params.take = this.vendorsearchParams.take;
 
-  getLoadDataGrid(page: number): void {
-    if (!this.searchParams.entityId) {
-      this.translate.get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
-        .subscribe(translations => {
-          this.toastr.warning(`${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
-        });
-      return;
-    }
-    const skip = (page - 1) * this.pagination.take;
-    this.searchParams.skip = skip;
-    this.searchParams.take = this.pagination.take;
-
-    const cleanedFilters = this.cleanFilterObject(this.searchParams);
-    this.spinnerService.show();
-   
-
-    this.apPaymentsTransactionHDRService.getAll(cleanedFilters)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-        next: (response: any) => {
-          this.loadgridData = response?.data || [];
-          this.pagination = {...this.pagination,totalCount: response.totalCount || 0};
-          this.spinnerService.hide();
+    this.Select2Service.getApVendorSelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: SelectdropdownResult) => {
+          const newItems = response?.results || [];
+          this.vendorSelect2 = [...this.vendorSelect2, ...newItems];
+          this.loadingvendors = false;
         },
-        error: () => {
-          this.spinnerService.hide();
-        }
+        error: () => this.loadingvendors = false
       });
   }
 
-  onvendorSelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.vendorName = selectedVendor.id;
-      this.searchParams.vendorNamestr = selectedVendor.text;
+  onvendorSelect2Change(selectedvendor: any): void {
+    if (selectedvendor) {
+      this.searchParams.vendorName = selectedvendor.id;
+      this.searchParams.vendorNamestr = selectedvendor.text;
     } else {
       this.searchParams.vendorName = null;
       this.searchParams.vendorNamestr = null;
     }
   }
 
-  onentitySelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.entityId = selectedVendor.id;
-      this.searchParams.entityIdstr = selectedVendor.text;
+  onentitySearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.entitysearchParams.skip = 0;
+    this.entitysearchParams.searchValue = search;
+    this.entitySelect2 = [];
+    this.entitySearchInput$.next(search);
+  }
+
+  loadMoreentity(): void {
+    this.entitysearchParams.skip++;
+    this.fetchentitySelect2();
+  }
+
+  fetchentitySelect2(): void {
+    this.loadingentity = true;
+    const searchVal = this.entitysearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.entitysearchParams.skip;
+    this.searchSelect2Params.take = this.entitysearchParams.take;
+
+    this.Select2Service.getEntitySelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: SelectdropdownResult) => {
+          const newItems = response?.results || [];
+          this.entitySelect2 = [...this.entitySelect2, ...newItems];
+          this.loadingentity = false;
+        },
+        error: () => this.loadingentity = false
+      });
+  }
+
+  onentitySelect2Change(selectedvendor: any): void {
+    if (selectedvendor) {
+      this.searchParams.entityId = selectedvendor.id;
+      this.searchParams.entityIdstr = selectedvendor.text;
     } else {
       this.searchParams.entityId = null;
       this.searchParams.entityIdstr = null;
     }
   }
 
-  onpaymentTypeSelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.paymentTypeDesc = selectedVendor.id;
-      this.searchParams.paymentTypeDescstr = selectedVendor.text;
+
+  onpaymentTypeSearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.paymentTypesearchParams.skip = 0;
+    this.paymentTypesearchParams.searchValue = search;
+    this.paymentTypeSelect2 = [];
+    this.paymentTypeSearchInput$.next(search);
+  }
+
+  loadMorepaymentType(): void {
+    this.paymentTypesearchParams.skip++;
+    this.fetchpaymentTypeSelect2();
+  }
+
+  fetchpaymentTypeSelect2(): void {
+    this.loadingpaymentType = true;
+    const searchVal = this.paymentTypesearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.paymentTypesearchParams.skip;
+    this.searchSelect2Params.take = this.paymentTypesearchParams.take;
+    this.Select2Service.getPaymentTypeSelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: SelectdropdownResult) => {
+          const newItems = response?.results || [];
+          this.paymentTypeSelect2 = [...this.paymentTypeSelect2, ...newItems];
+          this.loadingpaymentType = false;
+        },
+        error: () => this.loadingpaymentType = false
+      });
+  }
+
+  onpaymentTypeSelect2Change(selectedvendor: any): void {
+    if (selectedvendor) {
+      this.searchParams.paymentTypeDesc = selectedvendor.id;
+      this.searchParams.paymentTypeDescstr = selectedvendor.text;
     } else {
       this.searchParams.paymentTypeDesc = null;
       this.searchParams.paymentTypeDescstr = null;
     }
+  }
+
+  onSearch(): void {
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
+
+  onPageChange(event: { pageNumber: number; pageSize: number }): void {
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+  }
+
+  onTableSearch(text: string): void {
+    this.searchText = text;
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
   private cleanFilterObject(obj: any): any {
@@ -196,11 +264,48 @@ export class ApPaymentsTransactionHDRComponent {
 
   clear(): void {
     this.searchParams = new FilterApPaymentsTransactionHDRDto();
+
+    this.selectedentitySelect2Obj = null;
+    this.selectedvendorSelect2Obj = null;
+    this.selectpaymentTypeSelect2Obj = null;
+
     this.loadgridData = [];
 
     if (this.filterForm) {
       this.filterForm.resetForm();
     }
+  }
+
+  getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
+    if (!this.searchParams.entityId) {
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
+      return;
+    }
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    const skip = (event.pageNumber - 1) * event.pageSize;
+    this.searchParams.skip = skip;
+    this.searchParams.take = event.pageSize;    
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+    this.spinnerService.show();
+    this.apPaymentsTransactionHDRService.getAll(cleanedFilters)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: any) => {
+          this.loadgridData = response || [];
+          this.pagination.totalCount = response[0]?.rowsCount || 0;
+          this.spinnerService.hide();
+        },
+        error: () => {
+          this.spinnerService.hide();
+        }
+      });
   }
 
   getFormDatabyId(tr_Id: string, entitY_ID: string): void {
@@ -214,17 +319,50 @@ export class ApPaymentsTransactionHDRComponent {
         ApPaymentsTransactionHDRDto | ApPaymentsTransactionHDRDto[]>,
     })
       .pipe(takeUntil(this.destroy$)).subscribe({
-      next: (result) => {
-        this.loadformData = Array.isArray(result.mischeaderdata)
-          ? result.mischeaderdata[0] ?? ({} as ApPaymentsTransactionHDRDto)
-          : result.mischeaderdata;
+        next: (result) => {
+          this.loadformData = Array.isArray(result.mischeaderdata)
+            ? result.mischeaderdata[0] ?? ({} as ApPaymentsTransactionHDRDto)
+            : result.mischeaderdata;
+          const modalElement = document.getElementById('viewdetails');;
+          if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+          };
+
           this.spinnerService.hide();
-      },
+        },
         error: (err) => {
           this.spinnerService.hide();
-      }
-    });
+        }
+      });
   }
+
+  private buildColumnDefs(): void {
+    this.columnDefs = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentNumber'), field: 'paymenT_NUMBER', width: 200 },
+      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentDate'), field: 'paymenT_DATEstr', width: 200 },
+      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentTypeDesc'), field: 'paymenT_TYPE_DESC', width: 200 },
+      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.VendorNumber'), field: 'vendoR_NUMBER', width: 200 },
+      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.VendorName'), field: 'vendoR_NAME', width: 200 },
+      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.Amount'), field: 'paymenT_AMOUNTstr', width: 200 },
+    ];
+  }
+
+  onTableAction(event: { action: string, row: any }) {
+    if (event.action === 'onViewInfo') {
+      this.getFormDatabyId(event.row.paymenT_ID, event.row.entitY_ID);
+    }
+    if (event.action === 'edit') {
+    }
+  }
+
 
   printExcel(): void {
     if (!this.searchParams.entityId) {
@@ -291,6 +429,5 @@ export class ApPaymentsTransactionHDRComponent {
         }
       });
   }
-
 }
 

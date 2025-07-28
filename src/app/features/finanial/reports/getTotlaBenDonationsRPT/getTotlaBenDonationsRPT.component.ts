@@ -1,47 +1,64 @@
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormGroup, FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { map, takeUntil } from 'rxjs/operators';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import * as XLSX from 'xlsx';
-import { Pagination, SelectdropdownResultResults, FndLookUpValuesSelect2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { getTotlaBenDonationsRPTInputDto } from '../../../../core/dtos/Reports/FinancialReportsInput.dto';
-import { getTotlaBenDonationsRPTOutputDto } from '../../../../core/dtos/Reports/FinancialReportsOutput.dto';
-import { FinancialReportService } from '../../../../core/services/FinancialReport.service';
+import { Pagination, SelectdropdownResultResults, FndLookUpValuesSelect2RequestDto, SelectdropdownResult, reportPrintConfig, Select2RequestDto } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { openStandardReportService } from '../../../../core/services/openStandardReportService.service'
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { Select2Service } from '../../../../core/services/Select2.service';
-import { CustomTableComponent } from '../../../../../shared/custom-table/custom-table.component';
-
+import { getTotlaBenDonationsRPTInputDto } from '../../../../core/dtos/FinancialDtos/Reports/FinancialReportsInput.dto';
+import { getTotlaBenDonationsRPTOutputDto } from '../../../../core/dtos/FinancialDtos/Reports/FinancialReportsOutput.dto';
+import { FinancialReportService } from '../../../../core/services/Financial/Reports/FinancialReport.service';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { ColDef, GridOptions } from 'ag-grid-community';
+import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
 @Component({
   selector: 'app-getTotlaBenDonationsRPT',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, CustomTableComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, GenericDataTableComponent, NgSelectComponent],
   templateUrl: './getTotlaBenDonationsRPT.component.html',
   styleUrls: ['./getTotlaBenDonationsRPT.component.scss']
 })
 
 export class getTotlaBenDonationsRPTComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
-  private destroy$ = new Subject<void>();
+  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
 
+
+  private destroy$ = new Subject<void>();
+  userEntityForm!: FormGroup;
+  searchInput$ = new Subject<string>();
+  translatedHeaders: string[] = [];
   pagination = new Pagination();
 
-  entitySelect2: SelectdropdownResultResults[] = [];
-  beneficentIdSelect2: SelectdropdownResultResults[] = [];
+  columnDefs: ColDef[] = [];
+  gridOptions: GridOptions = { pagination: false };
+  searchText: string = '';
+  columnHeaderMap: { [key: string]: string } = {};
+  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
+
 
   searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
   searchParams = new getTotlaBenDonationsRPTInputDto();
   getAllDataForReports: getTotlaBenDonationsRPTOutputDto[] = [];
 
-  loading = false;
-  selectedentitySelect2Obj: any = null
-  selectedbeneficentIdSelect2Obj: any = null;
-
   translatedHeaders$: Observable<string[]> | undefined;
   headerKeys: string[] = [];
+
+  entitySelect2: SelectdropdownResultResults[] = [];
+  loadingentity = false;
+  entitysearchParams = new Select2RequestDto();
+  selectedentitySelect2Obj: any = null;
+  entitySearchInput$ = new Subject<string>();
+
+  beneficentIdSelect2: SelectdropdownResultResults[] = [];
+  loadingbeneficentId = false;
+  beneficentIdsearchParams = new Select2RequestDto();
+  selectedbeneficentIdSelect2Obj: any = null;
+  beneficentIdSearchInput$ = new Subject<string>();
   constructor(
     private financialReportService: FinancialReportService,
     private toastr: ToastrService,
@@ -56,6 +73,20 @@ export class getTotlaBenDonationsRPTComponent {
   }
 
   ngOnInit(): void {
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
+    ];
+
+    this.beneficentIdSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchbeneficentIdSelect2());
+
+    this.entitySearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchentitySelect2());
+
     this.fetchentitySelect2();
     this.fetchbeneficentIdSelect2();
   }
@@ -63,59 +94,108 @@ export class getTotlaBenDonationsRPTComponent {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
 
-    this.translatedHeaders$ = combineLatest([
-      this.translate.get('FinancialReportResourceName.beneficentName'),
-      this.translate.get('FinancialReportResourceName.beneficentNo'),
-      this.translate.get('FinancialReportResourceName.receiptNumber'),
-      this.translate.get('FinancialReportResourceName.miscReceiptDate'),
-      this.translate.get('FinancialReportResourceName.receiptTypeDesc'),
-      this.translate.get('FinancialReportResourceName.notes'),
-      this.translate.get('FinancialReportResourceName.administrative'),
-    ]).pipe(
-      map(translations => translations)
-    );
+  onentitySearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.entitysearchParams.skip = 0;
+    this.entitysearchParams.searchValue = search;
+    this.entitySelect2 = [];
+    this.entitySearchInput$.next(search);
+  }
 
-    this.headerKeys = [
-      'beneficentName',
-      'beneficenT_NO',
-      'receipT_NUMBER',
-      'misC_RECEIPT_DATEstr',
-      'receipT_TYPE_DESC',
-      'notes',
-      'misC_RECEIPT_AMOUNTstr',
-      'administrativEstr'
-    ];
+  loadMoreentity(): void {
+    this.entitysearchParams.skip++;
+    this.fetchentitySelect2();
   }
 
   fetchentitySelect2(): void {
+    this.loadingentity = true;
+    const searchVal = this.entitysearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.entitysearchParams.skip;
+    this.searchSelect2Params.take = this.entitysearchParams.take;
+
     this.Select2Service.getEntitySelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
-          this.entitySelect2 = response?.results || [];
+          const newItems = response?.results || [];
+          this.entitySelect2 = [...this.entitySelect2, ...newItems];
+          this.loadingentity = false;
         },
-        error: (err) => {
-          this.toastr.error('Failed to load Entity.', 'Error');
-        }
+        error: () => this.loadingentity = false
       });
+  }
+
+  onentitySelect2Change(selectedentity: any): void {
+    if (selectedentity) {
+      this.searchParams.entityId = selectedentity.id;
+      this.searchParams.entityIdstr = selectedentity.text;
+    } else {
+      this.searchParams.entityId = null;
+      this.searchParams.entityIdstr = null;
+    }
+  }
+
+
+  onbeneficentIdSearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.beneficentIdsearchParams.skip = 0;
+    this.beneficentIdsearchParams.searchValue = search;
+    this.beneficentIdSelect2 = [];
+    this.beneficentIdSearchInput$.next(search);
+  }
+
+  loadMorebeneficentId(): void {
+    this.beneficentIdsearchParams.skip++;
+    this.fetchbeneficentIdSelect2();
   }
 
   fetchbeneficentIdSelect2(): void {
+    this.loadingbeneficentId = true;
+    const searchVal = this.beneficentIdsearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.beneficentIdsearchParams.skip;
+    this.searchSelect2Params.take = this.beneficentIdsearchParams.take;
+
     this.Select2Service.getBeneficentIdSelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
-          this.beneficentIdSelect2 = response?.results || [];
+          const newItems = response?.results || [];
+          this.beneficentIdSelect2 = [...this.beneficentIdSelect2, ...newItems];
+          this.loadingbeneficentId = false;
         },
-        error: (err) => {
-          this.toastr.error('Failed to load Beneficent.', 'Error');
-        }
+        error: () => this.loadingbeneficentId = false
       });
   }
 
+  onbeneficentIdSelect2Change(selectedbeneficentId: any): void {
+    if (selectedbeneficentId) {
+      this.searchParams.beneficenT_ID = selectedbeneficentId.id;
+      this.searchParams.beneficentIdstr = selectedbeneficentId.text;
+    } else {
+      this.searchParams.beneficenT_ID = null;
+      this.searchParams.beneficentIdstr = null;
+    }
+  }
 
-  getLoadDataGrid(page: number, searchValue: string = ''): void {
-    const skip = (page - 1) * this.pagination.itemsPerPage;
-    if (!this.searchParams.entityId) return;
+  getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
+    if (!this.searchParams.entityId) {
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
+      return;
+    }
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    const skip = (event.pageNumber - 1) * event.pageSize;
+    this.searchParams.skip = skip;
+    this.searchParams.take = event.pageSize;
     this.spinnerService.show();
 
     this.financialReportService.getgetTotlaBenDonationsRPTData(this.searchParams)
@@ -127,33 +207,24 @@ export class getTotlaBenDonationsRPTComponent {
         },
         error: (error) => {
           this.spinnerService.hide();
-          this.toastr.error('Error fetching Data.', 'Error');
         }
       });
   }
 
-  onentitySelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.entityId = selectedVendor.id;
-      this.searchParams.entityIdstr = selectedVendor.text;
-    } else {
-      this.searchParams.entityId = null;
-      this.searchParams.entityIdstr = null;
-    }
-  }
-
-  onbeneficentIdSelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.beneficenT_ID = selectedVendor.id;
-      this.searchParams.beneficentIdstr = selectedVendor.text;
-    } else {
-      this.searchParams.beneficenT_ID = null;
-      this.searchParams.beneficentIdstr = null;
-    }
-  }
 
   onSearch(): void {
-    this.getLoadDataGrid(1);
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
+
+  onPageChange(event: { pageNumber: number; pageSize: number }): void {
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+  }
+
+  onTableSearch(text: string): void {
+    this.searchText = text;
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
   private cleanFilterObject(obj: any): any {
@@ -175,14 +246,51 @@ export class getTotlaBenDonationsRPTComponent {
     }
   }
 
+  private buildColumnDefs(): void {
+    this.columnDefs = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('FinancialReportResourceName.beneficentName'), field: 'beneficentName', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.beneficentNo'), field: 'beneficenT_NO', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.receiptNumber'), field: 'receipT_NUMBER', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.miscReceiptDate'), field: 'misC_RECEIPT_DATEstr', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.receiptTypeDesc'), field: 'receipT_TYPE_DESC', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.notes'), field: 'notes', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.miscReceiptAmount'), field: 'misC_RECEIPT_AMOUNTstr', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.administrative'), field: 'administrativEstr', width: 200 },
+    ];
+  }
+
+  onTableAction(event: { action: string, row: any }) {
+    if (event.action === 'onViewInfo') {
+      if (this.genericTable && this.genericTable.onViewInfo) {
+        this.genericTable.onViewInfo(event.row);
+      }
+    }
+    if (event.action === 'edit') {
+   }
+  }
+
   printExcel(): void {
-    this.spinnerService.show();
-    const cleanedFilters = this.cleanFilterObject(this.searchParams);
     if (!this.searchParams.entityId) {
-      this.spinnerService.hide();
-      this.toastr.warning('Please Select Entity', 'Warning');
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
       return;
     }
+    this.spinnerService.show();
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+   
     this.financialReportService.getgetTotlaBenDonationsRPTData({ ...cleanedFilters })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -232,26 +340,30 @@ export class getTotlaBenDonationsRPTComponent {
               },
               error: () => {
                 this.spinnerService.hide();
-                this.toastr.error('Failed to export Excel');
               }
             });
         },
         error: () => {
           this.spinnerService.hide();
-          this.toastr.error('Failed to retrieve data count');
         },
 
       });
   }
 
   printPDF(): void {
-    this.spinnerService.show();
-    const cleanedFilters = this.cleanFilterObject(this.searchParams);
     if (!this.searchParams.entityId) {
-      this.spinnerService.hide();
-      this.toastr.warning('Please Select Entity', 'Warning');
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
       return;
     }
+    this.spinnerService.show();
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
     this.financialReportService.getgetTotlaBenDonationsRPTData({ ...cleanedFilters })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -297,13 +409,11 @@ export class getTotlaBenDonationsRPTComponent {
               },
               error: () => {
                 this.spinnerService.hide();
-                this.toastr.error('Failed to export Excel');
               }
             });
         },
         error: () => {
           this.spinnerService.hide();
-          this.toastr.error('Failed to retrieve data count');
         },
 
       });

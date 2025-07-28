@@ -15,9 +15,14 @@ export class Select2APIEndpoint {
     GetGlAccountSelect2List: '/GlAccount/GetGlAccountSelect2List',
     GetSpBeneficentsSelect2List: '/SpBeneficents/GetSpBeneficentsSelect2List',
     GetGlPeriodDetailSelect2List: '/GlPeriodDetails/GetGlPeriodDetailSelect2List',
+    GetInvoiceTypeSelect2List: '/VwApInvoiceHd/GetInvoiceTypeSelect2List',
+    GetMiscPaymentStatusSelect2List: '/Lookup/Posted',
+    GetApVendorStatusSelect2List: '/Lookup/ApVendorStatus',
+    GetJvSourceSelect2List: '/Lookup/JvSource',
+    GetJeStatusSelect2List: '/Lookup/JeStatus',
+    GetCurrencySelect2List: '/Lookup/Currency',
     GetSpBenSelect2ListBYEntityID: '/SpBeneficents/GetSpBeneficentsSelect2List',
 
   };
-
 }
 

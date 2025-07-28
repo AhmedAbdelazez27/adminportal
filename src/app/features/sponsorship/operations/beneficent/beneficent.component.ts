@@ -5,127 +5,115 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, Subject, take } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
-import { CustomTableComponent } from '../../../../../shared/custom-table/custom-table.component';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../../core/services/openStandardReportService.service';
 import { FndLookUpValuesSelect2RequestDto, Pagination, reportPrintConfig, Select2RequestDto, SelectdropdownResult, SelectdropdownResultResults } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2Service } from '../../../../core/services/Select2.service';
-import { beneficentDto, filterBeneficentByIdDto, filterBeneficentDto, loadBeneficentNameDto } from '../../../../core/dtos/sponsorship/operations/beneficent.dto';
 import { beneficentService } from '../../../../core/services/sponsorship/operations/beneficent.service';
+
 import { NgSelectModule } from '@ng-select/ng-select';
+import { filterBeneficentDto, filterBeneficentByIdDto, beneficentDto, loadBeneficentNameDto } from '../../../../core/dtos/Sponsorship/operations/beneficent.dto';
+import { ColDef, GridOptions } from 'ag-grid-community';
+import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
 
 @Component({
   selector: 'app-beneficent',
-    standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, CustomTableComponent,NgSelectModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, TranslateModule, GenericDataTableComponent, NgSelectModule],
   templateUrl: './beneficent.component.html',
   styleUrls: ['./beneficent.component.scss']
 })
 export class BeneficentComponent {
-   @ViewChild('filterForm') filterForm!: NgForm;
- private destroy$ = new Subject<void>();
- pagination = new Pagination();
+  @ViewChild('filterForm') filterForm!: NgForm; @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
 
- entitySelect2: SelectdropdownResultResults[] = [];
- beneficentNameSelect2: SelectdropdownResultResults[] = [];
+  private destroy$ = new Subject<void>();
+  userEntityForm!: FormGroup;
+  searchInput$ = new Subject<string>();
+  translatedHeaders: string[] = [];
+  pagination = new Pagination();
 
- searchParams = new filterBeneficentDto();
- searchSelect2RequestDto = new FndLookUpValuesSelect2RequestDto();
- searchParamsById = new filterBeneficentByIdDto();
+  columnDefs: ColDef[] = [];
+  gridOptions: GridOptions = { pagination: false };
+  searchText: string = '';
+  columnHeaderMap: { [key: string]: string } = {};
+  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
 
- loadgridData: beneficentDto[] = [];
- loadformData: beneficentDto = {} as beneficentDto;
+  entitySelect2: SelectdropdownResultResults[] = [];
+  beneficentNameSelect2: SelectdropdownResultResults[] = [];
 
- selectedbeneficentNameSelect2Obj: any = null;
- selectedentitySelect2Obj: any = null;
- userEntityForm: FormGroup;
- translatedHeaders$: Observable<string[]> | undefined;
- headerKeys: string[] = [];
+  searchParams = new filterBeneficentDto();
+  searchSelect2RequestDto = new FndLookUpValuesSelect2RequestDto();
+  searchParamsById = new filterBeneficentByIdDto();
 
- loadingEntity = false;
+  loadgridData: beneficentDto[] = [];
+  loadformData: beneficentDto = {} as beneficentDto;
+
+  selectedbeneficentNameSelect2Obj: any = null;
+  selectedentitySelect2Obj: any = null;
+
+  loadingEntity = false;
   entitySearchInput$ = new Subject<string>();
   entitysearchParams = new Select2RequestDto();
-  
+
   loadingbeneficentName = false;
   beneficentNameSearchInput$ = new Subject<string>();
   beneficentNameSearchParams = new Select2RequestDto();
   loadBeneficentNameDto = new loadBeneficentNameDto();
 
+  constructor(
+    private beneficentService: beneficentService,
+    private toastr: ToastrService,
+    private translate: TranslateService,
+    private openStandardReportService: openStandardReportService,
+    private spinnerService: SpinnerService,
+    private Select2Service: Select2Service,
+    private fb: FormBuilder
+  )
+  {
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
+    this.userEntityForm = this.fb.group({
+      entityIds: [[], Validators.required]
+    });
+  }
 
- @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
+  ngOnInit(): void {
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
+    ];
 
-
- constructor(
-   private beneficentService: beneficentService,
-   private toastr: ToastrService,
-   private translate: TranslateService,
-   private openStandardReportService: openStandardReportService,
-   private spinnerService:SpinnerService,
-   private Select2Service: Select2Service,
-   private fb: FormBuilder
- )
- {
-   this.translate.setDefaultLang('en');
-   this.translate.use('en');
-   this.userEntityForm = this.fb.group({
-     entityIds: [[], Validators.required]
-   });
- }
-
- ngOnInit(): void {
-   this.translatedHeaders$ = combineLatest([
-     this.translate.get('beneficentResourceName.beneficentNumber'),
-     this.translate.get('beneficentResourceName.beneficentName'),
-     this.translate.get('beneficentResourceName.beneficentAddress'),
-     this.translate.get('beneficentResourceName.mobile'),
-     this.translate.get('beneficentResourceName.homeTel'),
-     this.translate.get('beneficentResourceName.workTel'),
-   ]).pipe(
-     map(translations => translations)
-   );
-
-   this.headerKeys = [
-     'beneficenT_NO',
-     'beneficentname',
-     'address',
-     'beneficentmobile',
-     'mobilE2',
-     'mobilE3'
-   ];
-   this.entitySearchInput$
+    this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
       .subscribe(() => this.fetchEntitySelect2());
 
-     
-      
-     this.beneficentNameSearchInput$
-  .pipe(debounceTime(300), takeUntil(this.destroy$))
-  .subscribe((searchTerm: string) => {
-    if (this.searchParams.entityId) {
-      this.beneficentNameSearchParams.skip = 0;
-      this.beneficentNameSearchParams.searchValue = searchTerm?.trim() || null;
-      this.beneficentNameSelect2 = [];
-      this.fetchBeneficentNameSelect2(this.searchParams.entityId, this.beneficentNameSearchParams.searchValue);
-    }
-  });
+    this.beneficentNameSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe((searchTerm: string) => {
+        if (this.searchParams.entityId) {
+          this.beneficentNameSearchParams.skip = 0;
+          this.beneficentNameSearchParams.searchValue = searchTerm?.trim() || null;
+          this.beneficentNameSelect2 = [];
+          this.fetchBeneficentNameSelect2(this.searchParams.entityId, this.beneficentNameSearchParams.searchValue);
+        }
+      });
 
     this.fetchEntitySelect2();
-     if (this.searchParams.entityId) {
-    this.fetchBeneficentNameSelect2(this.searchParams.entityId, this.beneficentNameSearchParams.searchValue);
+    if (this.searchParams.entityId) {
+      this.fetchBeneficentNameSelect2(this.searchParams.entityId, this.beneficentNameSearchParams.searchValue);
+    }
+
   }
 
- } 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
- ngOnDestroy(): void {
-   this.destroy$.next();
-   this.destroy$.complete();
- }
-
-   onEntitySearch(event: { term: string; items: any[] }): void {
+  onEntitySearch(event: { term: string; items: any[] }): void {
     const search = event.term;
-        const searchVal = event.term?.trim() || null;
+    const searchVal = event.term?.trim() || null;
     this.entitysearchParams.skip = 0;
     this.entitysearchParams.searchValue = searchVal;
     this.entitySelect2 = [];
@@ -134,7 +122,7 @@ export class BeneficentComponent {
 
   loadMoreEntity(): void {
     this.entitysearchParams.skip++;
-        this.fetchEntitySelect2();
+    this.fetchEntitySelect2();
 
   }
 
@@ -169,7 +157,7 @@ export class BeneficentComponent {
 
   onBeneficentNameSearch(event: { term: string; items: any[] }): void {
     const search = event.term;
-        const searchVal = event.term?.trim() || null;
+    const searchVal = event.term?.trim() || null;
     this.beneficentNameSearchParams.skip = 0;
     this.beneficentNameSearchParams.searchValue = searchVal;
     this.beneficentNameSelect2 = [];
@@ -185,7 +173,7 @@ export class BeneficentComponent {
     if (!entityId) return;
     this.loadingbeneficentName = true;
     this.loadBeneficentNameDto.entityId = entityId;
-      this.loadBeneficentNameDto.searchValue = searchValue;
+    this.loadBeneficentNameDto.searchValue = searchValue;
 
     this.loadBeneficentNameDto.skip = this.beneficentNameSearchParams.skip;
     this.loadBeneficentNameDto.take = this.beneficentNameSearchParams.take;
@@ -211,148 +199,185 @@ export class BeneficentComponent {
       this.searchParams.beneficentNamestr = null;
     }
   }
- 
- onSearch(): void {
-   this.getLoadDataGrid(1);
- }
 
- getLoadDataGrid(page: number): void {
-   if (!this.searchParams.entityId) {
-     this.translate.get(['beneficentResourceName.EntityId', 'Common.Required'])
-       .subscribe(translations => {
-         this.toastr.warning(`${translations['beneficentResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
-       });
-     return;
-   }
-   const skip = (page - 1) * this.pagination.take;
-   this.searchParams.skip = skip;
-   this.searchParams.take = this.pagination.take;
+  onSearch(): void {
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
 
-   const cleanedFilters = this.cleanFilterObject(this.searchParams);
-   this.spinnerService.show();
-  
+  onPageChange(event: { pageNumber: number; pageSize: number }): void {
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+  }
 
-   this.beneficentService.getAll(cleanedFilters)
-     .pipe(takeUntil(this.destroy$)).subscribe({
-       next: (response: any) => {
-         this.loadgridData = response || [];
-         this.pagination = {...this.pagination,totalCount: response.totalCount || 0};
-         this.spinnerService.hide();
-       },
-       error: () => {
-         this.spinnerService.hide();
-       }
-     });
- }
+  onTableSearch(text: string): void {
+    this.searchText = text;
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
 
- 
+  getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
+    if (!this.searchParams.entityId) {
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
+      return;
+    }
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    const skip = (event.pageNumber - 1) * event.pageSize;
+    this.searchParams.skip = skip;
+    this.searchParams.take = event.pageSize;
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
 
- 
- private cleanFilterObject(obj: any): any {
-   const cleaned = { ...obj };
-   Object.keys(cleaned).forEach((key) => {
-     if (cleaned[key] === '') {
-       cleaned[key] = null;
-     }
-   });
-   return cleaned;
- }
+    this.beneficentService.getAll(cleanedFilters)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: any) => {
+          this.loadgridData = response || [];
+          this.pagination = { ...this.pagination, totalCount: response.totalCount || 0 };
+          this.spinnerService.hide();
+        },
+        error: () => {
+          this.spinnerService.hide();
+        }
+      });
+  }
 
- clear(): void {
-   this.searchParams = new filterBeneficentDto();
-   this.loadgridData = [];
-this.selectedentitySelect2Obj  = null;
-   if (this.filterForm) {
-     this.filterForm.resetForm();
-   }
- }
+  private cleanFilterObject(obj: any): any {
+    const cleaned = { ...obj };
+    Object.keys(cleaned).forEach((key) => {
+      if (cleaned[key] === '') {
+        cleaned[key] = null;
+      }
+    });
+    return cleaned;
+  }
 
- getFormDatabyId(beneficenT_ID: any, entitY_ID: any): void {
-   const params: filterBeneficentByIdDto = {
-     entityId: entitY_ID,
-     beneficenT_ID: beneficenT_ID
-   };
-   this.spinnerService.show();
-   forkJoin({
-     beneficentHeaderData: this.beneficentService.getDetailById(params) as Observable<
-       beneficentDto | beneficentDto[]>,
-   })
-     .pipe(takeUntil(this.destroy$)).subscribe({
-     next: (result) => {
-      debugger;
-      console.log("detail ID",result);
-       this.loadformData = Array.isArray(result.beneficentHeaderData)
-         ? result.beneficentHeaderData[0] ?? ({} as beneficentDto)
-         : result.beneficentHeaderData;
-         this.spinnerService.hide();
-     },
-       error: (err) => {
-         this.spinnerService.hide();
-     }
-   });
- }
+  clear(): void {
+    this.searchParams = new filterBeneficentDto();
+    this.loadgridData = [];
+    this.selectedentitySelect2Obj = null;
+    if (this.filterForm) {
+      this.filterForm.resetForm();
+    }
+  }
 
- printExcel(): void {
-   if (!this.searchParams.entityId) {
-     this.translate.get(['beneficentResourceName.EntityId', 'Common.Required'])
-       .subscribe(translations => {
-         this.toastr.warning(`${translations['beneficentResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
-       });
-     return;
-   }
-   this.spinnerService.show();
-   const cleanedFilters = this.cleanFilterObject(this.searchParams);
+  getFormDatabyId(beneficenT_ID: any, entitY_ID: any): void {
+    const params: filterBeneficentByIdDto = {
+      entityId: entitY_ID,
+      beneficenT_ID: beneficenT_ID
+    };
+    this.spinnerService.show();
+    forkJoin({
+      beneficentHeaderData: this.beneficentService.getDetailById(params) as Observable<
+        beneficentDto | beneficentDto[]>,
+    })
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (result) => {
+          this.loadformData = Array.isArray(result.beneficentHeaderData)
+            ? result.beneficentHeaderData[0] ?? ({} as beneficentDto)
+            : result.beneficentHeaderData;
+          this.spinnerService.hide();
+        },
+        error: (err) => {
+          this.spinnerService.hide();
+        }
+      });
+  }
 
-   this.beneficentService.getAll({ ...cleanedFilters, skip: 0, take: 1 })
-     .pipe(takeUntil(this.destroy$))
-     .subscribe({
-       next: (initialResponse: any) => {
-         const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+  private buildColumnDefs(): void {
+    this.columnDefs = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('beneficentResourceName.beneficentNumber'), field: 'beneficenT_NO', width: 50 },
+      { headerName: this.translate.instant('beneficentResourceName.beneficentName'), field: 'beneficentname', width: 200 },
+      { headerName: this.translate.instant('beneficentResourceName.beneficentAddress'), field: 'address', width: 100 },
+      { headerName: this.translate.instant('beneficentResourceName.mobile'), field: 'beneficentmobile', width: 100 },
+      { headerName: this.translate.instant('beneficentResourceName.homeTel'), field: 'mobilE2', width: 100 },
+      { headerName: this.translate.instant('beneficentResourceName.workTel'), field: 'mobilE3', width: 100 },
+    ];
+  }
 
-         this.beneficentService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
-           .pipe(takeUntil(this.destroy$))
-           .subscribe({
-             next: (response: any) => {
-               const data = response|| [];
+  onTableAction(event: { action: string, row: any }) {
+    if (event.action === 'onViewInfo') {
+      if (this.genericTable && this.genericTable.onViewInfo) {
+        this.genericTable.onViewInfo(event.row);
+      }
+    }
+    if (event.action === 'edit') {
+    }
+  }
 
-               const reportConfig: reportPrintConfig = {
-                 title: this.translate.instant('beneficentResourceName.Title'),
-                 reportTitle: this.translate.instant('beneficentResourceName.Title'),
-                 fileName: `${this.translate.instant('beneficentResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-                 fields: [
-                   { label: this.translate.instant('beneficentResourceName.EntityId'), value: this.searchParams.entityIdstr },
-                   { label: this.translate.instant('beneficentResourceName.beneficentName'), value: this.searchParams.beneficentNamestr },
-                   { label: this.translate.instant('beneficentResourceName.beneficentNumber'), value: this.searchParams.beneficentName },
-                   { label: this.translate.instant('beneficentResourceName.phoneNumber'), value: this.searchParams.phoneNumber },                                   
-                 ],
-                 columns: [
-                   { label: '#', key: 'rowNo', title: '#' },
-                   { label: this.translate.instant('beneficentResourceName.beneficentNumber'), key: 'beneficenT_NO' },
-                   { label: this.translate.instant('beneficentResourceName.beneficentName'), key: 'beneficentname' },
-                   { label: this.translate.instant('beneficentResourceName.beneficentAddress'), key: 'address' },
-                   { label: this.translate.instant('beneficentResourceName.mobile'), key: 'beneficentmobile' },
-                   { label: this.translate.instant('beneficentResourceName.homeTel'), key: 'mobilE2' },
-                   { label: this.translate.instant('beneficentResourceName.workTel'), key: 'mobilE3' },
-                 ],
-                             
-                 data: data.map((item: any, index: number) => ({
-                   ...item,
-                   rowNo: index + 1
-                 })),                 
-               };
+  printExcel(): void {
+    if (!this.searchParams.entityId) {
+      this.translate.get(['beneficentResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(`${translations['beneficentResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
+        });
+      return;
+    }
+    this.spinnerService.show();
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
 
-               this.openStandardReportService.openStandardReportExcel(reportConfig);
-               this.spinnerService.hide();
-             },
-             error: () => {
-               this.spinnerService.hide();
-             }
-           });
-       },
-       error: () => {
-         this.spinnerService.hide();
-       }
-     });
- }
+    this.beneficentService.getAll({ ...cleanedFilters, skip: 0, take: 1 })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (initialResponse: any) => {
+          const totalCount = initialResponse[0]?.rowsCount || initialResponse?.length || 0;
+
+          this.beneficentService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (response: any) => {
+                const data = response || [];
+
+                const reportConfig: reportPrintConfig = {
+                  title: this.translate.instant('beneficentResourceName.Title'),
+                  reportTitle: this.translate.instant('beneficentResourceName.Title'),
+                  fileName: `${this.translate.instant('beneficentResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('beneficentResourceName.EntityId'), value: this.searchParams.entityIdstr },
+                    { label: this.translate.instant('beneficentResourceName.beneficentName'), value: this.searchParams.beneficentNamestr },
+                    { label: this.translate.instant('beneficentResourceName.beneficentNumber'), value: this.searchParams.beneficentName },
+                    { label: this.translate.instant('beneficentResourceName.phoneNumber'), value: this.searchParams.phoneNumber },
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('beneficentResourceName.beneficentNumber'), key: 'beneficenT_NO' },
+                    { label: this.translate.instant('beneficentResourceName.beneficentName'), key: 'beneficentname' },
+                    { label: this.translate.instant('beneficentResourceName.beneficentAddress'), key: 'address' },
+                    { label: this.translate.instant('beneficentResourceName.mobile'), key: 'beneficentmobile' },
+                    { label: this.translate.instant('beneficentResourceName.homeTel'), key: 'mobilE2' },
+                    { label: this.translate.instant('beneficentResourceName.workTel'), key: 'mobilE3' },
+                  ],
+
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                };
+
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();
+              },
+              error: () => {
+                this.spinnerService.hide();
+              }
+            });
+        },
+        error: () => {
+          this.spinnerService.hide();
+        }
+      });
+  }
 
 }

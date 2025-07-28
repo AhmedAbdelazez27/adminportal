@@ -5,7 +5,6 @@ import { generalLJournalRptComponent } from './generalLJournalRpt/generalLJourna
 import { receiptRPTComponent } from './receiptRPT/receiptRPT.component';
 import { vendorsPayTransRPTComponent } from './vendorsPayTransRPT/vendorsPayTransRPT.component';
 import { getTotlaBenDonationsRPTComponent } from './getTotlaBenDonationsRPT/getTotlaBenDonationsRPT.component';
-import { ReceiptvoucherReportComponent } from './receiptvoucher-report/receiptvoucher-report.component';
 
 export const reportsRoutes: Routes = [
     {
@@ -33,8 +32,6 @@ export const reportsRoutes: Routes = [
         , canActivate: [authGuard],
         data: { pagePermission: 'TotalBenDonationsRpt' }
     },  //Reports/GetTotlaBenDonations  // Beneficent Total Donation
-
-    { path: 'receiptvoucher-report', component: ReceiptvoucherReportComponent },
 
     // where the final report 
 ];

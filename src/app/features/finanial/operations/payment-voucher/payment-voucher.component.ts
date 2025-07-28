@@ -1,125 +1,430 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { forkJoin } from 'rxjs';
+import { FormBuilder, FormGroup, FormsModule, NgForm } from '@angular/forms';
+import { Observable, Subject, debounceTime, forkJoin, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { PaymentVoucherServiceService } from '../../../../core/services/payment-voucher-service.service';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FilterpaymentvoucherDto, FilterpaymentvoucherByIdDto, paymentvoucherDto, paymentvoucherlinesDto, paymentvoucherdetailsDto } from '../../../../core/dtos/FinancialDtos/OperationDtos/payment-voucher.dto';
+import { Pagination, FndLookUpValuesSelect2RequestDto, SelectdropdownResultResults, Select2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { SpinnerService } from '../../../../core/services/spinner.service';
+import { openStandardReportService } from '../../../../core/services/openStandardReportService.service';
+import { Select2Service } from '../../../../core/services/Select2.service';
+import { PaymentVoucherServiceService } from '../../../../core/services/Financial/Operation/payment-voucher-service.service';
+import { ColDef, GridOptions } from 'ag-grid-community';
+import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-payment-voucher',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent],
   templateUrl: './payment-voucher.component.html',
   styleUrls: ['./payment-voucher.component.scss']
 })
 export class PaymentVoucherComponent implements OnInit {
-  // Data lists
-  apMiscPaymentList: any[] = [];
-  paymentList: any[] = [];
-  paymentHeaderData: any = {};
-  checkDetailsList: any[] = [];
-  beneficiaryList: any[] = [];
-  entityList: any[] = [];
-  statusList: any[] = [];
+  @ViewChild('filterForm') filterForm!: NgForm;
+  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
 
-  // Filter model
-  filterModel = {
-    entityId: null as string | null,
-    paymentNumber: null as string | null,
-    beneficiaryName: null as string | null,
-    checkNumber: null as string | null,
-    amount: null as number | null,
-    status: null as string | null,
-    orderByValue: 'MISC_PAYMENT_ID'
-  };
+  private destroy$ = new Subject<void>();
+  userEntityForm!: FormGroup;
+  searchInput$ = new Subject<string>();
+  translatedHeaders: string[] = [];
+  pagination = new Pagination();
 
-  constructor(private readonly apiService: PaymentVoucherServiceService,private toastr: ToastrService) {}
+  columnDefs: ColDef[] = [];
+  gridOptions: GridOptions = { pagination: false };
+  searchText: string = '';
+  columnHeaderMap: { [key: string]: string } = {};
+  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
+
+
+  searchParams = new FilterpaymentvoucherDto();
+  searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
+  searchParamsById = new FilterpaymentvoucherByIdDto();
+
+  loadgridData: paymentvoucherDto[] = [];
+  loadformData: paymentvoucherDto = {} as paymentvoucherDto;
+  loadformDetailData: paymentvoucherdetailsDto[] = [];
+  loadformLineData: paymentvoucherlinesDto[] = [];
+
+  entitySelect2: SelectdropdownResultResults[] = [];
+  loadingentity = false;
+  entitysearchParams = new Select2RequestDto();
+  selectedentitySelect2Obj: any = null;
+  entitySearchInput$ = new Subject<string>();
+
+  beneficiaryNameSelect2: SelectdropdownResultResults[] = [];
+  loadingbeneficiaryName = false;
+  beneficiaryNamesearchParams = new Select2RequestDto();
+  selectedbeneficiaryNameSelect2Obj: any = null;
+  beneficiaryNameSearchInput$ = new Subject<string>();
+
+  statusSelect2: SelectdropdownResultResults[] = [];
+  loadingstatus = false;
+  statussearchParams = new Select2RequestDto();
+  selectedstatusSelect2Obj: any = null;
+  statusSearchInput$ = new Subject<string>();
+  constructor(
+    private apiService: PaymentVoucherServiceService,
+    private toastr: ToastrService,
+    private translate: TranslateService,
+    private openStandardReportService: openStandardReportService,
+    private spinnerService: SpinnerService,
+    private Select2Service: Select2Service,
+    private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
+    ];
+
+    this.beneficiaryNameSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchApbeneficiaryNameSelect2());
+
+    this.statusSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchstatusSelect2());
+
+
+    this.entitySearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchentitySelect2());
+
+    this.fetchentitySelect2();
+    this.fetchApbeneficiaryNameSelect2();
+    this.fetchstatusSelect2();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 
-  getApMiscPaymentHeaders(): void {
-    const filter = { ...this.filterModel };
-      if (!filter.entityId || filter.entityId.trim() === '') {
-      this.toastr.warning('Please select an entity before searching.', 'Warning');
+  onentitySearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.entitysearchParams.skip = 0;
+    this.entitysearchParams.searchValue = search;
+    this.entitySelect2 = [];
+    this.entitySearchInput$.next(search);
+  }
+
+  loadMoreentity(): void {
+    this.entitysearchParams.skip++;
+    this.fetchentitySelect2();
+  }
+
+  fetchentitySelect2(): void {
+    this.loadingentity = true;
+    const searchVal = this.entitysearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.entitysearchParams.skip;
+    this.searchSelect2Params.take = this.entitysearchParams.take;
+
+    this.Select2Service.getEntitySelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: SelectdropdownResult) => {
+          const newItems = response?.results || [];
+          this.entitySelect2 = [...this.entitySelect2, ...newItems];
+          this.loadingentity = false;
+        },
+        error: () => this.loadingentity = false
+      });
+  }
+
+  onentitySelect2Change(selectedentity: any): void {
+    if (selectedentity) {
+      this.searchParams.entityId = selectedentity.id;
+      this.searchParams.entityIdstr = selectedentity.text;
+    } else {
+      this.searchParams.entityId = null;
+      this.searchParams.entityIdstr = null;
+    }
+  }
+
+
+  onbeneficiaryNameSearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.beneficiaryNamesearchParams.skip = 0;
+    this.beneficiaryNamesearchParams.searchValue = search;
+    this.beneficiaryNameSelect2 = [];
+    this.beneficiaryNameSearchInput$.next(search);
+  }
+
+  loadMorebeneficiaryNames(): void {
+    this.beneficiaryNamesearchParams.skip++;
+    this.fetchApbeneficiaryNameSelect2();
+  }
+
+  fetchApbeneficiaryNameSelect2(): void {
+    this.loadingbeneficiaryName = true;
+    const searchVal = this.beneficiaryNamesearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.beneficiaryNamesearchParams.skip;
+    this.searchSelect2Params.take = this.beneficiaryNamesearchParams.take;
+
+    this.Select2Service.getBeneficentIdSelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: SelectdropdownResult) => {
+          const newItems = response?.results || [];
+          this.beneficiaryNameSelect2 = [...this.beneficiaryNameSelect2, ...newItems];
+          this.loadingbeneficiaryName = false;
+        },
+        error: () => this.loadingbeneficiaryName = false
+      });
+  }
+
+  onbeneficiaryNameSelect2Change(selectedbeneficiaryName: any): void {
+    if (selectedbeneficiaryName) {
+      this.searchParams.benifetaryName = selectedbeneficiaryName.id;
+      this.searchParams.benifetaryNamestr = selectedbeneficiaryName.text;
+    } else {
+      this.searchParams.benifetaryName = null;
+      this.searchParams.benifetaryNamestr = null;
+    }
+  }
+
+
+
+
+  onstatusSearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    const searchVal = event.term?.trim() || null;
+    this.statussearchParams.skip = 0;
+    this.statussearchParams.searchValue = searchVal;
+    this.statusSelect2 = [];
+    this.statusSearchInput$.next(search);
+  }
+
+  loadMorestatus(): void {
+    this.statussearchParams.skip++;
+    this.fetchstatusSelect2();
+  }
+
+  fetchstatusSelect2(): void {
+    this.loadingstatus = true;
+    this.searchSelect2Params.searchValue = this.statussearchParams.searchValue;
+    this.searchSelect2Params.skip = this.statussearchParams.skip;
+    this.searchSelect2Params.take = this.statussearchParams.take;
+
+    this.Select2Service.getMiscPaymentStatusSelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: SelectdropdownResult) => {
+          this.statusSelect2 = response?.results || [];
+          this.loadingstatus = false;
+        },
+        error: () => this.loadingstatus = false
+      });
+  }
+
+  onstatusSelect2Change(selectedstatus: any): void {
+    if (selectedstatus) {
+      this.searchParams.status = selectedstatus.id;
+      this.searchParams.statusstr = selectedstatus.text;
+    } else {
+      this.searchParams.status = null;
+      this.searchParams.statusstr = null;
+    }
+  }
+
+  onSearch(): void {
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
+
+  onPageChange(event: { pageNumber: number; pageSize: number }): void {
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+  }
+
+  onTableSearch(text: string): void {
+    this.searchText = text;
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
+
+
+  private cleanFilterObject(obj: any): any {
+    const cleaned = { ...obj };
+    Object.keys(cleaned).forEach((key) => {
+      if (cleaned[key] === '') {
+        cleaned[key] = null;
+      }
+    });
+    return cleaned;
+  }
+
+  clear(): void {
+    this.searchParams = new FilterpaymentvoucherDto();
+
+    this.selectedentitySelect2Obj = null;
+    this.selectedbeneficiaryNameSelect2Obj = null;
+    this.selectedstatusSelect2Obj = null;
+
+    this.loadgridData = [];
+
+    if (this.filterForm) {
+      this.filterForm.resetForm();
+    }
+  }
+
+
+  getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
+    if (!this.searchParams.entityId) {
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
       return;
     }
- 
-    this.apiService.getApMiscPaymentHeaders(filter).subscribe({
-      next: (response: any[]) => {
-        this.apMiscPaymentList = (response || []).map((item: any) => {
-          if (item.misC_PAYMENT_DATE) {
-            const date = new Date(item.misC_PAYMENT_DATE);
-            const day = ('0' + date.getDate()).slice(-2);
-            const month = ('0' + (date.getMonth() + 1)).slice(-2);
-            const year = date.getFullYear();
-            item.misC_PAYMENT_DATE = `${day}-${month}-${year}`;
-          }
-          return item;
-        });
-      },
-      error: (err) => console.error('API error:', err)
-    });
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    const skip = (event.pageNumber - 1) * event.pageSize;
+    this.searchParams.skip = skip;
+    this.searchParams.take = event.pageSize;
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+    this.spinnerService.show();
+    this.apiService.getAll(cleanedFilters)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: any) => {
+          this.loadgridData = response || [];
+          this.pagination.totalCount = response[0]?.rowsCount || 0;
+          this.spinnerService.hide();
+        },
+        error: () => {
+          this.spinnerService.hide();
+        }
+      });
   }
 
-
-  getMiscPaymentHeaderWithDetails(miscPaymentId: string, entityId: string): void {
-    forkJoin({
-      header: this.apiService.getMiscPaymentHeaderWithHisDetails(miscPaymentId, entityId),
-      paymentList: this.apiService.getPaymentLines(miscPaymentId, entityId),
-      checkDetailsList: this.apiService.getPaymentDetails(miscPaymentId, entityId)
-    }).subscribe({
-      next: (result) => {
-        this.paymentHeaderData = Array.isArray(result.header) ? result.header[0] || {} : result.header;
-        this.paymentList = result.paymentList || [];
-        this.checkDetailsList = result.checkDetailsList || [];
-      },
-      error: (err) => console.error('Error fetching payment voucher details:', err)
-    });
-  }
-
-  loadBeneficiary(): void {
-    if (this.beneficiaryList.length > 0) return;
-    const request = { searchTerm: '', take: 100, skip: 0 };
-    this.apiService.getBeneficiary(request).subscribe({
-      next: (response: any) => this.beneficiaryList = response?.results || [],
-      error: (err) => console.error('Beneficiary list load error', err)
-    });
-  }
-
-  loadEntities(): void {
-    if (this.entityList.length > 0) return;
-    this.apiService.getEntities().subscribe({
-      next: (response: any) => this.entityList = response?.data || [],
-      error: (err) => console.error('Entity load error', err)
-    });
-  }
-
-  loadStatus(): void {
-    if (this.statusList.length > 0) return;
-    const request = { searchTerm: '', take: 100, skip: 0 };
-    this.apiService.getStatus(request).subscribe({
-      next: (response: any) => this.statusList = response?.results || [],
-      error: (err) => console.error('Status list load error', err)
-    });
-  }
-
- 
-  applyFilter(): void {
-    this.getApMiscPaymentHeaders();
-  }
-
-
-  clearFilter(): void {
-    this.filterModel = {
-      entityId: null,
-      paymentNumber: null,
-      beneficiaryName: null,
-      checkNumber: null,
-      amount: null,
-      status: null,
-      orderByValue: 'MISC_PAYMENT_ID'
+  getFormDatabyId(misC_PAYMENT_ID: string, entitY_ID: string): void {
+    const params: FilterpaymentvoucherByIdDto = {
+      entityId: entitY_ID,
+      paymentId: misC_PAYMENT_ID
     };
+    this.spinnerService.show();
+    forkJoin({
+      mischeaderdata: this.apiService.getDetailById(params) as Observable<paymentvoucherDto | paymentvoucherDto[]>,
+      miscdetaildata: this.apiService.getPaymentDetailsListDataById(params) as Observable<paymentvoucherdetailsDto[]>,
+      misclinedata: this.apiService.getPaymentLinesListDataById(params) as Observable<paymentvoucherlinesDto[]>
+    }).pipe(takeUntil(this.destroy$)).subscribe({
+      next: (result) => {
+        this.loadformDetailData = result.miscdetaildata ?? [];
+        this.loadformLineData = result.misclinedata ?? [];
+        this.loadformData = Array.isArray(result.mischeaderdata)
+          ? result.mischeaderdata[0] ?? ({} as paymentvoucherDto)
+          : result.mischeaderdata;
+        const modalElement = document.getElementById('viewdetails');;
+        if (modalElement) {
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
+        };
+        this.spinnerService.hide();
+      },
+        error: (err) => {
+          this.spinnerService.hide();
+        }
+      });
+  }
+
+
+  private buildColumnDefs(): void {
+    this.columnDefs = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('InvoiceHdResourceName.paymenT_NUMBER'), field: 'paymenT_NUMBER', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.beneficiarY_NAME'), field: 'beneficiarY_NAME', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.misC_PAYMENT_DATE'), field: 'misC_PAYMENT_DATEstr', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.amount'), field: 'amountstr', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.status'), field: 'posted', width: 200 },
+    ];
+  }
+
+  onTableAction(event: { action: string, row: any }) {
+    if (event.action === 'onViewInfo') {
+      this.getFormDatabyId(event.row.misC_PAYMENT_ID, event.row.entitY_ID);
+    }
+    if (event.action === 'edit') {
+    }
+  }
+
+
+  printExcel(): void {
+    if (!this.searchParams.entityId) {
+      this.translate.get(['PaymentVoucherResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(`${translations['PaymentVoucherResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
+        });
+      return;
+    }
+    this.spinnerService.show();
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+
+    this.apiService.getAll({ ...cleanedFilters, skip: 0, take: 1 })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (initialResponse: any) => {
+          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+
+          this.apiService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (response: any) => {
+                const data = response?.data || [];
+
+                const reportConfig: reportPrintConfig = {
+                  title: this.translate.instant('PaymentVoucherResourceName.Title'),
+                  reportTitle: this.translate.instant('PaymentVoucherResourceName.Title'),
+                  fileName: `${this.translate.instant('PaymentVoucherResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('PaymentVoucherResourceName.entityId'), value: this.searchParams.entityIdstr },
+                    { label: this.translate.instant('PaymentVoucherResourceName.paymentNumber'), value: this.searchParams.paymentNumber },
+                    { label: this.translate.instant('PaymentVoucherResourceName.benifetaryName'), value: this.searchParams.benifetaryNamestr },
+                    { label: this.translate.instant('PaymentVoucherResourceName.checkNumber'), value: this.searchParams.checkNumber },
+                    { label: this.translate.instant('PaymentVoucherResourceName.amount'), value: this.searchParams.amount },
+                    { label: this.translate.instant('PaymentVoucherResourceName.status'), value: this.searchParams.statusstr },
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('PaymentVoucherResourceName.paymenT_NUMBER'), key: 'paymenT_NUMBER' },
+                    { label: this.translate.instant('PaymentVoucherResourceName.beneficiarY_NAME'), key: 'beneficiarY_NAME' },
+                    { label: this.translate.instant('PaymentVoucherResourceName.misC_PAYMENT_DATE'), key: 'misC_PAYMENT_DATEstr' },
+                    { label: this.translate.instant('PaymentVoucherResourceName.amount'), key: 'amountstr' },
+                    { label: this.translate.instant('PaymentVoucherResourceName.status'), key: 'posted' },
+                  ],
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: ['receiptAmountstr', 'chequeAmountstr', 'cashAmountstr', 'administrativeAmountstr']
+                };
+
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();
+              },
+              error: () => {
+                this.spinnerService.hide();
+              }
+            });
+        },
+        error: () => {
+          this.spinnerService.hide();
+        }
+      });
   }
 }

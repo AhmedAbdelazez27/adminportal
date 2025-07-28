@@ -3,22 +3,23 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { map, takeUntil } from 'rxjs/operators';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { vendorsPayTransRPTInputDto } from '../../../../core/dtos/Reports/FinancialReportsInput.dto';
-import { vendorsPayTransRPTOutputDto } from '../../../../core/dtos/Reports/FinancialReportsOutput.dto';
-import { Pagination, SelectdropdownResultResults, FndLookUpValuesSelect2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { FinancialReportService } from '../../../../core/services/FinancialReport.service';
+import { Pagination, SelectdropdownResultResults, FndLookUpValuesSelect2RequestDto, SelectdropdownResult, reportPrintConfig, Select2RequestDto } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { openStandardReportService } from '../../../../core/services/openStandardReportService.service'
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { Select2Service } from '../../../../core/services/Select2.service';
+import { vendorsPayTransRPTInputDto } from '../../../../core/dtos/FinancialDtos/Reports/FinancialReportsInput.dto';
+import { vendorsPayTransRPTOutputDto } from '../../../../core/dtos/FinancialDtos/Reports/FinancialReportsOutput.dto';
+import { FinancialReportService } from '../../../../core/services/Financial/Reports/FinancialReport.service';
+import { NgSelectComponent } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
 
 @Component({
   selector: 'app-vendorsPayTransRPT',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule,GenericDataTableComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, GenericDataTableComponent, NgSelectComponent],
   templateUrl: './vendorsPayTransRPT.component.html',
   styleUrls: ['./vendorsPayTransRPT.component.scss']
 })
@@ -27,24 +28,31 @@ export class vendorsPayTransRPTComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
   @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
   private destroy$ = new Subject<void>();
+  searchInput$ = new Subject<string>();
 
   pagination = new Pagination();
 
-  entitySelect2: SelectdropdownResultResults[] = [];
-  vendorIdSelect2: SelectdropdownResultResults[] = [];
 
   searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
   searchParams = new vendorsPayTransRPTInputDto();
   getAllDataForReports: vendorsPayTransRPTOutputDto[] = [];
 
-  loading = false;
-  selectedentitySelect2Obj: any = null
-  selectedvendorIdSelect2Obj: any = null
+  entitySelect2: SelectdropdownResultResults[] = [];
+  loadingentity = false;
+  entitysearchParams = new Select2RequestDto();
+  selectedentitySelect2Obj: any = null;
+  entitySearchInput$ = new Subject<string>();
+
+  vendorSelect2: SelectdropdownResultResults[] = [];
+  loadingvendor = false;
+  vendorsearchParams = new Select2RequestDto();
+  selectedvendorSelect2Obj: any = null;
+  vendorSearchInput$ = new Subject<string>();
+   
   columnDefs: ColDef[] = [];
   gridOptions: GridOptions = { pagination: false };
   searchText: string = '';
   columnHeaderMap: { [key: string]: string } = {};
-
   rowActions: Array<{ label: string, icon?: string, action: string }> = [];
 
   constructor(
@@ -62,56 +70,131 @@ export class vendorsPayTransRPTComponent {
 
   ngOnInit(): void {
     this.fetchentitySelect2();
-    this.fetchvendorIdSelect2();
+    this.fetchApvendorSelect2();
     this.buildColumnDefs();
     this.rowActions = [
       { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
         { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
     ];
+
+    this.vendorSearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchApvendorSelect2());
+
+    this.entitySearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchentitySelect2());
+
+    this.fetchentitySelect2();
+    this.fetchApvendorSelect2();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+  onvendorSearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.vendorsearchParams.skip = 0;
+    this.vendorsearchParams.searchValue = search;
+    this.vendorSelect2 = [];
+    this.vendorSearchInput$.next(search);
+  }
+
+  loadMorevendor(): void {
+    this.vendorsearchParams.skip++;
+    this.fetchApvendorSelect2();
+  }
+
+  fetchApvendorSelect2(): void {
+    this.loadingvendor = true;
+    const searchVal = this.vendorsearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.vendorsearchParams.skip;
+    this.searchSelect2Params.take = this.vendorsearchParams.take;
+
+    this.Select2Service.getApVendorSelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: SelectdropdownResult) => {
+          const newItems = response?.results || [];
+          this.vendorSelect2 = [...this.vendorSelect2, ...newItems];
+          this.loadingvendor = false;
+        },
+        error: () => this.loadingvendor = false
+      });
+  }
+
+  onvendorSelect2Change(selectedvendor: any): void {
+    if (selectedvendor) {
+      this.searchParams.vendorId = selectedvendor.id;
+      this.searchParams.vendorIdstr = selectedvendor.text;
+    } else {
+      this.searchParams.vendorId = null;
+      this.searchParams.vendorIdstr = null;
+    }
+  }
+
+  onentitySearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.entitysearchParams.skip = 0;
+    this.entitysearchParams.searchValue = search;
+    this.entitySelect2 = [];
+    this.entitySearchInput$.next(search);
+  }
+
+  loadMoreentity(): void {
+    this.entitysearchParams.skip++;
+    this.fetchentitySelect2();
+  }
 
   fetchentitySelect2(): void {
+    this.loadingentity = true;
+    const searchVal = this.entitysearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.entitysearchParams.skip;
+    this.searchSelect2Params.take = this.entitysearchParams.take;
+
     this.Select2Service.getEntitySelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
-          this.entitySelect2 = response?.results || [];
+          const newItems = response?.results || [];
+          this.entitySelect2 = [...this.entitySelect2, ...newItems];
+          this.loadingentity = false;
         },
-        error: (err) => {
-          this.toastr.error('Failed to load Entity.', 'Error');
-        }
+        error: () => this.loadingentity = false
       });
   }
 
-  fetchvendorIdSelect2(): void {
-    this.Select2Service.getVendorSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
-        next: (response: SelectdropdownResult) => {
-          this.vendorIdSelect2 = response?.results || [];
-        },
-        error: (err) => {
-          this.toastr.error('Failed to load Vendor.', 'Error');
-        }
-      });
+  onentitySelect2Change(selectedentity: any): void {
+    if (selectedentity) {
+      this.searchParams.entityId = selectedentity.id;
+      this.searchParams.entityIdstr = selectedentity.text;
+    } else {
+      this.searchParams.entityId = null;
+      this.searchParams.entityIdstr = null;
+    }
   }
 
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
+    if (!this.searchParams.entityId) {
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
+      return;
+    }
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;
     this.searchParams.skip = skip;
     this.searchParams.take = event.pageSize;
-    if (!this.searchParams.entityId) return;
     this.spinnerService.show();
-    if (!this.searchParams.entityId) {
-      this.spinnerService.hide();
-      this.toastr.warning('Please Select Entity', 'Warning');
-      return;
-    }
+
     this.financialReportService.getvendorsPayTransRPTData(this.searchParams)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
@@ -126,25 +209,6 @@ export class vendorsPayTransRPTComponent {
       });
   }
 
-  onentitySelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.entityId = selectedVendor.id;
-      this.searchParams.entityIdstr = selectedVendor.text;
-    } else {
-      this.searchParams.entityId = null;
-      this.searchParams.entityIdstr = null;
-    }
-  }
-  onvendorIdSelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.vendorId = selectedVendor.id;
-      this.searchParams.vendorIdstr = selectedVendor.text;
-    } else {
-      this.searchParams.vendorId = null;
-      this.searchParams.vendorIdstr = null;
-    }
-  }
-
   onSearch(): void {
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
@@ -157,8 +221,6 @@ export class vendorsPayTransRPTComponent {
 
   onTableSearch(text: string): void {
     this.searchText = text;
-    //backend support search, add to searchParams and fetch
-    // this.searchParams.searchText = text;
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
@@ -184,13 +246,20 @@ export class vendorsPayTransRPTComponent {
 
 
   printExcel(): void {
-    this.spinnerService.show();
-    const cleanedFilters = this.cleanFilterObject(this.searchParams);
     if (!this.searchParams.entityId) {
-      this.spinnerService.hide();
-      this.toastr.warning('Please Select Entity', 'Warning');
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
       return;
     }
+    this.spinnerService.show();
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+   
     this.financialReportService.getvendorsPayTransRPTData({ ...cleanedFilters })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -239,13 +308,11 @@ export class vendorsPayTransRPTComponent {
               },
               error: () => {
                 this.spinnerService.hide();
-                this.toastr.error('Failed to export Excel');
               }
             });
         },
         error: () => {
           this.spinnerService.hide();
-          this.toastr.error('Failed to retrieve data count');
         },
 
       });
@@ -302,13 +369,11 @@ export class vendorsPayTransRPTComponent {
               },
               error: () => {
                 this.spinnerService.hide();
-                this.toastr.error('Failed to export Excel');
               }
             });
         },
         error: () => {
           this.spinnerService.hide();
-          this.toastr.error('Failed to retrieve data count');
         },
 
       });
@@ -316,7 +381,13 @@ export class vendorsPayTransRPTComponent {
 
   private buildColumnDefs(): void {
     this.columnDefs = [
-      { headerName: '#', valueGetter: 'node.rowIndex + 1', width: 40, colId: '#' },
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
       { headerName: this.translate.instant('FinancialReportResourceName.vendorNumber'), field: 'vendoR_NUMBER', width: 150 },
       { headerName: this.translate.instant('FinancialReportResourceName.vendorName'), field: 'vendoR_NAME', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.workTel'), field: 'worK_TEL', width: 100 },
@@ -326,7 +397,6 @@ export class vendorsPayTransRPTComponent {
       { headerName: this.translate.instant('FinancialReportResourceName.DebitAmount'), field: 'debiT_AMOUNTstr' },
       { headerName: this.translate.instant('FinancialReportResourceName.creditAmount'), field: 'crediT_AMOUNTstr' },
     ];
-    // Build the columnHeaderMap for the popup
     this.columnHeaderMap = {
       'vendoR_NUMBER': this.translate.instant('FinancialReportResourceName.vendorNumber'),
       'vendoR_NAME': this.translate.instant('FinancialReportResourceName.vendorName'),
@@ -352,7 +422,6 @@ export class vendorsPayTransRPTComponent {
       }
     }
      if (event.action === 'edit') {
-      console.log('edit action')
     }
   }
 }

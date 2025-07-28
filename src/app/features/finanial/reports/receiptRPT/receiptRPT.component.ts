@@ -1,44 +1,56 @@
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormGroup, FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { map, takeUntil } from 'rxjs/operators';
-import { Observable, Subject, combineLatest } from 'rxjs';
-import { Pagination, SelectdropdownResultResults, FndLookUpValuesSelect2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { receiptRPTInputDto } from '../../../../core/dtos/Reports/FinancialReportsInput.dto';
-import { receiptRPTOutputDto } from '../../../../core/dtos/Reports/FinancialReportsOutput.dto';
-import { FinancialReportService } from '../../../../core/services/FinancialReport.service';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { Pagination, SelectdropdownResultResults, FndLookUpValuesSelect2RequestDto, SelectdropdownResult, reportPrintConfig, Select2RequestDto } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { openStandardReportService } from '../../../../core/services/openStandardReportService.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { Select2Service } from '../../../../core/services/Select2.service';
-import { CustomTableComponent } from '../../../../../shared/custom-table/custom-table.component';
-
+import { receiptRPTInputDto } from '../../../../core/dtos/FinancialDtos/Reports/FinancialReportsInput.dto';
+import { receiptRPTOutputDto } from '../../../../core/dtos/FinancialDtos/Reports/FinancialReportsOutput.dto';
+import { FinancialReportService } from '../../../../core/services/Financial/Reports/FinancialReport.service';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { ColDef, GridOptions } from 'ag-grid-community';
+import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
 @Component({
   selector: 'app-receiptRPT',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, CustomTableComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, GenericDataTableComponent, NgSelectComponent],
   templateUrl: './receiptRPT.component.html',
   styleUrls: ['./receiptRPT.component.scss']
 })
 
 export class receiptRPTComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
-  private destroy$ = new Subject<void>();
+  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
 
+  private destroy$ = new Subject<void>();
+  userEntityForm!: FormGroup;
+  searchInput$ = new Subject<string>();
+  translatedHeaders: string[] = [];
   pagination = new Pagination();
 
-  entitySelect2: SelectdropdownResultResults[] = [];
+  columnDefs: ColDef[] = [];
+  gridOptions: GridOptions = { pagination: false };
+  searchText: string = '';
+  columnHeaderMap: { [key: string]: string } = {};
+  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
 
   searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
   searchParams = new receiptRPTInputDto();
   getAllDataForReports: receiptRPTOutputDto[] = [];
 
-  loading = false;
-  selectedentitySelect2Obj: any = null
-
   translatedHeaders$: Observable<string[]> | undefined;
   headerKeys: string[] = [];
+
+  entitySelect2: SelectdropdownResultResults[] = [];
+  loadingentity = false;
+  entitysearchParams = new Select2RequestDto();
+  selectedentitySelect2Obj: any = null;
+  entitySearchInput$ = new Subject<string>();
   constructor(
     private financialReportService: FinancialReportService,
     private toastr: ToastrService,
@@ -53,6 +65,16 @@ export class receiptRPTComponent {
   }
 
   ngOnInit(): void {
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
+    ];
+
+    this.entitySearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchentitySelect2())
+
     this.fetchentitySelect2();
   }
 
@@ -60,54 +82,71 @@ export class receiptRPTComponent {
     this.destroy$.next();
     this.destroy$.complete();
 
-    this.translatedHeaders$ = combineLatest([
-      this.translate.get('FinancialReportResourceName.paymentCategory'),
-      this.translate.get('FinancialReportResourceName.paymentNumber'),
-      this.translate.get('FinancialReportResourceName.beneficiaryName'),
-      this.translate.get('FinancialReportResourceName.paymentDate'),
-      this.translate.get('FinancialReportResourceName.paymentType'),
-      this.translate.get('FinancialReportResourceName.amount'),
-      this.translate.get('FinancialReportResourceName.notes'),
-      this.translate.get('FinancialReportResourceName.bankAccount')
-    ]).pipe(
-      map(translations => translations)
-    );
+  }
 
-    this.headerKeys = [
-      'paymenT_CATEGORY',
-      'paymenT_NUMBER',
-      'beneficiarY_NAME',
-      'paymenT_DATEstr',
-      'paymenT_TYPE',
-      'trX_TYPE',
-      'amounTstr',
-      'notes',
-      'banK_ACCOUNT'
-    ];
+  onentitySearch(event: { term: string; items: any[] }): void {
+    const search = event.term;
+    this.entitysearchParams.skip = 0;
+    this.entitysearchParams.searchValue = search;
+    this.entitySelect2 = [];
+    this.entitySearchInput$.next(search);
+  }
+
+  loadMoreentity(): void {
+    this.entitysearchParams.skip++;
+    this.fetchentitySelect2();
   }
 
   fetchentitySelect2(): void {
+    this.loadingentity = true;
+    const searchVal = this.entitysearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.entitysearchParams.skip;
+    this.searchSelect2Params.take = this.entitysearchParams.take;
+
     this.Select2Service.getEntitySelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
-          this.entitySelect2 = response?.results || [];
+          const newItems = response?.results || [];
+          this.entitySelect2 = [...this.entitySelect2, ...newItems];
+          this.loadingentity = false;
         },
-        error: (err) => {
-          this.toastr.error('Failed to load Entity.', 'Error');
-        }
+        error: () => this.loadingentity = false
       });
   }
 
-  getLoadDataGrid(page: number, searchValue: string = ''): void {
-    this.pagination.currentPage = page;
-    const skip = (page - 1) * this.pagination.take;
+  onentitySelect2Change(selectedentity: any): void {
+    if (selectedentity) {
+      this.searchParams.entityId = selectedentity.id;
+      this.searchParams.entityIdstr = selectedentity.text;
+    } else {
+      this.searchParams.entityId = null;
+      this.searchParams.entityIdstr = null;
+    }
+  }
+
+
+  getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
+    if (!this.searchParams.entityId) {
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
+      return;
+    }
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    const skip = (event.pageNumber - 1) * event.pageSize;
     this.searchParams.skip = skip;
-    this.searchParams.take = this.pagination.take;
-    if (!this.searchParams.entityId) return;
+    this.searchParams.take = event.pageSize;
+   
     this.spinnerService.show();
     if (!this.searchParams.entityId) {
       this.spinnerService.hide();
-      this.toastr.warning('Please Select Entity', 'Warning');
       return;
     }
     this.financialReportService.getreceiptRPTData(this.searchParams)
@@ -119,25 +158,26 @@ export class receiptRPTComponent {
         },
         error: (error) => {
           this.spinnerService.hide();
-          this.toastr.error('Error fetching Data.', 'Error');
         }
       });
   }
 
-  onentitySelect2Change(selectedVendor: any): void {
-    if (selectedVendor) {
-      this.searchParams.entityId = selectedVendor.id;
-      this.searchParams.entityIdstr = selectedVendor.text;
-    } else {
-      this.searchParams.entityId = null;
-      this.searchParams.entityIdstr = null;
-    }
-  }
+
 
   onSearch(): void {
-    this.getLoadDataGrid(1);
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
+  onPageChange(event: { pageNumber: number; pageSize: number }): void {
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+  }
+
+  onTableSearch(text: string): void {
+    this.searchText = text;
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
 
   private cleanFilterObject(obj: any): any {
     const cleaned = { ...obj };
@@ -158,21 +198,58 @@ export class receiptRPTComponent {
     }
   }
 
+  private buildColumnDefs(): void {
+    this.columnDefs = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('FinancialReportResourceName.paymentCategory'), field: 'paymenT_CATEGORY', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.paymentNumber'), field: 'paymenT_NUMBER', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.beneficiaryName'), field: 'beneficiarY_NAME', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.paymentDate'), field: 'paymenT_DATEstr', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.paymentType'), field: 'paymenT_TYPE', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.amount'), field: 'amounTstr', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.notes'), field: 'notes', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.bankAccount'), field: 'banK_ACCOUNT', width: 200 },
+    ];
+  }
+
+  onTableAction(event: { action: string, row: any }) {
+    if (event.action === 'onViewInfo') {
+      if (this.genericTable && this.genericTable.onViewInfo) {
+        this.genericTable.onViewInfo(event.row);
+      }
+    }
+    if (event.action === 'edit') {
+    }
+  }
+
   printExcel(): void {
-    this.spinnerService.show();
-    const cleanedFilters = this.cleanFilterObject(this.searchParams);
     if (!this.searchParams.entityId) {
-      this.spinnerService.hide();
-      this.toastr.warning('Please Select Entity', 'Warning');
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
       return;
     }
-    this.financialReportService.getcatchReceiptRptData({ ...cleanedFilters })
+    this.spinnerService.show();
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+
+    this.financialReportService.getreceiptRPTData({ ...cleanedFilters })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
           const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
 
-          this.financialReportService.getcatchReceiptRptData({ ...cleanedFilters, skip: 0, take: totalCount })
+          this.financialReportService.getreceiptRPTData({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
@@ -213,33 +290,38 @@ export class receiptRPTComponent {
               },
               error: () => {
                 this.spinnerService.hide();
-                this.toastr.error('Failed to export Excel');
               }
             });
         },
         error: () => {
           this.spinnerService.hide();
-          this.toastr.error('Failed to retrieve data count');
         },
 
       });
   }
 
   printPDF(): void {
-    this.spinnerService.show();
-    const cleanedFilters = this.cleanFilterObject(this.searchParams);
     if (!this.searchParams.entityId) {
-      this.spinnerService.hide();
-      this.toastr.warning('Please Select Entity', 'Warning');
+      this.translate
+        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
+            'Warning'
+          );
+        });
       return;
     }
-    this.financialReportService.getvendorsPayTransRPTData({ ...cleanedFilters })
+    this.spinnerService.show();
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+  
+    this.financialReportService.getreceiptRPTData({ ...cleanedFilters })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
           const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
 
-          this.financialReportService.getcatchReceiptRptData({ ...cleanedFilters, skip: 0, take: totalCount })
+          this.financialReportService.getreceiptRPTData({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
@@ -275,13 +357,11 @@ export class receiptRPTComponent {
               },
               error: () => {
                 this.spinnerService.hide();
-                this.toastr.error('Failed to export Excel');
               }
             });
         },
         error: () => {
           this.spinnerService.hide();
-          this.toastr.error('Failed to retrieve data count');
         },
 
       });
