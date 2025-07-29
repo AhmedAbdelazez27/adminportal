@@ -12,7 +12,7 @@ import { Select2Service } from '../../../../core/services/Select2.service';
 import { beneficentService } from '../../../../core/services/sponsorship/operations/beneficent.service';
 
 import { NgSelectModule } from '@ng-select/ng-select';
-import { filterBeneficentDto, filterBeneficentByIdDto, beneficentDto, loadBeneficentNameDto } from '../../../../core/dtos/Sponsorship/operations/beneficent.dto';
+import { filterBeneficentDto, filterBeneficentByIdDto, beneficentDto, loadBeneficentNameDto } from '../../../../core/dtos/sponsorship/operations/beneficent.dto';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
 

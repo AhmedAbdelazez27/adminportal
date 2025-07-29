@@ -4,7 +4,7 @@ import { environment } from '../../../../../environments/environment';
 import { Observable } from 'rxjs';
 import { ApiEndpoints } from '../../../constants/api-endpoints';
 import { PagedResult } from '../../../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { filterBeneficentDto, beneficentDto, filterBeneficentByIdDto } from '../../../dtos/Sponsorship/operations/beneficent.dto';
+import { filterBeneficentDto, beneficentDto, filterBeneficentByIdDto } from '../../../dtos/sponsorship/operations/beneficent.dto';
 
 @Injectable({
   providedIn: 'root'

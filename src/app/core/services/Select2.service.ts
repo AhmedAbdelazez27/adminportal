@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { FndLookUpValuesSelect2RequestDto, SelectdropdownResult } from '../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2APIEndpoint } from '../constants/select2api-endpoints';
 import { loadVendorNameDto } from '../dtos/FinancialDtos/OperationDtos/vendor.models';
-import { loadBeneficentNameDto } from '../dtos/Sponsorship/operations/beneficent.dto';
+import { loadBeneficentNameDto } from '../dtos/sponsorship/operations/beneficent.dto';
 
 @Injectable({
   providedIn: 'root'
