@@ -131,4 +131,18 @@ export class ApiEndpoints {
     GetById: (beneficentId: string, entityId: string) => `/GetCasesSearch/${beneficentId}/${entityId}`,
   };
 
+  static readonly SpCasesPayment = {
+    Base: '/SpCasesPayment',
+    GetAll: '/GetAll',
+    GetById: (composeKey: string) => `/Get/${composeKey}`,
+    GetspCasesPaymentHdr: (composeKey: string, entityId: string) => `/GetByCode/${composeKey}/${entityId}`,
+  };
+
+  static readonly spContracts = {
+    Base: '/SpContracts',
+    GetAll: '/GetContractsRequests',
+    GetContractByIdBase: '/SpContractCases',
+    GetContractById: (contractId: string, entityId: string) => `/GetSpContract/${contractId}/${entityId}`,
+    GetContractCasesById: (contractId: string, entityId: string) => `/Get/${contractId}/${entityId}`,
+  };
 }

@@ -125,7 +125,37 @@ export class Select2Service {
     return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
   getBeneficentNamebyEntityID(loadBeneficentNameDto: loadBeneficentNameDto): Observable<SelectdropdownResult> {
-   const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetSpBenSelect2ListBYEntityID}`
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetSpBenSelect2ListBYEntityID}`
     return this.http.post<SelectdropdownResult>(apiUrl, loadBeneficentNameDto);
+  }
+
+  getSpOfficesSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.SpOfficesSelect2List}`;
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getSpCasesPaymentSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.SpCasesPaymentSelect2List}`;
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getPaymentStatusSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.PaymentStatusSelect2List}`;
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  SpContractsNoSelect2(loadBeneficentNameDto: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetSpContractsNoSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, loadBeneficentNameDto);
+  }
+
+  getContractStatusSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetContractStatusSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getBenefPaymentTypeSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetBenefPaymentTypeSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
 }
