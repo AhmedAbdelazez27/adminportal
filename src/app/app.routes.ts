@@ -90,6 +90,15 @@ export const routes: Routes = [
             // canActivate: [authGuard],
             // data: { permission: 'Financial.View' }
           },
+          {
+            path: 'charts',
+            loadChildren: () =>
+              import('./features/finanial/charts/charts.routes').then(
+                (m) => m.chartsRoutes
+              ),
+            // canActivate: [authGuard],
+            // data: { permission: 'Financial.View' }
+          },
         ],
       }
     ],
