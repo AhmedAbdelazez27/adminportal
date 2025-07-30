@@ -1,148 +1,103 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HighchartsChartModule } from "highcharts-angular";
-import Highcharts from 'highcharts';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { HighchartsChartModule } from 'highcharts-angular';
+import Highcharts, { Options, SeriesColumnOptions } from 'highcharts';
 
 @Component({
   selector: 'app-bar-chart',
   standalone: true,
-  imports: [CommonModule, FormsModule, HighchartsChartModule],
+  imports: [CommonModule, HighchartsChartModule],
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.scss']
 })
-export class BarChartComponent {
-  // Define an area chart using highchart 
+export class BarChartComponent implements OnChanges {
   Highcharts: typeof Highcharts = Highcharts;
+  chartOptionsBar: Options = {};
 
-  constructor() { }
+  @Input() categories: string[] = [];
+  @Input() seriesData: { name: string; data: number[]; color?: string }[] = [];
+  @Input() direction: 'rtl' | 'ltr' = 'rtl';
 
-  ngOnInit(): void {
-
+  ngOnChanges(changes: SimpleChanges): void {
+    this.buildChartOptions();
   }
 
-  // Bar chart configuration
-  chartOptionsBar: Highcharts.Options = {
-    chart: {
-      // type: 'column', 
-      // backgroundColor: '#f4f4f4',
-      // borderColor: '#b0b0b0', 
-      // borderWidth: 2
-    },
-    title: {
-      text: '',
-      // style: {
-      //   fontSize: '16px',
-      //   fontWeight: 'bold',
-      //   color: '#333333'
-      // }
-    },
-    xAxis: {
-      categories: ['Category 1', 'Category 2', 'Category 3', 'Category 4', 'Category 5', 'Category 6'],
-      labels: {
-        style: {
-          fontSize: '14px',
-          color: '#333333'
-        }
-      }
-    },
-    yAxis: {
-      title: {
-        text: ''
-      },
-      min: 0,
-      gridLineWidth: 1,
-      gridLineColor: '#ccc',
-      labels: {
-        style: {
-          fontSize: '12px',
-          color: '#777'
-        }
-      }
-    },
-    series: [
-      {
-        name: 'Category Data',
+  private buildChartOptions() {
+    const isRtl = this.direction === 'rtl';
+
+    this.chartOptionsBar = {
+      chart: {
         type: 'column',
-        data: [12, 9, 14, 18, 22, 70],
-        color: '#FF5733',
-        borderColor: '#b43b3b',
-        borderWidth: 1,
-        pointPadding: 0.1,
-        pointWidth: 30,
+        style: {
+          direction: isRtl ? 'rtl' : 'ltr' 
+        }
+      },
+      title: { text: '' },
+      xAxis: {
+        categories: isRtl ? [...this.categories].reverse() : this.categories,
+        reversed: isRtl, 
+        labels: {
+          style: {
+            fontSize: '14px',
+            color: '#333333',
+            textAlign: isRtl ? 'right' : 'left'
+          }
+        }
+      },
+      yAxis: {
+        min: 0,
+        title: { text: '' },
+        gridLineWidth: 1,
+        gridLineColor: '#ccc',
+        labels: {
+          style: {
+            fontSize: '12px',
+            color: '#777'
+          }
+        }
+      },
+      series: this.seriesData.map(s => ({
+        name: s.name,
+        type: 'column',
+        data: isRtl ? [...s.data].reverse() : s.data, 
+        color: s.color,
         dataLabels: {
-          enabled: true,
+          enabled: false,
           color: '#FFFFFF',
           style: {
             fontSize: '12px',
             fontWeight: 'bold'
           }
         }
+      })) as SeriesColumnOptions[],
+      tooltip: {
+        headerFormat: '<span style="font-size: 10px">{point.key}</span><br>',
+        pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br>',
+        valueSuffix: ' units',
+        shared: true,
+        useHTML: true
       },
-      {
-        name: 'Value 2',
-        type: 'column',
-        data: [18, 12, 20, 15, 25, 78],
-        color: '#33FF57',
-        borderColor: '#4CAF50',
-        borderWidth: 1,
-        pointPadding: 0.1,
-        pointWidth: 30,
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          style: {
-            fontSize: '12px',
-            fontWeight: 'bold'
-          }
-        }
-      }
-    ],
-    credits: {
-      enabled: false
-    },
-    tooltip: {
-      headerFormat: '<span style="font-size: 10px">{point.key}</span><br>',
-      pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br>',
-      valueSuffix: ' units',
-      shared: true,
-      useHTML: true
-    },
-    plotOptions: {
-      column: {
-        groupPadding: 0.05,
-        pointPadding: .0001,
-        borderWidth: 0
-      },
-      series: {
-        cursor: 'pointer',
-        point: {
-          events: {
-            click: function () {
-              // alert('clicked ' + this.category);
+      plotOptions: {
+        column: {
+          groupPadding: 0.05,
+          pointPadding: 0,
+          borderWidth: 0
+        },
+        series: {
+          cursor: 'pointer',
+          point: {
+            events: {
+              click: function () {
+                alert('تم النقر على: ' + this.category);
+              }
             }
           }
         }
-      }
-    },
-    legend: {
-      align: 'left',
-      verticalAlign: 'top',
-      layout: 'horizontal',
-      symbolWidth: 30,
-      symbolHeight: 10,
-      borderRadius: 0,
-      itemStyle: {
-        fontSize: '14px',
-        color: '#333333',
-        padding: '5px',
-        backgroundColor: '#f7f7f7',
-        borderRadius: 5,
       },
-      itemMarginTop: 15,
-      itemMarginBottom: 15,
-      itemDistance: 20,
-    }
-  };
-
+      legend: {
+       enabled: false
+      },
+      credits: { enabled: false }
+    };
+  }
 }

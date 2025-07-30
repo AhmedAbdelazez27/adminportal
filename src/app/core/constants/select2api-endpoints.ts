@@ -28,6 +28,8 @@ export class Select2APIEndpoint {
     GetSpContractsNoSelect2List: '/SpContracts/GetContractNoSelect2List',
     GetContractStatusSelect2List: '/SpContracts/GetContractStatusSelect2List',
     GetBenefPaymentTypeSelect2List: '/SpContracts/GetBenefPaymentTypeSelect2List',
+    GetGlPeriodYearsSelect2List: '/GlPeriodYears/GetGlPeriodYearsSelect2List',
+    ChartTypeRevenueAndExpenses: '/ChartType/RevenueAndExpenses',
   };
 }
 

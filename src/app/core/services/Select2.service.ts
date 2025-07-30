@@ -158,4 +158,13 @@ export class Select2Service {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetBenefPaymentTypeSelect2List}`
     return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
+
+  getGlPeriodYearsSelect2List(): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetGlPeriodYearsSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, { skip: 0, take: 300 });
+  }
+  getChartTypeRevenueAndExpenses(): Observable<any> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.ChartTypeRevenueAndExpenses}`
+    return this.http.get<SelectdropdownResult>(apiUrl);
+  }
 }

@@ -145,4 +145,9 @@ export class ApiEndpoints {
     GetContractById: (contractId: string, entityId: string) => `/GetSpContract/${contractId}/${entityId}`,
     GetContractCasesById: (contractId: string, entityId: string) => `/Get/${contractId}/${entityId}`,
   };
+
+    static readonly Charts = {
+    Base: '/Charts',
+    RevenueAndExpenses : '/RevenueAndExpenses'
+  };
 }
