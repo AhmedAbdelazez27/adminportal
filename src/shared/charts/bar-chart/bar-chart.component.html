@@ -1,5 +1,9 @@
-<highcharts-chart
-  [Highcharts]="Highcharts"
-  [options]="chartOptionsBar"
-  
-></highcharts-chart>
+<ng-container *ngIf="chartOptionsBar">
+
+  <highcharts-chart
+    [Highcharts]="Highcharts"
+    [options]="chartOptionsBar"
+    (chartInstance)="addComponentRef($event)"
+    
+  ></highcharts-chart>
+</ng-container> 

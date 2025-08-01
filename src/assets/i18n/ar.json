@@ -119,8 +119,6 @@
       "FAIL": "فشل في حذف الدور"
     }
   },
-
-
   "NAME": "الاسم",
   "ENTER_NAME": "ادخل الاسم",
   "NAME_REQUIRED": "الاسم مطلوب",
@@ -188,7 +186,6 @@
   "PASSWORDS_MATCH": "كلمتا المرور متطابقتان!",
   "ENTITIES_ASSIGNED": "تم تعيين الجمعيات بنجاح.",
   "ENTITIES_ASSIGN_FAILED": "فشل في تعيين الجمعيات.",
-
   "Common": {
     "Action": "العمليات",
     "Clear": "مسح",
@@ -203,7 +200,6 @@
     "Print": " طباعه",
     "Required": "هذا الحقل مطلوب"
   },
-
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "اسم الجمعية",
     "DocumentNumber": "رقم السند",
@@ -246,7 +242,6 @@
     "NoData": "لا توجد بيانات متاحة للعرض,",
     "SearchTitle": "بحث فى عمليات الصرف"
   },
-
   "ApPaymentsTransactionHDRResourceName": {
     "EntityId": "اسم الجمعية",
     "PaymentNumber": "رقم السند",
@@ -262,7 +257,6 @@
     "Notes": "ملاحظات",
     "Title": "تفاصيل عمليات الصرف"
   },
-
   "InvoiceHdResourceName": {
     "Title": "الفواتير",
     "TrTitle": " تفاصيل الفاتوره",
@@ -291,7 +285,6 @@
     "total_Amount": "اجمالى المبلغ",
     "total_TR": "اجمالى الضريبه"
   },
-
   "FinancialReportResourceName": {
     "catchReceiptRpt_Title": "سندات القبض",
     "generalLJournalRpt_Title": "كشف حركه حساب",
@@ -320,7 +313,6 @@
     "income": "قائمه الدخل",
     "vendorId": "اسم المورد",
     "DonatorId": "اسم المحسن",
-
     "bankAccountName": "اسم البنك",
     "beneficiaryName": "اسم المستفيد",
     "notes": "ملاحظات",
@@ -367,7 +359,6 @@
     "miscReceiptAmount": "القيمه",
     "administrative": "القيمه الاداريه"
   },
-
   "CORECT_EMAIL": "الرجاء إدخال بريد إلكتروني صحيح",
   "OTP": {
     "VERIFY_SUCCESS": "تم التحقق من OTP بنجاح!",
@@ -377,8 +368,6 @@
   "ENTER_NEW_PASSWORD": "أدخل كلمة المرور الجديدة",
   "PASSWORD_GUIDELINES": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل وأن تحتوي على حرف خاص.",
   "CONFIRM": "تأكيد",
-
-
   "PaymentVoucherResourceName": {
     "Title": "سندات صرف",
     "PaymentDetailTitle": " تفاصيل الشيك",
@@ -412,7 +401,6 @@
     "accountNameEn": " اسم الحساب ",
     "accountNameAr": " اسم الحساب "
   },
-
   "vendorResourceName": {
     "entityId": "اسم الجمعية",
     "vendorName": "اسم المورد",
@@ -428,7 +416,6 @@
     "mobile": "موبايل",
     "workTEL": "هاتف العمل"
   },
-
   "glJEResourceName": {
     "title": "القيود",
     "entityId": "اسم الجمعية",
@@ -454,7 +441,6 @@
     "totalDebit": "اجمالى دائن",
     "totalCredit": "اجمالى مدين"
   },
-
   "beneficentResourceName": {
     "Title": "بحث فى المتبرعين,",
     "EntityId": "اسم الجمعية",
@@ -477,8 +463,6 @@
     "gender": "الجنس",
     "city": "الإمارة"
   },
-
-
   "CasePaymentResourceName": {
     "Title": "تفاصيل الصرفيات ",
     "HdrTitle": "التفاصيل ",
@@ -506,7 +490,6 @@
     "total1": "اجمالى الكفاله",
     "total2": "اجمالى الهديه",
     "total3": "الاجمالى",
-
     "casE_PAYMENT_CODE": "",
     "paymenT_CODE": "",
     "statuS_CODE": "",
@@ -521,8 +504,6 @@
     "deliverY_METHOD_DESC": "",
     "attacheD_FILE": ""
   },
-
-
   "SpContractsResourceName": {
     "Title": "بحث فى استعلام العقود",
     "Title_SpContractCase": "التفاصيل",
@@ -558,7 +539,6 @@
     "sponceR_CATEGORY_DESC": "نوع الكفاله",
     "startdate": " تاريخ البدايه  "
   },
-
   "foundation_name": "اسم المؤسسة",
   "foundation_type": "نوع المؤسسة",
   "license_number": "رقم الترخيص",
@@ -583,5 +563,11 @@
   "download": "تحميل",
   "activate_account": "تفعيل الحساب",
   "reject_account": "رفض الحساب",
-  "block_account": "حظر الحساب"
+  "block_account": "حظر الحساب",
+  "finanial_charts_general_expenses": "التقارير التفاعلية للمصروفات والايرادات",
+  "finanial_charts_periods_branches": "تحليل المصاريف والايرادات حسب الفترات والفروع",
+  "finanial_charts_periods_Department": "تحليل المصاريف والايرادات حسب الفترات والاقسام",
+  "finanial_charts_branch_account": "تحليل المصاريف والايرادات حسب الفروع والحسابات",
+  "finanial_charts_branch_department": "تحليل المصاريف والايرادات حسب الفروع والاقسام"
+
 }

@@ -188,7 +188,6 @@
   "PASSWORD_GUIDELINES": "Password must be at least 6 characters and include uppercase, lowercase, numbers, and special characters.",
   "ENTITIES_ASSIGNED": "Entities assigned successfully.",
   "ENTITIES_ASSIGN_FAILED": "Failed to assign entities.",
-
   "Common": {
     "Action": "Action",
     "ViewInfo": "View Info",
@@ -204,7 +203,6 @@
     "Print": " Print",
     "Required": "This Field is Required"
   },
-
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "Entity Name",
     "DocumentNumber": "Document No",
@@ -247,7 +245,6 @@
     "NoData": "No data available to display",
     "SearchTitle": "Filter"
   },
-
   "ApPaymentsTransactionHDRResourceName": {
     "EntityId": "Entity Name",
     "PaymentNumber": "Document No",
@@ -263,7 +260,6 @@
     "Notes": "Notes",
     "Title": "Payment Details"
   },
-
   "InvoiceHdResourceName": {
     "Title": "Invoice",
     "TrTitle": "Invoice Details",
@@ -293,7 +289,6 @@
     "total_Amount": "Total Amount",
     "total_TR": "Total Tax"
   },
-
   "FinancialReportResourceName": {
     "catchReceipt_Title": "Receipt Voucher",
     "generalLJournalRpt_Title": "Balance Sheet",
@@ -301,7 +296,6 @@
     "receiptRpt_Title": "Payment Voucher",
     "vendorsPayTransRPT_Title": "Vendor Balance Sheet",
     "totlaBenDonationsRPT_Title": "Beneficent Total Donation",
-
     "entityId": "Entity Name",
     "collectorId": "Collector",
     "fromDate": "From Date",
@@ -366,17 +360,14 @@
     "miscReceiptAmount": "MiscReceipt Amount",
     "administrative": "Administrative Amount"
   },
-
   "CORECT_EMAIL": "Please enter a valid email address",
   "OTP": {
     "VERIFY_SUCCESS": "OTP Verified Successfully!",
     "VERIFY_FAILED": "Invalid OTP. Please try again."
   },
-
   "RESET_PASSWORD": "Reset Password",
   "ENTER_NEW_PASSWORD": "Enter your new password",
   "CONFIRM": "Confirm",
-
   "PaymentVoucherResourceName": {
     "Title": "Payment Voucher",
     "PaymentDetailTitle": "Cheque Details",
@@ -408,7 +399,6 @@
     "accountNameEn": "Account Name",
     "accountNameAr": "Account Name"
   },
-
   "vendorResourceName": {
     "entityId": "EntityId",
     "vendorName": "Vendor Name",
@@ -424,7 +414,6 @@
     "mobile": "Mobile",
     "workTEL": "Work Tel"
   },
-
   "glJEResourceName": {
     "title": "GL_JE",
     "entityId": "EntityId",
@@ -450,7 +439,6 @@
     "totalDebit": "Total Debit",
     "totalCredit": "Total Credit"
   },
-
   "beneficentResourceName": {
     "Title": "Beneficent",
     "EntityId": "Entity Name",
@@ -474,7 +462,6 @@
     "city": "City",
     "titleDto": "Title"
   },
-
   "CasePaymentResourceName": {
     "Title": "Payment Inquiry",
     "entityId": "Entity Name",
@@ -498,7 +485,6 @@
     "kafalA_STATUS_DESC": "Kafala Status",
     "iS_RECEIVED": "Is Received",
     "receivE_DATE": "Receive Date",
-
     "casE_PAYMENT_CODE": "",
     "paymenT_CODE": "",
     "statuS_CODE": "",
@@ -513,7 +499,6 @@
     "deliverY_METHOD_DESC": "",
     "attacheD_FILE": ""
   },
-
   "SpContractsResourceName": {
     "Title": "Contract Search",
     "Title_SpContractCase": "Details",
@@ -548,8 +533,6 @@
     "sponceR_CATEGORY_DESC": "Sponsorship Type",
     "startdate": "Start Date"
   },
-
-
   "foundation_name": "Foundation Name",
   "foundation_type": "Foundation Type",
   "license_number": "License Number",
@@ -574,5 +557,10 @@
   "download": "Download",
   "activate_account": "Activate Account",
   "reject_account": "Reject Account",
-  "block_account": "Block Account"
+  "block_account": "Block Account",
+  "finanial_charts_general_expenses": "Interactive reporting of expenses and revenues",
+  "finanial_charts_periods_branches": "Analysis of expenses and revenues by periods and branches",
+  "finanial_charts_periods_Department": "Analysis of expenses and revenues by periods and departments",
+  "finanial_charts_branch_account": "Analysis of expenses and revenues by branches and accounts",
+  "finanial_charts_branch_department": "Analysis of expenses and revenues by branches and departments"
 }

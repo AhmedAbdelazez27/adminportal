@@ -13,13 +13,19 @@ import Highcharts, { Options, SeriesColumnOptions } from 'highcharts';
 export class BarChartComponent implements OnChanges {
   Highcharts: typeof Highcharts = Highcharts;
   chartOptionsBar: Options = {};
+  chart: Highcharts.Chart | undefined;
 
   @Input() categories: string[] = [];
   @Input() seriesData: { name: string; data: number[]; color?: string }[] = [];
   @Input() direction: 'rtl' | 'ltr' = 'rtl';
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.categories );
+    
     this.buildChartOptions();
+  }
+    addComponentRef(chart: Highcharts.Chart) {
+    this.chart = chart;
   }
 
   private buildChartOptions() {
