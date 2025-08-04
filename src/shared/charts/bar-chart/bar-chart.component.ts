@@ -1,4 +1,3 @@
-
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { HighchartsChartModule } from 'highcharts-angular';
@@ -19,12 +18,11 @@ export class BarChartComponent implements OnChanges {
   @Input() categories: string[] = [];
   @Input() seriesData: { name: string; data: number[]; color?: string }[] = [];
   @Input() direction: 'rtl' | 'ltr' = 'rtl';
-  @Input() chartType: 'column' | 'line' | 'bar' = 'bar';
+  @Input() chartType: 'column' | 'line' = 'column';
 
   ngOnChanges(_: SimpleChanges): void {
-    console.log("categories ",this.categories);
-    console.log("seriesData ",this.seriesData);
-    
+    console.log("categories ", this.categories);
+    console.log("seriesData ", this.seriesData);
     this.buildChartOptions();
   }
 
@@ -32,7 +30,7 @@ export class BarChartComponent implements OnChanges {
     this.chart = chart;
   }
 
- private buildChartOptions() {
+  private buildChartOptions() {
     const isRtl = this.direction === 'rtl';
     const H = Highcharts;
     const cats = isRtl ? [...this.categories].reverse() : this.categories;
@@ -44,51 +42,13 @@ export class BarChartComponent implements OnChanges {
         type: this.chartType,
         data: (isRtl ? [...s.data].reverse() : s.data) as any,
         color: s.color,
-        dataLabels: { enabled: false, style: { fontSize: '12px', fontWeight: 'bold' } }
+        dataLabels: {
+          enabled: false,
+          style: { fontSize: '12px', fontWeight: 'bold' }
+        }
       }));
 
-   
-    const axesForBar: Pick<Options, 'xAxis' | 'yAxis' | 'chart'> = {
-      chart: {
-        type: 'bar',
-        style: { direction: isRtl ? 'rtl' : 'ltr' },
-        
-        marginLeft: isRtl ? undefined : 120,
-        marginRight: isRtl ? 120 : undefined
-      },
-      
-      xAxis: {
-        title: { text: NULL_TEXT },     
-        gridLineWidth: 1,
-        gridLineColor: '#ccc',
-        labels: {
-          formatter: function () {
-            return H.numberFormat(Number(this.value), 0, '.', ',');
-          },
-          style: { fontSize: '12px', color: '#777' }
-        }
-      },
-      
-      yAxis: {
-        categories: cats,
-        reversed: false,
-        title: { text: NULL_TEXT },        
-        gridLineWidth: 1,
-        gridLineColor: '#eee',
-        labels: {
-          useHTML: true,
-          align: isRtl ? 'right' : 'left',
-          x: isRtl ? -10 : 10,
-          formatter: function () {
-            const value = String(this.value ?? '');
-            return `<span style="display:inline-block;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;color:#333;${isRtl ? 'text-align:right;' : 'text-align:left;'}">${escapeHtml(value)}</span>`;
-          }
-        }
-      }
-    };
-
-   
-    const axesForStandard: Pick<Options, 'xAxis' | 'yAxis' | 'chart'> = {
+    const axesOptions: Pick<Options, 'xAxis' | 'yAxis' | 'chart'> = {
       chart: {
         type: this.chartType,
         style: { direction: isRtl ? 'rtl' : 'ltr' }
@@ -97,13 +57,17 @@ export class BarChartComponent implements OnChanges {
         categories: cats,
         reversed: isRtl,
         labels: {
-          style: { fontSize: '14px', color: '#333333', textAlign: isRtl ? 'right' : 'left' }
+          style: {
+            fontSize: '14px',
+            color: '#333333',
+            textAlign: isRtl ? 'right' : 'left'
+          }
         },
-        title: { text: NULL_TEXT }         
+        title: { text: NULL_TEXT }
       },
       yAxis: {
         min: 0,
-        title: { text: NULL_TEXT },       
+        title: { text: NULL_TEXT },
         gridLineWidth: 1,
         gridLineColor: '#ccc',
         labels: {
@@ -116,9 +80,8 @@ export class BarChartComponent implements OnChanges {
     };
 
     this.chartOptionsBar = {
-      ...(this.chartType === 'bar' ? axesForBar : axesForStandard),
+      ...axesOptions,
 
-     
       title: { text: NULL_TEXT },
       subtitle: { text: NULL_TEXT },
 
@@ -134,12 +97,26 @@ export class BarChartComponent implements OnChanges {
       },
 
       plotOptions: {
-        column: { groupPadding: 0.05, pointPadding: 0, borderWidth: 0 },
-        bar: { groupPadding: 0.05, pointPadding: 0, borderWidth: 0 },
-        line: { marker: { enabled: true, symbol: 'circle' } },
+        column: {
+          groupPadding: 0.05,
+          pointPadding: 0,
+          borderWidth: 0
+        },
+        line: {
+          marker: {
+            enabled: true,
+            symbol: 'circle'
+          }
+        },
         series: {
           cursor: 'pointer',
-          point: { events: { click: function () {  } } }
+          point: {
+            events: {
+              click: function () {
+                
+              }
+            }
+          }
         }
       },
 
@@ -160,22 +137,21 @@ export class BarChartComponent implements OnChanges {
 
       credits: { enabled: false }
     };
-  } 
-
-
-
-
+  }
 }
 
-// helper: escape HTML safely for useHTML labels/legend
-function escapeHtml(input: unknown): string {
-  return String(input ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+// Helper function to escape HTML special characters
+function escapeHtml(text: string): string {
+  const map: { [key: string]: string } = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, m => map[m]);
 }
+
 
  /* private buildChartOptions() {
   const isRtl = this.direction === 'rtl';
