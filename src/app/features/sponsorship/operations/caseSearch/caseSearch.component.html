@@ -1,0 +1,585 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="title">{{ 'CaseSearchResourceName.Title' | translate }}</h1>
+  </div>
+
+  <div class="filter mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="filter-title mb-0">{{ 'Common.SearchTitle' | translate }}</h4>
+      <button class="btn btn-filter" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilterTab" aria-expanded="false" aria-controls="collapseFilterTab">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z" fill="" />
+          <path d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z" fill="" />
+          <path d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z" fill="" />
+          <path d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z" fill="" />
+          <path d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z" fill="" />
+          <path d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z" fill="" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="collapse" id="collapseFilterTab">
+      <div class="card card-body">
+        <form #filterForm="ngForm">
+          <div class="row mb-3">
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'CaseSearchResourceName.entitY_ID' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="entitySelect2"
+                         [(ngModel)]="selectedentitySelect2Obj"
+                         [items]="entitySelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="searchInput$"
+                         [loading]="loadingentity"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreentity()"
+                         (change)="onentitySelect2Change($event)"
+                         (search)="onentitySearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'CaseSearchResourceName.casE_ID' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="caseIdSelect2"
+                         [(ngModel)]="selectedcaseIdSelect2Obj"
+                         [items]="caseIdSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="searchInput$"
+                         [loading]="loadingcaseId"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMorecaseId()"
+                         (change)="oncaseIdSelect2Change($event)"
+                         (search)="oncaseIdSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'CaseSearchResourceName.casE_STATUS' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="caseStatusSelect2"
+                         [(ngModel)]="selectedcaseStatusSelect2Obj"
+                         [items]="caseStatusSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="searchInput$"
+                         [loading]="loadingcaseStatus"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMorecaseStatus()"
+                         (change)="oncaseStatusSelect2Change($event)"
+                         (search)="oncaseStatusSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'CaseSearchResourceName.beneficenT_ID' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="beneficentIdSelect2"
+                         [(ngModel)]="selectedbeneficentIdSelect2Obj"
+                         [items]="beneficentIdSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="searchInput$"
+                         [loading]="loadingbeneficentId"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMorebeneficentId()"
+                         (change)="onbeneficentIdSelect2Change($event)"
+                         (search)="onbeneficentIdSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'CaseSearchResourceName.gender' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="genderSelect2"
+                         [(ngModel)]="selectedgenderSelect2Obj"
+                         [items]="genderSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="searchInput$"
+                         [loading]="loadinggender"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoregender()"
+                         (change)="ongenderSelect2Change($event)"
+                         (search)="ongenderSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'CaseSearchResourceName.nationalitY_DESC' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="nationalitySelect2"
+                         [(ngModel)]="selectednationalitySelect2Obj"
+                         [items]="nationalitySelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="searchInput$"
+                         [loading]="loadingnationality"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMorenationality()"
+                         (change)="onnationalitySelect2Change($event)"
+                         (search)="onnationalitySearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label for="checkNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.iD_NUMBER' | translate }}</label>
+              <input type="text" name="checkNumber" class="form-control" [(ngModel)]="searchParams.idNumber" placeholder="Search">
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'CaseSearchResourceName.officeId' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="officeIdSelect2"
+                         [(ngModel)]="selectedofficeIdSelect2Obj"
+                         [items]="officeIdSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="searchInput$"
+                         [loading]="loadingofficeId"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreofficeId()"
+                         (change)="onofficeIdSelect2Change($event)"
+                         (search)="onofficeIdSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'CaseSearchResourceName.sponceR_CATEGORY' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="sponsTypeSelect2"
+                         [(ngModel)]="selectedsponsTypeSelect2Obj"
+                         [items]="sponsTypeSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="searchInput$"
+                         [loading]="loadingsponsType"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoresponsType()"
+                         (change)="onsponsTypeSelect2Change($event)"
+                         (search)="onsponsTypeSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+          </div>
+        </form>
+
+        <div class="d-flex gap-2 justify-content-center">
+          <button class="btn btn-outline" (click)="clear()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#5B5B5B" />
+            </svg>
+            {{ 'Common.Clear' | translate }}
+          </button>
+          <button class="btn btn-gold" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
+            </svg>
+            {{ 'Common.Search' | translate }}
+          </button>
+          <button class="btn btn-success" (click)="printExcel()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
+            </svg>
+            {{ 'Common.PrintExcel' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <app-generic-data-table [columnDefs]="columnDefs"
+                            [rowData]="loadgridData"
+                            [totalCount]="pagination.totalCount"
+                            [pageSize]="pagination.take"
+                            [currentPage]="pagination.currentPage - 1"
+                            [columnHeaderMap]="columnHeaderMap"
+                            [rowActions]="rowActions"
+                            (actionClick)="onTableAction($event)"
+                            (pageChange)="onPageChange($event)"
+                            [showActionColumn]="true"
+                            (search)="onTableSearch($event)">
+    </app-generic-data-table>
+  </div>
+
+  <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editLabel">{{ 'CaseSearchResourceName.Title' | translate }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="border-bottom mb-4">
+            <h4 class="gold bold">{{ 'CaseSearchResourceName.Title' | translate }}</h4>
+
+            <div class="d-flex align-items-center gap-3 p-3 mb-4" style=" background-color: #eef2f3; border-radius: 10px;">
+              <img src="img/300-15.jpg" style="border-radius: 100px; width: 150px; height: 150px;" />
+              <!--<img {{ loadformData.casename }} style="border-radius: 100px; width: 150px; height: 150px;" />-->
+              <div>
+                <label for="inputcasename" class="black bold">{{ 'CaseSearchResourceName.casename' | translate }}</label>
+                <p>{{ loadformData.casename }}</p>
+                <label for="inputcasE_NO" class="black bold">{{ 'CaseSearchResourceName.casE_NO' | translate }}</label>
+                <p>{{ loadformData.casE_NO }}</p>
+              </div>
+            </div>
+
+            <div class="row">
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputbirthdate" class="black bold">{{ 'CaseSearchResourceName.birthdate' | translate }}</label>
+                <p>{{ loadformData.birthdatestr }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputbirthlocation" class="black bold">{{ 'CaseSearchResourceName.birthlocation' | translate }}</label>
+                <p>{{ loadformData.birthlocation }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputgendeR_DESC" class="black bold">{{ 'CaseSearchResourceName.gendeR_DESC' | translate }}</label>
+                <p>{{ loadformData.gendeR_DESC }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputnationalitY_DESC" class="black bold">{{ 'CaseSearchResourceName.nationalitY_DESC' | translate }}</label>
+                <p>{{ loadformData.nationalitY_DESC }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputcity" class="black bold">{{ 'CaseSearchResourceName.city' | translate }}</label>
+                <p>{{ loadformData.city }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputregion" class="black bold">{{ 'CaseSearchResourceName.region' | translate }}</label>
+                <p>{{ loadformData.region }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputphone" class="black bold">{{ 'CaseSearchResourceName.phone' | translate }}</label>
+                <p>{{ loadformData.phone }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputsponceR_CATEGORY_DESC" class="black bold">{{ 'CaseSearchResourceName.sponceR_CATEGORY_DESC' | translate }}</label>
+                <p>{{ loadformData.sponceR_CATEGORY_DESC }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputiD_NUMBER" class="black bold">{{ 'CaseSearchResourceName.iD_NUMBER' | translate }}</label>
+                <p>{{ loadformData.iD_NUMBER }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputcasE_STATUS_DESC" class="black bold">{{ 'CaseSearchResourceName.casE_STATUS_DESC' | translate }}</label>
+                <p>{{ loadformData.casE_STATUS_DESC }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputprocuratoR_NAME" class="black bold">{{ 'CaseSearchResourceName.procuratoR_NAME' | translate }}</label>
+                <p>{{ loadformData.procuratoR_NAME }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputprocuratoR_REL_DESC" class="black bold">{{ 'CaseSearchResourceName.procuratoR_REL_DESC' | translate }}</label>
+                <p>{{ loadformData.procuratoR_REL_DESC }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputmotheR_NAME" class="black bold">{{ 'CaseSearchResourceName.motheR_NAME' | translate }}</label>
+                <p>{{ loadformData.motheR_NAME }}</p>
+              </div>
+
+              <div id="student" style=" display :none">
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputstgradE_DESC" class="black bold">{{ 'CaseSearchResourceName.stgradE_DESC' | translate }}</label>
+                  <p>{{ loadformData.stgradE_DESC }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputschoolstagE_DESC" class="black bold">{{ 'CaseSearchResourceName.schoolstagE_DESC' | translate }}</label>
+                  <p>{{ loadformData.schoolstagE_DESC }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputschooL_NAME" class="black bold">{{ 'CaseSearchResourceName.schooL_NAME' | translate }}</label>
+                  <p>{{ loadformData.schooL_NAME }}</p>
+                </div>
+              </div>
+
+              <div id="family" style=" display :none">
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputnO_FAMILY" class="black bold">{{ 'CaseSearchResourceName.nO_FAMILY' | translate }}</label>
+                  <p>{{ loadformData.nO_FAMILY }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputhousE_LEGAL_DESC" class="black bold">{{ 'CaseSearchResourceName.housE_LEGAL_DESC' | translate }}</label>
+                  <p>{{ loadformData.housE_LEGAL_DESC }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputplacestatuS_DESC" class="black bold">{{ 'CaseSearchResourceName.placestatuS_DESC' | translate }}</label>
+                  <p>{{ loadformData.placestatuS_DESC }}</p>
+                </div>
+              </div>
+
+              <div id="special" style=" display :none">
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputstgradE_DESC" class="black bold">{{ 'CaseSearchResourceName.stgradE_DESC' | translate }}</label>
+                  <p>{{ loadformData.stgradE_DESC }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputschoolstagE_DESC" class="black bold">{{ 'CaseSearchResourceName.schoolstagE_DESC' | translate }}</label>
+                  <p>{{ loadformData.schoolstagE_DESC }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputsP_DISEASTYPE_DESC" class="black bold">{{ 'CaseSearchResourceName.sP_DISEASTYPE_DESC' | translate }}</label>
+                  <p>{{ loadformData.sP_DISEASTYPE_DESC }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputdiseaS_PERCENT" class="black bold">{{ 'CaseSearchResourceName.diseaS_PERCENT' | translate }}</label>
+                  <p>{{ loadformData.diseaS_PERCENT }}</p>
+                </div>
+              </div>
+
+              <div id="health" style=" display :none">
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputiS_TREATED_DESC" class="black bold">{{ 'CaseSearchResourceName.iS_TREATED_DESC' | translate }}</label>
+                  <p>{{ loadformData.iS_TREATED_DESC }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcasE_HEALTH_DESC" class="black bold">{{ 'CaseSearchResourceName.casE_HEALTH_DESC' | translate }}</label>
+                  <p>{{ loadformData.casE_HEALTH_DESC }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputdiseaS_TYPE_DESC" class="black bold">{{ 'CaseSearchResourceName.diseaS_TYPE_DESC' | translate }}</label>
+                  <p>{{ loadformData.diseaS_TYPE_DESC }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputdiseaS_DATE" class="black bold">{{ 'CaseSearchResourceName.diseaS_DATE' | translate }}</label>
+                  <p>{{ loadformData.diseaS_DATEstr }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputtreaT_AMOUNTstr" class="black bold">{{ 'CaseSearchResourceName.treaT_AMOUNT' | translate }}</label>
+                  <p>{{ loadformData.treaT_AMOUNTstr }}</p>
+                </div>
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputtraeT_STAGE" class="black bold">{{ 'CaseSearchResourceName.traeT_STAGE' | translate }}</label>
+                  <p>{{ loadformData.traeT_STAGE }}</p>
+                </div>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputfathermiss" class="black bold">{{ 'CaseSearchResourceName.fathermiss' | translate }}</label>
+                <p>{{ loadformData.fathermiss }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputdeatH_REASON" class="black bold">{{ 'CaseSearchResourceName.deatH_REASON' | translate }}</label>
+                <p>{{ loadformData.deatH_REASON }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputfatherdeathdate" class="black bold">{{ 'CaseSearchResourceName.fatherdeathdate' | translate }}</label>
+                <p>{{ loadformData.fatherdeathdatEstr }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputmotherdeath" class="black bold">{{ 'CaseSearchResourceName.motherdeath' | translate }}</label>
+                <p>{{ loadformData.motherdeath }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputmotherdeath" class="black bold">{{ 'CaseSearchResourceName.motherdeath' | translate }}</label>
+                <p>{{ loadformData.motherdeatHstr }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputbeneficenT_NO" class="black bold">{{ 'CaseSearchResourceName.beneficenT_NO' | translate }}</label>
+                <p>{{ loadformData.beneficenT_NO }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputbeneficentname" class="black bold">{{ 'CaseSearchResourceName.beneficentname' | translate }}</label>
+                <p>{{ loadformData.beneficentname }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputstartdate" class="black bold">{{ 'CaseSearchResourceName.startdate' | translate }}</label>
+                <p>{{ loadformData.startdatestr }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputcaseamount" class="black bold">{{ 'CaseSearchResourceName.caseamount' | translate }}</label>
+                <p>{{ loadformData.caseamountstr }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputconT_END_DATEstr" class="black bold">{{ 'CaseSearchResourceName.conT_END_DATE' | translate }}</label>
+                <p>{{ loadformData.conT_END_DATEstr }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputarabiC_VALUE" class="black bold">{{ 'CaseSearchResourceName.arabiC_VALUE' | translate }}</label>
+                <p>{{ loadformData.arabiC_VALUE }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="modal fade" id="viewcasehistorydetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editLabel">{{ 'CaseSearchResourceName.CaseHistory_Title' | translate }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="border-bottom mb-4">
+            <h4 class="gold bold">{{ 'CaseSearchResourceName.CaseHistory_Title' | translate }}</h4>
+            <div class="row">
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputcasE_NO" class="black bold">{{ 'CaseSearchResourceName.casE_NO' | translate }}</label>
+                <p>{{ loadCaseHistoryformData.casE_NO }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputcasename" class="black bold">{{ 'CaseSearchResourceName.casename' | translate }}</label>
+                <p>{{ loadCaseHistoryformData.casename }}</p>
+              </div>
+            </div>
+          </div>
+          <h4 class="gold bold">{{ 'CaseSearchResourceName.DetailTabTitle' | translate }}</h4>
+          <app-generic-data-table [columnDefs]="columnDefsCaseHistory"
+                                  [rowData]="loadCaseHistoryDetailformData"
+                                  [totalCount]="paginationcasehistorydetails.totalCount"
+                                  [pageSize]="paginationcasehistorydetails.take"
+                                  [currentPage]="paginationcasehistorydetails.currentPage - 1"
+                                  [columnHeaderMap]="columnHeaderMap"
+                                  [rowActions]="rowActions"
+                                  (actionClick)="onTableAction($event)"
+                                  (pageChange)="onPageChangeCaseHistory($event)"
+                                  [showActionColumn]="true"
+                                  (search)="onTableSearchCaseHistory($event)">
+          </app-generic-data-table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="viewCasePaymentDetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editLabel">{{ 'CaseSearchResourceName.CasePayment_Title' | translate }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="border-bottom mb-4">
+            <h4 class="gold bold">{{ 'CaseSearchResourceName.CasePayment_Title' | translate }}</h4>
+            <div class="row">
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputcasE_NO" class="black bold">{{ 'CaseSearchResourceName.casE_NO' | translate }}</label>
+                <p>{{ loadCasePaymentHdrformData.casE_NO }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputcasename" class="black bold">{{ 'CaseSearchResourceName.casename' | translate }}</label>
+                <p>{{ loadCasePaymentHdrformData.casename }}</p>
+              </div>
+            </div>
+          </div>
+          <h4 class="gold bold">{{ 'CaseSearchResourceName.DetailTabTitle' | translate }}</h4>
+          <app-generic-data-table [columnDefs]="columnDefsCasePayment"
+                                  [rowData]="loadCasePaymentHdrDetailformData"
+                                  [totalCount]="paginationCasePaymentHdr.totalCount"
+                                  [pageSize]="paginationCasePaymentHdr.take"
+                                  [currentPage]="paginationCasePaymentHdr.currentPage - 1"
+                                  [columnHeaderMap]="columnHeaderMap"
+                                  [rowActions]="rowActions"
+                                  (actionClick)="onTableAction($event)"
+                                  (pageChange)="onPageChangePaymentHdr($event)"
+                                  [showActionColumn]="true"
+                                  (search)="onTableSearchPaymentHdr($event)">
+          </app-generic-data-table>
+          <div class="row">
+            <div class="col-xxl-4 col-xl-6">
+              <label class="bold black">{{ 'CaseSearchResourceName.total1' | translate }}</label>
+              <p>{{ loadCasePaymentHdrformData.total_AMOUNT_AEDstr | number:'1.2-2' }}</p>
+            </div>
+            <div class="col-xxl-4 col-xl-6">
+              <label class="bold black">{{ 'CaseSearchResourceName.total2' | translate }}</label>
+              <p>{{ loadCasePaymentHdrformData.total_GIFT_AMOUNTstr | number:'1.2-2'}}</p>
+            </div>
+            <div class="col-xxl-4 col-xl-6">
+              <label class="bold black">{{ 'CaseSearchResourceName.total3' | translate }}</label>
+              <p>{{ loadCasePaymentHdrformData.total_GIFT_AMOUNTstr | number:'1.2-2'}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="viewContractDetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editLabel">{{ 'CaseSearchResourceName.ContractCaseTitle' | translate }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="border-bottom mb-4">
+            <h4 class="gold bold">{{ 'CaseSearchResourceName.ContractCaseTitle' | translate }}</h4>
+            <div class="row">
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputcontracT_NUMBER" class="black bold">{{ 'CaseSearchResourceName.contracT_NUMBER' | translate }}</label>
+                <p>{{ loadContractDetailformData.contracT_NUMBER }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputcontracT_DATEstr" class="black bold">{{ 'CaseSearchResourceName.contracT_DATEstr' | translate }}</label>
+                <p>{{ loadContractDetailformData.contracT_DATEstr }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputcontracT_STATUS_DESC" class="black bold">{{ 'CaseSearchResourceName.contracT_STATUS_DESC' | translate }}</label>
+                <p>{{ loadContractDetailformData.contracT_STATUS_DESC }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputpaymenT_METHOD_DESC" class="black bold">{{ 'CaseSearchResourceName.paymenT_METHOD_DESC' | translate }}</label>
+                <p>{{ loadContractDetailformData.paymenT_METHOD_DESC }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputbeneficenT_NO" class="black bold">{{ 'CaseSearchResourceName.beneficenT_NO' | translate }}</label>
+                <p>{{ loadContractDetailformData.beneficenT_NO }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputbeneficentname" class="black bold">{{ 'CaseSearchResourceName.beneficentname' | translate }}</label>
+                <p>{{ loadContractDetailformData.beneficentname }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputbanK_ACCOUNT_NAME" class="black bold">{{ 'CaseSearchResourceName.banK_ACCOUNT_NAME' | translate }}</label>
+                <p>{{ loadContractDetailformData.banK_ACCOUNT_NAME }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputnotes" class="black bold">{{ 'CaseSearchResourceName.notes' | translate }}</label>
+                <p>{{ loadContractDetailformData.notes }}</p>
+              </div>
+            </div>
+          </div>
+          <h4 class="gold bold">{{ 'CaseSearchResourceName.DetailTabTitle' | translate }}</h4>
+          <app-generic-data-table [columnDefs]="columnDefsContract"
+                                  [rowData]="loadContractCasesDetailformData"
+                                  [totalCount]="paginationContractDetails.totalCount"
+                                  [pageSize]="paginationContractDetails.take"
+                                  [currentPage]="paginationContractDetails.currentPage - 1"
+                                  [columnHeaderMap]="columnHeaderMap"
+                                  [rowActions]="rowActions"
+                                  (actionClick)="onTableAction($event)"
+                                  (pageChange)="onPageChangeContract($event)"
+                                  [showActionColumn]="true"
+                                  (search)="onTableSearchContract($event)">
+          </app-generic-data-table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+

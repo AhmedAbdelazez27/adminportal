@@ -42,17 +42,17 @@
 
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'InvoiceHdResourceName.invoiceNo' | translate }}</label>
-              <input type="text" class="form-control" [(ngModel)]="searchParams.invoiceNo" placeholder="Search">
+              <input type="text" name="invoiceNo" class="form-control" [(ngModel)]="searchParams.invoiceNo" placeholder="Search">
             </div>
 
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'InvoiceHdResourceName.invoiceDate' | translate }}</label>
-              <input type="date" class="form-control" [(ngModel)]="searchParams.invoiceDate" placeholder="Select date">
+              <input type="date" name="invoiceDatestr" class="form-control" [(ngModel)]="searchParams.invoiceDatestr" placeholder="Select date">
             </div>
 
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'InvoiceHdResourceName.vendorNo' | translate }}</label>
-              <input type="text" class="form-control" [(ngModel)]="searchParams.vendorNo" placeholder="Search">
+              <input type="text" name="vendorNo" class="form-control" [(ngModel)]="searchParams.vendorNo" placeholder="Search">
             </div>
 
             <div class="col-xl-4 mb-3">
@@ -115,20 +115,19 @@
         </div>
       </div>
     </div>
+    <app-generic-data-table [columnDefs]="columnDefs"
+                            [rowData]="loadgridData"
+                            [totalCount]="pagination.totalCount"
+                            [pageSize]="pagination.take"
+                            [currentPage]="pagination.currentPage - 1"
+                            [columnHeaderMap]="columnHeaderMap"
+                            [rowActions]="rowActions"
+                            (actionClick)="onTableAction($event)"
+                            (pageChange)="onPageChange($event)"
+                            [showActionColumn]="true"
+                            (search)="onTableSearch($event)">
+    </app-generic-data-table>
   </div>
-
-  <app-generic-data-table [columnDefs]="columnDefs"
-                          [rowData]="loadgridData"
-                          [totalCount]="pagination.totalCount"
-                          [pageSize]="pagination.take"
-                          [currentPage]="pagination.currentPage - 1"
-                          [columnHeaderMap]="columnHeaderMap"
-                          [rowActions]="rowActions"
-                          (actionClick)="onTableAction($event)"
-                          (pageChange)="onPageChange($event)"
-                          [showActionColumn]="true"
-                          (search)="onTableSearch($event)">
-  </app-generic-data-table>
 
 
 
@@ -183,33 +182,22 @@
             </div>
           </div>
 
-          <h4 class="gold bold">{{ 'InvoiceHdResourceName.TrTitle' | translate }}</h4>
-          <table class="table new-table mb-3">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>{{ 'InvoiceHdResourceName.accountnumber' | translate }}</th>
-                <th>{{ 'InvoiceHdResourceName.accountNameAr' | translate }}</th>
-                <th>{{ 'InvoiceHdResourceName.tR_ITEM' | translate }}</th>
-                <th>{{ 'InvoiceHdResourceName.tR_TOTL' | translate }}</th>
-                <th>{{ 'InvoiceHdResourceName.vaT_AMOUNT' | translate }}</th>
-                <th>{{ 'InvoiceHdResourceName.totla' | translate }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let invoicetr of loadformTrListData; let i = index">
-                <td>{{ i + 1 }}</td>
-                <td>{{ invoicetr.accountnumber }}</td>
-                <td>{{ invoicetr.accountNameAr }}</td>
-                <td>{{ invoicetr.tR_ITEM }}</td>
-                <td>{{ invoicetr.tR_TOTL }}</td>
-                <td>{{ invoicetr.vaT_AMOUNT }}</td>
-                <td>{{ invoicetr.totla }}</td>
-              </tr>
-            </tbody>
-          </table>
 
-          <!-- Section: Totals -->
+          <h4 class="gold bold">{{ 'InvoiceHdResourceName.TrTitle' | translate }}</h4>
+
+
+          <app-generic-data-table [columnDefs]="columnDefstrListData"
+                                  [rowData]="loadformTrListData"
+                                  [totalCount]="paginationtrListData.totalCount"
+                                  [pageSize]="paginationtrListData.take"
+                                  [currentPage]="paginationtrListData.currentPage - 1"
+                                  [columnHeaderMap]="columnHeaderMap"
+                                  (pageChange)="onPageChangetrListData($event)"
+                                  [showActionColumn]="false"
+                                  (search)="onTableSearchtrListData($event)">
+          </app-generic-data-table>
+
+        
           <div class="row">
             <div class="col-xxl-4 col-xl-6">
               <label class="bold black">{{ 'InvoiceHdResourceName.total_TR' | translate }}</label>

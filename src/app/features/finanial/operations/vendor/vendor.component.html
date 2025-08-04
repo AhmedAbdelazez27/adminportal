@@ -2,7 +2,6 @@
 <div class="container-fluid">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="title">{{ 'vendorResourceName.title' | translate }}</h1>
-    <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#Users">Add New</button>
   </div>
 
   <div class="filter mb-3">
@@ -29,57 +28,61 @@
 
     <div class="collapse" id="collapseExample">
       <div class="card card-body">
-
-        <div class="row mb-3">
-          <div class="col-xl-4 mb-3">
-            <label for="entityId" class="form-label">{{ 'vendorResourceName.entityId' | translate }}</label>
-            <ng-select class="ng-select-custom"
-                       [items]="entitySelect2"
-                       bindLabel="text"
-                       bindValue="id"
-                       [(ngModel)]="selectedentitySelect2Obj"
-                       [typeahead]="entitySearchInput$"
-                       [loading]="loadingEntity"
-                       [virtualScroll]="true"
-                       (scrollToEnd)="loadMoreEntity()"
-                       (change)="onentitySelect2Change($event)"
-                       (search)="onEntitySearch($event)"
-                       placeholder="{{ 'Common.Select' | translate }}">
-            </ng-select>
+        <form #filterForm="ngForm">
+          <div class="row mb-3">
+            <div class="col-xl-4 mb-3">
+              <label for="entityId" class="form-label">{{ 'vendorResourceName.entityId' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="entitySelect2"
+                         [items]="entitySelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [(ngModel)]="selectedentitySelect2Obj"
+                         [typeahead]="entitySearchInput$"
+                         [loading]="loadingEntity"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreEntity()"
+                         (change)="onentitySelect2Change($event)"
+                         (search)="onEntitySearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+            <div class="col-xl-4 mb-3">
+              <label for="VendorName" class="form-label">{{ 'vendorResourceName.vendorName' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="vendorIDSelect2"
+                         [items]="vendorIDSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [(ngModel)]="selectedVendorNameSelect2Obj"
+                         [typeahead]="vendorSearchInput$"
+                         [loading]="loadingVendor"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreVendorName()"
+                         (change)="onVendorNameSelect2Change($event)"
+                         (search)="onVendorNameSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+            <div class="col-xl-4 mb-3">
+              <label for="Status" class="form-label">{{ 'vendorResourceName.status' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="statusSelect2"
+                         [items]="statusSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [(ngModel)]="selectedstatusSelect2Obj"
+                         [typeahead]="statusSearchInput$"
+                         [loading]="loadingStatus"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreStatus()"
+                         (change)="onStatusSelect2Change($event)"
+                         (search)="onStatusSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
           </div>
-          <div class="col-xl-4 mb-3">
-            <label for="VendorName" class="form-label">{{ 'vendorResourceName.vendorName' | translate }}</label>
-            <ng-select class="ng-select-custom"
-                       [items]="vendorIDSelect2"
-                       bindLabel="text"
-                       bindValue="id"
-                       [(ngModel)]="selectedVendorNameSelect2Obj"
-                       [typeahead]="vendorSearchInput$"
-                       [loading]="loadingVendor"
-                       [virtualScroll]="true"
-                       (scrollToEnd)="loadMoreVendorName()"
-                       (change)="onVendorNameSelect2Change($event)"
-                       (search)="onVendorNameSearch($event)"
-                       placeholder="{{ 'Common.Select' | translate }}">
-            </ng-select>
-          </div>
-          <div class="col-xl-4 mb-3">
-            <label for="Status" class="form-label">{{ 'vendorResourceName.status' | translate }}</label>
-            <ng-select class="ng-select-custom"
-                       [items]="statusSelect2"
-                       bindLabel="text"
-                       bindValue="id"
-                       [(ngModel)]="selectedstatusSelect2Obj"
-                       [typeahead]="statusSearchInput$"
-                       [loading]="loadingStatus"
-                       [virtualScroll]="true"
-                       (scrollToEnd)="loadMoreStatus()"
-                       (change)="onStatusSelect2Change($event)"
-                       (search)="onStatusSearch($event)"
-                       placeholder="{{ 'Common.Select' | translate }}">
-            </ng-select>
-          </div>
-        </div>
+        </form>
 
         <div class="d-flex gap-2 justify-content-center">
           <button class="btn btn-outline" (click)="clear()">

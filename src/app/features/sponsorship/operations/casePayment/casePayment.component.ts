@@ -95,11 +95,15 @@ export class casePaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-    ];
-
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+        this.rowActions = [
+          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+        ];
+      });
+   
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
       .subscribe(() => this.fetchentitySelect2());
@@ -332,13 +336,7 @@ export class casePaymentComponent implements OnInit, OnDestroy {
 
   clear(): void {
     this.searchParams = new filtercasePaymentDto();
-    this.selectedentitySelect2Obj = null;
-    this.selectedspOfficesSelect2Obj = null;
-    this. selectedpaymentStatusSelect2Obj = null;
-    this. selectedspCasesPaymentSelect2Obj = null;
-
     this.loadgridData = [];
-
     if (this.filterForm) {
       this.filterForm.resetForm();
     }
@@ -469,13 +467,13 @@ export class casePaymentComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+          const totalCount = initialResponse[0]?.rowsCount || 0;
 
           this.casePaymentService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
-                const data = response?.data || [];
+                const data = response || [];
 
                 const reportConfig: reportPrintConfig = {
                   title: this.translate.instant('CasePaymentResourceName.Title'),

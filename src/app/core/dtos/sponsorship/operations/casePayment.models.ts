@@ -8,7 +8,7 @@ export class filtercasePaymentDto {
   searchValue?: string | null = null;
   skip?: number | null = 0;
   take?: number | null = 10;
-  orderByValue?: string = "vendoR_NUMBER Desc";
+  orderByValue?: string = "PAYMENT_DESC desc";
 
   entityIdstr?: string | null = null;
   paymentCodestr?: string | null = null;

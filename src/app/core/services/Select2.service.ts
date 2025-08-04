@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { FndLookUpValuesSelect2RequestDto, SelectdropdownResult } from '../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { FndLookUpValuesSelect2RequestDto, FndLookUpValuesSelect2RequestbyIdDto, SelectdropdownResult } from '../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2APIEndpoint } from '../constants/select2api-endpoints';
 import { loadVendorNameDto } from '../dtos/FinancialDtos/OperationDtos/vendor.models';
 import { loadBeneficentNameDto } from '../dtos/sponsorship/operations/beneficent.dto';
@@ -158,13 +158,82 @@ export class Select2Service {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetBenefPaymentTypeSelect2List}`
     return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
-
-  getGlPeriodYearsSelect2List(): Observable<SelectdropdownResult> {
+  
+    getGlPeriodYearsSelect2List(): Observable<SelectdropdownResult> {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetGlPeriodYearsSelect2List}`
     return this.http.post<SelectdropdownResult>(apiUrl, { skip: 0, take: 300 });
   }
   getChartTypeRevenueAndExpenses(): Observable<any> {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.ChartTypeRevenueAndExpenses}`
     return this.http.get<SelectdropdownResult>(apiUrl);
+  }
+  getSponcerCategorySelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetSponcerCategorySelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getNationalitySelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetNationalitySelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getSpCaseSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetSpCaseSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+   
+  getNameSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetNameSelect2List}`;
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getCasesBranchSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetCasesBranchSelect2List}`;
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getRequestTypeSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetRequestTypeSelect2List}`;
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getCitySelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetCitySelect2List}`;
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getGenderSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetGenderSelect2List}`;
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getAidRequestSourceSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetAidRequestSourceSelect2List}`;
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getSPCasesEntitySelect2(params: FndLookUpValuesSelect2RequestbyIdDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetSPCasesEntitySelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getRequestTypeReportSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetRequestTypeReportSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getCaseStatusSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.CaseStatusSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getScProjectStatusSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetScProjectStatusSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getScProjectTypeSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetScProjectTypeSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
 }

@@ -96,11 +96,13 @@ export class generalLJournalRptComponent {
   }
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
-    ];
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+      });
+    this.rowActions = [];
+
 
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -414,7 +416,7 @@ export class generalLJournalRptComponent {
     this.financialReportService.getgeneralLJournalRptData(this.searchParams)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
-          this.getAllDataForReports = response || [];
+          this.getAllDataForReports = response?.data || [];
           this.pagination.totalCount = response?.totalCount || 0;
           this.spinnerService.hide();
         },
@@ -453,7 +455,6 @@ export class generalLJournalRptComponent {
   clear(): void {
     this.searchParams = new generalLJournalRptInputDto();
     this.getAllDataForReports = [];
-
     if (this.filterForm) {
       this.filterForm.resetForm();
     }
@@ -479,15 +480,7 @@ export class generalLJournalRptComponent {
     ];
   }
 
-  onTableAction(event: { action: string, row: any }) {
-    if (event.action === 'onViewInfo') {
-      if (this.genericTable && this.genericTable.onViewInfo) {
-        this.genericTable.onViewInfo(event.row);
-      }
-    }
-    if (event.action === 'edit') {
-    }
-  }
+  onTableAction(event: { action: string, row: any }) { }
 
   printExcel(): void {
     if (!this.searchParams.entityId) {

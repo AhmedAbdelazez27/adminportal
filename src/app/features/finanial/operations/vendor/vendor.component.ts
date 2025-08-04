@@ -77,18 +77,21 @@ export class VendorComponent implements OnInit {
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service,
     private fb: FormBuilder,
-    public cdr: ChangeDetectorRef)
-  {
+    public cdr: ChangeDetectorRef) {
     this.translate.setDefaultLang('en');
     this.translate.use('en');
   }
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
-    ];
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+        this.rowActions = [
+          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+        ];
+      });
+ 
 
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -274,7 +277,7 @@ export class VendorComponent implements OnInit {
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.loadgridData = response || [];
-          this.pagination.totalCount = response?.totalCount || 0;
+          this.pagination.totalCount = response[0]?.rowsCount || 0;
           this.spinnerService.hide();
 
         },
@@ -312,9 +315,8 @@ export class VendorComponent implements OnInit {
   clear(): void {
     this.searchParams = new filterVendorHeaderDto();
     this.loadgridData = [];
-
     if (this.filterForm) {
-      this.cleanFilterObject;
+      this.filterForm.resetForm();
     }
   }
 
@@ -389,40 +391,51 @@ export class VendorComponent implements OnInit {
     this.vendorService.getAll(cleanedFilters)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: any) => {
-          const data = response?.items || response || [];
+        next: (initialResponse: any) => {
+          const totalCount = initialResponse[0]?.rowsCount || 0;
 
-          const reportConfig: reportPrintConfig = {
+          this.vendorService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (response: any) => {
+                const data = response || [];
 
-            title: this.translate.instant('vendorResourceName.title'),
-            reportTitle: this.translate.instant('vendorResourceName.title'),
-            fileName: `${this.translate.instant('vendorResourceName.title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-            fields: [
-              { label: this.translate.instant('vendorResourceName.entityId'), value: this.searchParams.entityIdstr },
-              { label: this.translate.instant('vendorResourceName.vendorName'), value: this.searchParams.VendorName },
-              { label: this.translate.instant('vendorResourceName.status'), value: this.searchParams.status },
+                const reportConfig: reportPrintConfig = {
 
-            ],
-            columns: [
-              { label: '#', key: 'rowNo', title: '#' },
-              { label: this.translate.instant('vendorResourceName.vendorNo'), key: 'vendoR_NUMBER' },
-              { label: this.translate.instant('vendorResourceName.vendorName'), key: 'vendoR_NAME' },
-              { label: this.translate.instant('vendorResourceName.status'), key: 'statuS_DESC' },
-              { label: this.translate.instant('vendorResourceName.category'), key: 'categorY_DESC' },
-              { label: this.translate.instant('vendorResourceName.address'), key: 'address' },
-            ],
+                  title: this.translate.instant('vendorResourceName.title'),
+                  reportTitle: this.translate.instant('vendorResourceName.title'),
+                  fileName: `${this.translate.instant('vendorResourceName.title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('vendorResourceName.entityId'), value: this.searchParams.entityIdstr },
+                    { label: this.translate.instant('vendorResourceName.vendorName'), value: this.searchParams.VendorName },
+                    { label: this.translate.instant('vendorResourceName.status'), value: this.searchParams.status },
 
-            data: data.map((item: any, index: number) => ({
-              ...item,
-              rowNo: index + 1
-            })),
-            totalLabel: this.translate.instant('Common.Total'),
-            totalKeys: []
-          };
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('vendorResourceName.vendorNo'), key: 'vendoR_NUMBER' },
+                    { label: this.translate.instant('vendorResourceName.vendorName'), key: 'vendoR_NAME' },
+                    { label: this.translate.instant('vendorResourceName.status'), key: 'statuS_DESC' },
+                    { label: this.translate.instant('vendorResourceName.category'), key: 'categorY_DESC' },
+                    { label: this.translate.instant('vendorResourceName.address'), key: 'address' },
+                  ],
 
-          this.openStandardReportService.openStandardReportExcel(reportConfig);
-          this.spinnerService.hide();
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: []
+                };
 
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();
+
+              },
+              error: () => {
+                this.spinnerService.hide();
+              }
+            });
         },
         error: () => {
           this.spinnerService.hide();

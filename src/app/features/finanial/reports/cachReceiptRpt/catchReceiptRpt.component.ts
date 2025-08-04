@@ -68,18 +68,19 @@ export class catchReceiptRptComponent {
     private openStandardReportService: openStandardReportService,
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
-  )
-  {
+  ) {
     this.translate.setDefaultLang('en');
     this.translate.use('en');
   }
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
-    ];
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+      });
+    this.rowActions = [];
+
 
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -250,7 +251,7 @@ export class catchReceiptRptComponent {
     this.financialReportService.getcatchReceiptRptData(this.searchParams)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
-          this.getAllDataForReports = response || [];
+          this.getAllDataForReports = response?.data || [];
           this.pagination.totalCount = response?.totalCount || 0;
           this.spinnerService.hide();
         },
@@ -263,7 +264,7 @@ export class catchReceiptRptComponent {
 
 
   onSearch(): void {
-   this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
   onPageChange(event: { pageNumber: number; pageSize: number }): void {
@@ -291,7 +292,6 @@ export class catchReceiptRptComponent {
   clear(): void {
     this.searchParams = new catchReceiptRptInputDto();
     this.getAllDataForReports = [];
-
     if (this.filterForm) {
       this.filterForm.resetForm();
     }
@@ -314,21 +314,13 @@ export class catchReceiptRptComponent {
       { headerName: this.translate.instant('FinancialReportResourceName.miscReceiptDate'), field: 'misC_RECEIPT_DATEstr', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.receiptAmount'), field: 'receipT_AMOUNTstr', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.chequeAmount'), field: 'chequE_AMOUNTstr', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.cashAmount'), field: 'casH_AMOUNTstr', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.amount'), field: 'casH_AMOUNTstr', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.administrativeAmount'), field: 'administrativE_AMOUNTstr', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.collectorName'), field: 'collectoR_NAME', width: 200 },
     ];
   }
-  
-  onTableAction(event: { action: string, row: any }) {
-    if (event.action === 'onViewInfo') {
-      if (this.genericTable && this.genericTable.onViewInfo) {
-        this.genericTable.onViewInfo(event.row);
-      }
-    }
-    if (event.action === 'edit') {
-    }
-  }
+
+  onTableAction(event: { action: string, row: any }) { }
 
 
   printExcel(): void {
@@ -348,46 +340,57 @@ export class catchReceiptRptComponent {
     this.financialReportService.getcatchReceiptRptData(cleanedFilters)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: any) => {
-          const data = response?.items || response || [];
+        next: (initialResponse: any) => {
+          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
 
-          const reportConfig: reportPrintConfig = {
-            title: this.translate.instant('FinancialReportResourceName.catchReceipt_Title'),
-            reportTitle: this.translate.instant('FinancialReportResourceName.catchReceipt_Title'),
-            fileName: `${this.translate.instant('FinancialReportResourceName.catchReceipt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-            fields: [
-              { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
-              { label: this.translate.instant('FinancialReportResourceName.collectorName'), value: this.searchParams.collectorNamestr },
-              { label: this.translate.instant('FinancialReportResourceName.type'), value: this.searchParams.typestr },
-              { label: this.translate.instant('FinancialReportResourceName.fromNo'), value: this.searchParams.fromNo },
-              { label: this.translate.instant('FinancialReportResourceName.toNo'), value: this.searchParams.toNo },
-              { label: this.translate.instant('FinancialReportResourceName.toDate'), value: this.searchParams.toDate },
-              { label: this.translate.instant('FinancialReportResourceName.fromDate'), value: this.searchParams.fromDate },
-            ],
-            columns: [
-              { label: '#', key: 'rowNo', title: '#' },
-              { label: this.translate.instant('FinancialReportResourceName.bankAccountName'), key: 'banK_ACCOUNT_NAME' },
-              { label: this.translate.instant('FinancialReportResourceName.beneficiaryName'), key: 'beneficiarY_NAME' },
-              { label: this.translate.instant('FinancialReportResourceName.notes'), key: 'notes' },
-              { label: this.translate.instant('FinancialReportResourceName.transactionTypeDesc'), key: 'transactioN_TYPE_DESC' },
-              { label: this.translate.instant('FinancialReportResourceName.receiptNumber'), key: 'receipT_NUMBER' },
-              { label: this.translate.instant('FinancialReportResourceName.miscReceiptDate'), key: 'misC_RECEIPT_DATEstr' },
-              { label: this.translate.instant('FinancialReportResourceName.receiptAmount'), key: 'receipT_AMOUNTstr' },
-              { label: this.translate.instant('FinancialReportResourceName.chequeAmount'), key: 'chequE_AMOUNTstr' },
-              { label: this.translate.instant('FinancialReportResourceName.cashAmount'), key: 'casH_AMOUNTstr' },
-              { label: this.translate.instant('FinancialReportResourceName.administrativeAmount'), key: 'administrativE_AMOUNTstr' },
-              { label: this.translate.instant('FinancialReportResourceName.collectorName'), key: 'collectoR_NAME' },
-            ],
-            data: data.map((item: any, index: number) => ({
-              ...item,
-              rowNo: index + 1
-            })),
-            totalLabel: this.translate.instant('Common.Total'),
-            totalKeys: ['receipT_AMOUNTstr', 'chequE_AMOUNTstr', 'casH_AMOUNTstr','administrativE_AMOUNTstr']
-          };
+          this.financialReportService.getcatchReceiptRptData({ ...cleanedFilters, skip: 0, take: totalCount })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (response: any) => {
+                const data = response?.data || [];
 
-          this.openStandardReportService.openStandardReportExcel(reportConfig);
-          this.spinnerService.hide();
+                const reportConfig: reportPrintConfig = {
+                  title: this.translate.instant('FinancialReportResourceName.catchReceipt_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.catchReceipt_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.catchReceipt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
+                    { label: this.translate.instant('FinancialReportResourceName.collectorName'), value: this.searchParams.collectorNamestr },
+                    { label: this.translate.instant('FinancialReportResourceName.categoryId'), value: this.searchParams.typestr },
+                    { label: this.translate.instant('FinancialReportResourceName.fromNo'), value: this.searchParams.fromNo },
+                    { label: this.translate.instant('FinancialReportResourceName.toNo'), value: this.searchParams.toNo },
+                    { label: this.translate.instant('FinancialReportResourceName.toDate'), value: this.searchParams.toDate },
+                    { label: this.translate.instant('FinancialReportResourceName.fromDate'), value: this.searchParams.fromDate },
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('FinancialReportResourceName.bankAccountName'), key: 'banK_ACCOUNT_NAME' },
+                    { label: this.translate.instant('FinancialReportResourceName.beneficiaryName'), key: 'beneficiarY_NAME' },
+                    { label: this.translate.instant('FinancialReportResourceName.notes'), key: 'notes' },
+                    { label: this.translate.instant('FinancialReportResourceName.transactionTypeDesc'), key: 'transactioN_TYPE_DESC' },
+                    { label: this.translate.instant('FinancialReportResourceName.receiptNumber'), key: 'receipT_NUMBER' },
+                    { label: this.translate.instant('FinancialReportResourceName.miscReceiptDate'), key: 'misC_RECEIPT_DATEstr' },
+                    { label: this.translate.instant('FinancialReportResourceName.receiptAmount'), key: 'receipT_AMOUNTstr' },
+                    { label: this.translate.instant('FinancialReportResourceName.chequeAmount'), key: 'chequE_AMOUNTstr' },
+                    { label: this.translate.instant('FinancialReportResourceName.amount'), key: 'casH_AMOUNTstr' },
+                    { label: this.translate.instant('FinancialReportResourceName.administrativeAmount'), key: 'administrativE_AMOUNTstr' },
+                    { label: this.translate.instant('FinancialReportResourceName.collectorName'), key: 'collectoR_NAME' },
+                  ],
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: ['receipT_AMOUNTstr', 'chequE_AMOUNTstr', 'casH_AMOUNTstr', 'administrativE_AMOUNTstr']
+                };
+
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();
+              },
+              error: () => {
+                this.spinnerService.hide();
+              }
+            });
         },
         error: () => {
           this.spinnerService.hide();
@@ -427,7 +430,7 @@ export class catchReceiptRptComponent {
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
                     { label: this.translate.instant('FinancialReportResourceName.collectorName'), value: this.searchParams.collectorNamestr },
-                    { label: this.translate.instant('FinancialReportResourceName.type'), value: this.searchParams.typestr },
+                    { label: this.translate.instant('FinancialReportResourceName.categoryId'), value: this.searchParams.typestr },
                     { label: this.translate.instant('FinancialReportResourceName.fromNo'), value: this.searchParams.fromNo },
                     { label: this.translate.instant('FinancialReportResourceName.toNo'), value: this.searchParams.toNo },
                     { label: this.translate.instant('FinancialReportResourceName.toDate'), value: this.searchParams.toDate },
@@ -442,7 +445,7 @@ export class catchReceiptRptComponent {
                     { label: this.translate.instant('FinancialReportResourceName.receiptNumber'), key: 'receipT_NUMBER' },
                     { label: this.translate.instant('FinancialReportResourceName.miscReceiptDate'), key: 'misC_RECEIPT_DATEstr' },
                     { label: this.translate.instant('FinancialReportResourceName.receiptAmount'), key: 'receipT_AMOUNTstr' },
-                    { label: this.translate.instant('FinancialReportResourceName.chequeAmount'), key: 'chequE_AMOUNTstr' },
+                    { label: this.translate.instant('FinancialReportResourceName.amount'), key: 'chequE_AMOUNTstr' },
                     { label: this.translate.instant('FinancialReportResourceName.cashAmount'), key: 'casH_AMOUNTstr' },
                     { label: this.translate.instant('FinancialReportResourceName.administrativeAmount'), key: 'administrativE_AMOUNTstr' },
                     { label: this.translate.instant('FinancialReportResourceName.collectorName'), key: 'collectoR_NAME' },

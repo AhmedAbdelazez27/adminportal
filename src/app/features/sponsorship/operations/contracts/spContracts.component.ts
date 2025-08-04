@@ -106,10 +106,15 @@ export class spContractsComponent {
   }
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-    ];
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+        this.rowActions = [
+          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+        ];
+      });
+    
 
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -411,15 +416,20 @@ export class spContractsComponent {
   }
 
 
+
   oncontractCasesPageChange(event: { pageNumber: number; pageSize: number }): void {
-    this.pagination.currentPage = event.pageNumber;
-    this.pagination.take = event.pageSize;
-    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+    this.contractCasespagination.currentPage = event.pageNumber;
+    this.contractCasespagination.take = event.pageSize;
+    const contractId = this.searchParamsById.contractId || '';
+    const entityId = this.searchParamsById.entityId || '';
+    this.getFormDatabyId(event, contractId, entityId);
   }
 
   oncontractCasesTableSearch(text: string): void {
     this.searchText = text;
-    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.contractCasespagination.take });
+    const contractId = this.searchParamsById.contractId || '';
+    const entityId = this.searchParamsById.entityId || '';
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.contractCasespagination.take }, contractId, entityId);
   }
 
   private cleanFilterObject(obj: any): any {
@@ -454,11 +464,13 @@ export class spContractsComponent {
         });
       return;
     }
+
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;
     this.searchParams.skip = skip;
-   
+    this.searchParams.take = event.pageSize;
+
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
     this.spinnerService.show();
 
@@ -519,7 +531,7 @@ export class spContractsComponent {
       },
       { headerName: this.translate.instant('SpContractsResourceName.contracT_NUMBER'), field: 'contracT_NUMBER', width: 200 },
       { headerName: this.translate.instant('SpContractsResourceName.contracT_DATE'), field: 'contracT_DATEstr', width: 200 },
-      { headerName: this.translate.instant('SpContractsResourceName.beneficenT_NO'), field: 'beneficenT_NO', width: 200 },
+      { headerName: this.translate.instant('SpContractsResourceName.beneficentNo'), field: 'beneficenT_NO', width: 200 },
       { headerName: this.translate.instant('SpContractsResourceName.beneficentname'), field: 'beneficentname', width: 200 },
       { headerName: this.translate.instant('SpContractsResourceName.contracT_STATUS_DESC'), field: 'contracT_STATUS_DESC', width: 200 },
       { headerName: this.translate.instant('SpContractsResourceName.paymenT_METHOD_DESC'), field: 'paymenT_METHOD_DESC', width: 200 },
@@ -553,8 +565,14 @@ export class spContractsComponent {
   }
 
   onTableAction(event: { action: string, row: any }) {
+    var data = event.row.composeKey.split(',');
+
+    var contractId = data[0];
+    var entityId = data[1];
+
+   
     if (event.action === 'onViewInfo') {
-      this.getFormDatabyId({ pageNumber: 1, pageSize: this.contractCasespagination.take }, event.row.contractId, event.row.entitY_ID);
+      this.getFormDatabyId({ pageNumber: 1, pageSize: this.contractCasespagination.take }, contractId, entityId);
     }
   }
 
@@ -575,13 +593,13 @@ export class spContractsComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+          const totalCount = initialResponse[0]?.rowsCount || 0;
 
           this.spContractsService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
-                const data = response?.data || [];
+                const data = response || [];
 
                 const reportConfig: reportPrintConfig = {
                   title: this.translate.instant('SpContractsResourceName.Title'),
@@ -602,7 +620,7 @@ export class spContractsComponent {
                     { label: '#', key: 'rowNo', title: '#' },
                     { label: this.translate.instant('SpContractsResourceName.contracT_NUMBER'), key: 'contracT_NUMBER' },
                     { label: this.translate.instant('SpContractsResourceName.contracT_DATE'), key: 'contracT_DATEstr' },
-                    { label: this.translate.instant('SpContractsResourceName.beneficenT_NO'), key: 'beneficenT_NO' },
+                    { label: this.translate.instant('SpContractsResourceName.beneficentNo'), key: 'beneficenT_NO' },
                     { label: this.translate.instant('SpContractsResourceName.beneficentname'), key: 'beneficentname' },
                     { label: this.translate.instant('SpContractsResourceName.contracT_STATUS_DESC'), key: 'contracT_STATUS_DESC' },
                     { label: this.translate.instant('SpContractsResourceName.paymenT_METHOD_DESC'), key: 'paymenT_METHOD_DESC' },
@@ -614,7 +632,7 @@ export class spContractsComponent {
                     rowNo: index + 1
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['receiptAmountstr', 'chequeAmountstr', 'cashAmountstr', 'administrativeAmountstr']
+                  totalKeys: ['caseAmountTotal']
                 };
 
                 this.openStandardReportService.openStandardReportExcel(reportConfig);

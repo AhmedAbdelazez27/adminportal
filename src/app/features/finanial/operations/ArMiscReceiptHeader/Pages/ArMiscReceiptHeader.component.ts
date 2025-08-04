@@ -34,8 +34,12 @@ export class ArMiscReceiptHeaderComponent {
   searchInput$ = new Subject<string>();
   translatedHeaders: string[] = [];
   pagination = new Pagination();
+  paginationDetailData = new Pagination();
+  paginationLineData = new Pagination();
 
   columnDefs: ColDef[] = [];
+  columnDefsDetailData: ColDef[] = [];
+  columnDefsLineData: ColDef[] = [];
   gridOptions: GridOptions = { pagination: false };
   searchText: string = '';
   columnHeaderMap: { [key: string]: string } = {};
@@ -93,11 +97,15 @@ export class ArMiscReceiptHeaderComponent {
   }
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
-    ];
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+        this.rowActions = [
+          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+        ];
+      });
+    
 
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -306,6 +314,38 @@ export class ArMiscReceiptHeaderComponent {
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
+  onPageChangeDetailData(event: { pageNumber: number; pageSize: number }): void {
+    this.paginationDetailData.currentPage = event.pageNumber;
+    this.paginationDetailData.take = event.pageSize;
+    const miscReceiptId = this.searchParamsById.miscReceiptId || '';
+    const entityId = this.searchParamsById.entityId || '';
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationDetailData.take }, miscReceiptId, entityId);
+  }
+
+  onTableSearchDetailData(text: string): void {
+    this.searchText = text;
+    const miscReceiptId = this.searchParamsById.miscReceiptId || '';
+    const entityId = this.searchParamsById.entityId || '';
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationDetailData.take }, miscReceiptId, entityId);
+  }
+
+
+
+  onPageChangeLineData(event: { pageNumber: number; pageSize: number }): void {
+    this.paginationLineData.currentPage = event.pageNumber;
+    this.paginationLineData.take = event.pageSize;
+    const miscReceiptId = this.searchParamsById.miscReceiptId || '';
+    const entityId = this.searchParamsById.entityId || '';
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationLineData.take }, miscReceiptId, entityId);
+  }
+
+  onTableSearchLineData(text: string): void {
+    this.searchText = text;
+    const miscReceiptId = this.searchParamsById.miscReceiptId || '';
+    const entityId = this.searchParamsById.entityId || '';
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationLineData.take }, miscReceiptId, entityId);
+  }
+
   private cleanFilterObject(obj: any): any {
     const cleaned = { ...obj };
     Object.keys(cleaned).forEach((key) => {
@@ -319,7 +359,6 @@ export class ArMiscReceiptHeaderComponent {
   clear(): void {
     this.searchParams = new FilterArMiscReceiptHeaderDto();
     this.loadgridData = [];
-
     if (this.filterForm) {
       this.filterForm.resetForm();
     }
@@ -359,10 +398,10 @@ export class ArMiscReceiptHeaderComponent {
     });
   }
 
-  getFormDatabyId(tr_Id: string, entitY_ID: string): void {
+  getFormDatabyId(event: { pageNumber: number; pageSize: number }, miscReceiptId: string, entitY_ID: string): void {
     const params: FilterArMiscReceiptHeaderByIdDto = {
       entityId: entitY_ID,
-      miscReceiptId: tr_Id
+      miscReceiptId: miscReceiptId
     };
     this.spinnerService.show();;
     forkJoin({
@@ -376,7 +415,11 @@ export class ArMiscReceiptHeaderComponent {
         this.loadformData = Array.isArray(result.mischeaderdata)
           ? result.mischeaderdata[0] ?? ({} as ArMiscReceiptHeaderDto)
           : result.mischeaderdata;
-        const modalElement = document.getElementById('viewdetails');;
+
+        this.paginationDetailData.totalCount = result.miscdetaildata.length || 0;
+        this.paginationLineData.totalCount = result.misclinedata.length || 0;
+
+        const modalElement = document.getElementById('viewdetails');
         if (modalElement) {
           const modal = new bootstrap.Modal(modalElement);
           modal.show();
@@ -404,13 +447,48 @@ export class ArMiscReceiptHeaderComponent {
       { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.AMOUNT'), field: 'amounTstr', width: 200 },
       { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.Status'), field: 'posted', width: 200 },
     ];
+
+
+
+    this.columnDefsLineData = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.paginationLineData.currentPage - 1) * this.paginationLineData.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.RECEIPT_TYPE_DESC'), field: 'receipT_TYPE_DESC', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.Accountnumber'), field: 'accountnumber', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.AccountNameAr'), field: 'accountNameAr', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.PROJECT_NUMBER'), field: 'projecT_NUMBER', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.BENEFICENTNAME'), field: 'beneficentname', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.CASENAME'), field: 'casename', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.MISC_RECEIPT_AMOUNT'), field: 'misC_RECEIPT_AMOUNTstr', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.ADMINISTRATIVE_PERCENT'), field: 'administrativE_PERCENTstr', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.TotaPercent'), field: 'totaPercentstr', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.TotalAmount'), field: 'totalAmountstr', width: 200 },
+    ];
+
+    this.columnDefsDetailData = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.paginationDetailData.currentPage - 1) * this.paginationDetailData.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.CHECK_NUMBER'), field: 'checK_NUMBER', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.BANK_NAME'), field: 'banK_NAME', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.MATURITY_DATE'), field: 'maturitY_DATEstr', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.AMOUNT'), field: 'amounTstr', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.NOTES'), field: 'notes', width: 200 },
+    ];
   }
 
   onTableAction(event: { action: string, row: any }) {
     if (event.action === 'onViewInfo') {
-      this.getFormDatabyId(event.row.misC_RECEIPT_ID, event.row.entitY_ID);
-    }
-    if (event.action === 'edit') {
+      this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationDetailData.take || this.paginationLineData.take }, event.row.misC_RECEIPT_ID, event.row.entitY_ID);
     }
   }
 
@@ -431,13 +509,13 @@ export class ArMiscReceiptHeaderComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+          const totalCount = initialResponse[0]?.rowsCount || initialResponse?.data?.length || 0;
 
           this.arMiscReceiptHeaderService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
-                const data = response?.data || [];
+                const data = response || [];
 
                 const reportConfig: reportPrintConfig = {
                   title: this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceipt_Title'),
@@ -467,7 +545,7 @@ export class ArMiscReceiptHeaderComponent {
                     rowNo: index + 1
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['receiptAmountstr', 'chequeAmountstr', 'cashAmountstr', 'administrativeAmountstr']
+                  totalKeys: ['amounTstr']
                 };
 
                 this.openStandardReportService.openStandardReportExcel(reportConfig);

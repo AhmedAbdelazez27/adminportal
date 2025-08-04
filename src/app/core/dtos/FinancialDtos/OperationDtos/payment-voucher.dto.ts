@@ -5,7 +5,7 @@ export class FilterpaymentvoucherDto {
   checkNumber: string | null = null;
   amount: string | null = null;
   status: string | null = null;
-  orderByValue: string = 'RECEIPT_NUMBER asc';
+  orderByValue: string = 'MISC_PAYMENT_ID asc';
   take: number = 10;
   skip: number = 0;
 

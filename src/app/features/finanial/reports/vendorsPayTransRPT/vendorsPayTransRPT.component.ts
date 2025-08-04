@@ -69,13 +69,14 @@ export class vendorsPayTransRPTComponent {
 
 
   ngOnInit(): void {
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+      });
     this.fetchentitySelect2();
     this.fetchApvendorSelect2();
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-        { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
-    ];
+    this.rowActions = [];
 
     this.vendorSearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -176,6 +177,16 @@ export class vendorsPayTransRPTComponent {
     }
   }
 
+  onvendorIdSelect2Change(selectedVendor: any): void {
+    if (selectedVendor) {
+      this.searchParams.vendorId = selectedVendor.id;
+      this.searchParams.vendorIdstr = selectedVendor.text;
+    } else {
+      this.searchParams.vendorId = null;
+      this.searchParams.vendorIdstr = null;
+    }
+  }
+
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
     if (!this.searchParams.entityId) {
       this.translate
@@ -193,6 +204,7 @@ export class vendorsPayTransRPTComponent {
     const skip = (event.pageNumber - 1) * event.pageSize;
     this.searchParams.skip = skip;
     this.searchParams.take = event.pageSize;
+    this.searchParams.fromDatestr = this.financialReportService.formatToYYYYMMDD(this.searchParams.fromDatestr || '');
     this.spinnerService.show();
 
     this.financialReportService.getvendorsPayTransRPTData(this.searchParams)
@@ -366,6 +378,7 @@ export class vendorsPayTransRPTComponent {
                 };
 
                 this.openStandardReportService.openStandardReportPDF(reportConfig);
+                this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();
@@ -415,14 +428,6 @@ export class vendorsPayTransRPTComponent {
     };
   }
 
-  onTableAction(event: { action: string, row: any }) {
-    if (event.action === 'onViewInfo') {
-      if (this.genericTable && this.genericTable.onViewInfo) {
-        this.genericTable.onViewInfo(event.row);
-      }
-    }
-     if (event.action === 'edit') {
-    }
-  }
+  onTableAction(event: { action: string, row: any }) {}
 }
 

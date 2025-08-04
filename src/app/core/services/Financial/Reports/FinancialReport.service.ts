@@ -60,4 +60,10 @@ export class FinancialReportService {
     const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetGeneralProLosRptEndPoint}`;
     return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
   }
+
+  formatToYYYYMMDD(dateStr: string): string {
+    if (!dateStr) return '';
+    if (dateStr.includes('/')) return dateStr;
+    return dateStr.replace(/-/g, '/');
+  }
 }

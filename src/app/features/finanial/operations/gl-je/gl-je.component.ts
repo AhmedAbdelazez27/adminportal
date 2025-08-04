@@ -33,8 +33,10 @@ export class GLJEComponent implements OnInit {
   searchInput$ = new Subject<string>();
   translatedHeaders: string[] = [];
   pagination = new Pagination();
+  paginationlineData = new Pagination();
 
   columnDefs: ColDef[] = [];
+  columnDefslineData: ColDef[] = [];
   gridOptions: GridOptions = { pagination: false };
   searchText: string = '';
   columnHeaderMap: { [key: string]: string } = {};
@@ -43,6 +45,7 @@ export class GLJEComponent implements OnInit {
   loadgridData: gljeHeaderDto[] = [];
   loadformData: gljeHeaderDto = {} as gljeHeaderDto;
   loadformdetailsData: GljeDetailsDto[] = [];
+
   searchParams = new filterGljeListHeaderDto();
   searchFndLookUpValuesSelect2RequestDto = new FndLookUpValuesSelect2RequestDto();
   searchSelect2RequestDto = new FndLookUpValuesSelect2RequestDto();
@@ -90,11 +93,15 @@ export class GLJEComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
-    ];
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+        this.rowActions = [
+          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+        ];
+      });
+   
 
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -336,6 +343,20 @@ export class GLJEComponent implements OnInit {
   }
 
 
+  jE_ID: string = '';
+  entitY_ID: string = '';
+
+  onPageChangelineData(event: { pageNumber: number; pageSize: number }): void {
+    this.paginationlineData.currentPage = event.pageNumber;
+    this.paginationlineData.take = event.pageSize;
+    this.getFormDatabyId(event, this.jE_ID, this.entitY_ID);
+  }
+
+  onTableSearchlineData(text: string): void {
+    this.searchText = text;
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationlineData.take }, this.jE_ID, this.entitY_ID);
+  }
+
   private cleanFilterObject(obj: any): any {
     const cleaned = { ...obj };
     Object.keys(cleaned).forEach((key) => {
@@ -356,7 +377,7 @@ export class GLJEComponent implements OnInit {
   }
 
 
-  getFormDatabyId(jE_ID: any, entitY_ID: any): void {
+  getFormDatabyId(event: { pageNumber: number; pageSize: number }, jE_ID: string, entitY_ID: string): void {
     const params: getgljeByIDDto = {
       entityId: entitY_ID,
       receiptId: jE_ID
@@ -372,6 +393,9 @@ export class GLJEComponent implements OnInit {
         this.loadformData = Array.isArray(result.loadformData)
           ? result.loadformData[0] ?? ({} as gljeHeaderDto)
           : result.loadformData;
+
+        this.paginationlineData.totalCount = result?.gljedetaildata.length || 0;
+
         const modalElement = document.getElementById('viewdetails');
         if (modalElement) {
           const modal = new bootstrap.Modal(modalElement);
@@ -403,13 +427,26 @@ export class GLJEComponent implements OnInit {
       { headerName: this.translate.instant('glJEResourceName.jvStatus'), field: 'jE_STATUS', width: 200 },
       { headerName: this.translate.instant('glJEResourceName.currency'), field: 'jE_CURR_DESC', width: 200 },
     ];
+
+    this.columnDefslineData = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.paginationlineData.currentPage - 1) * this.paginationlineData.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('glJEResourceName.accountNo'), field: 'accountnumber', width: 200 },
+      { headerName: this.translate.instant('glJEResourceName.accountName'), field: 'accountNameAr', width: 200 },
+      { headerName: this.translate.instant('glJEResourceName.jvDesc'), field: 'sourcE_DESC_DETAILS', width: 200 },
+      { headerName: this.translate.instant('glJEResourceName.credit'), field: 'debiT_AMOUNT', width: 200 },
+      { headerName: this.translate.instant('glJEResourceName.debit'), field: 'crediT_AMOUNT', width: 200 },
+    ];
   }
 
   onTableAction(event: { action: string, row: any }) {
     if (event.action === 'onViewInfo') {
-      this.getFormDatabyId(event.row.jE_ID, event.row.entitY_ID);
-    }
-    if (event.action === 'edit') {
+      this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationlineData.take }, event.row.jE_ID, event.row.entitY_ID);
     }
   }
 
@@ -422,58 +459,67 @@ export class GLJEComponent implements OnInit {
         });
       return;
     }
+    this.searchParams.take = this.pagination.totalCount;
     this.spinnerService.show();
-
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
-
     this.gljeService.getAll(cleanedFilters)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: any) => {
-          const data = response?.items || response || [];
+        next: (initialResponse: any) => {
+          const totalCount = initialResponse[0]?.rowsCount || 0;
 
-          const reportConfig: reportPrintConfig = {
+          this.gljeService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (response: any) => {
+                const data = response || [];
 
-            title: this.translate.instant('glJEResourceName.title'),
-            reportTitle: this.translate.instant('glJEResourceName.title'),
-            fileName: `${this.translate.instant('glJEResourceName.title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-            fields: [
-              { label: this.translate.instant('glJEResourceName.entityId'), value: this.searchParams.entityIdstr },
-              { label: this.translate.instant('glJEResourceName.jvNo'), value: this.searchParams.att10 },
-              { label: this.translate.instant('glJEResourceName.jvName'), value: this.searchParams.jE_NAME },
-              { label: this.translate.instant('glJEResourceName.jvManualNo'), value: this.searchParams.att7 },
-              { label: this.translate.instant('glJEResourceName.value'), value: this.searchParams.att7 },
-              { label: this.translate.instant('glJEResourceName.referenceNo'), value: this.searchParams.je_Soure },
-              { label: this.translate.instant('glJEResourceName.jvStatus'), value: this.searchParams.je_State },
-              { label: this.translate.instant('glJEResourceName.jvDate'), value: this.searchParams.je_Date },
-              { label: this.translate.instant('glJEResourceName.currency'), value: this.searchParams.je_Curr },
-            ],
-            columns: [
-              { label: '#', key: 'rowNo', title: '#' },
-              { label: this.translate.instant('glJEResourceName.jvNo'), key: 'attributE10' },
-              { label: this.translate.instant('glJEResourceName.jvName'), key: 'jE_NAME' },
-              { label: this.translate.instant('glJEResourceName.jvDate'), key: 'jE_DATE' },
-              { label: this.translate.instant('glJEResourceName.period'), key: 'perioD_ID' },
-              { label: this.translate.instant('glJEResourceName.referenceNo'), key: 'jE_SOURCE_DESC' },
-              { label: this.translate.instant('glJEResourceName.jvStatus'), key: 'jE_STATUS' },
-              { label: this.translate.instant('glJEResourceName.currency'), key: 'jE_CURR_DESC' },
-            ],
+                const reportConfig: reportPrintConfig = {
 
-            data: data.map((item: any, index: number) => ({
-              ...item,
-              rowNo: index + 1
-            })),
-            totalLabel: this.translate.instant('Common.Total'),
-            totalKeys: []
-          };
-          this.openStandardReportService.openStandardReportExcel(reportConfig);
-          this.spinnerService.hide();
+                  title: this.translate.instant('glJEResourceName.title'),
+                  reportTitle: this.translate.instant('glJEResourceName.title'),
+                  fileName: `${this.translate.instant('glJEResourceName.title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('glJEResourceName.entityId'), value: this.searchParams.entityIdstr },
+                    { label: this.translate.instant('glJEResourceName.jvNo'), value: this.searchParams.att10 },
+                    { label: this.translate.instant('glJEResourceName.jvName'), value: this.searchParams.jE_NAME },
+                    { label: this.translate.instant('glJEResourceName.jvManualNo'), value: this.searchParams.att7 },
+                    { label: this.translate.instant('glJEResourceName.value'), value: this.searchParams.att7 },
+                    { label: this.translate.instant('glJEResourceName.referenceNo'), value: this.searchParams.je_Soure },
+                    { label: this.translate.instant('glJEResourceName.jvStatus'), value: this.searchParams.je_State },
+                    { label: this.translate.instant('glJEResourceName.jvDate'), value: this.searchParams.je_Date },
+                    { label: this.translate.instant('glJEResourceName.currency'), value: this.searchParams.je_Curr },
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('glJEResourceName.jvNo'), key: 'attributE10' },
+                    { label: this.translate.instant('glJEResourceName.jvName'), key: 'jE_NAME' },
+                    { label: this.translate.instant('glJEResourceName.jvDate'), key: 'jE_DATE' },
+                    { label: this.translate.instant('glJEResourceName.period'), key: 'perioD_ID' },
+                    { label: this.translate.instant('glJEResourceName.referenceNo'), key: 'jE_SOURCE_DESC' },
+                    { label: this.translate.instant('glJEResourceName.jvStatus'), key: 'jE_STATUS' },
+                    { label: this.translate.instant('glJEResourceName.currency'), key: 'jE_CURR_DESC' },
+                  ],
+
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: []
+                };
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();
+              },
+              error: () => {
+                this.spinnerService.hide();
+              }
+            });
         },
         error: () => {
           this.spinnerService.hide();
         }
       });
   }
-
 
 }

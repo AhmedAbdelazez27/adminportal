@@ -3,7 +3,6 @@
 <div class="container-fluid">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="title">{{ 'glJEResourceName.title' | translate }}</h1>
-    <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#Users">Add New</button>
   </div>
 
   <div class="filter mb-3">
@@ -30,113 +29,115 @@
 
     <div class="collapse" id="collapseExample">
       <div class="card card-body">
+        <form #filterForm="ngForm">
 
-        <div class="row mb-3">
-          <div class="col-xl-4 mb-3">
-            <label for="entityId" class="form-label">{{ 'glJEResourceName.entityId' | translate }}</label>
-            <ng-select class="ng-select-custom"
-                       name="entitySelect2"
-                       [(ngModel)]="selectedentitySelect2Obj"
-                       [items]="entitySelect2"
-                       bindLabel="text"
-                       bindValue="id"
-                       [typeahead]="entitySearchInput$"
-                       [loading]="loadingentity"
-                       [virtualScroll]="true"
-                       (scrollToEnd)="loadMoreentity()"
-                       (change)="onentitySelect2Change($event)"
-                       (search)="onentitySearch($event)"
-                       placeholder="{{ 'Common.Select' | translate }}">
-            </ng-select>
+          <div class="row mb-3">
+            <div class="col-xl-4 mb-3">
+              <label for="entityId" class="form-label">{{ 'glJEResourceName.entityId' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="entitySelect2"
+                         [(ngModel)]="selectedentitySelect2Obj"
+                         [items]="entitySelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="entitySearchInput$"
+                         [loading]="loadingentity"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreentity()"
+                         (change)="onentitySelect2Change($event)"
+                         (search)="onentitySearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
 
-          </div>
+            </div>
 
-          <div class="col-xl-4 mb-3">
-            <label for="Att10" class="form-label">{{ 'glJEResourceName.jvNo' | translate }} </label>
-            <input type="text" class="form-control" [(ngModel)]="searchParams.att10"
-                   placeholder="Search">
-          </div>
-          <div class="col-xl-4 mb-3">
-            <label for="JE_NAME" class="form-label">{{ 'glJEResourceName.jvName' | translate }}</label>
-            <input type="text" class="form-control" [(ngModel)]="searchParams.jE_NAME"
-                   placeholder="Search">
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-xl-4 mb-3">
-            <label for="att7" class="form-label">{{ 'glJEResourceName.jvManualNo' | translate }} </label>
-            <input type="text" class="form-control" [(ngModel)]="searchParams.att7"
-                   placeholder="Search">
-          </div>
-          <div class="col-xl-4 mb-3">
-            <label for="amount" class="form-label">{{ 'glJEResourceName.value' | translate }}</label>
-            <input type="number" class="form-control" [(ngModel)]="searchParams.amount"
-                   placeholder="Search">
-          </div>
-          <div class="col-xl-4 mb-3">
-            <label for="je_Soure" class="form-label">{{ 'glJEResourceName.referenceNo' | translate }}</label>
-            <ng-select class="ng-select-custom"
-                       name="je_SoureSelect2"
-                       [items]="je_SoureSelect2"
-                       bindLabel="text"
-                       bindValue="id"
-                       [(ngModel)]="selectedJe_SoureSelect2Obj"
-                       [typeahead]="je_SoureSearchInput$"
-                       [loading]="loadingJe_Soure"
-                       [virtualScroll]="true"
-                       (scrollToEnd)="loadMoreje_Soure()"
-                       (change)="onje_SoureSelect2Change($event)"
-                       (search)="onje_SoureSearch($event)"
-                       placeholder="{{ 'Common.Select' | translate }}">
-            </ng-select>
-
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-xl-4 mb-3">
-            <label for="je_State" class="form-label">{{ 'glJEResourceName.jvStatus' | translate }}</label>
-            <ng-select class="ng-select-custom"
-                       name="statusSelect2"
-                       [items]="statusSelect2"
-                       bindLabel="text"
-                       bindValue="id"
-                       [(ngModel)]="selectedstatusSelect2Obj"
-                       [typeahead]="statusSearchInput$"
-                       [loading]="loadingstatus"
-                       [virtualScroll]="true"
-                       (scrollToEnd)="loadMorestatus()"
-                       (change)="onstatusSelect2Change($event)"
-                       (search)="onstatusSearch($event)"
-                       placeholder="{{ 'Common.Select' | translate }}">
-            </ng-select>
-
-          </div>
-          <div class="col-xl-4 mb-3">
-            <label for="je_Curr" class="form-label">{{ 'glJEResourceName.currency' | translate }}</label>
-            <ng-select class="ng-select-custom"
-                       name="je_CurrSelect2"
-                       [items]="je_CurrSelect2"
-                       bindLabel="text"
-                       bindValue="id"
-                       [(ngModel)]="selectedJe_CurrSelect2Obj"
-                       [typeahead]="je_CurrSearchInput$"
-                       [loading]="loadingJe_Curr"
-                       [virtualScroll]="true"
-                       (scrollToEnd)="loadMoreje_Curr()"
-                       (change)="onje_CurrSelect2Change($event)"
-                       (search)="onje_CurrSearch($event)"
-                       placeholder="{{ 'Common.Select' | translate }}">
-            </ng-select>
-
+            <div class="col-xl-4 mb-3">
+              <label for="Att10" class="form-label">{{ 'glJEResourceName.jvNo' | translate }} </label>
+              <input type="text" class="form-control" [(ngModel)]="searchParams.att10" name="att10"
+                     placeholder="Search">
+            </div>
+            <div class="col-xl-4 mb-3">
+              <label for="JE_NAME" class="form-label">{{ 'glJEResourceName.jvName' | translate }}</label>
+              <input type="text" class="form-control" [(ngModel)]="searchParams.jE_NAME" name="jE_NAME"
+                     placeholder="Search">
+            </div>
           </div>
 
-          <div class="col-xl-4 mb-3">
-            <label for="je_Date" class="form-label">{{ 'glJEResourceName.date' | translate }}</label>
-            <input type="date" class="form-control" [(ngModel)]="searchParams.je_Date"
-                   placeholder="Select date">
+          <div class="row mb-3">
+            <div class="col-xl-4 mb-3">
+              <label for="att7" class="form-label">{{ 'glJEResourceName.jvManualNo' | translate }} </label>
+              <input type="text" class="form-control" [(ngModel)]="searchParams.att7" name="att7"
+                     placeholder="Search">
+            </div>
+            <div class="col-xl-4 mb-3">
+              <label for="amount" class="form-label">{{ 'glJEResourceName.value' | translate }}</label>
+              <input type="number" class="form-control" [(ngModel)]="searchParams.amount" name="amount"
+                     placeholder="Search">
+            </div>
+            <div class="col-xl-4 mb-3">
+              <label for="je_Soure" class="form-label">{{ 'glJEResourceName.referenceNo' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="je_SoureSelect2"
+                         [items]="je_SoureSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [(ngModel)]="selectedJe_SoureSelect2Obj"
+                         [typeahead]="je_SoureSearchInput$"
+                         [loading]="loadingJe_Soure"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreje_Soure()"
+                         (change)="onje_SoureSelect2Change($event)"
+                         (search)="onje_SoureSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+
+            </div>
           </div>
-        </div>
+          <div class="row mb-3">
+            <div class="col-xl-4 mb-3">
+              <label for="je_State" class="form-label">{{ 'glJEResourceName.jvStatus' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="statusSelect2"
+                         [items]="statusSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [(ngModel)]="selectedstatusSelect2Obj"
+                         [typeahead]="statusSearchInput$"
+                         [loading]="loadingstatus"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMorestatus()"
+                         (change)="onstatusSelect2Change($event)"
+                         (search)="onstatusSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+
+            </div>
+            <div class="col-xl-4 mb-3">
+              <label for="je_Curr" class="form-label">{{ 'glJEResourceName.currency' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="je_CurrSelect2"
+                         [items]="je_CurrSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [(ngModel)]="selectedJe_CurrSelect2Obj"
+                         [typeahead]="je_CurrSearchInput$"
+                         [loading]="loadingJe_Curr"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreje_Curr()"
+                         (change)="onje_CurrSelect2Change($event)"
+                         (search)="onje_CurrSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label for="je_Date" class="form-label">{{ 'glJEResourceName.date' | translate }}</label>
+              <input type="date" class="form-control" [(ngModel)]="searchParams.je_Date" name="je_Date"
+                     placeholder="Select date">
+            </div>
+          </div>
+        </form>
 
         <div class="d-flex gap-2 justify-content-center">
           <button class="btn btn-outline" (click)="clear()">
@@ -227,39 +228,23 @@
 
             </div>
 
-            <h4 class="gold bold">Details</h4>
-            <table class="table new-table mb-3">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>{{ 'glJEResourceName.accountNo' | translate }}</th>
-                  <th>{{ 'glJEResourceName.accountName' | translate }}</th>
-                  <th>{{ 'glJEResourceName.jvDesc' | translate }}</th>
-                  <th>{{ 'glJEResourceName.credit' | translate }}</th>
-                  <th>{{ 'glJEResourceName.debit' | translate }}</th>
+            <h4 class="gold bold">{{ 'glJEResourceName.title_details' | translate }}</h4>
+            <app-generic-data-table [columnDefs]="columnDefslineData"
+                                    [rowData]="loadformdetailsData"
+                                    [totalCount]="paginationlineData.totalCount"
+                                    [pageSize]="paginationlineData.take"
+                                    [currentPage]="paginationlineData.currentPage - 1"
+                                    [columnHeaderMap]="columnHeaderMap"
+                                    (pageChange)="onPageChangelineData($event)"
+                                    [showActionColumn]="false"
+                                    (search)="onTableSearchlineData($event)">
+            </app-generic-data-table>
 
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let glJe_Details of loadformdetailsData; let i = index">
-                  <td>{{ i + 1 }}</td>
-                  <td>{{ glJe_Details.accountnumber }}</td>
-                  <td>{{ glJe_Details.accountNameAr }}</td>
-                  <td>{{ glJe_Details.sourcE_DESC_DETAILS }}</td>
-                  <td>{{ glJe_Details.debiT_AMOUNT }}</td>
-                  <td>{{ glJe_Details.crediT_AMOUNT }}</td>
-
-                </tr>
-              </tbody>
-            </table>
             <div class="row">
-              <!-- Total Credit -->
               <div class="col-xxl-4 col-xl-6">
                 <label class="bold black">{{ 'glJEResourceName.Total Credit' | translate }}</label>
                 <p id="totalCredit">{{loadformData.totalCredit}}</p>
               </div>
-              <!-- Total Debit -->
-
               <div class="col-xxl-4 col-xl-6">
                 <label class="bold black">{{ 'glJEResourceName.Total Debit' | translate }}</label>
                 <p id="totalDept">{{loadformData.totalDept}}</p>

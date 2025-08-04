@@ -1,0 +1,368 @@
+  <div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1 class="title">{{ 'ProjectsResourceName.Title' | translate }}</h1>
+    </div>
+
+    <div class="filter mb-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="filter-title mb-0">{{ 'Common.SearchTitle' | translate }}</h4>
+        <button class="btn btn-filter" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilterTab" aria-expanded="false" aria-controls="collapseFilterTab">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z" fill="" />
+            <path d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z" fill="" />
+            <path d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z" fill="" />
+            <path d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z" fill="" />
+            <path d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z" fill="" />
+            <path d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z" fill="" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="collapse" id="collapseFilterTab">
+        <div class="card card-body">
+          <form #filterForm="ngForm">
+            <div class="row mb-3">
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">{{ 'ProjectsResourceName.entityId' | translate }}</label>
+                <ng-select class="ng-select-custom"
+                           name="entitySelect2"
+                           [(ngModel)]="selectedentitySelect2Obj"
+                           [items]="entitySelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="searchInput$"
+                           [loading]="loadingentity"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMoreentity()"
+                           (change)="onentitySelect2Change($event)"
+                           (search)="onentitySearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+              <div class="col-xl-4 mb-3">
+                <label for="projectNumber" class="form-label">{{ 'ProjectsResourceName.projectNumber' | translate}}</label>
+                <input type="text" name="projectNumber" class="form-control" [(ngModel)]="searchParams.projectNumber" placeholder="Search">
+              </div>
+
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">{{ 'ProjectsResourceName.status' | translate }}</label>
+                <ng-select class="ng-select-custom"
+                           name="statusSelect2"
+                           [items]="statusSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [(ngModel)]="selectedstatusSelect2Obj"
+                           [typeahead]="searchInput$"
+                           [loading]="loadingstatus"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMorestatus()"
+                           (change)="onstatusSelect2Change($event)"
+                           (search)="onstatusSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">{{ 'ProjectsResourceName.projectName' | translate }}</label>
+                <ng-select class="ng-select-custom"
+                           name="projectNameSelect2"
+                           [items]="projectNameSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [(ngModel)]="selectedprojectNameSelect2Obj"
+                           [typeahead]="searchInput$"
+                           [loading]="loadingprojectName"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMoreprojectName()"
+                           (change)="onprojectNameSelect2Change($event)"
+                           (search)="onprojectNameSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">{{ 'ProjectsResourceName.benificentId' | translate }}</label>
+                <ng-select class="ng-select-custom"
+                           name="benNameSelect2"
+                           [items]="benNameSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [(ngModel)]="selectedbenNameSelect2Obj"
+                           [typeahead]="searchInput$"
+                           [loading]="loadingbenName"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMorebenName()"
+                           (change)="onbenNameSelect2Change($event)"
+                           (search)="onbenNameSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">{{ 'ProjectsResourceName.projectTypeDesc' | translate }}</label>
+                <ng-select class="ng-select-custom"
+                           name="projecttypeSelect2"
+                           [items]="projecttypeSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [(ngModel)]="selectedprojecttypeSelect2Obj"
+                           [typeahead]="searchInput$"
+                           [loading]="loadingprojecttype"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMoreprojecttype()"
+                           (change)="onprojecttypeSelect2Change($event)"
+                           (search)="onprojecttypeSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">{{ 'ProjectsResourceName.countryCode' | translate }}</label>
+                <ng-select class="ng-select-custom"
+                           name="countrySelect2"
+                           [items]="countrySelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [(ngModel)]="selectedcountrySelect2Obj"
+                           [typeahead]="searchInput$"
+                           [loading]="loadingcountry"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMorecountry()"
+                           (change)="oncountrySelect2Change($event)"
+                           (search)="oncountrySearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-4 mb-3">
+                <label for="applicationDate" class="form-label">{{ 'ProjectsResourceName.applicationDate' | translate }}</label>
+                <input type="date" name="applicationDate" class="form-control" [(ngModel)]="searchParams.applicationDate" placeholder="Search">
+              </div>
+            </div>
+          </form>
+
+          <div class="d-flex gap-2 justify-content-center">
+            <button class="btn btn-outline" (click)="clear()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#5B5B5B" />
+              </svg>
+              {{ 'Common.Clear' | translate }}
+            </button>
+            <button class="btn btn-gold" (click)="onSearch()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
+              </svg>
+              {{ 'Common.Search' | translate }}
+            </button>
+            <button class="btn btn-success" (click)="printExcel()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
+              </svg>
+              {{ 'Common.PrintExcel' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <app-generic-data-table [columnDefs]="columnDefs"
+                              [rowData]="loadgridData"
+                              [totalCount]="pagination.totalCount"
+                              [pageSize]="pagination.take"
+                              [currentPage]="pagination.currentPage - 1"
+                              [columnHeaderMap]="columnHeaderMap"
+                              [rowActions]="rowActions"
+                              (actionClick)="onTableAction($event)"
+                              (pageChange)="onPageChange($event)"
+                              [showActionColumn]="true"
+                              (search)="onTableSearch($event)">
+      </app-generic-data-table>
+    </div>
+    
+    <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="editLabel">{{ 'ProjectsResourceName.Title' | translate }}</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="border-bottom mb-4">
+              <h4 class="gold bold">{{ 'ProjectsResourceName.Title' | translate }}</h4>
+
+              <div class="row">
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="projecT_NUMBER" class="black bold">{{ 'ProjectsResourceName.projecT_NUMBER' | translate }}</label>
+                  <p id="projecT_NUMBER">{{ loadformData.projecT_NUMBER }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputapplicatioN_DATE" class="black bold">{{ 'ProjectsResourceName.applicatioN_DATE' | translate }}</label>
+                  <p id="applicatioN_DATE">{{ loadformData.applicatioN_DATEstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputstatuS_DESC" class="black bold">{{ 'ProjectsResourceName.statuS_DESC' | translate }}</label>
+                  <p id="statuS_DESC">{{ loadformData.statuS_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputprojecT_NAME" class="black bold">{{ 'ProjectsResourceName.projecT_NAME' | translate }}</label>
+                  <p id="projecT_NAME">{{ loadformData.projecT_NAME }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputprojecT_TYPE_DESC" class="black bold">{{ 'ProjectsResourceName.projecT_TYPE_DESC' | translate }}</label>
+                  <p id="projecT_TYPE_DESC">{{ loadformData.projecT_TYPE_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputsC_PROJECTS_CATEGORIES_DESC" class="black bold">{{ 'ProjectsResourceName.sC_PROJECTS_CATEGORIES_DESC' | translate }}</label>
+                  <p id="sC_PROJECTS_CATEGORIES_DESC">{{ loadformData.sC_PROJECTS_CATEGORIES_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputbeneficentname" class="black bold">{{ 'ProjectsResourceName.beneficentname' | translate }}</label>
+                  <p id="beneficentname">{{ loadformData.beneficentname }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcost" class="black bold">{{ 'ProjectsResourceName.cost' | translate }}</label>
+                  <p id="cost">{{ loadformData.coststr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcurrancY_NAME" class="black bold">{{ 'ProjectsResourceName.currancY_NAME' | translate }}</label>
+                  <p id="currancY_NAME">{{ loadformData.currancY_NAME }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcurrancY_RATE" class="black bold">{{ 'ProjectsResourceName.currancY_RATE' | translate }}</label>
+                  <p id="currancY_RATE">{{ loadformData.currancY_RATEstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputenD_DATE" class="black bold">{{ 'ProjectsResourceName.enD_DATE' | translate }}</label>
+                  <p id="enD_DATE">{{ loadformData.enD_DATEstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputstarT_DATE" class="black bold">{{ 'ProjectsResourceName.starT_DATE' | translate }}</label>
+                  <p id="starT_DATE">{{ loadformData.starT_DATEstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputmanG_PERCENT" class="black bold">{{ 'ProjectsResourceName.manG_PERCENT' | translate }}</label>
+                  <p id="manG_PERCENT">{{ loadformData.manG_PERCENTstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcompletioN_PERCENT" class="black bold">{{ 'ProjectsResourceName.completioN_PERCENT' | translate }}</label>
+                  <p id="completioN_PERCENT">{{ loadformData.completioN_PERCENTstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputarabiC_COUNTRY_NAME" class="black bold">{{ 'ProjectsResourceName.arabiC_COUNTRY_NAME' | translate }}</label>
+                  <p id="arabiC_COUNTRY_NAME">{{ loadformData.arabiC_COUNTRY_NAME }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputprojecT_SITE" class="black bold">{{ 'ProjectsResourceName.projecT_SITE' | translate }}</label>
+                  <p id="projecT_SITE">{{ loadformData.projecT_SITE }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputprojecT_DESC" class="black bold">{{ 'ProjectsResourceName.projecT_DESC' | translate }}</label>
+                  <p id="projecT_DESC">{{ loadformData.projecT_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcompletioN_PERCENT" class="black bold">{{ 'ProjectsResourceName.completioN_PERCENT' | translate }}</label>
+                  <p id="completioN_PERCENT">{{ loadformData.completioN_PERCENTstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputimplementatioN_DESC" class="black bold">{{ 'ProjectsResourceName.implementatioN_DESC' | translate }}</label>
+                  <p id="implementatioN_DESC">{{ loadformData.implementatioN_DESC }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="tabbable-line boxless tabbable-reversed">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="document-details-tab" data-bs-toggle="tab" data-bs-target="#document-details" type="button" role="tab" aria-controls="document-details" aria-selected="true">
+                      <i class="fa fa-file"></i>{{ 'ProjectsResourceName.LiscReceiptLinesTitle' | translate }}
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="cheque-details-tab" data-bs-toggle="tab" data-bs-target="#cheque-details" type="button" role="tab" aria-controls="cheque-details" aria-selected="false">
+                      <i class="fa fa-address-card"></i>{{ 'ProjectsResourceName.LiscReceiptDetailsTitle' | translate }}
+                    </button>
+                  </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+                  <div class="tab-pane fade show active" id="document-details" role="tabpanel" aria-labelledby="document-details-tab">
+                    <div class="form">
+                      <div class="form-horizontal">
+                        <div class="form-body">
+                          <div class="portlet box red">
+                            <div class="portlet-body">
+                              <div id="details1" class="table-responsive tablecontainer">
+                                <app-generic-data-table [columnDefs]="columnDefsLineData"
+                                                        [rowData]="loadformLineData"
+                                                        [totalCount]="paginationLineData.totalCount"
+                                                        [pageSize]="paginationLineData.take"
+                                                        [currentPage]="paginationLineData.currentPage - 1"
+                                                        [columnHeaderMap]="columnHeaderMap"
+                                                        (pageChange)="onPageChangeLineData($event)"
+                                                        [showActionColumn]="false"
+                                                        (search)="onTableSearchLineData($event)">
+                                </app-generic-data-table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tab-pane fade" id="cheque-details" role="tabpanel" aria-labelledby="cheque-details-tab">
+                    <div class="form">
+                      <div class="form-horizontal">
+                        <div class="form-body">
+                          <div class="portlet box red">
+                            <div class="portlet-body">
+                              <div id="details2" class="table-responsive tablecontainer">
+                                <app-generic-data-table [columnDefs]="columnDefsDetailsData"
+                                                        [rowData]="loadformDetailsData"
+                                                        [totalCount]="paginationDetailsData.totalCount"
+                                                        [pageSize]="paginationDetailsData.take"
+                                                        [currentPage]="paginationDetailsData.currentPage - 1"
+                                                        [columnHeaderMap]="columnHeaderMap"
+                                                        (pageChange)="onPageChangeDetailsData($event)"
+                                                        [showActionColumn]="false"
+                                                        (search)="onTableSearchDetailsData($event)">
+                                </app-generic-data-table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

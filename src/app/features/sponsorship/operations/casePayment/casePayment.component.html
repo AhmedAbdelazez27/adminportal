@@ -98,112 +98,113 @@
 
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'CasePaymentResourceName.startDateCode' | translate }}</label>
-              <input type="date" class="form-control" [(ngModel)]="searchParams.startDateCodestr" placeholder="Select date">
+              <input type="date" class="form-control" [(ngModel)]="searchParams.startDateCodestr" placeholder="Select date" name="startDateCodestr">
             </div>
 
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'CasePaymentResourceName.endDateCode' | translate }}</label>
-              <input type="date" class="form-control" [(ngModel)]="searchParams.endDateCodestr" placeholder="Select date">
+              <input type="date" class="form-control" [(ngModel)]="searchParams.endDateCodestr" placeholder="Select date" name="endDateCodestr">
             </div>
           </div>
         </form>
 
-    <div class="d-flex gap-2 justify-content-center">
-      <button class="btn btn-outline" (click)="clear()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#5B5B5B" />
-        </svg>
-        {{ 'Common.Clear' | translate }}
-      </button>
-      <button class="btn btn-gold" (click)="onSearch()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
-        </svg>
-        {{ 'Common.Search' | translate }}
-      </button>
-      <button class="btn btn-success" (click)="printExcel()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
-        </svg>
-        {{ 'Common.PrintExcel' | translate }}
-      </button>
-    </div>
-  </div>
-  </div>
-  <app-generic-data-table [columnDefs]="columnDefs"
-                          [rowData]="loadgridData"
-                          [totalCount]="pagination.totalCount"
-                          [pageSize]="pagination.take"
-                          [currentPage]="pagination.currentPage - 1"
-                          [columnHeaderMap]="columnHeaderMap"
-                          [rowActions]="rowActions"
-                          (actionClick)="onTableAction($event)"
-                          (pageChange)="onPageChange($event)"
-                          [showActionColumn]="true"
-                          (search)="onTableSearch($event)">
-  </app-generic-data-table>
-</div>
-
-<div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="editLabel">{{ 'CasePaymentResourceName.Title' | translate }}</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="d-flex gap-2 justify-content-center">
+          <button class="btn btn-outline" (click)="clear()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#5B5B5B" />
+            </svg>
+            {{ 'Common.Clear' | translate }}
+          </button>
+          <button class="btn btn-gold" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
+            </svg>
+            {{ 'Common.Search' | translate }}
+          </button>
+          <button class="btn btn-success" (click)="printExcel()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
+            </svg>
+            {{ 'Common.PrintExcel' | translate }}
+          </button>
+        </div>
       </div>
-      <div class="modal-body">
-        <div class="border-bottom mb-4">
-          <h4 class="gold bold">{{ 'CasePaymentResourceName.Title' | translate }}</h4>
+    </div>
+    <app-generic-data-table [columnDefs]="columnDefs"
+                            [rowData]="loadgridData"
+                            [totalCount]="pagination.totalCount"
+                            [pageSize]="pagination.take"
+                            [currentPage]="pagination.currentPage - 1"
+                            [columnHeaderMap]="columnHeaderMap"
+                            [rowActions]="rowActions"
+                            (actionClick)="onTableAction($event)"
+                            (pageChange)="onPageChange($event)"
+                            [showActionColumn]="true"
+                            (search)="onTableSearch($event)">
+    </app-generic-data-table>
+  </div>
+
+  <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editLabel">{{ 'CasePaymentResourceName.Title' | translate }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="border-bottom mb-4">
+            <h4 class="gold bold">{{ 'CasePaymentResourceName.Title' | translate }}</h4>
+            <div class="row">
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputreceipT_NUMBER" class="black bold">{{ 'CasePaymentResourceName.paymenT_DESC' | translate }}</label>
+                <p>{{ loadformData.paymenT_DESC }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputreceipT_NUMBER" class="black bold">{{ 'CasePaymentResourceName.statuS_CODE_DESC' | translate }}</label>
+                <div class="status-submitted pt-0 pb-0">{{ loadformData.statuS_CODE_DESC }}</div>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputreceipT_NUMBER" class="black bold">{{ 'CasePaymentResourceName.starT_DATE' | translate }}</label>
+                <p>{{ loadformData.starT_DATEstr }}</p>
+              </div>
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputreceipT_NUMBER" class="black bold">{{ 'CasePaymentResourceName.enD_DATE' | translate }}</label>
+                <p>{{ loadformData.enD_DATEstr }}</p>
+              </div>
+            </div>
+          </div>
+          <h4 class="gold bold">{{ 'CasePaymentResourceName.HdrTitle' | translate }}</h4>
+          <app-generic-data-table [columnDefs]="columnDefsPaymentHdr"
+                                  [rowData]="loadHdrformData"
+                                  [totalCount]="paginationPaymentHdr.totalCount"
+                                  [pageSize]="paginationPaymentHdr.take"
+                                  [currentPage]="paginationPaymentHdr.currentPage - 1"
+                                  [columnHeaderMap]="columnHeaderMap"
+                                  [rowActions]="rowActions"
+                                  (actionClick)="onTableAction($event)"
+                                  (pageChange)="onPageChangePaymentHdr($event)"
+                                  [showActionColumn]="false"
+                                  (search)="onTableSearch($event)">
+          </app-generic-data-table>
+
           <div class="row">
             <div class="col-xxl-4 col-xl-6">
-              <label for="inputreceipT_NUMBER" class="black bold">{{ 'CasePaymentResourceName.paymenT_DESC' | translate }}</label>
-              <p>{{ loadformData.paymenT_DESC }}</p>
+              <label class="bold black">{{ 'CasePaymentResourceName.total1' | translate }}</label>
+              <p>{{ loadformData.amounT_AEDstr | number:'1.2-2' }}</p>
             </div>
             <div class="col-xxl-4 col-xl-6">
-              <label for="inputreceipT_NUMBER" class="black bold">{{ 'CasePaymentResourceName.statuS_CODE_DESC' | translate }}</label>
-              <div class="status-submitted pt-0 pb-0">{{ loadformData.statuS_CODE_DESC }}</div>
+              <label class="bold black">{{ 'CasePaymentResourceName.total2' | translate }}</label>
+              <p>{{ loadformData.gifT_AMOUNTstr | number:'1.2-2'}}</p>
             </div>
             <div class="col-xxl-4 col-xl-6">
-              <label for="inputreceipT_NUMBER" class="black bold">{{ 'CasePaymentResourceName.starT_DATE' | translate }}</label>
-              <p>{{ loadformData.starT_DATEstr }}</p>
-            </div>
-            <div class="col-xxl-4 col-xl-6">
-              <label for="inputreceipT_NUMBER" class="black bold">{{ 'CasePaymentResourceName.enD_DATE' | translate }}</label>
-              <p>{{ loadformData.enD_DATEstr }}</p>
+              <label class="bold black">{{ 'CasePaymentResourceName.total3' | translate }}</label>
+              <p>{{ loadformData.totalAmountstr | number:'1.2-2'  }}</p>
             </div>
           </div>
         </div>
-        <h4 class="gold bold">{{ 'CasePaymentResourceName.HdrTitle' | translate }}</h4>
-        <app-generic-data-table [columnDefs]="columnDefsPaymentHdr"
-                                [rowData]="loadHdrformData"
-                                [totalCount]="paginationPaymentHdr.totalCount"
-                                [pageSize]="paginationPaymentHdr.take"
-                                [currentPage]="paginationPaymentHdr.currentPage - 1"
-                                [columnHeaderMap]="columnHeaderMap"
-                                [rowActions]="rowActions"
-                                (actionClick)="onTableSearchPaymentHdr($event)"
-                                (pageChange)="onPageChangePaymentHdr($event)"
-                                [showActionColumn]="false"
-                                (search)="onTableSearch($event)">
-        </app-generic-data-table>
-
-        <div class="row">
-          <div class="col-xxl-4 col-xl-6">
-            <label class="bold black">{{ 'CasePaymentResourceName.total1' | translate }}</label>
-            <p>{{ loadformData.amounT_AEDstr | number:'1.2-2' }}</p>
-          </div>
-          <div class="col-xxl-4 col-xl-6">
-            <label class="bold black">{{ 'CasePaymentResourceName.total2' | translate }}</label>
-            <p>{{ loadformData.gifT_AMOUNTstr | number:'1.2-2'}}</p>
-          </div>
-          <div class="col-xxl-4 col-xl-6">
-            <label class="bold black">{{ 'CasePaymentResourceName.total3' | translate }}</label>
-            <p>{{ loadformData.totalAmountstr | number:'1.2-2'  }}</p>
-          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

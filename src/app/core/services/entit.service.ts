@@ -61,10 +61,10 @@ export class EntityService {
     return this.http.delete<void>(`${this.BASE_URL}/${id}`);
   }
 
-    GetSelect2List(skip: number=0, take: number=2000): Observable<any> {
-        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Entity.GetSelect2List}`, { take,skip });
-    }
-
-
-
+  GetSelect2List(skip: number = 0, take: number = 2000): Observable<any> {
+    return this.http.post(
+      `${this.BASE_URL}${ApiEndpoints.Entity.GetSelect2List}`,
+      { take, skip }
+    );
+  }
 }

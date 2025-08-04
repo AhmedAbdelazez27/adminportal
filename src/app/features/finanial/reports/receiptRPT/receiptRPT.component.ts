@@ -65,12 +65,12 @@ export class receiptRPTComponent {
   }
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
-    ];
-
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+      });
+    this.rowActions = [];
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
       .subscribe(() => this.fetchentitySelect2())
@@ -218,15 +218,7 @@ export class receiptRPTComponent {
     ];
   }
 
-  onTableAction(event: { action: string, row: any }) {
-    if (event.action === 'onViewInfo') {
-      if (this.genericTable && this.genericTable.onViewInfo) {
-        this.genericTable.onViewInfo(event.row);
-      }
-    }
-    if (event.action === 'edit') {
-    }
-  }
+  onTableAction(event: { action: string, row: any }) {}
 
   printExcel(): void {
     if (!this.searchParams.entityId) {

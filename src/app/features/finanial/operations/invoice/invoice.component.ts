@@ -34,8 +34,10 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   searchInput$ = new Subject<string>();
   translatedHeaders: string[] = [];
   pagination = new Pagination();
+  paginationtrListData = new Pagination();
 
   columnDefs: ColDef[] = [];
+  columnDefstrListData: ColDef[] = [];
   gridOptions: GridOptions = { pagination: false };
   searchText: string = '';
   columnHeaderMap: { [key: string]: string } = {};
@@ -85,11 +87,15 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
-    ];
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+        this.rowActions = [
+          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+        ];
+      });
+    
 
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -252,6 +258,19 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
+  tr_Id: string = '';
+  entitY_ID: string = '';
+
+  onPageChangetrListData(event: { pageNumber: number; pageSize: number }): void {
+    this.paginationtrListData.currentPage = event.pageNumber;
+    this.paginationtrListData.take = event.pageSize;
+    this.getFormDatabyId(event, this.tr_Id, this.entitY_ID);
+  }
+
+  onTableSearchtrListData(text: string): void {
+    this.searchText = text;
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationtrListData.take }, this.tr_Id, this.entitY_ID);
+  }
   private cleanFilterObject(obj: any): any {
     const cleaned = { ...obj };
     Object.keys(cleaned).forEach((key) => {
@@ -264,9 +283,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   clear(): void {
     this.searchParams = new InvoiceFilter();
-    this.selectedentitySelect2Obj = null;
-    this.selectedvendorSelect2Obj = null;
-    this.selectedinvoiceTypeSelect2Obj = null;
     this.loadgridData = [];
     if (this.filterForm) this.filterForm.resetForm();
   }
@@ -305,7 +321,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       });
   }
 
-  getFormDatabyId(tr_Id: string, entitY_ID: string): void {
+
+  getFormDatabyId(event: { pageNumber: number; pageSize: number }, tr_Id: string, entitY_ID: string): void {
     const params: FilterInvoiceByIdDto = {
       entityId: entitY_ID,
       tr_Id: tr_Id
@@ -321,6 +338,9 @@ export class InvoiceComponent implements OnInit, OnDestroy {
           this.loadformData = Array.isArray(result.invoiceheaderdata)
             ? result.invoiceheaderdata[0] ?? ({} as InvoiceHeader)
             : result.invoiceheaderdata;
+
+          this.paginationtrListData.totalCount = result?.invoiceTrdata.length || 0;
+
           const modalElement = document.getElementById('viewdetails');;
           if (modalElement) {
             const modal = new bootstrap.Modal(modalElement);
@@ -350,13 +370,27 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       { headerName: this.translate.instant('InvoiceHdResourceName.hD_TYPE_DESC'), field: 'hD_TYPE_DESC', width: 200 },
       { headerName: this.translate.instant('InvoiceHdResourceName.totalVal'), field: 'totalValstr', width: 200 },
     ];
+
+    this.columnDefstrListData = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.paginationtrListData.currentPage - 1) * this.paginationtrListData.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('InvoiceHdResourceName.accountnumber'), field: 'accountnumber', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.accountNameAr'), field: 'accountNameAr', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.tR_ITEM'), field: 'tR_ITEM', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.tR_TOTL'), field: 'tR_TOTL', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.vaT_AMOUNT'), field: 'vaT_AMOUNT', width: 200 },
+      { headerName: this.translate.instant('InvoiceHdResourceName.totla'), field: 'totla', width: 200 },
+    ];
   }
 
   onTableAction(event: { action: string, row: any }) {
     if (event.action === 'onViewInfo') {
-      this.getFormDatabyId(event.row.hd_id, event.row.entitY_ID);
-    }
-    if (event.action === 'edit') {
+      this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationtrListData.take }, event.row.hd_id, event.row.entitY_ID);
     }
   }
 
@@ -375,13 +409,13 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+          const totalCount = initialResponse[0]?.rowsCount || initialResponse?.data?.length || 0;
 
           this.apiService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
-                const data = response?.data || [];
+                const data = response || [];
 
                 const reportConfig: reportPrintConfig = {
                   title: this.translate.instant('InvoiceHdResourceName.Title'),
@@ -390,7 +424,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
                   fields: [
                     { label: this.translate.instant('InvoiceHdResourceName.EntityId'), value: this.searchParams.entityIdstr },
                     { label: this.translate.instant('InvoiceHdResourceName.invoiceNo'), value: this.searchParams.invoiceNo },
-                    { label: this.translate.instant('InvoiceHdResourceName.invoiceDatestr'), value: this.searchParams.invoiceDatestr },
+                    { label: this.translate.instant('InvoiceHdResourceName.invoiceDate'), value: this.searchParams.invoiceDatestr },
                     { label: this.translate.instant('InvoiceHdResourceName.vendorNo'), value: this.searchParams.vendorNo },
                     { label: this.translate.instant('InvoiceHdResourceName.vendorName'), value: this.searchParams.vendorNamestr },
                     { label: this.translate.instant('InvoiceHdResourceName.type'), value: this.searchParams.typestr },
@@ -410,7 +444,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
                     rowNo: index + 1
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['receiptAmountstr', 'chequeAmountstr', 'cashAmountstr', 'administrativeAmountstr']
+                  totalKeys: ['totalValstr']
                 };
 
                 this.openStandardReportService.openStandardReportExcel(reportConfig);
@@ -425,12 +459,5 @@ export class InvoiceComponent implements OnInit, OnDestroy {
           this.spinnerService.hide();
         }
       });
-  }
-
-  onInvoiceRowClicked(event: any): void {
-    const data = event?.data;
-    if (data) {
-      this.getFormDatabyId(data.hd_id ?? '', data.entitY_ID ?? '');
-    }
   }
 }

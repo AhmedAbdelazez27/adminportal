@@ -18,6 +18,10 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/adminportal",
+            "allowedCommonJsDependencies": [
+              "highcharts",
+              "leaflet"
+            ],
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -63,8 +67,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2MB",
-                  "maximumError": "3MB"
+                  "maximumWarning": "4MB",
+                  "maximumError": "5MB"
                 },
                 {
                   "type": "anyComponentStyle",

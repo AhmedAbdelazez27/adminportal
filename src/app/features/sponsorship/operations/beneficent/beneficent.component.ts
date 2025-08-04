@@ -15,6 +15,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { filterBeneficentDto, filterBeneficentByIdDto, beneficentDto, loadBeneficentNameDto } from '../../../../core/dtos/sponsorship/operations/beneficent.dto';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-beneficent',
@@ -78,11 +79,15 @@ export class BeneficentComponent {
   }
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
-    ];
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+        this.rowActions = [
+          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+        ];
+      });
+ 
 
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -238,7 +243,7 @@ export class BeneficentComponent {
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.loadgridData = response || [];
-          this.pagination = { ...this.pagination, totalCount: response.totalCount || 0 };
+          this.pagination.totalCount = response[0]?.rowsCount || 0;
           this.spinnerService.hide();
         },
         error: () => {
@@ -260,7 +265,6 @@ export class BeneficentComponent {
   clear(): void {
     this.searchParams = new filterBeneficentDto();
     this.loadgridData = [];
-    this.selectedentitySelect2Obj = null;
     if (this.filterForm) {
       this.filterForm.resetForm();
     }
@@ -281,6 +285,13 @@ export class BeneficentComponent {
           this.loadformData = Array.isArray(result.beneficentHeaderData)
             ? result.beneficentHeaderData[0] ?? ({} as beneficentDto)
             : result.beneficentHeaderData;
+
+          const modalElement = document.getElementById('viewdetails');
+          if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+          };
+
           this.spinnerService.hide();
         },
         error: (err) => {
@@ -309,13 +320,10 @@ export class BeneficentComponent {
 
   onTableAction(event: { action: string, row: any }) {
     if (event.action === 'onViewInfo') {
-      if (this.genericTable && this.genericTable.onViewInfo) {
-        this.genericTable.onViewInfo(event.row);
-      }
-    }
-    if (event.action === 'edit') {
+      this.getFormDatabyId(event.row.beneficenT_ID, event.row.entitY_ID);
     }
   }
+
 
   printExcel(): void {
     if (!this.searchParams.entityId) {

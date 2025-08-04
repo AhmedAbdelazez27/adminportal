@@ -5,15 +5,15 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { ColDef, GridOptions } from 'ag-grid-community';
+import { GenericDataTableComponent } from '../../../../../../shared/generic-data-table/generic-data-table.component';
 import { SpinnerService } from '../../../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../../../core/services/openStandardReportService.service';
 import { FndLookUpValuesSelect2RequestDto, Pagination, Select2RequestDto, SelectdropdownResult, SelectdropdownResultResults, reportPrintConfig } from '../../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2Service } from '../../../../../core/services/Select2.service';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import { FilterApPaymentsTransactionHDRDto, FilterApPaymentsTransactionHDRByIdDto, ApPaymentsTransactionHDRDto } from '../../../../../core/dtos/FinancialDtos/OperationDtos/ApPaymentsTransactionHDR.dto';
 import { ApPaymentsTransactionHDRService } from '../../../../../core/services/Financial/Operation/ApPaymentsTransactionHDR.service';
-import { ColDef, GridOptions } from 'ag-grid-community';
-import { GenericDataTableComponent } from '../../../../../../shared/generic-data-table/generic-data-table.component';
 
 declare var bootstrap: any;
 
@@ -85,11 +85,15 @@ export class ApPaymentsTransactionHDRComponent {
   }
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
-    ];
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+        this.rowActions = [
+          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+        ];
+      });
+   
 
     this.vendorSearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -264,13 +268,7 @@ export class ApPaymentsTransactionHDRComponent {
 
   clear(): void {
     this.searchParams = new FilterApPaymentsTransactionHDRDto();
-
-    this.selectedentitySelect2Obj = null;
-    this.selectedvendorSelect2Obj = null;
-    this.selectpaymentTypeSelect2Obj = null;
-
     this.loadgridData = [];
-
     if (this.filterForm) {
       this.filterForm.resetForm();
     }
@@ -379,13 +377,13 @@ export class ApPaymentsTransactionHDRComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+          const totalCount = initialResponse[0]?.rowsCount || initialResponse?.data?.length || 0;
 
           this.apPaymentsTransactionHDRService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
-                const data = response?.data || [];
+                const data = response || [];
 
                 const reportConfig: reportPrintConfig = {
                   title: this.translate.instant('ApPaymentsTransactionHDRResourceName.Title'),
@@ -413,7 +411,7 @@ export class ApPaymentsTransactionHDRComponent {
                     rowNo: index + 1
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['receiptAmountstr', 'chequeAmountstr', 'cashAmountstr', 'administrativeAmountstr']
+                  totalKeys: ['paymenT_AMOUNTstr']
                 };
 
                 this.openStandardReportService.openStandardReportExcel(reportConfig);

@@ -32,8 +32,13 @@ export class PaymentVoucherComponent implements OnInit {
   searchInput$ = new Subject<string>();
   translatedHeaders: string[] = [];
   pagination = new Pagination();
+  paginationDetailData = new Pagination();
+  paginationLineData = new Pagination();
 
   columnDefs: ColDef[] = [];
+  columnDefsDetailData: ColDef[] = [];
+  columnDefsLineData: ColDef[] = [];
+
   gridOptions: GridOptions = { pagination: false };
   searchText: string = '';
   columnHeaderMap: { [key: string]: string } = {};
@@ -76,11 +81,15 @@ export class PaymentVoucherComponent implements OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.buildColumnDefs();
-    this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.Action'), icon: 'fas fa-edit', action: 'edit' },
-    ];
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.buildColumnDefs();
+        this.rowActions = [
+          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+        ];
+      });
+  
 
     this.beneficiaryNameSearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -249,6 +258,35 @@ export class PaymentVoucherComponent implements OnInit {
   }
 
 
+  onPageChangeDetailData(event: { pageNumber: number; pageSize: number }): void {
+    this.paginationDetailData.currentPage = event.pageNumber;
+    this.paginationDetailData.take = event.pageSize;
+    const paymentId = this.searchParamsById.paymentId || '';
+    const entityId = this.searchParamsById.entityId || '';
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationDetailData.take }, paymentId, entityId);  }
+
+  onTableSearchDetailData(text: string): void {
+    this.searchText = text;
+    const paymentId = this.searchParamsById.paymentId || '';
+    const entityId = this.searchParamsById.entityId || '';
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationDetailData.take }, paymentId, entityId);  }
+
+
+
+  onPageChangeLineData(event: { pageNumber: number; pageSize: number }): void {
+    this.paginationLineData.currentPage = event.pageNumber;
+    this.paginationLineData.take = event.pageSize;
+    const paymentId = this.searchParamsById.paymentId || '';
+    const entityId = this.searchParamsById.entityId || '';
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationLineData.take }, paymentId, entityId);  }
+
+  onTableSearchLineData(text: string): void {
+    this.searchText = text;
+    const paymentId = this.searchParamsById.paymentId || '';
+    const entityId = this.searchParamsById.entityId || '';
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationLineData.take }, paymentId, entityId);
+  }
+
   private cleanFilterObject(obj: any): any {
     const cleaned = { ...obj };
     Object.keys(cleaned).forEach((key) => {
@@ -261,13 +299,7 @@ export class PaymentVoucherComponent implements OnInit {
 
   clear(): void {
     this.searchParams = new FilterpaymentvoucherDto();
-
-    this.selectedentitySelect2Obj = null;
-    this.selectedbeneficiaryNameSelect2Obj = null;
-    this.selectedstatusSelect2Obj = null;
-
     this.loadgridData = [];
-
     if (this.filterForm) {
       this.filterForm.resetForm();
     }
@@ -306,7 +338,9 @@ export class PaymentVoucherComponent implements OnInit {
       });
   }
 
-  getFormDatabyId(misC_PAYMENT_ID: string, entitY_ID: string): void {
+
+  getFormDatabyId(event: { pageNumber: number; pageSize: number }, misC_PAYMENT_ID: string, entitY_ID: string): void {
+
     const params: FilterpaymentvoucherByIdDto = {
       entityId: entitY_ID,
       paymentId: misC_PAYMENT_ID
@@ -323,6 +357,10 @@ export class PaymentVoucherComponent implements OnInit {
         this.loadformData = Array.isArray(result.mischeaderdata)
           ? result.mischeaderdata[0] ?? ({} as paymentvoucherDto)
           : result.mischeaderdata;
+
+        this.paginationDetailData.totalCount = result.miscdetaildata.length || 0;
+        this.paginationLineData.totalCount = result.misclinedata.length || 0;
+
         const modalElement = document.getElementById('viewdetails');;
         if (modalElement) {
           const modal = new bootstrap.Modal(modalElement);
@@ -346,19 +384,48 @@ export class PaymentVoucherComponent implements OnInit {
         width: 60,
         colId: 'serialNumber'
       },
-      { headerName: this.translate.instant('InvoiceHdResourceName.paymenT_NUMBER'), field: 'paymenT_NUMBER', width: 200 },
-      { headerName: this.translate.instant('InvoiceHdResourceName.beneficiarY_NAME'), field: 'beneficiarY_NAME', width: 200 },
-      { headerName: this.translate.instant('InvoiceHdResourceName.misC_PAYMENT_DATE'), field: 'misC_PAYMENT_DATEstr', width: 200 },
-      { headerName: this.translate.instant('InvoiceHdResourceName.amount'), field: 'amountstr', width: 200 },
-      { headerName: this.translate.instant('InvoiceHdResourceName.status'), field: 'posted', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.paymenT_NUMBER'), field: 'paymenT_NUMBER', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.beneficiarY_NAME'), field: 'beneficiarY_NAME', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.misC_PAYMENT_DATE'), field: 'misC_PAYMENT_DATEstr', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.amount'), field: 'amount', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.status'), field: 'posted', width: 200 },
+    ];
+
+    this.columnDefsLineData = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.paginationLineData.currentPage - 1) * this.paginationLineData.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.accountnumber'), field: 'accountnumber', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.accountNameAr'), field: 'accountNameAr', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.tR_TAX'), field: 'tR_TAX', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.taX_PERCENT'), field: 'taX_PERCENT', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.totaPercent'), field: 'totaPercentstr', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.totalAmount'), field: 'totalAmountstr', width: 200 },
+    ];
+
+    this.columnDefsDetailData = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.paginationDetailData.currentPage - 1) * this.paginationDetailData.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.checK_NUMBER'), field: 'checK_NUMBER', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.maturitY_DATE'), field: 'maturitY_DATE', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.beneficiarY_NAME'), field: 'beneficiarY_NAME', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.notes'), field: 'notes', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.amount'), field: 'amounTstr', width: 200 },
     ];
   }
 
   onTableAction(event: { action: string, row: any }) {
     if (event.action === 'onViewInfo') {
-      this.getFormDatabyId(event.row.misC_PAYMENT_ID, event.row.entitY_ID);
-    }
-    if (event.action === 'edit') {
+      this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationDetailData.take || this.paginationLineData.take }, event.row.misC_PAYMENT_ID, event.row.entitY_ID);
     }
   }
 
@@ -378,13 +445,13 @@ export class PaymentVoucherComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+          const totalCount = initialResponse[0]?.rowsCount || initialResponse?.data?.length || 0;
 
           this.apiService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
-                const data = response?.data || [];
+                const data = response || [];
 
                 const reportConfig: reportPrintConfig = {
                   title: this.translate.instant('PaymentVoucherResourceName.Title'),
@@ -411,7 +478,7 @@ export class PaymentVoucherComponent implements OnInit {
                     rowNo: index + 1
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['receiptAmountstr', 'chequeAmountstr', 'cashAmountstr', 'administrativeAmountstr']
+                  totalKeys: ['amountstr']
                 };
 
                 this.openStandardReportService.openStandardReportExcel(reportConfig);

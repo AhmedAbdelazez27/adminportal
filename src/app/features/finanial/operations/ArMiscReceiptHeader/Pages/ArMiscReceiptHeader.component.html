@@ -213,113 +213,45 @@
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-md-12">
-              <div class="tabbable-line boxless tabbable-reversed">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="document-details-tab" data-bs-toggle="tab" data-bs-target="#document-details" type="button" role="tab" aria-controls="document-details" aria-selected="true">
-                      <i class="fa fa-file"></i>{{ 'ArMiscReceiptHeaderResourceName.LiscReceiptLinesTitle' | translate }}
-                    </button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="cheque-details-tab" data-bs-toggle="tab" data-bs-target="#cheque-details" type="button" role="tab" aria-controls="cheque-details" aria-selected="false">
-                      <i class="fa fa-address-card"></i>{{ 'ArMiscReceiptHeaderResourceName.LiscReceiptDetailsTitle' | translate }}
-                    </button>
-                  </li>
-                </ul>
+          <ul class="nav nav-tabs mb-3" id="voucherTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active gold bold" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-tab-pane" type="button" role="tab">
+                {{ 'ArMiscReceiptHeaderResourceName.LiscReceiptLinesTitle' | translate }}
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link gold bold" id="check-tab" data-bs-toggle="tab" data-bs-target="#check-tab-pane" type="button" role="tab">
+                {{  'ArMiscReceiptHeaderResourceName.LiscReceiptDetailsTitle' | translate }}
+              </button>
+            </li>
+          </ul>
 
-                <div class="tab-content" id="myTabContent">
-                  <div class="tab-pane fade show active" id="document-details" role="tabpanel" aria-labelledby="document-details-tab">
-                    <!-- Document Details Table -->
-                    <div class="form">
-                      <div class="form-horizontal">
-                        <div class="form-body">
-                          <div class="portlet box red">
-                            <div class="portlet-body">
-                              <div id="details1" class="table-responsive tablecontainer">
-                                <table class="table new-table mb-3">
-                                  <thead>
-                                    <tr>
-                                      <th>#</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.RECEIPT_TYPE_DESC' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.Accountnumber' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.AccountNameAr' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.PROJECT_NUMBER' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.BENEFICENTNAME' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.CASENAME' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.MISC_RECEIPT_AMOUNT' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.ADMINISTRATIVE_PERCENT' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.TotaPercent' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.TotalAmount' | translate }}</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr *ngFor="let receiptLineData of loadformLineData; let i = index">
-                                      <td>{{ i + 1 }}</td>
-                                      <td>{{ receiptLineData.receipT_TYPE_DESC }}</td>
-                                      <td>{{ receiptLineData.accountnumber }}</td>
-                                      <td>{{ receiptLineData.accountNameAr }}</td>
-                                      <td>{{ receiptLineData.projecT_NUMBER }}</td>
-                                      <td>{{ receiptLineData.beneficentname }}</td>
-                                      <td>{{ receiptLineData.casename }}</td>
-                                      <td>{{ receiptLineData.misC_RECEIPT_AMOUNTstr }}</td>
-                                      <td>{{ receiptLineData.administrativE_PERCENTstr }}</td>
-                                      <td>{{ receiptLineData.totaPercentstr }}</td>
-                                      <td>{{ receiptLineData.totalAmountstr }}</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+          <div class="tab-content" id="voucherTabsContent">
+            <div class="tab-pane fade show active" id="details-tab-pane" role="tabpanel">
+              <app-generic-data-table [columnDefs]="columnDefsLineData"
+                                      [rowData]="loadformLineData"
+                                      [totalCount]="paginationLineData.totalCount"
+                                      [pageSize]="paginationLineData.take"
+                                      [currentPage]="paginationLineData.currentPage - 1"
+                                      (pageChange)="onPageChangeLineData($event)"
+                                      [showActionColumn]="false"
+                                      (search)="onTableSearchLineData($event)">
+              </app-generic-data-table>
+            </div>
 
-                  <div class="tab-pane fade" id="cheque-details" role="tabpanel" aria-labelledby="cheque-details-tab">
-                    <!-- Cheque Details Table -->
-                    <div class="form">
-                      <div class="form-horizontal">
-                        <div class="form-body">
-                          <div class="portlet box red">
-                            <div class="portlet-body">
-                              <div id="details2" class="table-responsive tablecontainer">
-                                <table class="table new-table mb-3">
-                                  <thead>
-                                    <tr>
-                                      <th>#</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.CHECK_NUMBER' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.BANK_NAME' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.MATURITY_DATE' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.AMOUNT' | translate }}</th>
-                                      <th>{{ 'ArMiscReceiptHeaderResourceName.NOTES' | translate }}</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr *ngFor="let receiptDetailsData of loadformDetailsData; let i = index">
-                                      <td>{{ i + 1 }}</td>
-                                      <td>{{ receiptDetailsData.checK_NUMBER }}</td>
-                                      <td>{{ receiptDetailsData.banK_NAME }}</td>
-                                      <td>{{ receiptDetailsData.maturitY_DATEstr }}</td>
-                                      <td>{{ receiptDetailsData.amounTstr }}</td>
-                                      <td>{{ receiptDetailsData.notes }}</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div class="tab-pane fade" id="check-tab-pane" role="tabpanel">
+              <app-generic-data-table [columnDefs]="columnDefsDetailData"
+                                      [rowData]="loadformDetailsData"
+                                      [totalCount]="paginationDetailData.totalCount"
+                                      [pageSize]="paginationDetailData.take"
+                                      [currentPage]="paginationDetailData.currentPage - 1"
+                                      (pageChange)="onPageChangeDetailData($event)"
+                                      [showActionColumn]="false"
+                                      (search)="onTableSearchDetailData($event)">
+              </app-generic-data-table>
             </div>
           </div>
-
+       
           <div class="modal-footer">
             <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
           </div>

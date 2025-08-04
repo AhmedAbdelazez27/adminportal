@@ -57,16 +57,25 @@ export class ApiEndpoints {
 
   static readonly Entity = {
     Base: '/Entity',
-    GetSelect2List : '/GetSelect2List',
-     GetAll: '/Entity/GetAll',
+    GetSelect2List: '/GetSelect2List',
+    GetAll: '/Entity/GetAll',
     GetById: (id: string) => `/Entity/${id}`,
   };
 
-    static readonly EntityInfo = {
-    Base: '/Lookup/EntityInfo'
+  static readonly AvailableNumber = {
+    Base: '/AvailableNumber',
+    Create: '/Create',
+    Update: '/Update',
+    GetAll: '/GetAll',
+    GetById: (id: number) => `/GetById/${id}`,
+    Delete: (id: number) => `/Delete/${id}`,
+  };
+
+  static readonly EntityInfo = {
+    Base: '/Lookup/EntityInfo',
   };
   static readonly UserStatus = {
-    Base: '/Lookup/UserStatus'
+    Base: '/Lookup/UserStatus',
   };
 
 
@@ -123,13 +132,67 @@ export class ApiEndpoints {
     GetTotalBenDonationsRptEndPoint: '/GetTotalBenDonationsRpt',
     GetGetGlTrialBalancesRptEndPoint: '/GetGlTrialBalancesRpt',
     GetGeneralBalanceSheetRptEndPoint: '/GetGeneralBalanceSheetRpt',
-  }
+  };
   static readonly beneficent = {
     Base: '/SpBeneficents',
     GetAll: '/GetAll',
     GetDetailById: '/Get',
-    GetById: (beneficentId: string, entityId: string) => `/GetCasesSearch/${beneficentId}/${entityId}`,
+    GetById: (beneficentId: string, entityId: string) =>
+      `/GetCasesSearch/${beneficentId}/${entityId}`,
   };
+
+  static readonly Attachments = {
+    Base: '/Attachments',
+    GetAll: '/GetAll',
+    GetById: (id: number) => `/${id}`,
+    Create: '',
+    Update: '/Update',
+    Delete: (id: number) => `/Delete/${id}`,
+    SaveFile: '/SaveFile',
+    SaveFiles: '/files',
+    DeleteFile: (id: number) => `/file/${id}`,
+    GetByMasterId: (masterId: number, masterType: number) =>
+      `/${masterId}/${masterType}`,
+    GetListByMasterId: (masterId: number, masterType: number) =>
+      `/list/${masterId}/${masterType}`,
+    GetListByMasterIds: '/list/multiple',
+  };
+
+  static readonly AttachmentsConfig = {
+    Base: '/AttachmentsConfig',
+    GetAll: '/GetAll',
+    GetById: (id: number) => `/${id}`,
+    Create: '/Create',
+    Update: '/Update',
+    Delete: (id: number) => `/Delete/${id}`,
+  };
+
+  static readonly AttachmentsConfigType = {
+    Base: '/Lookup/AttachmentsConfigType',
+  };
+
+  static readonly LocationType = {
+    Base: '/Lookup/LocationType',
+  };
+
+  static readonly Location = {
+    Base: '/Location',
+    Create: '/Create',
+    GetAll: '/GetAll',
+    GetById: (id: number) => `/Get/${id}`,
+    Update: '/Update',
+    Delete: (id: number) => `/Delete/${id}`,
+    Select2: '/Select2',
+    CheckAvailable: '/CheckAvailable',
+  };
+  static readonly SponsorshipReports = {
+    Base: '/GuaranteesReports',
+    GetBeneficentsRptEndPoint: '/GetBeneficentsRpt',
+    GetCaseSearchRptEndPoint: '/GetCaseSearchRpt',
+    GetBenifcientTotalRptEndPoint: '/GetBenifcientTotalRpt',
+    GetCaseAidEntitiesRptEndPoint: '/GetCaseAidEntitiesRpt',
+    GetCaseSearchListRptEndPoint: '/GetCaseSearchListRpt',
+  }
 
   static readonly SpCasesPayment = {
     Base: '/SpCasesPayment',
@@ -146,6 +209,69 @@ export class ApiEndpoints {
     GetContractCasesById: (contractId: string, entityId: string) => `/Get/${contractId}/${entityId}`,
   };
 
+  static readonly AidRequest = {
+    Base: '/AidRequest',
+    AidRequestsZakatBase: '/AidRequestsZakat',
+    AidRequestsStudiesBase: '/AidRequestsStudies',
+    QuotationHeaderBase: '/QuotationHeader',
+    GetAll: '/GetAll',
+    GetShowDetailById: (caseCode: string, entityId: string) => `/GetPortaCAidRequest/${caseCode}/${entityId}`,
+    GetZakatStudyDetailById: (headerId: string, entityId: string) => `/GetAidRequestsZakat/${headerId}/${entityId}`,
+    GetAidRequestsStudyDetailById: (headerId: string, entityId: string) => `/GetAidRequestsStudy/${headerId}/${entityId}`,
+    GetQuotationHeaderDetailById: (headerId: string, entityId: string) => `/GetQuotationHeader/${headerId}/${entityId}`,
+  };
+
+    static readonly SocialCasesReports = {
+        Base: '/SocialCasesReports',
+        GetOrdersListRptEndPoint: '/GetOrdersListRpt',
+        GetCasesEntitiesRptEndPoint: '/GetCasesEntitiesRpt',
+        GetCaseHelpRptEndPoint: '/GetCaseHelpRpt',
+    };
+
+  static readonly caseSearch = {
+    Base: '/SpCases',
+    GetAll: '/GetAll',
+    GetCaseHistoryDetailBase: '/SpCasesHistory',
+    GetCasePaymentHdrDetailBase: '/SpCasesPaymentHdr',
+    GetContractDetailBase: '/SpContractCases',
+
+    GetById: (caseId: string, entityId: string) => `/Get/${caseId}/${entityId}`,
+    GetCaseHistoryDetailsById: (caseId: string, entityId: string) => `/GetCasesHistory/${caseId}/${entityId}`,
+    GetCasePaymentHdrDetailsById: (caseId: string, entityId: string) => `/Get/${caseId}/${entityId}`,
+    GetContractDetailById: (contractId: string, entityId: string) => `/GetSpContract/${contractId}/${entityId}`,
+    GetContractCasesDetailById: (contractId: string, entityId: string) => `/Get/${contractId}/${entityId}`,
+  };
+
+  static readonly ServiceRequestsReports = {
+    Base: '/ServiceRequestsReports',
+    GetServiceRequestsDetailsRptEndPoint: '/GetServiceRequestsDetailsRpt',
+    GetTotalServiceRequestsRptEndPoint: '/GetTotalServiceRequestsRpt',
+};
+
+ static readonly Regions = {
+    Base: '/Regions',
+    Create: '/Create',
+    GetAll: '/GetAll',
+    GetById: (id: number) => `/Get/${id}`,
+    Update: '/Update',
+    Delete: (id: number) => `/Delete/${id}`,
+    Select2: '/Select2',
+};
+
+    static readonly ProjectReports = {
+        Base: '/ProjectReports',
+        GetProjectListRptEndPoint: '/GetProjectListRpt ',
+    };
+
+    static readonly ScProject = {
+        Base: '/ScProject',
+        GetAll: '/GetAllProject',
+        GetDetailsByIdBase: '/ProjectsHdr',
+        GetDetailsById: (projectId: string, entityId: string) => `/GetProjectHeader/${projectId}/${entityId}`,
+        GetRecieptProjectsDetailsByIdBase: '/ArMiscReciptHeader',
+        GetRecieptProjectsDetailsById: (projectId: string, entityId: string) => `/GetMiscRecieptProjects/${projectId}/${entityId}`,
+        GetProjectImplement: (projectId: string, entityId: string) => `/CpProjectImplement/${projectId}/${entityId}`,
+    };
     static readonly Charts = {
     Base: '/Charts',
     RevenueAndExpenses : '/RevenueAndExpenses'

@@ -5,11 +5,20 @@ export class FndLookUpValuesSelect2RequestDto {
   orderByValue?: string | null = null;
 }
 
+export class FndLookUpValuesSelect2RequestbyIdDto {
+  totalCount?: number;
+  entityId?: string;
+  skip = 0;
+  take = 10;
+  searchValue?: string | null;
+  orderByValue?: string | null = null;
+}
+
 export class Select2RequestDto {
   searchValue?: string | null = null;
   skip: number = 0;
-  take: number = 10;
-  loader?:boolean
+  take: number = 999;
+  orderByValue?: string | null = null;
 }
 
 export class Selectdropdown {
