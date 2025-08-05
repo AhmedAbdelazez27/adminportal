@@ -274,6 +274,8 @@ export class ApiEndpoints {
     };
     static readonly Charts = {
     Base: '/Charts',
-    RevenueAndExpenses : '/RevenueAndExpenses'
+    RevenueAndExpenses : '/RevenueAndExpenses',
+    GetRevenueComparison : '/GetRevenueComparison',
+    GetExpensesComparison : '/GetExpensesComparison'
   };
 }

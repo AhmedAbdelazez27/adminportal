@@ -119,7 +119,6 @@
       "FAIL": "فشل في حذف الدور"
     }
   },
-
   "NAME": "الاسم",
   "ENTER_NAME": "ادخل الاسم",
   "NAME_REQUIRED": "الاسم مطلوب",
@@ -187,7 +186,6 @@
   "PASSWORDS_MATCH": "كلمتا المرور متطابقتان!",
   "ENTITIES_ASSIGNED": "تم تعيين الجمعيات بنجاح.",
   "ENTITIES_ASSIGN_FAILED": "فشل في تعيين الجمعيات.",
-
   "Common": {
     "Action": "العمليات",
     "Clear": "مسح",
@@ -202,7 +200,6 @@
     "Print": " طباعه",
     "Required": "هذا الحقل مطلوب"
   },
-
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "اسم الجمعية",
     "DocumentNumber": "رقم السند",
@@ -245,7 +242,6 @@
     "NoData": "لا توجد بيانات متاحة للعرض,",
     "SearchTitle": "بحث فى عمليات الصرف"
   },
-
   "ApPaymentsTransactionHDRResourceName": {
     "EntityId": "اسم الجمعية",
     "PaymentNumber": "رقم السند",
@@ -261,7 +257,6 @@
     "Notes": "ملاحظات",
     "Title": "تفاصيل عمليات الصرف"
   },
-
   "InvoiceHdResourceName": {
     "Title": "الفواتير",
     "TrTitle": " تفاصيل الفاتوره",
@@ -290,7 +285,6 @@
     "total_Amount": "اجمالى المبلغ",
     "total_TR": "اجمالى الضريبه"
   },
-
   "FinancialReportResourceName": {
     "catchReceiptRpt_Title": "سندات القبض",
     "generalLJournalRpt_Title": "كشف حركه حساب",
@@ -319,7 +313,6 @@
     "income": "قائمه الدخل",
     "vendorId": "اسم المورد",
     "DonatorId": "اسم المحسن",
-
     "bankAccountName": "اسم البنك",
     "beneficiaryName": "اسم المستفيد",
     "notes": "ملاحظات",
@@ -366,7 +359,6 @@
     "miscReceiptAmount": "القيمه",
     "administrative": "القيمه الاداريه"
   },
-
   "CORECT_EMAIL": "الرجاء إدخال بريد إلكتروني صحيح",
   "OTP": {
     "VERIFY_SUCCESS": "تم التحقق من OTP بنجاح!",
@@ -376,7 +368,6 @@
   "ENTER_NEW_PASSWORD": "أدخل كلمة المرور الجديدة",
   "PASSWORD_GUIDELINES": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل وأن تحتوي على حرف خاص.",
   "CONFIRM": "تأكيد",
-
   "PaymentVoucherResourceName": {
     "Title": "سندات صرف",
     "PaymentDetailTitle": " تفاصيل الشيك",
@@ -410,7 +401,6 @@
     "accountNameEn": " اسم الحساب ",
     "accountNameAr": " اسم الحساب "
   },
-
   "vendorResourceName": {
     "entityId": "اسم الجمعية",
     "vendorName": "اسم المورد",
@@ -426,7 +416,6 @@
     "mobile": "موبايل",
     "workTEL": "هاتف العمل"
   },
-
   "glJEResourceName": {
     "title": "القيود",
     "entityId": "اسم الجمعية",
@@ -452,7 +441,6 @@
     "totalDebit": "اجمالى دائن",
     "totalCredit": "اجمالى مدين"
   },
-
   "beneficentResourceName": {
     "Title": "بحث فى المتبرعين,",
     "EntityId": "اسم الجمعية",
@@ -475,7 +463,6 @@
     "gender": "الجنس",
     "city": "الإمارة"
   },
-
   "CasePaymentResourceName": {
     "Title": "تفاصيل الصرفيات ",
     "HdrTitle": "التفاصيل ",
@@ -503,7 +490,6 @@
     "total1": "اجمالى الكفاله",
     "total2": "اجمالى الهديه",
     "total3": "الاجمالى",
-
     "casE_PAYMENT_CODE": "",
     "paymenT_CODE": "",
     "statuS_CODE": "",
@@ -518,7 +504,6 @@
     "deliverY_METHOD_DESC": "",
     "attacheD_FILE": ""
   },
-
   "SpContractsResourceName": {
     "Title": "بحث فى استعلام العقود",
     "Title_SpContractCase": "التفاصيل",
@@ -554,7 +539,6 @@
     "sponceR_CATEGORY_DESC": "نوع الكفاله",
     "startdate": " تاريخ البدايه  "
   },
-
   "foundation_name": "اسم المؤسسة",
   "foundation_type": "نوع المؤسسة",
   "license_number": "رقم الترخيص",
@@ -580,7 +564,6 @@
   "activate_account": "تفعيل الحساب",
   "reject_account": "رفض الحساب",
   "block_account": "حظر الحساب",
-
   "SponsorshipReportResourceName": {
     "arabicValue": "",
     "benifcientTotalRpt_Title": "اجمالى عدد المستفيدين",
@@ -654,7 +637,6 @@
     "value": "",
     "wifeId": ""
   },
-
   "AidRequestsResourceName": {
     "Title": "بحث فى الحالات",
     "aiD_REQUEST_DATE": "Request Date",
@@ -717,7 +699,6 @@
     "wifE_NAME": "Spouse Name",
     "wifeiD_END_DATE": "Spouse emirates ID expiry date"
   },
-
   "SocialCaseReportsResourceName": {
     "ordersListBranchRptTitle": "قائمه الطلبات حسب الفرع",
     "ordersListCityRptTitle": "قائمه الطلبات حسب الاماره",
@@ -730,7 +711,6 @@
     "cityId": "الاماره",
     "fromDate": "من تاريخ",
     "toDate": "الى تاريخ",
-
     "referencenumber": "رقم الطلب",
     "aiD_REQUEST_DATE": "تاريخ الطلب",
     "requesT_TYPE_DESC": "نوع الطلب",
@@ -749,7 +729,6 @@
     "statuS_DESC": "حاله الساعده",
     "entitY_NAME": "الجمعيه"
   },
-
   "ServiceRequestsReportsResourceName": {
     "requestDetailsEntitiesRPT_Title": "الطلبات المقدمه",
     "totalRequestsEntitiesRPT_Title": "اجمالي الطلبات المقدمه",
@@ -769,10 +748,7 @@
     "targetedAmount": "المبلغ المستهدف",
     "rejectedRequestsNo": "الطلبات المرفوضه",
     "postedRequestsNo": "الطلبات المعتمده"
-
   },
-
-
   "CaseSearchResourceName": {
     "Title": " بحث الاستمارات",
     "MenuBarTitle": " استعلام كفالات",
@@ -868,7 +844,6 @@
     "trX_DATEstr": " تاريخ العمليه ",
     "trX_DESC": ""
   },
-
   "AVAILABLE_NUMBER": {
     "TITLE": "الأرقام المتاحة",
     "ADD_NEW": "إضافة رقم متاح جديد",
@@ -882,7 +857,6 @@
     "ENTER_ALLOWED_NUMBER": "أدخل الرقم المسموح",
     "DELETE_CONFIRMATION": "هل أنت متأكد من حذف هذا الرقم المتاح؟ لا يمكن التراجع عن هذا الإجراء."
   },
-
   "ATTACHMENTS_CONFIG": {
     "TITLE": "إعدادات المرفقات",
     "ADD_NEW": "إضافة إعداد مرفق جديد",
@@ -903,7 +877,6 @@
     "CREATE": "إنشاء",
     "UPDATE": "تحديث"
   },
-
   "LOCATIONS": {
     "TITLE": "إدارة المواقع",
     "ADD_NEW": "إضافة موقع جديد",
@@ -944,7 +917,6 @@
     "CREATE": "إنشاء",
     "UPDATE": "تحديث"
   },
-
   "REGIONS": {
     "TITLE": "إدارة المناطق",
     "ADD_NEW": "إضافة منطقة جديدة",
@@ -969,8 +941,6 @@
     "CREATE": "إنشاء",
     "UPDATE": "تحديث"
   },
-
-
   "ProjectReportResourceName": {
     "projectTypeListRpt_Title": "كشف مشاريع حسب النوع",
     "projectCountryListRpt_Title": "كشف مشاريع حسب الدوله ",
@@ -994,7 +964,6 @@
     "projecT_TYPE_DESC": "حاله المشروع",
     "countrY_code": "الدوله"
   },
-
   "ProjectsResourceName": {
     "Title": " تفاصيل المشاريع",
     "Tab1_Title": " المقبوضات",
@@ -1040,6 +1009,14 @@
   "finanial_charts_periods_branches": "تحليل المصاريف والايرادات حسب الفترات والفروع",
   "finanial_charts_periods_Department": "تحليل المصاريف والايرادات حسب الفترات والاقسام",
   "finanial_charts_branch_account": "تحليل المصاريف والايرادات حسب الفروع والحسابات",
-  "finanial_charts_branch_department": "تحليل المصاريف والايرادات حسب الفروع والاقسام"
+  "finanial_charts_branch_department": "تحليل المصاريف والايرادات حسب الفروع والاقسام",
 
+  "charts_comparison_revenue_entit": "مقارنة الايرادات حسب الجمعية",
+  "charts_comparison_expenses_entit": "مقارنة المصروفات حسب الجمعية",
+  "charts_comparison_revenue_department": "مقارنة الايرادات حسب الاقسام",
+  "charts_comparison_expenses_department": "مقارنة المصروفات حسب الاقسام",
+  "charts_comparison_revenue_branches": "مقارنة الايرادات حسب الفروع",
+  "charts_comparison_expenses_branches": "مقارنة المصروفات حسب الفروع",
+  "charts_comparison_revenue_accounts": "مقارنة الايرادات حسب الحسابات",
+  "charts_comparison_expenses_accounts": "مقارنة المصروفات حسب الحسابات"
 }

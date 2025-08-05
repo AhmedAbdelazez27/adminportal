@@ -12,7 +12,7 @@ export class Select2APIEndpoint {
     GetFndCountrySelect2List: '/FndCountry/GetSelect2List',
     GetBranchSelect2List: '/FinancialReports/GetBranchSelect2List',
     GetDepartmentSelect2List: '/Department/Select2',
-    GetGlAccountSelect2List: '/GlAccount/GetGlAccountSelect2List',
+    GetGlAccountSelect2List: '/GlAccount/GetGlAccountSelect2List',   
     GetSpBeneficentsSelect2List: '/SpBeneficents/GetSpBeneficentsSelect2List',
     GetGlPeriodDetailSelect2List: '/GlPeriodDetails/GetGlPeriodDetailSelect2List',
     GetInvoiceTypeSelect2List: '/VwApInvoiceHd/GetInvoiceTypeSelect2List',
@@ -45,6 +45,7 @@ export class Select2APIEndpoint {
     GetSpCaseSelect2List: '/SpCases/GetSpCaseSelect2List',
     GetScProjectStatusSelect2List: '/ScProject/GetScProjectStatusSelect2List',
     GetScProjectTypeSelect2List: '/ScProject/GetScProjectTypeSelect2List',
+    GetBranchesSelect2List:"/GlAccDetails/select2"
   };
 }
 

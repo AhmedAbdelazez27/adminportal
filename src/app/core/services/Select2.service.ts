@@ -158,8 +158,8 @@ export class Select2Service {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetBenefPaymentTypeSelect2List}`
     return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
-  
-    getGlPeriodYearsSelect2List(): Observable<SelectdropdownResult> {
+
+  getGlPeriodYearsSelect2List(): Observable<SelectdropdownResult> {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetGlPeriodYearsSelect2List}`
     return this.http.post<SelectdropdownResult>(apiUrl, { skip: 0, take: 300 });
   }
@@ -181,7 +181,7 @@ export class Select2Service {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetSpCaseSelect2List}`
     return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
-   
+
   getNameSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetNameSelect2List}`;
     return this.http.post<SelectdropdownResult>(apiUrl, params);
@@ -235,5 +235,10 @@ export class Select2Service {
   getScProjectTypeSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetScProjectTypeSelect2List}`
     return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getBranchesSelect2(): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetBranchesSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, { segmentId: "3", skip: 0, take: 200 });
   }
 }

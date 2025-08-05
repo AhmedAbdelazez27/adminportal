@@ -66,7 +66,7 @@ export class BarChartComponent implements OnChanges {
         title: { text: NULL_TEXT }
       },
       yAxis: {
-        min: 0,
+        min: undefined,
         title: { text: NULL_TEXT },
         gridLineWidth: 1,
         gridLineColor: '#ccc',

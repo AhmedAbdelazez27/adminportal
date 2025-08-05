@@ -25,16 +25,23 @@ export class NavbarComponent {
   showPassword: boolean = false;
   showCPassword: boolean = false;
   submitted: boolean = false;
+  currentLang: string = 'en';
 
   constructor(public translation: TranslationService, private authService: AuthService, private toastr: ToastrService, private fb: FormBuilder, private spinnerService: SpinnerService,
-    private translate: TranslateService,private userService: UserService) {
+    private translate: TranslateService, private userService: UserService) {
     this.changePasswordForm = this.fb.group({
       currentPassword: ['', [Validators.required, Validators.minLength(1)]],
       newPassword: ['', [Validators.required, Validators.minLength(1)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(1)]]
     }, {
-          validators: confirmPasswordValidator('newPassword', 'confirmPassword')
-        });
+      validators: confirmPasswordValidator('newPassword', 'confirmPassword')
+    });
+
+    this.currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'ar';
+
+    this.translate.onLangChange.subscribe(lang => {
+      this.currentLang = lang.lang;
+    });
 
   }
 
@@ -76,7 +83,7 @@ export class NavbarComponent {
   submitChangePassword(): void {
     this.submitted = true;
     console.log(this.changePasswordForm);
-    
+
     if (this.changePasswordForm.invalid) {
       this.changePasswordForm.markAllAsTouched();
       this.toastr.error(this.translate.instant('TOAST.VALIDATION_ERROR'));
@@ -88,20 +95,20 @@ export class NavbarComponent {
     this.spinnerService.show();
     const userId = localStorage.getItem('userId')
 
-      this.userService.changeUserPassword({...formData,userId}).subscribe({
-        next: (res) => {
-          this.toastr.success(this.translate.instant('TOAST.USER_UPDATED'));
+    this.userService.changeUserPassword({ ...formData, userId }).subscribe({
+      next: (res) => {
+        this.toastr.success(this.translate.instant('TOAST.USER_UPDATED'));
         const closeBtn = document.querySelector('.changepassword.btn-close') as HTMLElement;
         closeBtn?.click();
-        },
-        error: (err) => {
-          this.spinnerService.hide();
-          this.toastr.error('Failed to update user');
-        },
-        complete: () => this.spinnerService.hide()
-      });
-    }
-  
+      },
+      error: (err) => {
+        this.spinnerService.hide();
+        this.toastr.error('Failed to update user');
+      },
+      complete: () => this.spinnerService.hide()
+    });
+  }
+
 
 
 }

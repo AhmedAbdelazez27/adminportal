@@ -1048,5 +1048,13 @@
   "finanial_charts_periods_branches": "Analysis of expenses and revenues by periods and branches",
   "finanial_charts_periods_Department": "Analysis of expenses and revenues by periods and departments",
   "finanial_charts_branch_account": "Analysis of expenses and revenues by branches and accounts",
-  "finanial_charts_branch_department": "Analysis of expenses and revenues by branches and departments"
+  "finanial_charts_branch_department": "Analysis of expenses and revenues by branches and departments",
+  "charts_comparison_revenue_entit": "Comparison of revenues by entity",
+  "charts_comparison_expenses_entit": "Comparison of expenses by entity",
+  "charts_comparison_revenue_department": "Comparison of revenues by department",
+  "charts_comparison_expenses_department": "Comparison of expenses by department",
+  "charts_comparison_revenue_branches": "Comparison of revenues by branches",
+  "charts_comparison_expenses_branches": "Comparison of expenses by branches",
+  "charts_comparison_revenue_accounts": "Comparison of revenues by accounts",
+  "charts_comparison_expenses_accounts": "Comparison of expenses by accounts"
 }
