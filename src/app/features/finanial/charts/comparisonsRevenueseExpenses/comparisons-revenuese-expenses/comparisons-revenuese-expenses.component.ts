@@ -138,6 +138,7 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
         console.log(res);
         if (typeChange == 1) {
           this.transformToChartData(res?.data, 'categoriees', 'seriesData');
+           this.onYearChange(2);
         }else if (typeChange == 2){
           this.transformToChartData(res?.data, 'categoriees2', 'seriesData2');
         }

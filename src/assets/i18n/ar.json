@@ -1135,6 +1135,11 @@
   "ExpensesByBranch": "المصروفات حسب الفرع",
   "ExpensesByDepartment": "المصروفات حسب القسم",
   "ExpensesByAccount": "المصروفات حسب الحسابات",
-  "Comparison_expenses_revenue": "مقارنات المصروفات والايرادات"
-
+  "Comparison_expenses_revenue": "مقارنات المصروفات والايرادات",
+  "Analysis_of_revenues_expenses": "تحليل الايرادات والمصروفات",
+  "general": "عام",
+  "periods_and_departments": "الفترات والأقسام",
+  "period_and_branches": "الفترات والفروع",
+  "branches_and_accounts": "الفروع والحسابات",
+  "branches_and_departments": "الفروع والأقسام"
 }

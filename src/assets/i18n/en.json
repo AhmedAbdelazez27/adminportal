@@ -1176,6 +1176,12 @@
   "ExpensesByBranch": "Expenses By Branch",
   "ExpensesByDepartment": "Expenses By Department",
   "ExpensesByAccount": "Expenses By Account",
-  "Comparison_expenses_revenue": "Comparison of revenues and expenses"
+  "Comparison_expenses_revenue": "Comparison of revenues and expenses",
+  "Analysis_of_revenues_expenses":"Analysis of revenues and expenses",
+  "general": "General",
+  "periods_and_departments": "Periods & Departments",
+  "period_and_branches": "Period & Branches",
+  "branches_and_accounts": "Branches & Accounts",
+  "branches_and_departments": "Branches & Departments"
 
 }
