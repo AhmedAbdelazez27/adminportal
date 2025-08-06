@@ -95,10 +95,10 @@
                     </div>
                     <button class="col-1 btn btn-info my-1" (click)="onYearChange(2)">Start</button>
                 </div>
-                <!-- <ng-container>
+                <ng-container *ngIf="seriesData2.length">
                     <app-bar-chart [categories]="categoriees2" [seriesData]="seriesData2">
                     </app-bar-chart>
-                </ng-container> -->
+                </ng-container>
             </div>
         </div>
 

@@ -53,7 +53,7 @@ export class ChartsService {
       entityId?: string[],
       type?: any | null,
       id?: any | null,
-      periodId?: number | null
+      periodId?: string | null
     }
   },typeComparison:string): Observable<any> {
     const endpoint = ApiEndpoints.Charts[typeComparison as keyof typeof ApiEndpoints.Charts];

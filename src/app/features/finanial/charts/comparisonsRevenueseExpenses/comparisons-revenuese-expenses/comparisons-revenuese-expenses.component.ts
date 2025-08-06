@@ -130,7 +130,7 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
         entityId: this.selectedEntity,
         type: this.id,
         id: this.selectedAccountId ||this.selectedBranchId ||this.selectedDepartmentId  || null, // will send on it ex branch id or account id ...... 
-        periodId: null
+        periodId: typeChange == 2 ? this.selectedmonthId.join(','): null
       }
     };
     this._ChartsService.getExpensesRevenuesComparison(payload,this.typeService).subscribe({
