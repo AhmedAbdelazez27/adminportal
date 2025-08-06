@@ -192,6 +192,16 @@ export const routes: Routes = [
         ],
       },
 
+      {
+        path: 'serviceSetting2',
+        loadChildren: () =>
+          import('./features/serviceSetting2/serviceSetting2.routes').then(
+            (m) => m.serviceSetting2Routes
+          ),
+       // canActivate: [authGuard],
+        data: { permission: 'ServiceSetting.View' },
+      },
+
 
     ],
   },

@@ -1167,5 +1167,15 @@
   "charts_comparison_revenue_branches": "Comparison of revenues by branches",
   "charts_comparison_expenses_branches": "Comparison of expenses by branches",
   "charts_comparison_revenue_accounts": "Comparison of revenues by accounts",
-  "charts_comparison_expenses_accounts": "Comparison of expenses by accounts"
+  "charts_comparison_expenses_accounts": "Comparison of expenses by accounts",
+  "RevenueByDepartment": "Revenue By Department",
+  "RevenueByEntit": "Revenue By Entity",
+  "RevenueByBranch": "Revenue By Branch",
+  "RevenueByAccount": "Revenue By Account",
+  "ExpensesByEntit": "Expenses By Entity",
+  "ExpensesByBranch": "Expenses By Branch",
+  "ExpensesByDepartment": "Expenses By Department",
+  "ExpensesByAccount": "Expenses By Account",
+  "Comparison_expenses_revenue": "Comparison of revenues and expenses"
+
 }
