@@ -71,7 +71,8 @@
     "LOOKS_GOOD": "Looks good!",
     "FORM_ERRORS": "Please fix the following errors:",
     "ERROR_COUNT": "error(s) found",
-    "MANDATORY_FIELDS_REQUIRED": "Please fill in the required fields (Arabic Name and English Name)"
+    "MANDATORY_FIELDS_REQUIRED": "Please fill in the required fields (Arabic Name and English Name)",
+    "MIN_VALUE": "Minimum value is {{min}}"
   },
   "COMMON": {
     "ACTIONS": "Actions",
@@ -83,7 +84,25 @@
     "CREATE": "Create",
     "UPDATE": "Update",
     "SAVE": "Save",
-    "CONFIRM": "Confirm"
+    "CONFIRM": "Confirm",
+    "BACK": "Back",
+    "ADD": "Add",
+    "SHOW": "Show",
+    "HIDE": "Hide",
+    "YES": "Yes",
+    "NO": "No",
+    "CONFIRM_DELETE": "Are you sure you want to delete this item?",
+    "SEARCH_TITLE": "Search",
+    "UPDATING": "Updating...",
+    "DELETE_CONFIRMATION": "Delete Confirmation",
+    "DELETE_CONFIRMATION_MESSAGE": "Are you sure you want to delete this item?",
+    "ERROR_LOADING_DATA": "Error loading data",
+    "ERROR_SAVING_DATA": "Error saving data",
+    "ERROR_DELETING_DATA": "Error deleting data",
+    "PLEASE_FILL_REQUIRED_FIELDS": "Please fill all required fields correctly",
+    "FIELD_REQUIRED": "This field is required",
+    "MIN_VALUE_ERROR": "Minimum value is {{min}}",
+    "MAX_LENGTH_ERROR": "Maximum length is {{max}} characters"
   },
   "ENTITY": {
     "TITLE": "Entities",
@@ -191,7 +210,7 @@
 
   "Common": {
     "Action": "Action",
-    "ViewInfo": "View Info",
+    "ViewInfo": "Show Details",
     "ShowInfo": "Show Details",
     "StudyDetails": "Study Details",
     "Clear": "Clear",
@@ -204,7 +223,10 @@
     "PrintExcel": "Print Excel",
     "Total": "Total",
     "Print": " Print",
-    "Required": "This Field is Required"
+    "Required": "This Field is Required",
+    "ViewHistoryInfo": "Beneficiary History",
+    "ViewPaymentInfo": "Guarantee Disbursements",
+    "ViewContractInfo": "Contracts"
   },
 
   "ArMiscReceiptHeaderResourceName": {
@@ -579,7 +601,7 @@
   "block_account": "Block Account",
 
   "AidRequestsResourceName": {
-    "Title" :  "Aid Request",
+    "Title": "Aid Request",
     "aiD_REQUEST_DATE": "Request Date",
     "aiD_TYPE": "Aid Desc",
     "amount": "Value",
@@ -771,7 +793,6 @@
     "postedRequestsNo": "Posted Request No"
   },
 
-
   "CaseSearchResourceName": {
     "Title": "Case Search Survey Form",
     "MenuBarTitle": "Case Search",
@@ -864,7 +885,11 @@
     "totalstr": "Total",
     "trX_DATE": "TRX Date",
     "trX_DATEstr": "TRX Date",
-    "trX_DESC": "Details"
+    "trX_DESC": "Details",
+    "total1": "Total Guarantee",
+    "total2": "Total Gift",
+    "total3": "Total",
+    "NoContract": "No Contracts"
   },
 
   "AVAILABLE_NUMBER": {
@@ -968,7 +993,6 @@
     "UPDATE": "Update"
   },
 
-
   "ProjectReportResourceName": {
     "projectTypeListRpt_Title": "Projects by Type",
     "projectCountryListRpt_Title": "Projects by Country",
@@ -991,6 +1015,93 @@
     "statuS_DESC": "Status",
     "projecT_TYPE_DESC": "Status",
     "countrY_code": "Country"
+  },
+  "SERVICE_SETTING": {
+    "TITLE": "Service Settings",
+    "ADD_NEW": "Add New Service",
+    "SERVICE_ID": "Service ID",
+    "SERVICE_NAME": "Service Name (Arabic)",
+    "SERVICE_NAME_EN": "Service Name (English)",
+    "SERVICE_REFERENCE_NO": "Service Reference No",
+    "SERVICE_TYPE": "Service Type",
+    "STATUS": "Status",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "LAST_MODIFIED": "Last Modified",
+    "DESCRIPTION_AR": "Description (Arabic)",
+    "DESCRIPTION_EN": "Description (English)",
+    "MAIN_SERVICE_CLASSIFICATION": "Main Service Classification",
+    "SUB_SERVICE_CLASSIFICATION": "Sub Service Classification",
+    "EDIT": "Edit Service",
+    "VIEW": "View Service",
+    "DELETE_CONFIRMATION": "Are you sure you want to delete this service?",
+    "DELETE_SUCCESS": "Service deleted successfully",
+    "CREATE_SUCCESS": "Service created successfully",
+    "UPDATE_SUCCESS": "Service updated successfully",
+    "MAIN_INFORMATION": "Main Information",
+    "ATTRIBUTES": "Attributes",
+    "SERVICE_DEPARTMENTS": "Service Departments",
+    "ATTACHMENTS_CONFIG": "Attachments Configuration",
+    "INDIVIDUAL": "Individual",
+    "ORGANIZATION": "Organization",
+    "ATTRIBUTE_NAME_AR": "Attribute Name (Arabic)",
+    "ATTRIBUTE_NAME_EN": "Attribute Name (English)",
+    "REFERENCE_ATTRIBUTE_TYPE": "Reference Attribute Type",
+    "VIEW_ORDER": "View Order",
+    "ORDER": "Order",
+    "ATTRIBUTE_VALUES": "Attribute Values",
+    "VALUE_AR": "Value (Arabic)",
+    "VALUE_EN": "Value (English)",
+    "ADD_ATTRIBUTE": "Add Attribute",
+    "ADD_ATTRIBUTE_VALUE": "Add Attribute Value",
+    "DEPARTMENT": "Department",
+    "SERVICE_LEVEL": "Service Level",
+    "DEPARTMENT_ACTION": "Department Action",
+    "STEP_NAME": "Step Name",
+    "ADD_SERVICE_DEPARTMENT": "Add Service Department",
+    "ATTRIBUTE_INFORMATION": "Attribute Information",
+    "ADD_FIRST_ATTRIBUTE": "Add First Attribute",
+    "NO_ATTRIBUTES": "No attributes found for this service",
+    "NO_ATTRIBUTE_VALUES": "No attribute values added yet",
+    "EDIT_ATTRIBUTE": "Edit Attribute",
+    "VIEW_ATTRIBUTE": "View Attribute",
+    "DELETE_ATTRIBUTE_CONFIRMATION": "Are you sure you want to delete this attribute?",
+    "ATTRIBUTE_SUCCESS": "Attribute saved successfully",
+    "ATTRIBUTE_DELETE_SUCCESS": "Attribute deleted successfully",
+    "NO_SERVICE_DEPARTMENTS": "No service departments found for this service",
+    "ADD_FIRST_SERVICE_DEPARTMENT": "Add First Service Department",
+    "EDIT_SERVICE_DEPARTMENT": "Edit Service Department",
+    "VIEW_SERVICE_DEPARTMENT": "View Service Department",
+    "SELECT_DEPARTMENT": "Select Department",
+    "SELECT_ACTION": "Select Action",
+    "DELETE_SERVICE_DEPARTMENT_CONFIRMATION": "Are you sure you want to delete this service department?",
+    "SERVICE_DEPARTMENT_SUCCESS": "Service department saved successfully",
+    "SERVICE_DEPARTMENT_DELETE_SUCCESS": "Service department deleted successfully",
+    "ADD_ATTACHMENT_CONFIG": "Add Attachment Configuration",
+    "ADD_FIRST_ATTACHMENT_CONFIG": "Add First Attachment Configuration",
+    "NO_ATTACHMENT_CONFIGS": "No attachment configurations found for this service",
+    "EDIT_ATTACHMENT_CONFIG": "Edit Attachment Configuration",
+    "VIEW_ATTACHMENT_CONFIG": "View Attachment Configuration",
+    "SELECT_ATTACHMENT_TYPE": "Select Attachment Type",
+    "DELETE_ATTACHMENT_CONFIG_CONFIRMATION": "Are you sure you want to delete this attachment configuration?",
+    "ATTACHMENT_CONFIG_SUCCESS": "Attachment configuration saved successfully",
+    "ATTACHMENT_CONFIG_DELETE_SUCCESS": "Attachment configuration deleted successfully",
+    "OPTIONAL": "Optional",
+    "ADD_WORKFLOW": "Add Workflow",
+    "ATTACHMENT_NAME_AR": "Attachment Name (Arabic)",
+    "ATTACHMENT_NAME_EN": "Attachment Name (English)",
+    "ATTACHMENT_TYPE": "Attachment Type",
+    "ATTACHMENTS_CONFIGURATION": "Attachments Configuration",
+    "ADD_ATTACHMENT_CONFIGURATION": "Add Attachment Configuration",
+    "MANDATORY": "Mandatory",
+    "SERVICE_DEPARTMENT": "Service Department",
+    "DEPARTMENT_ACTION_APPROVE": "Approve",
+    "DEPARTMENT_ACTION_REJECT": "Reject",
+    "DEPARTMENT_ACTION_REVIEW": "Review",
+    "DEPARTMENT_ACTION_RETURN": "Return",
+    "SERVICE_DEPARTMENT_ADDED_SUCCESS": "Service department added successfully",
+    "SERVICE_DEPARTMENT_UPDATED_SUCCESS": "Service department updated successfully",
+    "SERVICE_DEPARTMENT_DELETED_SUCCESS": "Service department deleted successfully"
   },
 
   "ProjectsResourceName": {
@@ -1044,11 +1155,11 @@
     "finisH_DATE": "End Implement",
     "imP_TYPE": "Implement Type"
   },
-   "finanial_charts_general_expenses": "Interactive reporting of expenses and revenues",
+  "finanial_charts_general_expenses": "Interactive reporting of expenses and revenues",
   "finanial_charts_periods_branches": "Analysis of expenses and revenues by periods and branches",
   "finanial_charts_periods_Department": "Analysis of expenses and revenues by periods and departments",
   "finanial_charts_branch_account": "Analysis of expenses and revenues by branches and accounts",
-  "finanial_charts_branch_department": "Analysis of expenses and revenues by branches and departments",
+    "finanial_charts_branch_department": "Analysis of expenses and revenues by branches and departments",
   "charts_comparison_revenue_entit": "Comparison of revenues by entity",
   "charts_comparison_expenses_entit": "Comparison of expenses by entity",
   "charts_comparison_revenue_department": "Comparison of revenues by department",

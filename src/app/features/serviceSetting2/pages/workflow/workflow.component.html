@@ -1,0 +1,164 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="title">{{ 'SERVICE_SETTING.SERVICE_DEPARTMENTS' | translate }}</h1>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline" (click)="forceHideSpinner()" title="Force Hide Spinner">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
+            fill="#5B5B5B" />
+        </svg>
+      </button>
+      <button class="btn btn-outline" (click)="backToList()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M19 12H5M12 19L5 12L12 5" stroke="#5B5B5B" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        {{ 'COMMON.BACK' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <button class="btn btn-gold mb-3" (click)="addNewDepartment()" [disabled]="isSubmitting">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M12 5V19M5 12H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    {{ 'SERVICE_SETTING.ADD_SERVICE_DEPARTMENT' | translate }}
+  </button>
+
+  <app-generic-data-table [columnDefs]="columnDefs" [rowData]="departments" [totalCount]="departments.length"
+    [pageSize]="10" [currentPage]="0" [showActionColumn]="true" [rowActions]="rowActions"
+    [columnHeaderMap]="columnHeaderMap" (actionClick)="onActionClick($event)"></app-generic-data-table>
+</div>
+
+<!-- Add/Edit/View Service Department Modal -->
+<div class="modal fade" id="ServiceDepartmentModal" tabindex="-1" aria-labelledby="ServiceDepartmentModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" style="max-height: 80vh;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ServiceDepartmentModalLabel">
+          {{ mode === 'add' ? ('SERVICE_SETTING.ADD_SERVICE_DEPARTMENT' | translate) : mode === 'edit' ?
+          ('SERVICE_SETTING.EDIT_SERVICE_DEPARTMENT' | translate) : ('SERVICE_SETTING.VIEW_SERVICE_DEPARTMENT' |
+          translate) }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="serviceDepartmentForm" (ngSubmit)="submit()" id="serviceDepartmentForm">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="deptId" class="form-label">{{ 'SERVICE_SETTING.DEPARTMENT' | translate }} <span
+                  class="text-danger">*</span></label>
+              <ng-select [items]="departmentOptions" bindLabel="text" bindValue="value" [multiple]="false"
+                [closeOnSelect]="true" [clearable]="mode !== 'view'" formControlName="deptId"
+                [class.is-invalid]="isFieldInvalid('deptId')" (blur)="onFieldBlur('deptId')"
+                class="ng-select ng-select-custom" [disabled]="mode === 'view'"
+                [loading]="departmentOptions.length === 0">
+                <ng-template ng-option-tmp let-item="item">
+                  {{ item.text }}
+                </ng-template>
+              </ng-select>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('deptId')">
+                {{ getFieldError('deptId') }}
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="serviceLevel" class="form-label">{{ 'SERVICE_SETTING.SERVICE_LEVEL' | translate }} <span
+                  class="text-danger">*</span></label>
+              <input type="number" class="form-control" id="serviceLevel" formControlName="serviceLevel"
+                [class.is-invalid]="isFieldInvalid('serviceLevel')" [class.is-valid]="isFieldValid('serviceLevel')"
+                (blur)="onFieldBlur('serviceLevel')" [disabled]="mode === 'view'" min="1">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('serviceLevel')">
+                {{ getFieldError('serviceLevel') }}
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="departmentAction" class="form-label">{{ 'SERVICE_SETTING.DEPARTMENT_ACTION' | translate }}
+                <span class="text-danger">*</span></label>
+              <ng-select [items]="departmentActions" bindLabel="label" bindValue="value" [multiple]="false"
+                [closeOnSelect]="true" [clearable]="mode !== 'view'" formControlName="departmentAction"
+                [class.is-invalid]="isFieldInvalid('departmentAction')" (blur)="onFieldBlur('departmentAction')"
+                (change)="onDepartmentActionChange($event)" class="ng-select ng-select-custom"
+                [disabled]="mode === 'view'">
+                <ng-template ng-option-tmp let-item="item">
+                  {{ item.label }}
+                </ng-template>
+              </ng-select>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('departmentAction')">
+                {{ getFieldError('departmentAction') }}
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="stepName" class="form-label">{{ 'SERVICE_SETTING.STEP_NAME' | translate }} <span
+                  class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="stepName" formControlName="stepName"
+                [class.is-invalid]="isFieldInvalid('stepName')" [class.is-valid]="isFieldValid('stepName')"
+                (blur)="onFieldBlur('stepName')" [disabled]="mode === 'view'" maxlength="200">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('stepName')">
+                {{ getFieldError('stepName') }}
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="closeModal()">
+          {{ mode === 'view' ? ('COMMON.CLOSE' | translate) : ('COMMON.CANCEL' | translate) }}
+        </button>
+        <button type="submit" form="serviceDepartmentForm" class="btn btn-gold" *ngIf="mode !== 'view'"
+          [disabled]="serviceDepartmentForm.invalid || isSubmitting">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+              fill="white" />
+          </svg>
+          {{ mode === 'add' ? ('COMMON.CREATE' | translate) : ('COMMON.UPDATE' | translate) }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteServiceDepartmentModal" tabindex="-1"
+  aria-labelledby="deleteServiceDepartmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteServiceDepartmentModalLabel">
+          {{ 'COMMON.DELETE_CONFIRMATION' | translate }}
+        </h5>
+        <button type="button" class="btn-close" (click)="cancelDelete()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ 'COMMON.DELETE_CONFIRMATION_MESSAGE' | translate }}</p>
+        <div *ngIf="selectedDepartmentToDelete" class="delete-confirmation-details">
+          <strong>{{ 'SERVICE_SETTING.SERVICE_LEVEL' | translate }}:</strong> {{ selectedDepartmentToDelete.serviceLevel
+          }}<br>
+          <strong>{{ 'SERVICE_SETTING.DEPARTMENT' | translate }}:</strong> {{
+          selectedDepartmentToDelete.department?.aname }}<br>
+          <strong>{{ 'SERVICE_SETTING.DEPARTMENT_ACTION' | translate }}:</strong> {{
+          selectedDepartmentToDelete.departmentActionName }}<br>
+          <strong>{{ 'SERVICE_SETTING.STEP_NAME' | translate }}:</strong> {{ selectedDepartmentToDelete.stepName }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="cancelDelete()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteDepartment()" [disabled]="isSubmitting">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M3 6H5H21M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z"
+              stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          {{ 'COMMON.DELETE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

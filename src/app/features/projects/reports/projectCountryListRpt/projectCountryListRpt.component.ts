@@ -74,11 +74,7 @@ export class projectCountryListRptComponent {
   }
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
-      });
+    this.buildColumnDefs();
     this.rowActions = [];
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -164,7 +160,7 @@ export class projectCountryListRptComponent {
     this.searchSelect2Params.skip = this.projectTypesearchParams.skip;
     this.searchSelect2Params.take = this.projectTypesearchParams.take;
 
-    this.Select2Service.getProjectNameSelect2(this.searchSelect2Params)
+    this.Select2Service.getScProjectTypeSelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];

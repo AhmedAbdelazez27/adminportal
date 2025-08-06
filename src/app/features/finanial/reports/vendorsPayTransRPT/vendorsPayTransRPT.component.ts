@@ -69,11 +69,7 @@ export class vendorsPayTransRPTComponent {
 
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
-      });
+    this.buildColumnDefs();
     this.fetchentitySelect2();
     this.fetchApvendorSelect2();
     this.rowActions = [];

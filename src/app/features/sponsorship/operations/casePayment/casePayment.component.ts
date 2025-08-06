@@ -95,15 +95,10 @@ export class casePaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
-        this.rowActions = [
-          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-        ];
-      });
-   
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+    ];
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
       .subscribe(() => this.fetchentitySelect2());
@@ -365,8 +360,8 @@ export class casePaymentComponent implements OnInit, OnDestroy {
     this.casePaymentService.getAll(cleanedFilters)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
-          this.loadgridData = response || [];
-          this.pagination.totalCount = response[0]?.rowsCount || 0;
+          this.loadgridData = response?.data || [];
+          this.pagination.totalCount = response?.data[0]?.rowsCount || 0;
           this.spinnerService.hide();
         },
         error: () => {
@@ -416,15 +411,13 @@ export class casePaymentComponent implements OnInit, OnDestroy {
         colId: 'serialNumber'
       },
 
-      { headerName: this.translate.instant('CasePaymentResourceName.casE_No'), field: 'casE_NO', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.casE_Name'), field: 'casename', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.sponsoR_CATEGORY_DESC'), field: 'sponsoR_CATEGORY_DESC', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.casE_STATUS_DESC'), field: 'casE_STATUS_DESC', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.kafalA_STATUS_DESC'), field: 'kafalA_STATUS_DESC', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.paymenT_DESC'), field: 'paymenT_DESC', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.starT_DATE'), field: 'starT_DATEstr', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.enD_DATE'), field: 'enD_DATEstr', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.statuS_CODE_DESC'), field: 'statuS_CODE_DESC', width: 200 },
       { headerName: this.translate.instant('CasePaymentResourceName.amounT_AED'), field: 'amounT_AEDstr', width: 200 },
       { headerName: this.translate.instant('CasePaymentResourceName.gifT_AMOUNT'), field: 'gifT_AMOUNTstr', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.totalAmount'), field: 'totalstr', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.receivE_DATE'), field: 'receivE_DATEstr', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.totalAmount'), field: 'totalAmount', width: 200 },
     ];
 
     this.columnDefsPaymentHdr = [
@@ -445,9 +438,10 @@ export class casePaymentComponent implements OnInit, OnDestroy {
   }
 
   onTableAction(event: { action: string, row: any }) {
+    var data = event.row.composeKey.split(',');
+    var entityId = data[1];
     if (event.action === 'onViewInfo') {
-      this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationPaymentHdr.take }, event.row.composeKey, event.row.entitY_ID);
-
+      this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationPaymentHdr.take }, event.row.composeKey, entityId);
     }
   }
 
@@ -467,13 +461,13 @@ export class casePaymentComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse[0]?.rowsCount || 0;
+          const totalCount = initialResponse?.data[0]?.rowsCount || 0;
 
           this.casePaymentService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
-                const data = response || [];
+                const data = response?.data || [];
 
                 const reportConfig: reportPrintConfig = {
                   title: this.translate.instant('CasePaymentResourceName.Title'),

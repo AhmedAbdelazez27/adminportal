@@ -81,16 +81,11 @@ export class PaymentVoucherComponent implements OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
+    this.buildColumnDefs();
         this.rowActions = [
           { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
         ];
-      });
-  
-
+      
     this.beneficiaryNameSearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
       .subscribe(() => this.fetchApbeneficiaryNameSelect2());

@@ -201,7 +201,10 @@
       </div>
     </div>
 
-    <app-generic-data-table [columnDefs]="columnDefs"
+   
+  </div>
+
+ <app-generic-data-table [columnDefs]="columnDefs"
                             [rowData]="loadgridData"
                             [totalCount]="pagination.totalCount"
                             [pageSize]="pagination.take"
@@ -213,9 +216,7 @@
                             [showActionColumn]="true"
                             (search)="onTableSearch($event)">
     </app-generic-data-table>
-  </div>
-
-
+    
 
 
   <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="viewLabel" aria-hidden="true">

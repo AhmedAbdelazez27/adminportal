@@ -1,0 +1,45 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="title">{{ 'SERVICE_SETTING.TITLE' | translate }}</h1>
+  </div>
+
+  <!-- Filter Section (copied from original component) -->
+  <div class="filter mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="filter-title mb-0">{{ 'COMMON.SEARCH_TITLE' | translate }}</h4>
+      <button class="btn btn-filter" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilterTab"
+        aria-expanded="false" aria-controls="collapseFilterTab">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z"
+            fill="" />
+          <path
+            d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z"
+            fill="" />
+          <path
+            d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z"
+            fill="" />
+          <path
+            d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z"
+            fill="" />
+          <path
+            d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z"
+            fill="" />
+          <path
+            d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z"
+            fill="" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="collapse" id="collapseFilterTab">
+      <!-- Keep placeholder for future filter form -->
+    </div>
+  </div>
+
+  <!-- Generic Data Table for Services List -->
+  <app-generic-data-table [columnDefs]="columnDefs" [rowData]="services" [totalCount]="totalCount"
+    [pageSize]="itemsPerPage" [currentPage]="currentPage - 1" [showActionColumn]="true" [rowActions]="rowActions"
+    [columnHeaderMap]="columnHeaderMap" (pageChange)="onPageChange($event)" (search)="onSearch($event)"
+    (actionClick)="onActionClick($event)"></app-generic-data-table>
+</div>

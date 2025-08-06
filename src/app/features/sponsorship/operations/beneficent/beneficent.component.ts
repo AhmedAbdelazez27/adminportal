@@ -79,16 +79,10 @@ export class BeneficentComponent {
   }
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
-        this.rowActions = [
-          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-        ];
-      });
- 
-
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+    ];
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
       .subscribe(() => this.fetchEntitySelect2());

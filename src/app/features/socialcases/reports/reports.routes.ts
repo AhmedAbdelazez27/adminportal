@@ -9,12 +9,12 @@ export const ReportsRoutes: Routes = [
   {
     path: 'BranchOrdersList', component: orderListBranchRptComponent,
     canActivate: [authGuard],
-    data: { pagePermission: 'OrderListBranchRpt' } // OrderListBranchRpt  ,   OrderListBranchRpt.View
+    data: { pagePermission: 'OrdersListRpt' } // OrdersListRpt  ,   OrdersListRpt.View
   },
   {
     path: 'EmiratesOrdersList', component: ordersListCityRptComponent,
     canActivate: [authGuard],
-    data: { pagePermission: 'ordersListCityRpt' } // ordersListCityRpt  ,   ordersListCityRpt.View
+    data: { pagePermission: 'OrdersListRpt' } // OrdersListRpt  ,   OrdersListRpt.View
   },
   {
     path: 'CasesEntities', component: casesEntitiesRptComponent,
@@ -24,6 +24,6 @@ export const ReportsRoutes: Routes = [
   {
     path: 'CasesHelp', component: caseHelpRptComponent,
     canActivate: [authGuard],
-    data: { pagePermission: 'CaseHelpRpt' } // CaseHelpRpt  ,   CaseHelpRpt.View
+    data: { pagePermission: 'CaseAidEntitiesRpt' } // CaseAidEntitiesRpt  ,   CaseAidEntitiesRpt.View
   },
 ];

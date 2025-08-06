@@ -127,16 +127,12 @@ export class caseSearchComponent {
   }
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
-      });
+    this.buildColumnDefs();
     this.rowActions = [
       { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewcasehistorydetailsInfo' },
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewCasePaimentDetailsInfo' },
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewContractDetailsInfo' },
+      { label: this.translate.instant('Common.ViewHistoryInfo'), icon: 'fas fa-eye', action: 'onViewcasehistorydetailsInfo' },
+      { label: this.translate.instant('Common.ViewPaymentInfo'), icon: 'fas fa-eye', action: 'onViewCasePaimentDetailsInfo' },
+      { label: this.translate.instant('Common.ViewContractInfo'), icon: 'fas fa-eye', action: 'onViewContractDetailsInfo' },
     ];
 
     this.entitySearchInput$
@@ -601,10 +597,10 @@ export class caseSearchComponent {
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
     if (!this.searchParams.entityId) {
       this.translate
-        .get(['CasePaymentResourceName.EntityId', 'Common.Required'])
+        .get(['CasePaymentResourceName.entityId', 'Common.Required'])
         .subscribe(translations => {
           this.toastr.warning(
-            `${ translations['CasePaymentResourceName.EntityId']} ${ translations['Common.Required']}`,
+            `${ translations['CasePaymentResourceName.entityId']} ${ translations['Common.Required']}`,
             'Warning'
           );
         });
@@ -621,6 +617,7 @@ export class caseSearchComponent {
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.loadgridData = response || [];
+          console.log("casesearchData", response);
           this.pagination.totalCount = response[0]?.rowsCount || 0;
           this.spinnerService.hide();
         },
@@ -728,12 +725,23 @@ export class caseSearchComponent {
 
 
 
-  getContractFormDatabyId(event: { pageNumber: number; pageSize: number }, caseId: string, contractId: string): void {
+  getContractFormDatabyId(event: { pageNumber: number; pageSize: number }, contractId: string, entityId: string): void {
     const params: filtercaseSearchByIdDto = {
-      entityId: null,
-      caseId: caseId,
+      entityId: entityId,
+      caseId: null,
       contractId: contractId
     };
+    if (!contractId) {
+      this.translate
+        .get(['CaseSearchResourceName.NoContract'])
+        .subscribe(translations => {
+          this.toastr.warning(
+            `${translations['CaseSearchResourceName.NoContract']}`,
+            'Warning'
+          );
+        });
+      return;
+    }
     this.spinnerService.show();
 
     forkJoin({
@@ -782,35 +790,25 @@ export class caseSearchComponent {
 
 
   private buildColumnDefs(): void {
-    this.translate.get([
-      'CaseSearchResourceName.casE_ID',
-      'CaseSearchResourceName.entitY_ID',
-      'CaseSearchResourceName.casename',
-      'CaseSearchResourceName.casE_STATUS_DESC',
-      'CaseSearchResourceName.caseamount',
-      'CaseSearchResourceName.startdate',
-      'CaseSearchResourceName.beneficentname',
-      'CaseSearchResourceName.sponceR_CATEGORY_DESC',
-    ]).subscribe(translations => {
-      this.columnDefs = [
-        {
-          headerName: '#',
-          valueGetter: (params) =>
-            (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-          width: 60,
-          colId: 'serialNumber'
-        },
-        { headerName: translations['CaseSearchResourceName.casE_ID'], field: 'casE_ID', width: 200 },
-        { headerName: translations['CaseSearchResourceName.entitY_ID'], field: 'entitY_ID', width: 200 },
-        { headerName: translations['CaseSearchResourceName.casename'], field: 'casename', width: 200 },
-        { headerName: translations['CaseSearchResourceName.casE_STATUS_DESC'], field: 'casE_STATUS_DESC', width: 200 },
-        { headerName: translations['CaseSearchResourceName.caseamount'], field: 'caseamountstr', width: 200 },
-        { headerName: translations['CaseSearchResourceName.startdate'], field: 'startdatestr', width: 200 },
-        { headerName: translations['CaseSearchResourceName.beneficentname'], field: 'beneficentname', width: 200 },
-        { headerName: translations['CaseSearchResourceName.sponceR_CATEGORY_DESC'], field: 'sponceR_CATEGORY_DESC', width: 200 },
-      ];
-    });
+    this.columnDefs = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('CaseSearchResourceName.casE_ID'), field: 'casE_ID', width: 200 },
+      { headerName: this.translate.instant('CaseSearchResourceName.entitY_ID'), field: 'entitY_ID', width: 200 },
+      { headerName: this.translate.instant('CaseSearchResourceName.casename'), field: 'casename', width: 200 },
+      { headerName: this.translate.instant('CaseSearchResourceName.casE_STATUS_DESC'), field: 'casE_STATUS_DESC', width: 200 },
+      { headerName: this.translate.instant('CaseSearchResourceName.caseamount'), field: 'caseamount', width: 200 },
+      { headerName: this.translate.instant('CaseSearchResourceName.startdate'), field: 'startdatestr', width: 200 },
+      { headerName: this.translate.instant('CaseSearchResourceName.beneficentname'), field: 'beneficentname', width: 200 },
+      { headerName: this.translate.instant('CaseSearchResourceName.sponceR_CATEGORY_DESC'), field: 'sponceR_CATEGORY_DESC', width: 200 },
+    ];
 
+  
     this.translate.get([
       'CaseSearchResourceName.paymenT_DESC',
       'CaseSearchResourceName.starT_DATE',
@@ -916,7 +914,6 @@ export class caseSearchComponent {
 
   onTableAction(event: { action: string, row: any }) {
     var data = event.row.composeKey.split(',');
-
     var contractId = null;
     var contract_entityId = null;
 
@@ -933,16 +930,16 @@ export class caseSearchComponent {
     }
 
     if (event.action === 'onViewInfo') {
-      this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationshowDetails.take }, entityId, entityId);
+      this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationshowDetails.take }, caseId, entityId);
     }
     else if (event.action === 'onViewcasehistorydetailsInfo') {
-      this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationcasehistorydetails.take }, caseId, entityId);
+      this.getCaseHistoryFormDatabyId({ pageNumber: 1, pageSize: this.paginationcasehistorydetails.take }, caseId, entityId);
     }
     else if (event.action === 'onViewCasePaimentDetailsInfo') {
-      this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationCasePaymentHdr.take }, caseId, entityId);
+      this.getCasePaymentFormDatabyId({ pageNumber: 1, pageSize: this.paginationCasePaymentHdr.take }, caseId, entityId);
     }
     else if (event.action === 'onViewContractDetailsInfo') {
-      this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationContractDetails.take }, contractId, contract_entityId);
+      this.getContractFormDatabyId({ pageNumber: 1, pageSize: this.paginationContractDetails.take }, contractId, contract_entityId);
     }
   }
 

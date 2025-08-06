@@ -1,0 +1,51 @@
+<div class="container-fluid">
+  <h2 class="title">{{ isEditMode ? ('COMMON.UPDATE' | translate) : ('COMMON.ADD' | translate) }}
+    {{ 'SERVICE_SETTING.SERVICE_DEPARTMENT' | translate }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="card p-4 mt-3">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label required">{{ 'SERVICE_SETTING.DEPARTMENT' | translate }}</label>
+        <div class="d-flex align-items-center">
+          <ng-select [items]="departmentOptions" bindLabel="label" bindValue="value" formControlName="deptId"
+            [searchable]="true" [loading]="isLoadingDepartments"
+            placeholder="{{ isLoadingDepartments ? 'Loading departments...' : 'Click to load departments' }}"
+            [clearable]="false" (open)="onDepartmentDropdownOpen()" class="flex-grow-1 me-2">
+          </ng-select>
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="refreshDepartments()"
+            [disabled]="isLoadingDepartments" title="Refresh departments">
+            <i class="fas fa-sync-alt" [class.fa-spin]="isLoadingDepartments"></i>
+          </button>
+        </div>
+        <div *ngIf="isLoadingDepartments" class="text-muted small mt-1">
+          <i class="fas fa-spinner fa-spin"></i> Loading departments...
+        </div>
+        <div *ngIf="!isLoadingDepartments && departmentOptions.length === 0" class="text-muted small mt-1">
+          <i class="fas fa-info-circle"></i> Click the dropdown to load departments
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label required">{{ 'SERVICE_SETTING.SERVICE_LEVEL' | translate }}</label>
+        <input type="number" class="form-control" formControlName="serviceLevel" min="1" />
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label required">{{ 'SERVICE_SETTING.DEPARTMENT_ACTION' | translate }}</label>
+        <ng-select [items]="departmentActionOptions" bindLabel="label" bindValue="value"
+          formControlName="departmentAction"></ng-select>
+      </div>
+      <div class="col-md-12 mb-3">
+        <label class="form-label">{{ 'SERVICE_SETTING.STEP_NAME' | translate }}</label>
+        <input type="text" class="form-control" formControlName="stepName" />
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-end">
+      <button type="button" class="btn btn-outline" (click)="cancel()">
+        {{ 'COMMON.CANCEL' | translate }}
+      </button>
+      <button type="submit" class="btn btn-gold" [disabled]="form.invalid">
+        {{ isEditMode ? ('COMMON.UPDATE' | translate) : ('COMMON.SAVE' | translate) }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,113 @@
+<div class="container-fluid">
+  <h2 class="title">
+    <span *ngIf="serviceDetails" class="service-name">
+      {{ (translate.currentLang === 'ar' ? serviceDetails.serviceName : serviceDetails.serviceNameEn) }}
+    </span>
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="card p-4 mt-3">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">{{ 'SERVICE_SETTING.SERVICE_NAME' | translate }}</label>
+        <input type="text" class="form-control" formControlName="serviceName" readonly />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">{{ 'SERVICE_SETTING.SERVICE_NAME_EN' | translate }}</label>
+        <input type="text" class="form-control" formControlName="serviceNameEn" readonly />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">{{ 'SERVICE_SETTING.SERVICE_REFERENCE_NO' | translate }}</label>
+        <input type="text" class="form-control" formControlName="serviceRefrenceNo" readonly />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">{{ 'SERVICE_SETTING.SERVICE_TYPE' | translate }}</label>
+        <input type="text" class="form-control" formControlName="serviceTypeName" readonly />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">{{ 'SERVICE_SETTING.DESCRIPTION_AR' | translate }}</label>
+        <textarea rows="3" class="form-control" [class.is-invalid]="isFieldInvalid('descriptionAr')"
+          [class.is-valid]="isFieldValid('descriptionAr')" formControlName="descriptionAr" [readonly]="!isEditMode">
+        </textarea>
+        <div *ngIf="isFieldInvalid('descriptionAr')" class="invalid-feedback">
+          {{ getFieldError('descriptionAr') }}
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">{{ 'SERVICE_SETTING.DESCRIPTION_EN' | translate }}</label>
+        <textarea rows="3" class="form-control" [class.is-invalid]="isFieldInvalid('descriptionEn')"
+          [class.is-valid]="isFieldValid('descriptionEn')" formControlName="descriptionEn" [readonly]="!isEditMode">
+        </textarea>
+        <div *ngIf="isFieldInvalid('descriptionEn')" class="invalid-feedback">
+          {{ getFieldError('descriptionEn') }}
+        </div>
+      </div>
+      <div class="col-md-12 mb-3">
+        <label class="form-label">{{ 'SERVICE_SETTING.STATUS' | translate }}</label>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="active" formControlName="active" [disabled]="!isEditMode">
+          <label class="form-check-label" for="active">
+            {{ 'SERVICE_SETTING.ACTIVE' | translate }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-end">
+      <button type="button" class="btn btn-outline" (click)="back()">{{ 'COMMON.BACK' | translate }}</button>
+      <button *ngIf="isEditMode" type="submit" class="btn btn-gold" [disabled]="form.invalid || isSubmitting">
+        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+          aria-hidden="true"></span>
+        {{ isSubmitting ? ('COMMON.UPDATING' | translate) : ('COMMON.UPDATE' | translate) }}
+      </button>
+    </div>
+  </form>
+
+  <!-- Collapsible Sections -->
+  <div class="mt-4">
+    <!-- Attributes Section -->
+    <div class="collapsible-section mb-3">
+      <div class="section-header d-flex justify-content-between align-items-center p-3">
+        <h5 class="section-title mb-0">{{ 'SERVICE_SETTING.ATTRIBUTES' | translate }}</h5>
+        <div class="section-actions">
+          <!-- <button *ngIf="isEditMode" type="button" class="btn btn-gold me-2" (click)="addAttribute()">
+            <i class="fas fa-plus me-1"></i>{{ 'SERVICE_SETTING.ADD_ATTRIBUTE' | translate }}
+          </button> -->
+          <button type="button" class="btn btn-outline" (click)="toggleAttributesCollapse()"
+            [attr.aria-expanded]="!attributesCollapsed" aria-controls="attributesCollapse">
+            <i class="fas" [class.fa-chevron-down]="attributesCollapsed"
+              [class.fa-chevron-up]="!attributesCollapsed"></i>
+            {{ attributesCollapsed ? ('COMMON.SHOW' | translate) : ('COMMON.HIDE' | translate) }}
+          </button>
+        </div>
+      </div>
+      <div class="collapse" [class.show]="!attributesCollapsed" id="attributesCollapse">
+        <div class="section-content">
+          <app-attributes-list [isEditMode]="isEditMode"></app-attributes-list>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attachments Configuration Section -->
+    <div class="collapsible-section mb-3">
+      <div class="section-header d-flex justify-content-between align-items-center p-3">
+        <h5 class="section-title mb-0">{{ 'SERVICE_SETTING.ATTACHMENTS_CONFIGURATION' | translate }}</h5>
+        <div class="section-actions">
+          <!-- <button *ngIf="isEditMode" type="button" class="btn btn-gold me-2" (click)="addAttachmentConfig()">
+            <i class="fas fa-plus me-1"></i>{{ 'SERVICE_SETTING.ADD_ATTACHMENT_CONFIGURATION' | translate }}
+          </button> -->
+          <button type="button" class="btn btn-outline" (click)="toggleAttachmentsCollapse()"
+            [attr.aria-expanded]="!attachmentsCollapsed" aria-controls="attachmentsCollapse">
+            <i class="fas" [class.fa-chevron-down]="attachmentsCollapsed"
+              [class.fa-chevron-up]="!attachmentsCollapsed"></i>
+            {{ attachmentsCollapsed ? ('COMMON.SHOW' | translate) : ('COMMON.HIDE' | translate) }}
+          </button>
+        </div>
+      </div>
+      <div class="collapse" [class.show]="!attachmentsCollapsed" id="attachmentsCollapse">
+        <div class="section-content">
+          <app-attachments-list [isEditMode]="isEditMode"></app-attachments-list>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

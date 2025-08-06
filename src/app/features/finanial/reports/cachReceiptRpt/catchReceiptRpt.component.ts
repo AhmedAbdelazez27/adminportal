@@ -74,11 +74,7 @@ export class catchReceiptRptComponent {
   }
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
-      });
+    this.buildColumnDefs();
     this.rowActions = [];
 
 
@@ -243,7 +239,7 @@ export class catchReceiptRptComponent {
     }
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
-    const skip = (event.pageNumber - 1) * event.pageSize;
+    const skip = (event.pageNumber - 1);
     this.searchParams.skip = skip;
     this.searchParams.take = event.pageSize;
     this.spinnerService.show();

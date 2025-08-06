@@ -77,11 +77,7 @@ export class caseSearchListRptComponent {
   }
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
-      });
+    this.buildColumnDefs();
     this.rowActions = [];
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -172,7 +168,7 @@ export class caseSearchListRptComponent {
     this.searchSelect2Params.skip = this.nationalitysearchParams.skip;
     this.searchSelect2Params.take = this.nationalitysearchParams.take;
 
-    this.Select2Service.getSpCaseSelect2(this.searchSelect2Params)
+    this.Select2Service.getNationalitySelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
@@ -214,7 +210,7 @@ export class caseSearchListRptComponent {
     this.searchSelect2Params.skip = this.sponsorCatsearchParams.skip;
     this.searchSelect2Params.take = this.sponsorCatsearchParams.take;
 
-    this.Select2Service.getSpCaseSelect2(this.searchSelect2Params)
+    this.Select2Service.getSponcerCategorySelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
@@ -255,7 +251,7 @@ export class caseSearchListRptComponent {
     this.searchSelect2Params.skip = this.caseStatussearchParams.skip;
     this.searchSelect2Params.take = this.caseStatussearchParams.take;
 
-    this.Select2Service.getSpCaseSelect2(this.searchSelect2Params)
+    this.Select2Service.getCaseStatusSelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];

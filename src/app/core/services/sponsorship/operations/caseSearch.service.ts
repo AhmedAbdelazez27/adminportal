@@ -52,7 +52,7 @@ export class caseSearchService {
 
   getContractDetailsById(params: filtercaseSearchByIdDto): Observable<getSpContractDto> {
     if (!params.contractId || !params.entityId) {
-      throw new Error('caseId and entityId must not be null');
+      throw new Error('contractId and entityId must not be null');
     }
     const apiUrl = `${this.ContractBASE_URL}${ApiEndpoints.caseSearch.GetContractDetailById(params.contractId, params.entityId)}`;
     return this.http.get<getSpContractDto>(apiUrl);
@@ -60,7 +60,7 @@ export class caseSearchService {
 
   getContractCaseDetailsById(params: filtercaseSearchByIdDto): Observable<getSpContractCasesDto[]> {
     if (!params.contractId || !params.entityId) {
-      throw new Error('caseId and entityId must not be null');
+      throw new Error('contractId and entityId must not be null');
     }
     const apiUrl = `${this.ContractBASE_URL}${ApiEndpoints.caseSearch.GetContractCasesDetailById(params.contractId, params.entityId)}`;
     return this.http.get<getSpContractCasesDto[]>(apiUrl);

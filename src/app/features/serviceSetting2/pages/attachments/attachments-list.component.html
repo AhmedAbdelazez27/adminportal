@@ -1,0 +1,117 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="title">{{ 'SERVICE_SETTING.ATTACHMENTS_CONFIG' | translate }}</h1>
+    <div class="d-flex gap-2">
+      <button *ngIf="isEditMode" class="btn btn-gold" (click)="addAttachment()">
+        <i class="fas fa-plus me-1"></i>{{ 'SERVICE_SETTING.ADD_ATTACHMENT_CONFIG' | translate }}
+      </button>
+    </div>
+  </div>
+  <app-generic-data-table [columnDefs]="columnDefs" [rowData]="attachments" [totalCount]="attachments.length"
+    [pageSize]="10" [currentPage]="0" [showActionColumn]="true" [rowActions]="rowActions"
+    (actionClick)="onActionClick($event)"></app-generic-data-table>
+</div>
+
+<!-- Attachment Modal -->
+<div class="modal fade" id="AttachmentModal" tabindex="-1" aria-labelledby="AttachmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="AttachmentModalLabel">
+          {{ modalMode === 'add' ? ('SERVICE_SETTING.ADD_ATTACHMENT_CONFIG' | translate) :
+          modalMode === 'edit' ? ('SERVICE_SETTING.EDIT_ATTACHMENT_CONFIG' | translate) :
+          ('SERVICE_SETTING.VIEW_ATTACHMENT_CONFIG' | translate) }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="attachmentForm" (ngSubmit)="submitAttachment()" id="attachmentForm">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="name" class="form-label">{{ 'SERVICE_SETTING.ATTACHMENT_NAME_AR' | translate }} <span
+                  class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="name" formControlName="name"
+                [class.is-invalid]="isFieldInvalid('name')" [class.is-valid]="isFieldValid('name')"
+                (blur)="onFieldBlur('name')" [disabled]="modalMode === 'view'" />
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('name')">
+                {{ getFieldError('name') }}
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="nameEn" class="form-label">{{ 'SERVICE_SETTING.ATTACHMENT_NAME_EN' | translate }}</label>
+              <input type="text" class="form-control" id="nameEn" formControlName="nameEn"
+                [class.is-invalid]="isFieldInvalid('nameEn')" [class.is-valid]="isFieldValid('nameEn')"
+                (blur)="onFieldBlur('nameEn')" [disabled]="modalMode === 'view'" />
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('nameEn')">
+                {{ getFieldError('nameEn') }}
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="mendatory" formControlName="mendatory"
+                  [disabled]="modalMode === 'view'">
+                <label class="form-check-label" for="mendatory">
+                  {{ 'SERVICE_SETTING.MANDATORY' | translate }}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="active" formControlName="active"
+                  [disabled]="modalMode === 'view'">
+                <label class="form-check-label" for="active">
+                  {{ 'SERVICE_SETTING.ACTIVE' | translate }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="closeAttachmentModal()">
+          {{ modalMode === 'view' ? ('COMMON.CLOSE' | translate) : ('COMMON.CANCEL' | translate) }}
+        </button>
+        <button type="submit" form="attachmentForm" class="btn btn-gold" *ngIf="modalMode !== 'view'"
+          [disabled]="attachmentForm.invalid">
+          {{ modalMode === 'add' ? ('COMMON.SAVE' | translate) : ('COMMON.UPDATE' | translate) }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteAttachmentModal" tabindex="-1" aria-labelledby="deleteAttachmentModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteAttachmentModalLabel">
+          {{ 'COMMON.DELETE_CONFIRMATION' | translate }}
+        </h5>
+        <button type="button" class="btn-close" (click)="cancelDelete()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ 'COMMON.DELETE_CONFIRMATION_MESSAGE' | translate }}</p>
+        <div *ngIf="selectedAttachmentToDelete" class="delete-confirmation-details">
+          <strong>{{ 'SERVICE_SETTING.ATTACHMENT_NAME_AR' | translate }}:</strong> {{ selectedAttachmentToDelete.name
+          }}<br>
+          <strong>{{ 'SERVICE_SETTING.ATTACHMENT_NAME_EN' | translate }}:</strong> {{ selectedAttachmentToDelete.nameEn
+          }}<br>
+          <strong>{{ 'SERVICE_SETTING.ACTIVE' | translate }}:</strong> {{ selectedAttachmentToDelete.active ?
+          ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}<br>
+          <strong>{{ 'SERVICE_SETTING.MANDATORY' | translate }}:</strong> {{ selectedAttachmentToDelete.mendatory ?
+          ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="cancelDelete()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteAttachment()">
+          {{ 'COMMON.DELETE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

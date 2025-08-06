@@ -1,0 +1,179 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="title">{{ 'SERVICE_SETTING.ATTRIBUTES' | translate }}</h2>
+  </div>
+  <button *ngIf="isEditMode && canAddAttribute()" class="btn btn-gold mb-3" (click)="addAttribute()">
+    <i class="fas fa-plus me-1"></i>{{ 'SERVICE_SETTING.ADD_ATTRIBUTE' | translate }}
+  </button>
+  <app-generic-data-table [columnDefs]="columnDefs" [rowData]="attributes" [totalCount]="attributes.length"
+    [pageSize]="10" [currentPage]="0" [showActionColumn]="true" [rowActions]="rowActions"
+    [columnHeaderMap]="columnHeaderMap" (actionClick)="onActionClick($event)"></app-generic-data-table>
+</div>
+
+<!-- Attribute Modal -->
+<div class="modal fade" id="AttributeModal" tabindex="-1" aria-labelledby="AttributeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="AttributeModalLabel">
+          {{ modalMode === 'add' ? ('SERVICE_SETTING.ADD_ATTRIBUTE' | translate) :
+          modalMode === 'edit' ? ('SERVICE_SETTING.EDIT_ATTRIBUTE' | translate) :
+          ('SERVICE_SETTING.VIEW_ATTRIBUTE' | translate) }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="attributeForm" (ngSubmit)="submitAttribute()">
+          <!-- Attribute Basic Information -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <h6 class="mb-0">{{ 'SERVICE_SETTING.ATTRIBUTE_INFORMATION' | translate }}</h6>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label required">{{ 'SERVICE_SETTING.ATTRIBUTE_NAME_AR' | translate }}</label>
+                  <input type="text" class="form-control" formControlName="nameAr"
+                    [class.is-invalid]="attributeForm.get('nameAr')?.invalid && attributeForm.get('nameAr')?.touched"
+                    [class.is-valid]="attributeForm.get('nameAr')?.valid && attributeForm.get('nameAr')?.touched"
+                    [placeholder]="'SERVICE_SETTING.ATTRIBUTE_NAME_AR' | translate" />
+                  <div class="invalid-feedback"
+                    *ngIf="attributeForm.get('nameAr')?.invalid && attributeForm.get('nameAr')?.touched">
+                    {{ 'VALIDATION.REQUIRED' | translate }}
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">{{ 'SERVICE_SETTING.ATTRIBUTE_NAME_EN' | translate }}</label>
+                  <input type="text" class="form-control" formControlName="nameEn"
+                    [class.is-invalid]="attributeForm.get('nameEn')?.invalid && attributeForm.get('nameEn')?.touched"
+                    [class.is-valid]="attributeForm.get('nameEn')?.valid && attributeForm.get('nameEn')?.touched"
+                    [placeholder]="'SERVICE_SETTING.ATTRIBUTE_NAME_EN' | translate" />
+                  <div class="invalid-feedback"
+                    *ngIf="attributeForm.get('nameEn')?.invalid && attributeForm.get('nameEn')?.touched">
+                    {{ getAttributeFieldError('nameEn') }}
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label required">{{ 'SERVICE_SETTING.VIEW_ORDER' | translate }}</label>
+                  <input type="number" class="form-control" formControlName="viewOrder" min="1"
+                    [class.is-invalid]="attributeForm.get('viewOrder')?.invalid && attributeForm.get('viewOrder')?.touched"
+                    [class.is-valid]="attributeForm.get('viewOrder')?.valid && attributeForm.get('viewOrder')?.touched"
+                    [placeholder]="'SERVICE_SETTING.VIEW_ORDER' | translate" />
+                  <div class="invalid-feedback"
+                    *ngIf="attributeForm.get('viewOrder')?.invalid && attributeForm.get('viewOrder')?.touched">
+                    {{ getAttributeFieldError('viewOrder') }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Attribute Values Management -->
+          <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h6 class="mb-0">{{ 'SERVICE_SETTING.ATTRIBUTE_VALUES' | translate }}</h6>
+              <button type="button" class="btn btn-gold btn-sm" (click)="addValueRow()"
+                *ngIf="modalMode !== 'view' && ((modalMode === 'add' && canAddAttribute()) || (modalMode === 'edit' && canEditAttribute()))">
+                <i class="fas fa-plus me-1"></i>
+                {{ 'SERVICE_SETTING.ADD_ATTRIBUTE_VALUE' | translate }}
+              </button>
+            </div>
+            <div class="card-body">
+              <!-- Add new attribute value form -->
+              <div class="border rounded p-3 mb-3"
+                *ngIf="modalMode !== 'view' && ((modalMode === 'add' && canAddAttribute()) || (modalMode === 'edit' && canEditAttribute()))">
+                <form [formGroup]="attributeValueForm">
+                  <div class="row">
+                    <div class="col-md-4 mb-2">
+                      <input type="text" class="form-control form-control-sm" formControlName="valueAr"
+                        [class.is-invalid]="isAttributeValueFieldInvalid('valueAr')"
+                        [class.is-valid]="isAttributeValueFieldValid('valueAr')"
+                        [placeholder]="'SERVICE_SETTING.VALUE_AR' | translate">
+                      <div class="invalid-feedback" *ngIf="isAttributeValueFieldInvalid('valueAr')">
+                        {{ getAttributeValueFieldError('valueAr') }}
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                      <input type="text" class="form-control form-control-sm" formControlName="valueEn"
+                        [class.is-invalid]="isAttributeValueFieldInvalid('valueEn')"
+                        [class.is-valid]="isAttributeValueFieldValid('valueEn')"
+                        [placeholder]="'SERVICE_SETTING.VALUE_EN' | translate">
+                      <div class="invalid-feedback" *ngIf="isAttributeValueFieldInvalid('valueEn')">
+                        {{ getAttributeValueFieldError('valueEn') }}
+                      </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                      <input type="number" class="form-control form-control-sm" formControlName="viewOrder" min="1"
+                        [class.is-invalid]="isAttributeValueFieldInvalid('viewOrder')"
+                        [class.is-valid]="isAttributeValueFieldValid('viewOrder')" [placeholder]="'ORDER' | translate">
+                      <div class="invalid-feedback" *ngIf="isAttributeValueFieldInvalid('viewOrder')">
+                        {{ getAttributeValueFieldError('viewOrder') }}
+                      </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                      <button type="button" class="btn btn-gold btn-sm w-100" (click)="addAttributeValue()"
+                        [disabled]="attributeValueForm.invalid">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Existing attribute values list -->
+              <div *ngIf="currentAttributeValues && currentAttributeValues.length > 0">
+                <div class="table-responsive">
+                  <table class="table table-sm table-bordered">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>{{ 'SERVICE_SETTING.VALUE_AR' | translate }}</th>
+                        <th>{{ 'SERVICE_SETTING.VALUE_EN' | translate }}</th>
+                        <th>{{ 'SERVICE_SETTING.VIEW_ORDER' | translate }}</th>
+                        <th
+                          *ngIf="modalMode !== 'view' && ((modalMode === 'add' && canAddAttribute()) || (modalMode === 'edit' && canEditAttribute()))">
+                          {{ 'COMMON.ACTIONS' | translate }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let value of currentAttributeValues; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ value.valueAr }}</td>
+                        <td>{{ value.valueEn }}</td>
+                        <td>{{ value.viewOrder }}</td>
+                        <td
+                          *ngIf="modalMode !== 'view' && ((modalMode === 'add' && canAddAttribute()) || (modalMode === 'edit' && canEditAttribute()))">
+                          <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeAttributeValue(i)">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div *ngIf="!currentAttributeValues || currentAttributeValues.length === 0">
+                <p class="text-muted text-center">{{ 'SERVICE_SETTING.NO_ATTRIBUTE_VALUES' | translate }}</p>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer" *ngIf="modalMode !== 'view'">
+        <button type="button" class="btn btn-outline" (click)="closeAttributeModal()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="button" class="btn btn-gold" (click)="submitAttribute()"
+          [disabled]="attributeForm.invalid || (modalMode === 'add' && !canAddAttribute()) || (modalMode === 'edit' && !canEditAttribute())">
+          {{ modalMode === 'add' ? ('COMMON.CREATE' | translate) : ('COMMON.UPDATE' | translate) }}
+        </button>
+      </div>
+      <div class="modal-footer" *ngIf="modalMode === 'view'">
+        <button type="button" class="btn btn-outline" (click)="closeAttributeModal()">
+          {{ 'COMMON.CLOSE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

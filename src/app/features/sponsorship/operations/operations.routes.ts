@@ -3,6 +3,7 @@ import { authGuard } from '../../../core/guards/auth/auth-guars';
 import { BeneficentComponent } from './beneficent/beneficent.component';
 import { casePaymentComponent } from './casePayment/casePayment.component';
 import { caseSearchComponent } from './caseSearch/caseSearch.component';
+import { spContractsComponent } from './contracts/spContracts.component';
 
 export const operationsRoutes: Routes = [
   {
@@ -16,7 +17,7 @@ export const operationsRoutes: Routes = [
     data: { pagePermission: 'SpCasesPayment' } // casePayment  ,   SpCasesPayment.View
   },
   {
-    path: 'Contracts', component: casePaymentComponent,
+    path: 'Contracts', component: spContractsComponent,
     canActivate: [authGuard],
     data: { pagePermission: 'SpContracts' } // SpContracts  ,   SpContracts.View
   },

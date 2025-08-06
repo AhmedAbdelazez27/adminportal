@@ -93,6 +93,22 @@ p, span, a, td, li {
 }
 
 
+ .dropdown-mega {
+        width: 55vw;
+    }
+
+    .dropdown:hover .dropdown-mega {
+        display: flex;
+        position: unset;
+        width: 100%;
+        left: 0;
+        padding: 24px;
+    }
+
+    .dropdown-mega.show {
+        display: flex;
+    }
+
 
 @media only screen and (min-width: 992px) {
     .dropdown-mega {
@@ -373,6 +389,24 @@ p, span, a, td, li {
         color: #fff;
     }
 
+
+    .btn-danger {
+    display: flex;
+    padding: 12px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid #CA4832;
+    background-color: #CA4832;
+    color: #fff;
+}
+
+    .btn-danger:hover {
+        background-color: #d1604d;
+        color: #fff;
+    }
+
 .btn-green {
     display: flex;
     padding: 12px 24px;
@@ -386,6 +420,24 @@ p, span, a, td, li {
 }
 
     .btn-green:hover {
+        background-color: #72C5C2;
+        color: #fff;
+    }
+
+
+    .btn-success {
+    display: flex;
+    padding: 12px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid #5ba7a4;
+    background-color: #5ba7a4;
+    color: #fff;
+}
+
+    .btn-success:hover {
         background-color: #72C5C2;
         color: #fff;
     }
@@ -1078,18 +1130,24 @@ p, span, a, td, li {
 .custom-modal-width {
   max-width: 95% !important;
   width: 95% !important;}
+
+  ng-select{
+      border: none !important;
+  }
   
 .ng-select.ng-select-custom {
-  min-height: 45px;
-  border: 1px solid #ced4da;
-  border-radius: 0.375rem;
-  font-size: 0.95rem;
+      border: none;
+      border-radius: 10px;
+
 
   .ng-select-container {
-    min-height: 45px;
-    padding: 0.375rem 0.75rem;
+        padding: 12px 16px;
+    border-radius: 10px;
+    background-color: var(--Color-21, #F7F7F7);
     border: none;
     box-shadow: none;
+    height: 48px;
+
 
     .ng-value {
       background-color: #f8f9fa;
@@ -1234,4 +1292,94 @@ span.ag-paging-page-size {
 .ag-theme-admin .ag-disabled {
   opacity: 0.4;
   cursor: default;
+}
+
+
+app-navbar{
+    position: fixed;
+    z-index: 999;
+    background-color: #f7f7f7;
+    left: 24px;
+    right: 24px;
+    top: 0;
+   
+}
+
+
+
+.page-content{
+    margin-top: 155px;
+}
+
+@media only screen and (max-width: 991px) {
+    app-navbar{
+    position: unset;
+    z-index: 999;
+    background-color: #f7f7f7;
+    left: 24px;
+    right: 24px;
+    top: 0;
+   
+}
+
+ app-navbar .dropdown-menu.dropdown-mega{
+    width: 100%;
+    box-shadow: none !important;
+    margin-top: 8px;
+ }
+ 
+.page-content{
+    margin-top: 0;
+}
+
+.navbar-toggler{
+    margin-bottom: 16px;
+}
+
+.navbar .nav-link{
+        justify-content: start;
+}
+
+}
+
+
+.mega-list  .card-body{
+        border: none;
+    margin-top: 8px;
+    padding: 8px;
+}
+
+.mega-list .card-body ul{
+
+    padding-left: 0 !important;
+}
+
+
+.btn-pager{
+    display: flex;
+width: 32px;
+height: 32px;
+padding: 0;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 10px;
+border-radius: 8px;
+border: 1px solid #F1F1F1 !important;
+background: #FFF !important;
+}
+
+.page-input{
+height: 42px !important;
+padding: 8px 15px !important;
+border-radius: 8px !important;
+background: #FFF !important;
+border: none  !important;
+}
+
+.data-table-search{
+    padding: 8px !important;
+    background-color: #fff !important;
+    border-radius: 15px !important;
+    margin-bottom: 8px;
 }

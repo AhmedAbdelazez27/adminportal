@@ -20,7 +20,7 @@ export class casePaymentService {
 
   getDetailById(params: filtercasePaymentByIdDto): Observable<casePaymentDto> {
     if (!params.composeKey) {
-      throw new Error('miscReceiptId and entityId must not be null');
+      throw new Error('composeKey and entityId must not be null');
     }
     const apiUrl = `${this.BASE_URL}${ApiEndpoints.SpCasesPayment.Base}${ApiEndpoints.SpCasesPayment.GetById(params.composeKey)}`;
     return this.http.get<casePaymentDto>(apiUrl);
@@ -28,9 +28,9 @@ export class casePaymentService {
 
   getspCasesPaymentHdr(params: filtercasePaymentByIdDto): Observable<casePaymentHdrDto[]> {
     if (!params.composeKey || !params.entityId) {
-      throw new Error('miscReceiptId and entityId must not be null');
+      throw new Error('composeKey and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.SpCasesPayment.Base}${ApiEndpoints.SpCasesPayment.GetspCasesPaymentHdr(params.composeKey, params.entityId)}`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.SpCasesPayment.GetspCasesPaymentHdrBase}${ApiEndpoints.SpCasesPayment.GetspCasesPaymentHdr(params.composeKey, params.entityId)}`;
     return this.http.get<casePaymentHdrDto[]>(apiUrl);
   }
 }

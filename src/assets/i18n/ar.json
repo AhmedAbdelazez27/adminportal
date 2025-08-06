@@ -70,7 +70,8 @@
     "LOOKS_GOOD": "يبدو جيداً!",
     "FORM_ERRORS": "يرجى إصلاح الأخطاء التالية:",
     "ERROR_COUNT": "خطأ موجود",
-    "MANDATORY_FIELDS_REQUIRED": "يرجى ملء الحقول المطلوبة (الاسم العربي والاسم بالإنجليزية)"
+    "MANDATORY_FIELDS_REQUIRED": "يرجى ملء الحقول المطلوبة (الاسم العربي والاسم بالإنجليزية)",
+    "MIN_VALUE": "الحد الأدنى للقيمة هو {{min}}"
   },
   "COMMON": {
     "ACTIONS": "الإجراءات",
@@ -82,7 +83,24 @@
     "CREATE": "إنشاء",
     "UPDATE": "تحديث",
     "SAVE": "حفظ",
-    "CONFIRM": "تأكيد"
+    "CONFIRM": "تأكيد",
+    "BACK": "رجوع",
+    "ADD": "إضافة",
+    "SHOW": "إظهار",
+    "HIDE": "إخفاء",
+    "YES": "نعم",
+    "NO": "لا",
+    "CONFIRM_DELETE": "هل أنت متأكد من حذف هذا العنصر؟",
+    "SEARCH_TITLE": "بحث",
+    "DELETE_CONFIRMATION": "تأكيد الحذف",
+    "DELETE_CONFIRMATION_MESSAGE": "هل أنت متأكد من حذف هذا العنصر؟",
+    "ERROR_LOADING_DATA": "خطأ في تحميل البيانات",
+    "ERROR_SAVING_DATA": "خطأ في حفظ البيانات",
+    "ERROR_DELETING_DATA": "خطأ في حذف البيانات",
+    "PLEASE_FILL_REQUIRED_FIELDS": "يرجى ملء جميع الحقول المطلوبة بشكل صحيح",
+    "FIELD_REQUIRED": "هذا الحقل مطلوب",
+    "MIN_VALUE_ERROR": "الحد الأدنى للقيمة هو {{min}}",
+    "MAX_LENGTH_ERROR": "الحد الأقصى للطول هو {{max}} حرف"
   },
   "ENTITY": {
     "TITLE": "الكيانات",
@@ -119,7 +137,7 @@
       "FAIL": "فشل في حذف الدور"
     }
   },
-  
+
   "NAME": "الاسم",
   "ENTER_NAME": "ادخل الاسم",
   "NAME_REQUIRED": "الاسم مطلوب",
@@ -187,6 +205,7 @@
   "PASSWORDS_MATCH": "كلمتا المرور متطابقتان!",
   "ENTITIES_ASSIGNED": "تم تعيين الجمعيات بنجاح.",
   "ENTITIES_ASSIGN_FAILED": "فشل في تعيين الجمعيات.",
+
   "Common": {
     "Action": "العمليات",
     "Clear": "مسح",
@@ -199,8 +218,13 @@
     "PrintExcel": "تنزيل ملف اكسل",
     "Total": "إجمالي",
     "Print": " طباعه",
-    "Required": "هذا الحقل مطلوب"
+    "Required": "هذا الحقل مطلوب",
+    "ViewInfo": "عرض التفاصيل",
+    "ViewHistoryInfo": "تاريخ المستفيد",
+    "ViewPaymentInfo": "صرفيات الكفالات",
+    "ViewContractInfo": "العقود"
   },
+
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "اسم الجمعية",
     "DocumentNumber": "رقم السند",
@@ -243,6 +267,7 @@
     "NoData": "لا توجد بيانات متاحة للعرض,",
     "SearchTitle": "بحث فى عمليات الصرف"
   },
+
   "ApPaymentsTransactionHDRResourceName": {
     "EntityId": "اسم الجمعية",
     "PaymentNumber": "رقم السند",
@@ -258,6 +283,7 @@
     "Notes": "ملاحظات",
     "Title": "تفاصيل عمليات الصرف"
   },
+
   "InvoiceHdResourceName": {
     "Title": "الفواتير",
     "TrTitle": " تفاصيل الفاتوره",
@@ -286,6 +312,7 @@
     "total_Amount": "اجمالى المبلغ",
     "total_TR": "اجمالى الضريبه"
   },
+
   "FinancialReportResourceName": {
     "catchReceiptRpt_Title": "سندات القبض",
     "generalLJournalRpt_Title": "كشف حركه حساب",
@@ -314,6 +341,7 @@
     "income": "قائمه الدخل",
     "vendorId": "اسم المورد",
     "DonatorId": "اسم المحسن",
+
     "bankAccountName": "اسم البنك",
     "beneficiaryName": "اسم المستفيد",
     "notes": "ملاحظات",
@@ -360,6 +388,7 @@
     "miscReceiptAmount": "القيمه",
     "administrative": "القيمه الاداريه"
   },
+
   "CORECT_EMAIL": "الرجاء إدخال بريد إلكتروني صحيح",
   "OTP": {
     "VERIFY_SUCCESS": "تم التحقق من OTP بنجاح!",
@@ -369,6 +398,7 @@
   "ENTER_NEW_PASSWORD": "أدخل كلمة المرور الجديدة",
   "PASSWORD_GUIDELINES": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل وأن تحتوي على حرف خاص.",
   "CONFIRM": "تأكيد",
+
   "PaymentVoucherResourceName": {
     "Title": "سندات صرف",
     "PaymentDetailTitle": " تفاصيل الشيك",
@@ -402,6 +432,7 @@
     "accountNameEn": " اسم الحساب ",
     "accountNameAr": " اسم الحساب "
   },
+
   "vendorResourceName": {
     "entityId": "اسم الجمعية",
     "vendorName": "اسم المورد",
@@ -417,6 +448,7 @@
     "mobile": "موبايل",
     "workTEL": "هاتف العمل"
   },
+
   "glJEResourceName": {
     "title": "القيود",
     "entityId": "اسم الجمعية",
@@ -442,6 +474,7 @@
     "totalDebit": "اجمالى دائن",
     "totalCredit": "اجمالى مدين"
   },
+
   "beneficentResourceName": {
     "Title": "بحث فى المتبرعين,",
     "EntityId": "اسم الجمعية",
@@ -464,6 +497,7 @@
     "gender": "الجنس",
     "city": "الإمارة"
   },
+
   "CasePaymentResourceName": {
     "Title": "تفاصيل الصرفيات ",
     "HdrTitle": "التفاصيل ",
@@ -491,6 +525,7 @@
     "total1": "اجمالى الكفاله",
     "total2": "اجمالى الهديه",
     "total3": "الاجمالى",
+
     "casE_PAYMENT_CODE": "",
     "paymenT_CODE": "",
     "statuS_CODE": "",
@@ -505,6 +540,7 @@
     "deliverY_METHOD_DESC": "",
     "attacheD_FILE": ""
   },
+
   "SpContractsResourceName": {
     "Title": "بحث فى استعلام العقود",
     "Title_SpContractCase": "التفاصيل",
@@ -540,6 +576,7 @@
     "sponceR_CATEGORY_DESC": "نوع الكفاله",
     "startdate": " تاريخ البدايه  "
   },
+
   "foundation_name": "اسم المؤسسة",
   "foundation_type": "نوع المؤسسة",
   "license_number": "رقم الترخيص",
@@ -565,6 +602,7 @@
   "activate_account": "تفعيل الحساب",
   "reject_account": "رفض الحساب",
   "block_account": "حظر الحساب",
+
   "SponsorshipReportResourceName": {
     "arabicValue": "",
     "benifcientTotalRpt_Title": "اجمالى عدد المستفيدين",
@@ -638,6 +676,7 @@
     "value": "",
     "wifeId": ""
   },
+
   "AidRequestsResourceName": {
     "Title": "بحث فى الحالات",
     "aiD_REQUEST_DATE": "Request Date",
@@ -700,6 +739,7 @@
     "wifE_NAME": "Spouse Name",
     "wifeiD_END_DATE": "Spouse emirates ID expiry date"
   },
+
   "SocialCaseReportsResourceName": {
     "ordersListBranchRptTitle": "قائمه الطلبات حسب الفرع",
     "ordersListCityRptTitle": "قائمه الطلبات حسب الاماره",
@@ -712,6 +752,7 @@
     "cityId": "الاماره",
     "fromDate": "من تاريخ",
     "toDate": "الى تاريخ",
+
     "referencenumber": "رقم الطلب",
     "aiD_REQUEST_DATE": "تاريخ الطلب",
     "requesT_TYPE_DESC": "نوع الطلب",
@@ -730,6 +771,7 @@
     "statuS_DESC": "حاله الساعده",
     "entitY_NAME": "الجمعيه"
   },
+
   "ServiceRequestsReportsResourceName": {
     "requestDetailsEntitiesRPT_Title": "الطلبات المقدمه",
     "totalRequestsEntitiesRPT_Title": "اجمالي الطلبات المقدمه",
@@ -750,6 +792,7 @@
     "rejectedRequestsNo": "الطلبات المرفوضه",
     "postedRequestsNo": "الطلبات المعتمده"
   },
+
   "CaseSearchResourceName": {
     "Title": " بحث الاستمارات",
     "MenuBarTitle": " استعلام كفالات",
@@ -845,6 +888,7 @@
     "trX_DATEstr": " تاريخ العمليه ",
     "trX_DESC": ""
   },
+
   "AVAILABLE_NUMBER": {
     "TITLE": "الأرقام المتاحة",
     "ADD_NEW": "إضافة رقم متاح جديد",
@@ -858,6 +902,7 @@
     "ENTER_ALLOWED_NUMBER": "أدخل الرقم المسموح",
     "DELETE_CONFIRMATION": "هل أنت متأكد من حذف هذا الرقم المتاح؟ لا يمكن التراجع عن هذا الإجراء."
   },
+
   "ATTACHMENTS_CONFIG": {
     "TITLE": "إعدادات المرفقات",
     "ADD_NEW": "إضافة إعداد مرفق جديد",
@@ -878,6 +923,7 @@
     "CREATE": "إنشاء",
     "UPDATE": "تحديث"
   },
+
   "LOCATIONS": {
     "TITLE": "إدارة المواقع",
     "ADD_NEW": "إضافة موقع جديد",
@@ -918,6 +964,7 @@
     "CREATE": "إنشاء",
     "UPDATE": "تحديث"
   },
+
   "REGIONS": {
     "TITLE": "إدارة المناطق",
     "ADD_NEW": "إضافة منطقة جديدة",
@@ -942,6 +989,7 @@
     "CREATE": "إنشاء",
     "UPDATE": "تحديث"
   },
+
   "ProjectReportResourceName": {
     "projectTypeListRpt_Title": "كشف مشاريع حسب النوع",
     "projectCountryListRpt_Title": "كشف مشاريع حسب الدوله ",
@@ -965,6 +1013,94 @@
     "projecT_TYPE_DESC": "حاله المشروع",
     "countrY_code": "الدوله"
   },
+  "SERVICE_SETTING": {
+    "TITLE": "إعدادات الخدمات",
+    "ADD_NEW": "إضافة خدمة جديدة",
+    "SERVICE_ID": "رقم الخدمة",
+    "SERVICE_NAME": "اسم الخدمة (عربي)",
+    "SERVICE_NAME_EN": "اسم الخدمة (إنجليزي)",
+    "SERVICE_REFERENCE_NO": "رقم مرجع الخدمة",
+    "SERVICE_TYPE": "نوع الخدمة",
+    "STATUS": "الحالة",
+    "ACTIVE": "نشط",
+    "INACTIVE": "غير نشط",
+    "LAST_MODIFIED": "آخر تعديل",
+    "DESCRIPTION_AR": "الوصف (عربي)",
+    "DESCRIPTION_EN": "الوصف (إنجليزي)",
+    "MAIN_SERVICE_CLASSIFICATION": "التصنيف الرئيسي للخدمة",
+    "SUB_SERVICE_CLASSIFICATION": "التصنيف الفرعي للخدمة",
+    "EDIT": "تعديل الخدمة",
+    "VIEW": "عرض الخدمة",
+    "DELETE_CONFIRMATION": "هل أنت متأكد من حذف هذه الخدمة؟",
+    "DELETE_SUCCESS": "تم حذف الخدمة بنجاح",
+    "CREATE_SUCCESS": "تم إنشاء الخدمة بنجاح",
+    "UPDATE_SUCCESS": "تم تحديث الخدمة بنجاح",
+    "MAIN_INFORMATION": "المعلومات الأساسية",
+    "ATTRIBUTES": "الخصائص",
+    "SERVICE_DEPARTMENTS": "أقسام الخدمة",
+    "ATTACHMENTS_CONFIG": "إعدادات المرفقات",
+    "INDIVIDUAL": "فردي",
+    "ORGANIZATION": "مؤسسة",
+    "ATTRIBUTE_NAME_AR": "اسم الخاصية (عربي)",
+    "ATTRIBUTE_NAME_EN": "اسم الخاصية (إنجليزي)",
+    "REFERENCE_ATTRIBUTE_TYPE": "نوع مرجع الخاصية",
+    "VIEW_ORDER": "ترتيب العرض",
+    "ORDER": "الترتيب",
+    "ATTRIBUTE_VALUES": "قيم الخاصية",
+    "VALUE_AR": "القيمة (عربي)",
+    "VALUE_EN": "القيمة (إنجليزي)",
+    "ADD_ATTRIBUTE": "إضافة خاصية",
+    "ADD_ATTRIBUTE_VALUE": "إضافة قيمة خاصية",
+    "DEPARTMENT": "القسم",
+    "SERVICE_LEVEL": "مستوى الخدمة",
+    "DEPARTMENT_ACTION": "إجراء القسم",
+    "STEP_NAME": "اسم الخطوة",
+    "ADD_SERVICE_DEPARTMENT": "إضافة قسم خدمة",
+    "ATTRIBUTE_INFORMATION": "معلومات الخاصية",
+    "ADD_FIRST_ATTRIBUTE": "إضافة أول خاصية",
+    "NO_ATTRIBUTES": "لا توجد خصائص لهذه الخدمة",
+    "NO_ATTRIBUTE_VALUES": "لم يتم إضافة قيم للخاصية بعد",
+    "EDIT_ATTRIBUTE": "تعديل الخاصية",
+    "VIEW_ATTRIBUTE": "عرض الخاصية",
+    "DELETE_ATTRIBUTE_CONFIRMATION": "هل أنت متأكد من حذف هذه الخاصية؟",
+    "ATTRIBUTE_SUCCESS": "تم حفظ الخاصية بنجاح",
+    "ATTRIBUTE_DELETE_SUCCESS": "تم حذف الخاصية بنجاح",
+    "NO_SERVICE_DEPARTMENTS": "لا توجد أقسام خدمة لهذه الخدمة",
+    "ADD_FIRST_SERVICE_DEPARTMENT": "إضافة أول قسم خدمة",
+    "EDIT_SERVICE_DEPARTMENT": "تعديل قسم الخدمة",
+    "VIEW_SERVICE_DEPARTMENT": "عرض قسم الخدمة",
+    "SELECT_DEPARTMENT": "اختر القسم",
+    "SELECT_ACTION": "اختر الإجراء",
+    "DELETE_SERVICE_DEPARTMENT_CONFIRMATION": "هل أنت متأكد من حذف قسم الخدمة هذا؟",
+    "SERVICE_DEPARTMENT_SUCCESS": "تم حفظ قسم الخدمة بنجاح",
+    "SERVICE_DEPARTMENT_DELETE_SUCCESS": "تم حذف قسم الخدمة بنجاح",
+    "ADD_ATTACHMENT_CONFIG": "إضافة إعداد مرفق",
+    "ADD_FIRST_ATTACHMENT_CONFIG": "إضافة أول إعداد مرفق",
+    "NO_ATTACHMENT_CONFIGS": "لا توجد إعدادات مرفقات لهذه الخدمة",
+    "EDIT_ATTACHMENT_CONFIG": "تعديل إعداد المرفق",
+    "VIEW_ATTACHMENT_CONFIG": "عرض إعداد المرفق",
+    "SELECT_ATTACHMENT_TYPE": "اختر نوع المرفق",
+    "DELETE_ATTACHMENT_CONFIG_CONFIRMATION": "هل أنت متأكد من حذف إعداد المرفق هذا؟",
+    "ATTACHMENT_CONFIG_SUCCESS": "تم حفظ إعداد المرفق بنجاح",
+    "ATTACHMENT_CONFIG_DELETE_SUCCESS": "تم حذف إعداد المرفق بنجاح",
+    "OPTIONAL": "اختياري",
+    "ADD_WORKFLOW": "إضافة سير العمل",
+    "ATTACHMENT_NAME_AR": "اسم المرفق (عربي)",
+    "ATTACHMENT_NAME_EN": "اسم المرفق (إنجليزي)",
+    "ATTACHMENT_TYPE": "نوع المرفق",
+    "ATTACHMENTS_CONFIGURATION": "إعدادات المرفقات",
+    "ADD_ATTACHMENT_CONFIGURATION": "إضافة إعداد مرفق",
+    "MANDATORY": "إجباري",
+    "SERVICE_DEPARTMENT": "قسم الخدمة",
+    "DEPARTMENT_ACTION_APPROVE": "موافقة",
+    "DEPARTMENT_ACTION_REJECT": "رفض",
+    "DEPARTMENT_ACTION_REVIEW": "مراجعة",
+    "DEPARTMENT_ACTION_RETURN": "إرجاع",
+    "SERVICE_DEPARTMENT_ADDED_SUCCESS": "تم إضافة قسم الخدمة بنجاح",
+    "SERVICE_DEPARTMENT_UPDATED_SUCCESS": "تم تحديث قسم الخدمة بنجاح",
+    "SERVICE_DEPARTMENT_DELETED_SUCCESS": "تم حذف قسم الخدمة بنجاح"
+  },
+
   "ProjectsResourceName": {
     "Title": " تفاصيل المشاريع",
     "Tab1_Title": " المقبوضات",

@@ -116,11 +116,7 @@ export class aidRequestsComponent {
   }
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
-      });
+    this.buildColumnDefs();
     this.rowActions = [
       { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
       { label: this.translate.instant('Common.StudyDetails'), icon: 'fas fa-eye', action: 'onViewStudyDetailsInfo' },

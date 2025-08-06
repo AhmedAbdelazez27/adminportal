@@ -131,7 +131,7 @@
             </div>
 
             <div class="col-xl-4 mb-3">
-              <label for="checkNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.iD_NUMBER' | translate }}</label>
+              <label for="checkNumber" class="form-label">{{ 'CaseSearchResourceName.iD_NUMBER' | translate }}</label>
               <input type="text" name="checkNumber" class="form-control" [(ngModel)]="searchParams.idNumber" placeholder="Search">
             </div>
 
@@ -195,7 +195,9 @@
         </div>
       </div>
     </div>
-    <app-generic-data-table [columnDefs]="columnDefs"
+    
+  </div>
+  <app-generic-data-table [columnDefs]="columnDefs"
                             [rowData]="loadgridData"
                             [totalCount]="pagination.totalCount"
                             [pageSize]="pagination.take"
@@ -207,7 +209,7 @@
                             [showActionColumn]="true"
                             (search)="onTableSearch($event)">
     </app-generic-data-table>
-  </div>
+    
 
   <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">

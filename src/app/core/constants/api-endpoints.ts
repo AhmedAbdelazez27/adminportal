@@ -196,6 +196,7 @@ export class ApiEndpoints {
 
   static readonly SpCasesPayment = {
     Base: '/SpCasesPayment',
+    GetspCasesPaymentHdrBase: '/SpCasesPaymentHdr',
     GetAll: '/GetAll',
     GetById: (composeKey: string) => `/Get/${composeKey}`,
     GetspCasesPaymentHdr: (composeKey: string, entityId: string) => `/GetByCode/${composeKey}/${entityId}`,
@@ -273,9 +274,18 @@ export class ApiEndpoints {
         GetProjectImplement: (projectId: string, entityId: string) => `/CpProjectImplement/${projectId}/${entityId}`,
     };
     static readonly Charts = {
-    Base: '/Charts',
+     Base: '/Charts',
     RevenueAndExpenses : '/RevenueAndExpenses',
     GetRevenueComparison : '/GetRevenueComparison',
     GetExpensesComparison : '/GetExpensesComparison'
   };
+
+  static readonly Services = {
+    Base: '/Services',
+    GetAll: '/GetAll',
+    GetById: (id: number) => `/Get/${id}`,
+    Update: '/Update',
+    Delete: (id: number) => `/Delete/${id}`,
+  };
+
 }

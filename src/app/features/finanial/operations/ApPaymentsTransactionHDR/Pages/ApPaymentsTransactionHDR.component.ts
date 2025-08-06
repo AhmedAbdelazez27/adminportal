@@ -85,15 +85,10 @@ export class ApPaymentsTransactionHDRComponent {
   }
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
-        this.rowActions = [
-          { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-        ];
-      });
-   
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+    ];
 
     this.vendorSearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))

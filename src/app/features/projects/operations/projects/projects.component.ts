@@ -109,11 +109,7 @@ export class projectsComponent {
   }
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
-      });
+    this.buildColumnDefs();
     this.rowActions = [
       { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
     ];
@@ -473,7 +469,7 @@ export class projectsComponent {
     }
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
-    const skip = (event.pageNumber - 1) * event.pageSize;
+    const skip = (event.pageNumber - 1);
     this.searchParams.skip = skip;
    
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
@@ -482,8 +478,8 @@ export class projectsComponent {
     this.projectsService.getAll(cleanedFilters)
       .pipe(takeUntil(this.destroy$)).subscribe({
       next: (response: any) => {
-          this.loadgridData = response || [];
-          this.pagination.totalCount = response[0]?.rowsCount || 0;
+          this.loadgridData = response.data || [];
+          this.pagination.totalCount = response.data[0]?.rowsCount || 0;
           this.spinnerService.hide();
       },
         error: (error) => {
@@ -628,7 +624,7 @@ export class projectsComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+          const totalCount = initialResponse?.data[0].rowsCount || initialResponse?.data?.length || 0;
 
           this.projectsService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))

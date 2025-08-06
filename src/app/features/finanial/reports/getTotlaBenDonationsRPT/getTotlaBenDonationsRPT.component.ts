@@ -73,11 +73,7 @@ export class getTotlaBenDonationsRPTComponent {
   }
 
   ngOnInit(): void {
-    this.translate.onLangChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.buildColumnDefs();
-      });
+    this.buildColumnDefs();
     this.rowActions = [];
 
     this.beneficentIdSearchInput$
