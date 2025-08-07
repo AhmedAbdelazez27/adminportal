@@ -152,7 +152,7 @@ export class caseSearchRptComponent {
     this.searchSelect2Params.skip = this.caseNamesearchParams.skip;
     this.searchSelect2Params.take = this.caseNamesearchParams.take;
 
-    this.Select2Service.getSponcerCategorySelect2(this.searchSelect2Params)
+    this.Select2Service.getSpCaseSelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
