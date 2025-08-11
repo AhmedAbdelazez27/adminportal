@@ -130,7 +130,13 @@ export const routes: Routes = [
                 (m) => m.ReportsRoutes
               ),
 
-          },
+          },{
+            path: 'charts',
+            loadChildren: () =>
+              import('./features/sponsorship/charts/charts-sponsorship.routes').then(
+                (m) => m.chartsSponsorshipRoutes
+              )
+          }
         ],
       },
 

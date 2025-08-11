@@ -277,7 +277,8 @@ export class ApiEndpoints {
      Base: '/Charts',
     RevenueAndExpenses : '/RevenueAndExpenses',
     GetRevenueComparison : '/GetRevenueComparison',
-    GetExpensesComparison : '/GetExpensesComparison'
+    GetExpensesComparison : '/GetExpensesComparison',
+    GuaranteesCharts : '/GuaranteesCharts'
   };
 
   static readonly Services = {
