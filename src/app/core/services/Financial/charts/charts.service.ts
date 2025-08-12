@@ -70,7 +70,7 @@ export class ChartsService {
       entityId?: string | null,
       sponcerCategory?: string | null,
       nationality?: string | null,
-      periodId?: number | null,
+      periodId?: any | null,
       haiOffice?: string | null,
       years?: string[],
       comparisonType?: number | null,

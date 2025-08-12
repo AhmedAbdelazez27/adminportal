@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BarChartComponent } from "../../../../../shared/charts/bar-chart/bar-chart.component";
 import { Select2Service } from '../../../../core/services/Select2.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ChartsService } from '../../../../core/services/Financial/charts/charts.service';
-import { forkJoin } from 'rxjs';
+import { debounceTime, forkJoin, Subject, takeUntil } from 'rxjs';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EntityService } from '../../../../core/services/entit.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { FndLookUpValuesSelect2RequestDto, Select2RequestDto, SelectdropdownResult, SelectdropdownResultResults } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { filteraidRequestsDto } from '../../../../core/dtos/socialcases/operations/aidRequests.dto';
 
 @Component({
   selector: 'app-sponsorship-charts',
@@ -19,14 +21,19 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
   styleUrl: './sponsorship-charts.component.scss',
   providers: [Select2Service]
 })
-export class SponsorshipChartsComponent {
+export class SponsorshipChartsComponent implements OnInit, OnDestroy {
   [key: string]: any;
   entities: any[] = [];
   yearsList: any = [];
   officesList: any = [];
+  sponcerOfficesList: any = [];
+  sponsorshipCategories: any = [];
   selectedYearId: any = '1';
   selectedEntity: any;
   selectedOffice: any;
+  selectedSponsorOffice: any;
+  selectedNationality: any;
+  selectedsponsorshipCategory: any;
   defaultChartType: string = '';
   pageTitle: string = "";
 
@@ -42,6 +49,34 @@ export class SponsorshipChartsComponent {
 
   categories3: string[] = [];
   seriesData3: any[] = [];
+  isComparission: boolean = false;
+  monthsList: any = [
+    { id: 1, text: 'يناير', textEn: 'January' },
+    { id: 2, text: 'فبراير', textEn: 'February' },
+    { id: 3, text: 'مارس', textEn: 'March' },
+    { id: 4, text: 'أبريل', textEn: 'April' },
+    { id: 5, text: 'مايو', textEn: 'May' },
+    { id: 6, text: 'يونيو', textEn: 'June' },
+    { id: 7, text: 'يوليو', textEn: 'July' },
+    { id: 8, text: 'أغسطس', textEn: 'August' },
+    { id: 9, text: 'سبتمبر', textEn: 'September' },
+    { id: 10, text: 'أكتوبر', textEn: 'October' },
+    { id: 11, text: 'نوفمبر', textEn: 'November' },
+    { id: 12, text: 'ديسمبر', textEn: 'December' }
+  ];
+  selectedmonthId: any[] = [];
+  currentLang: string = "en";
+  comparisonId: any = null;
+  comparisonType: any = null;
+
+  nationalitySelect2: SelectdropdownResultResults[] = [];
+  loadingnationality = false;
+  nationalitysearchParams = new Select2RequestDto();
+  selectednationalitySelect2Obj: any = null;
+  nationalitySearchInput$ = new Subject<string>();
+  private destroy$ = new Subject<void>();
+  searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
+  searchParams = new filteraidRequestsDto();
 
   constructor(private _Select2Service: Select2Service, private _ChartsService: ChartsService,
     private spinnerService: SpinnerService,
@@ -50,7 +85,9 @@ export class SponsorshipChartsComponent {
     private entityService: EntityService,
     private route: ActivatedRoute
   ) {
-
+    this.translate.onLangChange.subscribe(lang => {
+      this.currentLang = lang.lang;
+    });
   }
 
   ngOnInit(): void {
@@ -60,6 +97,12 @@ export class SponsorshipChartsComponent {
       this.getYearAndChartTypesList();
     });
     // this.getYearAndChartTypesList();
+    this.nationalitySearchInput$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => this.fetchnationalitySelect2());
+
+
+    this.fetchnationalitySelect2();
   }
 
 
@@ -69,15 +112,19 @@ export class SponsorshipChartsComponent {
       years: this._Select2Service.getGlPeriodYearsSelect2List(),
       chartTypes: this._Select2Service.getChartTypeGuarantees(),
       entities: this.entityService.GetSelect2List(0, 6000),
-      officeSponsorships: this._Select2Service.getSpOfficesSelect2({skip:0,take:6000})
+      officeSponsorships: this._Select2Service.getSpOfficesSelect2({ skip: 0, take: 6000 }),
+      sponcerCategory: this._Select2Service.getSponcerCategorySelect2({ skip: 0, take: 6000 }),
+      sponcerOffices: this._Select2Service.getSpOfficesSelect2({ skip: 0, take: 6000 }),
     }).subscribe({
       next: (res) => {
         let chartTypeBased;
         this.yearsList = res.years.results;
         this.chartTypes = res.chartTypes;
-        console.log("res.officeSponsorships ",res.officeSponsorships);
-        
+        // console.log("res.officeSponsorships ", res.officeSponsorships);
+
         this.officesList = res.officeSponsorships?.results;
+        this.sponsorshipCategories = res.officeSponsorships?.results;
+        this.sponcerOfficesList = res.officeSponsorships?.results;
         this.entities = [{ id: "", text: 'No Select' }, ...res.entities?.results];
         this.selectedEntity = "";
         const maxIdItem = res.years.results.reduce((maxItem: any, currentItem: any) => {
@@ -107,7 +154,7 @@ export class SponsorshipChartsComponent {
           this.selectedChart1 = 11;
           this.selectedChart2 = null;
           chartTypeBased = 10
-        } else if (this.defaultChartType == 'noofsponsorsbyentityandtypeofsponsorship') {
+        }else if (this.defaultChartType == 'noofsponsorsbyentityandtypeofsponsorship') {
           this.pageTitle = "finanial_charts_periods_Department";
           this.selectedChart1 = 5;
           this.selectedChart2 = 1;
@@ -117,7 +164,34 @@ export class SponsorshipChartsComponent {
           this.selectedChart1 = 6;
           this.selectedChart2 = 1;
           chartTypeBased = 7
-        }
+        } else if (this.defaultChartType == 'comparisonofCasesbytypeofsponsorship') {
+          this.pageTitle = "finanial_charts_periods_Department";
+          this.selectedChart1 = 13;
+          chartTypeBased = 13
+          this.isComparission = true;
+          this.comparisonType = 1;
+          return;
+
+        } else if (this.defaultChartType == 'comparisonofCasesaccordingtonationality') {
+          this.pageTitle = "finanial_charts_periods_Department";
+          this.selectedChart1 = 13;
+          chartTypeBased = 13
+          this.isComparission = true;
+          this.comparisonType = 2;
+          return;
+        }else if (this.defaultChartType == 'comparisonofCasesbyofficeoftheEntity') {
+          this.pageTitle = "finanial_charts_periods_Department";
+          this.selectedChart1 = 13;
+          chartTypeBased = 13
+          this.isComparission = true;
+          this.comparisonType = 3;
+          return;
+        } else if (this.defaultChartType == 'casesavailableforsponsorship') {
+          this.pageTitle = "finanial_charts_periods_Department";
+          this.selectedChart1 = 12;
+          this.selectedChart2 = null;
+          chartTypeBased = 14
+        } 
 
         if (maxIdItem) {
           this.selectedYearId = maxIdItem.id;
@@ -136,26 +210,35 @@ export class SponsorshipChartsComponent {
 
 
   onYearChange(typeChange?: string, chartTypeBased: number = 7) {
+    if (this.defaultChartType == 'comparisonofCasesbytypeofsponsorship') {
+      this.comparisonId = this.selectedsponsorshipCategory;
+    } else if (this.defaultChartType == 'comparisonofCasesaccordingtonationality') {
+      this.comparisonId = this.selectednationalitySelect2Obj;
+    } else if (this.defaultChartType == 'comparisonofCasesbyofficeoftheEntity') {
+      this.comparisonId = this.selectedSponsorOffice;
+    }
+
     if (!this.selectedYearId) return;
     this.spinnerService.show();
     const payload = {
       chartType: chartTypeBased,
       parameters: {
         language: '',
-        periodYearId: this.selectedYearId.toString(),
+        periodYearId: !Array.isArray(this.selectedYearId) ? this.selectedYearId.toString() : null,
         caseStatus: null,
         userId: null,
-        entityId: null,
-        sponcerCategory: null,
+        entityId: this.selectedEntity.toString(),
+        sponcerCategory: this.selectedsponsorshipCategory ? this.selectedsponsorshipCategory : null,
         nationality: null,
         periodId: null,
         haiOffice: null,
-        years: [""],
-        comparisonType: 1,
-        comparisonId: null
+        years: Array.isArray(this.selectedYearId) && this.selectedYearId.length > 0 ? this.selectedYearId : [""],
+        comparisonType: this.comparisonType,
+        comparisonId: this.comparisonId
+
       }
     };
-    console.log("this.selectedChart1 = ", this.selectedChart1);
+    // console.log("this.selectedChart1 = ", this.selectedChart1);
 
     if (typeChange == 'changeEntit') {
       this.spinnerService.show();
@@ -188,23 +271,27 @@ export class SponsorshipChartsComponent {
 
   onTypeChange(chartType: any, categoriesName: string, seriesDataName: string) {
     if (!this.selectedYearId) return;
-    console.log("chart type = ", chartType);
+     if (this.defaultChartType == 'comparisonofCasesbytypeofsponsorship') {
+      this.comparisonId = this.selectedsponsorshipCategory;
+    } else if (this.defaultChartType == 'comparisonofCasesaccordingtonationality') {
+      this.comparisonId = this.selectednationalitySelect2Obj;
+    }
 
     const payload = {
       chartType: chartType,
       parameters: {
         language: '',
-        periodYearId: this.selectedYearId.toString(),
+        periodYearId: !Array.isArray(this.selectedYearId) ? this.selectedYearId.toString() : null,
         caseStatus: null,
         userId: null,
-        entityId: null,
-        sponcerCategory: null,
+        entityId: this.selectedEntity.toString(),
+        sponcerCategory: this.selectedsponsorshipCategory ? this.selectedsponsorshipCategory : null,
         nationality: null,
-        periodId: null,
+        periodId: this.selectedmonthId.length > 0 ? this.selectedmonthId.toString() : null,
         haiOffice: this.selectedOffice ? this.selectedOffice : null,
-        years: [""],
-        comparisonType: 1,
-        comparisonId: null
+        years: Array.isArray(this.selectedYearId) && this.selectedYearId.length > 0 ? this.selectedYearId : [""],
+        comparisonType: this.comparisonType,
+        comparisonId: this.comparisonId
       }
     };
 
@@ -253,8 +340,62 @@ export class SponsorshipChartsComponent {
     for (let i = 0; i < count; i++) {
       randomValues.push(Math.floor(Math.random() * 1001));
     }
-    console.log("randomValues = ", randomValues);
+    // console.log("randomValues = ", randomValues);
 
     return randomValues;
+  };
+
+  onEntityChange(no: number = 2, ddlName: string) {
+    // console.log(this[ddlName]);
+    if (this[ddlName].length >= no) {
+      this.toastr.warning(`لا تستطيع اختيار أكثر من ${no} عناصر`);
+    }
+  }
+
+  fetchnationalitySelect2(): void {
+    this.loadingnationality = true;
+    const searchVal = this.nationalitysearchParams.searchValue?.trim();
+    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2Params.skip = this.nationalitysearchParams.skip;
+    this.searchSelect2Params.take = this.nationalitysearchParams.take;
+
+    this._Select2Service.getNationalitySelect2(this.searchSelect2Params)
+      .pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: SelectdropdownResult) => {
+          const newItems = response?.results || [];
+          this.nationalitySelect2 = [...this.nationalitySelect2, ...newItems];
+          this.loadingnationality = false;
+        },
+        error: () => this.loadingnationality = false
+      });
+  };
+  loadMorenationality(): void {
+    this.nationalitysearchParams.skip++;
+    this.fetchnationalitySelect2();
+  }
+  onnationalitySelect2Change(selectedvendor: any): void {
+    console.log("selectednationalitySelect2Obj ", this.selectednationalitySelect2Obj);
+    if (selectedvendor) {
+      this.searchParams.nationality = selectedvendor.id;
+      this.searchParams.nationalitystr = selectedvendor.text;
+    } else {
+      this.searchParams.nationality = null;
+      this.searchParams.nationalitystr = null;
+    }
+  };
+
+  onnationalitySearch(event: { term: string; items: any[] }): void {
+
+    const search = event.term;
+    this.nationalitysearchParams.skip = 0;
+    this.nationalitysearchParams.searchValue = search;
+    this.nationalitySelect2 = [];
+    this.nationalitySearchInput$.next(search);
+  };
+
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

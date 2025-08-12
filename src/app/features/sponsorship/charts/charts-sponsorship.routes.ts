@@ -6,6 +6,6 @@ export const chartsSponsorshipRoutes: Routes = [
         path: ':chartType',
         component: SponsorshipChartsComponent
     }, // sub routing  :  /CasesNumberBySponsorShip  /byperiodandtypeofsponsorship /bytypeofsponsorshipandnationality   /revenueByAccount
-       // sub routing  :  /Totaldonationsbytypeofsponsorship  /Contractstatisticsbypaymentmethod  /noofsponsorsbyentityandtypeofsponsorship   /nofsponsorsinoutcountry 
+       // sub routing  :  /Totaldonationsbytypeofsponsorship  /Contractstatisticsbypaymentmethod  /noofsponsorsbyentityandtypeofsponsorship   /nofsponsorsinoutcountry /comparisonofCasesbytypeofsponsorship /comparisonofCasesaccordingtonationality   /casesavailableforsponsorship
 
 ];
