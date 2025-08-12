@@ -5,7 +5,7 @@ export interface ContactInformationDto {
   email: string;
   title?: string | null;
   message?: string | null;
-  createdDate: string; // ISO 8601 date-time format
+  creationDate: Date; // Date object
 }
 
 // DTO for creating a new contact information

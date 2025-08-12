@@ -328,9 +328,17 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
     this.selectedContactInformationToDelete = null;
   }
 
-  formatDate(date: Date | string): string {
+  formatDate(date: Date | string | null): string {
     if (!date) return '';
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    
+    let dateObj: Date;
+    if (typeof date === 'string') {
+      dateObj = new Date(date);
+      if (isNaN(dateObj.getTime())) return '';
+    } else {
+      dateObj = date;
+    }
+    
     return dateObj.toLocaleDateString();
   }
 
@@ -385,7 +393,7 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
       },
       {
         headerName: this.translate.instant('CONTACT_INFORMATION.CREATED_DATE'),
-        field: 'createdDate',
+        field: 'creationDate',
         sortable: true,
         filter: true,
         flex: 1,
@@ -413,7 +421,7 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
       email: this.translate.instant('CONTACT_INFORMATION.EMAIL'),
       title: this.translate.instant('CONTACT_INFORMATION.FIELD_TITLE'),
       message: this.translate.instant('CONTACT_INFORMATION.MESSAGE'),
-      createdDate: this.translate.instant('CONTACT_INFORMATION.CREATED_DATE'),
+      creationDate: this.translate.instant('CONTACT_INFORMATION.CREATED_DATE'),
     };
   }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ApiEndpoints } from '../../constants/api-endpoints';
 import {
   ContactInformationDto,
@@ -26,6 +27,11 @@ export class ContactInformationService {
     return this.http.post<ContactInformationDto>(
       `${this.BASE_URL}${ApiEndpoints.ContactInformation.Create}`,
       contactInformation
+    ).pipe(
+      map(response => ({
+        ...response,
+        creationDate: new Date(response.creationDate)
+      }))
     );
   }
 
@@ -36,6 +42,14 @@ export class ContactInformationService {
     return this.http.post<PagedResultDto<ContactInformationDto>>(
       `${this.BASE_URL}${ApiEndpoints.ContactInformation.GetAll}`,
       params
+    ).pipe(
+      map(response => ({
+        ...response,
+        data: response.data.map(item => ({
+          ...item,
+          creationDate: new Date(item.creationDate)
+        }))
+      }))
     );
   }
 
@@ -43,6 +57,11 @@ export class ContactInformationService {
   getContactInformationById(id: number): Observable<ContactInformationDto> {
     return this.http.get<ContactInformationDto>(
       `${this.BASE_URL}${ApiEndpoints.ContactInformation.GetById(id)}`
+    ).pipe(
+      map(response => ({
+        ...response,
+        creationDate: new Date(response.creationDate)
+      }))
     );
   }
 
@@ -53,6 +72,11 @@ export class ContactInformationService {
     return this.http.post<ContactInformationDto>(
       `${this.BASE_URL}${ApiEndpoints.ContactInformation.Update}`,
       contactInformation
+    ).pipe(
+      map(response => ({
+        ...response,
+        creationDate: new Date(response.creationDate)
+      }))
     );
   }
 
