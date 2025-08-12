@@ -111,7 +111,7 @@ export class projectsComponent {
   ngOnInit(): void {
     this.buildColumnDefs();
     this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
     ];
 
     this.entitySearchInput$
@@ -496,8 +496,8 @@ export class projectsComponent {
     this.spinnerService.show();;
     forkJoin({
       mischeaderdata: this.projectsService.getDetailById(params) as Observable<projectsDto | projectsDto[]>,
-      miscdetaildata: this.projectsService.getRecieptProjectsDetailsId(params) as Observable<recieptProjectsDetailsDto[]>,
-      misclinedata: this.projectsService.getProjectImplementDetailById(params) as Observable<projectImplementDto[]>
+      miscdetaildata: this.projectsService.getProjectImplementDetailById(params) as Observable<projectImplementDto[]>,
+      misclinedata: this.projectsService.getRecieptProjectsDetailsId(params) as Observable<recieptProjectsDetailsDto[]>
     }).pipe(takeUntil(this.destroy$)).subscribe({
       next: (result) => {
         this.loadformDetailsData = result.miscdetaildata ?? [];
@@ -565,7 +565,7 @@ export class projectsComponent {
           width: 60,
           colId: 'serialNumber'
         },
-        { headerName: translations['ProjectsResourceName.receipT_NUMBER'], field: 'projecT_NUMBER', width: 200 },
+        { headerName: translations['ProjectsResourceName.receipT_NUMBER'], field: 'receipT_NUMBER', width: 200 },
         { headerName: translations['ProjectsResourceName.misC_RECEIPT_DATE'], field: 'misC_RECEIPT_DATEstr', width: 200 },
         { headerName: translations['ProjectsResourceName.misC_RECEIPT_AMOUNT'], field: 'misC_RECEIPT_AMOUNTstr', width: 200 },
         { headerName: translations['ProjectsResourceName.beneficiarY_NAME'], field: 'beneficiarY_NAME', width: 200 },

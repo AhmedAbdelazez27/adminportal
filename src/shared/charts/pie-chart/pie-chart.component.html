@@ -1,0 +1,9 @@
+<ng-container *ngIf="chartOptionsPie">
+
+  <highcharts-chart
+    [Highcharts]="Highcharts"
+    [options]="chartOptionsPie"
+    (chartInstance)="addComponentRef($event)"
+    
+  ></highcharts-chart>
+</ng-container> 

@@ -8,6 +8,7 @@ import { CreateRoleDto } from '../dtos/create-role.dto';
 import { UnassignRoleDto } from '../dtos/unassign-role.dto';
 import { RoleSelect2RequestDto } from '../dtos/role-select2.dto';
 import { AssignRoleDto } from '../dtos/assign-role.dto';
+import { PagedDto } from '../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +29,16 @@ export class RoleService {
             .set('searchValue', searchValue);
 
         return this.http.get(`${this.BASE_URL}`, { params });
-    }
+  }
+
+    getAllRoles(param: PagedDto): Observable<any> {
+    const params = new HttpParams()
+      .set('skip', param.skip)
+      .set('take', param.take)
+      .set('searchValue', param.searchValue);
+    const apiUrl = this.http.get(`${this.BASE_URL}`, { params });
+    return apiUrl;
+  }
 
     updateRole(payload: any): Observable<any> {
         return this.http.post(`${this.BASE_URL}/Update`, { id: payload?.id, name: payload?.name, aspNetUsersRoleCount: 1 });

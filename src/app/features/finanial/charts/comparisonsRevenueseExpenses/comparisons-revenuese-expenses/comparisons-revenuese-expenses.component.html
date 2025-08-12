@@ -8,7 +8,7 @@
             <div class="main-container h-100">
                 <div class="row  ">
                     <div class="col-2 mb-3">
-                        <label class="form-label mr-2">Entity</label>
+                      <label class="form-label mr-2">{{ 'FinancialCharts.entity' | translate }}</label>
                     </div>
                     <div class="col-5">
                         <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
@@ -19,7 +19,7 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-2">
-                        <label class="form-label mr-2">Year</label>
+                        <label class="form-label mr-2">{{ 'FinancialCharts.year' | translate }}</label>
                     </div>
                     <div class="col-5 my-1">
                         <ng-select [items]="yearsList" bindLabel="text" bindValue="id" [(ngModel)]="selectedYearId"

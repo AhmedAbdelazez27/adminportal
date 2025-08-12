@@ -180,7 +180,14 @@ export class caseSearchRptComponent {
           this.toastr.warning(`${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
         });
       return;
-    }
+      }
+      if (!this.searchParams.caseId) {
+          this.translate.get(['SponsorshipReportResourceName.caseName', 'Common.Required'])
+              .subscribe(translations => {
+                  this.toastr.warning(`${translations['SponsorshipReportResourceName.caseName']} ${translations['Common.Required']}`, 'Warning');
+              });
+          return;
+      }
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;
@@ -284,7 +291,14 @@ export class caseSearchRptComponent {
       this.spinnerService.hide();
       this.toastr.warning('Please Select Entity', 'Warning');
       return;
-    }
+      }
+      if (!this.searchParams.caseId) {
+          this.translate.get(['SponsorshipReportResourceName.caseName', 'Common.Required'])
+              .subscribe(translations => {
+                  this.toastr.warning(`${translations['SponsorshipReportResourceName.caseName']} ${translations['Common.Required']}`, 'Warning');
+              });
+          return;
+      }
     this.sponsorshipReportService.getcaseSearchRptData({ ...cleanedFilters })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -367,7 +381,14 @@ export class caseSearchRptComponent {
       this.spinnerService.hide();
       this.toastr.warning('Please Select Entity', 'Warning');
       return;
-    }
+      }
+      if (!this.searchParams.caseId) {
+          this.translate.get(['SponsorshipReportResourceName.caseName', 'Common.Required'])
+              .subscribe(translations => {
+                  this.toastr.warning(`${translations['SponsorshipReportResourceName.caseName']} ${translations['Common.Required']}`, 'Warning');
+              });
+          return;
+      }
     this.sponsorshipReportService.getcaseSearchRptData({ ...cleanedFilters })
       .pipe(takeUntil(this.destroy$))
       .subscribe({

@@ -1,4 +1,4 @@
-/* styles.scss */
+
 
 
 
@@ -19,6 +19,63 @@
     src: url('./assets/fonts/Cairo-Bold.eot');
     src: url('./assets/fonts/Cairo-Bold.eot?#iefix') format('embedded-opentype'), url('./assets/fonts/Cairo-Bold.woff2') format('woff2'), url('./assets/fonts/Cairo-Bold.woff') format('woff'), url('./assets/fonts/Cairo-Bold.ttf') format('truetype'), url('./assets/fonts/Cairo-Bold.svg#Cairo') format('svg');
   }
+
+  @font-face {
+  font-family: 'icomoon';
+  src:  url('./assets/fonts/icomoon.eot?6waavj');
+  src:  url('./assets/fonts/icomoon.eot?6waavj#iefix') format('embedded-opentype'),
+    url('./assets/fonts/icomoon.ttf?6waavj') format('truetype'),
+    url('./assets/fonts/icomoon.woff?6waavj') format('woff'),
+    url('./assets/fonts/icomoon.svg?6waavj#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-frame-user:before {
+  content: "\e900";
+}
+.icon-frame-screens:before {
+  content: "\e901";
+}
+.icon-frame-entities:before {
+  content: "\e902";
+}
+.icon-frame-edit:before {
+  content: "\e903";
+}
+.icon-frame-delete:before {
+  content: "\e904";
+}
+.icon-frame-department:before {
+  content: "\e905";
+}
+.icon-frame-permition:before {
+  content: "\e906";
+}
+.icon-frame-view:before {
+  content: "\e907";
+}
+.icon-frame-role:before {
+  content: "\e908";
+}
+
+
 
 
 .reg {
@@ -50,6 +107,11 @@ p, span, a, td, li {
 }
 
 
+
+// ==============================================================================English================================================================================
+
+
+    
 .navbar{
     background-color:transparent;
 }
@@ -203,6 +265,31 @@ p, span, a, td, li {
     border-top-right-radius:12px;
 }
 
+.ag-root-wrapper, .ag-header, .ag-cell,  .ag-pinned-right-header{
+    border: none !important;
+}
+
+
+
+.ag-header-cell{
+
+    background-color: #E6E6E6;
+   height: max-content;
+    font-size: 16px;
+    font-style: normal;
+    line-height: 20px; /* 142.857% */
+    letter-spacing: 0.07px;
+    border-bottom: 1px solid var(--superlightgray, #E6E6E6);
+    align-content: center;
+    font-family: 'Cairo-bold';
+    font-weight: unset;
+}
+
+.ag-header-cell .ag-header-cell-text{
+ color: var(--textblack, #000);
+}
+
+
 
 
 .page-select {
@@ -330,8 +417,8 @@ p, span, a, td, li {
     align-items: center;
     gap: 10px;
     border-radius: 10px;
-    background: rgb(163 163 163 / 10%);
-    color: #9f9f9f;
+    background:#a5a5a5;
+    color: #ffffff;
     font-size: 14px;
     font-style: normal;
     line-height: normal;
@@ -353,6 +440,16 @@ p, span, a, td, li {
     line-height: normal;
     width: max-content;
     font-family: 'Cairo-bold';
+}
+
+    .btn-outline-secondary {
+    display: flex;
+    padding: 12px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+
 }
 
 .btn-gold {
@@ -1146,7 +1243,8 @@ p, span, a, td, li {
     background-color: var(--Color-21, #F7F7F7);
     border: none;
     box-shadow: none;
-    height: 48px;
+    height: max-content;
+    min-height: 48px;
 
 
     .ng-value {
@@ -1159,9 +1257,8 @@ p, span, a, td, li {
       border: 1px solid #ced4da;
 
       .ng-value-icon {
-        color: #dc3545;
-        font-size: 1rem;
-        margin-left: 4px;
+        color: #ffffff;
+         font-size: 14px;
       }
     }
 
@@ -1171,8 +1268,8 @@ p, span, a, td, li {
   }
 
   &.ng-select-focused {
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(230, 154, 42, 0.25);
+    border-color: #8d734d;
   }
 }
 
@@ -1383,3 +1480,153 @@ border: none  !important;
     border-radius: 15px !important;
     margin-bottom: 8px;
 }
+
+
+.form-control:focus {
+
+    border-color: #8d734d !important;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem #e4d8c6 !important;
+}
+
+.ng-select.ng-select-custom.ng-select-focused{
+      border-color: #8d734d !important;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem #e4d8c6 !important;
+}
+
+input:focus, select:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: #8d734d;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem #e4d8c6;
+}
+
+.bg-gray{
+    background-color: var(--Color-21, #F7F7F7);
+    padding: 16px;
+    border-radius: 15px;
+}
+
+.ng-select.ng-select-custom .ng-select-container .ng-value {
+    background-color: #8d734d;
+        color: #ffffff;
+        border-radius: 5px !important;
+        padding: 0px 8px;
+        margin-right: 4px;
+        font-size: 14px;
+        border: 1px solid #8d734d;
+        margin-top: 2px;
+        margin-bottom: 2px;
+        gap: 4px;
+        display: flex;
+
+}
+
+.ng-select-container.ng-has-value .ng-placeholder.ng-star-inserted{
+    display: none;
+}
+
+.ng-dropdown-panel .ng-option.ng-option-marked {
+    background-color: var(--Color-28, rgba(141, 115, 77, 0.10));
+    color: #8d734d;
+}
+
+.ng-dropdown-panel .ng-option.ng-option-selected {
+     background-color: #8d734d;
+    color: #fff;
+    font-weight: bold;
+}
+
+
+
+.relative-select .ng-dropdown-panel{
+    position: relative;
+    transition: ease 0.3s;
+}
+
+.input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback){
+    border-radius: 0 10px 10px 0;
+}
+
+.input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n+3), .input-group:not(.has-validation) > .form-floating:not(:last-child) > .form-control, .input-group:not(.has-validation) > .form-floating:not(:last-child) > .form-select, .input-group:not(.has-validation) > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating) {
+   border-radius: 10px 0 0 10px;
+}
+
+.table-responsive {
+    overflow-x: unset;
+
+}
+
+.table-responsive.shadow-sm{
+        box-shadow: none !important;
+}
+
+.ag-header-cell:first-child{
+    border-radius: 10px 0 0 0;
+}
+
+.ag-column-last{
+    border-radius: 0 10px 0 0 !important;
+}
+
+.ng-star-inserted{
+    border-radius: 10px !important;
+}
+
+button.dropdown-item:hover{
+    background-color: rgba(141, 115, 77, 0.10) !important;
+    border-radius: 0 !important;
+}
+
+
+.ag-cell{
+
+.status-approved {
+        padding: 2px 16px;
+        font-weight: normal;
+        margin-top: 5px;
+
+    }
+
+.status-waiting {
+        padding: 2px 16px;
+        font-weight: normal;
+        margin-top: 5px;
+}
+
+.status-rejected {
+        padding: 2px 16px;
+        font-weight: normal;
+        margin-top: 5px;
+}
+
+.status-submitted {
+        padding: 2px 16px;
+        font-weight: normal;
+        margin-top: 5px;
+}
+
+.status-inactive {
+        padding: 2px 16px;
+        font-weight: normal;
+        margin-top: 5px;
+}
+
+.status-active {
+        padding: 2px 16px;
+        font-weight: normal;
+        margin-top: 5px;
+}
+
+}
+
+.form-control:disabled {
+    background-color: var(--Color-21, #F7F7F7) !important;
+    opacity: 0.6 !important;
+}
+
+
+// ==============================================================================Arabic===========================================================================
+

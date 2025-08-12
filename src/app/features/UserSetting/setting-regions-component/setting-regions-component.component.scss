@@ -1,15 +1,11 @@
-.title {
-  color: #333;
-  font-weight: 600;
-  margin-bottom: 0;
-}
+
 
 .nav-tabs {
   border-bottom: 2px solid #dee2e6;
 
   .nav-link {
     border: none;
-    color: #6c757d;
+    color: #2e2e2e;
     font-weight: 500;
     padding: 0.75rem 1.5rem;
     margin-right: 0.5rem;
@@ -22,9 +18,9 @@
 
     &.active {
       border: none;
-      color: #8B4513;
+      color: #8d734d;
       background-color: #fff;
-      border-bottom: 2px solid #8B4513;
+      border-bottom: 2px solid #8d734d;
     }
   }
 }

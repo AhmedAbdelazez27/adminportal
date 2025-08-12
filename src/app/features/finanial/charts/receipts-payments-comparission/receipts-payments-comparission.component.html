@@ -1,0 +1,101 @@
+<div class="header" *ngIf="pageTitle">
+  {{'FinancialCharts.titleForReceiptPaymentComparission'|translate}}
+</div>
+<div class="container-fluid mt-3">
+
+  <div class="row">
+    <div class="col-xl-6 mb-3">
+      <div class="main-container h-100">
+        <div class="row  ">
+          <div class="col-2 mb-3">
+            <label class="form-label mr-2"> {{'FinancialCharts.entity'|translate}}</label>
+          </div>
+          <div class="col-5">
+            <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
+                       [multiple]="true" [closeOnSelect]="true" class="ng-select-custom" [maxSelectedItems]="4"
+                       (change)="onEntityChange(4,'selectedEntity')">
+            </ng-select>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-2">
+            <label class="form-label mr-2">{{'FinancialCharts.year'|translate}}</label>
+          </div>
+          <div class="col-5 my-1">
+            <ng-select [items]="yearsList" bindLabel="text" bindValue="id" [(ngModel)]="selectedYearId"
+                       [multiple]="true" [closeOnSelect]="true" class="ng-select-custom" [maxSelectedItems]="2"
+                       (change)="onEntityChange(2,'selectedYearId')">
+            </ng-select>
+          </div>
+          <button class="col-1 btn btn-info my-1" [disabled]="!(selectedYearId.length&&selectedEntity.length)" (click)="onYearChange(1)">Start</button>
+        </div>
+        <div class="row mb-3" *ngIf="defaultChartType == 'receiptsByDepartment'||  defaultChartType == 'paymentsByDepartment'">
+          <div class="col-2">
+            <label class="form-label mr-2">{{'FinancialCharts.department'|translate}}</label>
+          </div>
+          <div class="col-8">
+            <ng-select [items]="departmentList" bindLabel="text" bindValue="id"
+                       [(ngModel)]="selectedDepartmentId" [closeOnSelect]="true"
+                       class="ng-select-custom">
+            </ng-select>
+          </div>
+        </div>
+        <div class="row mb-3" *ngIf="defaultChartType == 'receiptsByBranch'|| defaultChartType == 'paymentsByBranch'">
+          <div class="col-2">
+            <label class="form-label mr-2">{{'FinancialCharts.branch'|translate}}</label>
+          </div>
+          <div class="col-8">
+            <ng-select [items]="branchList" bindLabel="text" bindValue="id" [(ngModel)]="selectedBranchId"
+                       [closeOnSelect]="true" class="ng-select-custom">
+            </ng-select>
+          </div>
+        </div>
+        <div class="row mb-3" *ngIf="defaultChartType == 'receiptsByAccount'|| defaultChartType == 'paymentsByAccount'">
+          <div class="col-2">
+            <label class="form-label mr-2">{{'FinancialCharts.account'|translate}}</label>
+          </div>
+          <div class="col-8">
+            <ng-select [items]="accountList" bindLabel="text" bindValue="id" [(ngModel)]="selectedAccountId"
+                       [closeOnSelect]="true" class="ng-select-custom">
+            </ng-select>
+          </div>
+        </div>
+        <ng-container *ngIf="seriesData.length">
+          <app-bar-chart [categories]="categoriees" [seriesData]="seriesData">
+          </app-bar-chart>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="col-xl-6 mb-3 h-100">
+      <div class="main-container border p-3 rounded">
+        <div class="row mb-3 align-items-center">
+          <div class="col-2">
+            <label class="form-label mr-2">{{ 'FinancialCharts.month' | translate }}</label>
+          </div>
+          <div class="col-5 my-1">
+            <ng-select [items]="monthsList"
+                       bindValue="id"
+                       [(ngModel)]="selectedmonthId"
+                       [multiple]="true"
+                       [closeOnSelect]="true"
+                       class="ng-select-custom w-100">
+              <ng-template ng-option-tmp let-item="item">
+                {{ currentLang === 'ar' ? item.text : item.textEn }}
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                {{ currentLang === 'ar' ? item.text : item.textEn }}
+                <span class="ng-value-icon left" (click)="clear(item)">x</span>
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="col-2">
+            <button class="btn btn-info my-1 w-100" (click)="onYearChange(2)">
+              {{ 'FinancialCharts.start' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

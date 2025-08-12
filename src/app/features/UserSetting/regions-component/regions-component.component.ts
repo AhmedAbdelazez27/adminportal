@@ -102,9 +102,9 @@ export class RegionsComponentComponent implements OnInit {
   ];
 
   rowActions = [
-    { label: 'View', action: 'view', icon: 'fas fa-eye' },
-    { label: 'Edit', action: 'edit', icon: 'fas fa-edit' },
-    { label: 'Delete', action: 'delete', icon: 'fas fa-trash' },
+    { label: 'View', action: 'view', icon: 'icon-frame-view' },
+    { label: 'Edit', action: 'edit', icon: 'icon-frame-edit' },
+    { label: 'Delete', action: 'delete', icon: 'icon-frame-delete' },
   ];
 
   constructor(

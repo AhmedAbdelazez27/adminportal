@@ -31,20 +31,6 @@ export class ChartsService {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.Charts.Base}${ApiEndpoints.Charts.RevenueAndExpenses}`, payload);
   }
 
-  // getRevenueComparison(payload: {
-  //   chartType: number,
-  //   parameters: {
-  //     language?: string,
-  //     year?: string[],
-  //     entityId?: string[],
-  //     type?: any | null,
-  //     id?: any | null,
-  //     periodId?: number | null
-  //   }
-  // }): Observable<any> {
-  //   return this.http.post(`${this.BASE_URL}${ApiEndpoints.Charts.Base}${ApiEndpoints.Charts.GetRevenueComparison}`, payload);
-  // }
-
   getExpensesRevenuesComparison(payload: {
     chartType: number,
     parameters: {
@@ -55,12 +41,12 @@ export class ChartsService {
       id?: any | null,
       periodId?: string | null
     }
-  }, typeComparison: string): Observable<any> {
+  },typeComparison:string): Observable<any> {
     const endpoint = ApiEndpoints.Charts[typeComparison as keyof typeof ApiEndpoints.Charts];
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.Charts.Base}${endpoint}`, payload);
   }
 
-  getGuaranteesChart(payload: {
+    getGuaranteesChart(payload: {
     chartType: number,
     parameters: {
       language?: string,
@@ -83,4 +69,74 @@ export class ChartsService {
     );
   }
 
+
+  getReceiptsandPaymentChart(payload: {
+    chartType: number,
+    parameters: {
+      language?: string,
+      periodYearId?: string,
+      entityId?: string,
+      periodId?: number | null,
+      departmentId?: number | null,
+      countryId?: number | null,
+      branchId?: number | null,
+      userId?: number | null,
+      level?: number | null
+    }
+  }): Observable<any> {
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.Charts.Base}${ApiEndpoints.Charts.ReceiptsAndPayments}`;
+    return this.http.post(apiUrl, payload);
+  }
+
+  getReceiptsandPaymentsComparison(payload: {
+    chartType: number,
+    parameters: {
+      language?: string,
+      year?: string[],
+      entityId?: string[],
+      type?: any | null,
+      id?: any | null,
+      periodId?: string | null
+    }
+  }, typeComparison: string): Observable<any> {
+    const endpoint = ApiEndpoints.Charts[typeComparison as keyof typeof ApiEndpoints.Charts];
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.Charts.Base}${endpoint}`, payload);
+    }
+
+    getSocialCasesChart(payload: {
+        chartType: number,
+        parameters: {
+            language?: string,
+            periodYearId?: string,
+            entityId?: string,
+            periodId?: number | null,
+            departmentId?: number | null,
+            countryId?: number | null,
+            branchId?: number | null,
+            userId?: number | null,
+            level?: number | null
+        }
+    }): Observable<any> {
+        const apiUrl = `${this.BASE_URL}${ApiEndpoints.Charts.Base}${ApiEndpoints.Charts.GetSocialCasesCharts}`;
+        return this.http.post(apiUrl, payload);
+    }
+
+
+    getProjectChart(payload: {
+        chartType: number,
+        parameters: {
+            language?: string,
+            periodYearId?: string,
+            entityId?: string,
+            periodId?: number | null,
+            departmentId?: number | null,
+            countryId?: number | null,
+            branchId?: number | null,
+            userId?: number | null,
+            level?: number | null
+        }
+    }): Observable<any> {
+        const apiUrl = `${this.BASE_URL}${ApiEndpoints.Charts.Base}${ApiEndpoints.Charts.GetProjectCharts}`;
+        return this.http.post(apiUrl, payload);
+    }
 }

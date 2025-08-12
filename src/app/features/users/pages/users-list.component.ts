@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,11 +15,15 @@ import { confirmPasswordValidator } from '../../../shared/customValidators/confi
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DepartmentService } from '../../../core/services/department.service';
 import { EntityService } from '../../../core/services/entit.service';
-import { forkJoin, of, take } from 'rxjs';
+import { Subject, forkJoin, of, take } from 'rxjs';
 import { EntityInfoService } from '../../../core/services/entitIfo.service';
 import { FndLookUpValuesSelect2RequestDto } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2Service } from '../../../core/services/Select2.service';
 import { FilterUserDto } from '../../../core/dtos/search-user.dto';
+import { ColDef, GridOptions } from 'ag-grid-community';
+import { PagedDto, Pagination } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { GenericDataTableComponent } from '../../../../shared/generic-data-table/generic-data-table.component';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-users-list',
@@ -30,12 +34,16 @@ import { FilterUserDto } from '../../../core/dtos/search-user.dto';
     TranslateModule,
     NgSelectModule,
     FormsModule,
+    GenericDataTableComponent
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss',
 })
 export class UsersListComponent implements OnInit {
+  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
+
   users: any[] = [];
+  loadgridData: any[] = [];
   totalCount: number = 0;
   currentPage: number = 1;
   itemsPerPage: number = 5;
@@ -88,6 +96,19 @@ export class UsersListComponent implements OnInit {
   userRoles: any[] = [];
   user: any
 
+  searchParams = new PagedDto();
+  searchInput$ = new Subject<string>();
+  translatedHeaders: string[] = [];
+  pagination = new Pagination();
+
+  columnDefs: ColDef[] = [];
+  columnDefslineData: ColDef[] = [];
+  gridOptions: GridOptions = { pagination: false };
+  searchText: string = '';
+  columnHeaderMap: { [key: string]: string } = {};
+  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
+
+
   constructor(
     private userService: UserService,
     private departmentService: DepartmentService,
@@ -99,9 +120,6 @@ export class UsersListComponent implements OnInit {
     private entityInfoService: EntityInfoService,
     private select2Service: Select2Service,
   ) {
-
-
-
     this.userDepartmentForm = this.fb.group({
       departmentIds: [[], Validators.required],
     });
@@ -156,7 +174,6 @@ export class UsersListComponent implements OnInit {
     this.fetchUsersStatusSelect2();
     this.fetchUsersTypesSelect2();
 
-    // watch for changes in selectedModules to filter screens accordingly
     this.filterForm
       .get('selectedModules')
       ?.valueChanges.subscribe((modules) => {
@@ -170,8 +187,58 @@ export class UsersListComponent implements OnInit {
         const updated = selected.filter((s: string) => allowed.includes(s));
         this.filterForm.get('selectedScreens')?.setValue(updated);
       });
+
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+    this.buildColumnDefs();
+
+        this.rowActions = [
+            { label: this.translate.instant('Common.dept'), icon: 'icon-frame-department', action: 'onDepartmentInfo' },
+            { label: this.translate.instant('Common.entities'), icon: 'icon-frame-entities', action: 'onEntitiesInfo' },
+            { label: this.translate.instant('Common.permissions'), icon: 'icon-frame-user', action: 'onUserInfo' },
+            { label: this.translate.instant('Common.edit'), icon: 'icon-frame-edit', action: 'onEditInfo' },
+            { label: this.translate.instant('Common.deletd'), icon: 'icon-frame-delete', action: 'onDeletdInfo' },
+            { label: this.translate.instant('Common.role'), icon: 'icon-frame-role', action: 'onRoleInfo' },
+            { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
+        ];
+    }
+
+
+  private cleanFilterObject(obj: any): any {
+    const cleaned = { ...obj };
+    Object.keys(cleaned).forEach((key) => {
+      if (cleaned[key] === '') {
+        cleaned[key] = null;
+      }
+    });
+    return cleaned;
   }
 
+  getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    const skip = (event.pageNumber - 1) * event.pageSize;
+    this.filterUserCriteria.skip = skip;
+    this.filterUserCriteria.take = event.pageSize;
+    const cleanedFilters = this.cleanFilterObject(this.filterUserCriteria);
+    cleanedFilters.searchValue = cleanedFilters.searchValue != null ? cleanedFilters.searchValue : '';
+
+    this.spinnerService.show();
+    this.userService.getUsers(cleanedFilters).subscribe(
+      (data: any) => {
+        this.loadgridData = data.data;
+        console.log("loadgridData", data.data);
+        this.pagination.totalCount = data.totalCount;
+        this.spinnerService.hide();
+      },
+      (error) => {
+        this.toastr.error(
+          this.translate.instant('ERROR.FETCH_ROLES'),
+          this.translate.instant('TOAST.TITLE.ERROR')
+        );
+        this.spinnerService.hide();
+      }
+    );
+  }
 
   getUsers(page: number): void {
     const skip = (page - 1) * this.itemsPerPage;
@@ -326,6 +393,11 @@ export class UsersListComponent implements OnInit {
       masterId: user?.masterId ?? null,
     });
     this.togglePasswordFields(false);
+    const modalElement = document.getElementById('Users');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    };
   }
 
   closeModal(): void {
@@ -396,6 +468,11 @@ export class UsersListComponent implements OnInit {
     this.userDepartmentForm.reset({
       departments: user.departments?.map((d: any) => d.id) || [],
     });
+    const modalElement = document.getElementById('department');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    };
   }
 
   assignDepartments(): void {
@@ -467,6 +544,11 @@ export class UsersListComponent implements OnInit {
     this.userEntityForm.reset({
       entityIds: user.departments?.map((d: any) => d.id) || [],
     });
+    const modalElement = document.getElementById('Entities');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    };
   }
 
   getUserIntities(userId: string): void {
@@ -516,6 +598,11 @@ export class UsersListComponent implements OnInit {
   // Delete user
   selectUserToDelete(user: any) {
     this.selectedUserIdForDepartments = user.id;
+    const modalElement = document.getElementById('delete');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    };
   }
 
   deleteUser(): void {
@@ -557,6 +644,11 @@ export class UsersListComponent implements OnInit {
           );
         this.filteredPermissions = [...this.userPermissions];
         this.populateModuleAndScreenOptions();
+        const modalElement = document.getElementById('permissions');
+        if (modalElement) {
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
+        };
       },
       error: () => {
         this.toastr.error('Failed to load permissions');
@@ -761,56 +853,124 @@ export class UsersListComponent implements OnInit {
   // show user roles 
   openRolesModal(roles: any) {
     this.userRoles = roles || []
+    const modalElement = document.getElementById('rolesModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    };
   }
 
   // view details
   onViewDetails(user: any) {
     console.log(user);
     this.user = user
+    const modalElement = document.getElementById('details');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    };
 
   }
 
-updateUserStatus(status: number) {
-  if (!this.user.id || !status) {
-    return;
-  }
-
-  this.spinnerService.show();
-
-  this.userService.updateUserStatus({ userStatus: status, userId: this.user.id }).subscribe({
-    next: (res) => {
-      this.spinnerService.hide();
-
-      let messageKey = '';
-      switch (status) {
-        case 2:
-          messageKey = 'TOAST.USER_STATUS_UPDATED.ACTIVATED';
-          break;
-        case 3:
-          messageKey = 'TOAST.USER_STATUS_UPDATED.REJECTED';
-          break;
-        case 4:
-          messageKey = 'TOAST.USER_STATUS_UPDATED.BLOCKED';
-          break;
-        default:
-          messageKey = 'TOAST.USER_STATUS_UPDATED.GENERIC';
-      }
-
-      this.toastr.success(this.translate.instant(messageKey));
-
-      const closeBtn = document.querySelector('.viewDetailsbtn') as HTMLElement;
-      closeBtn?.click();
-    },
-    error: (err) => {
-      this.spinnerService.hide();
-      this.toastr.error(this.translate.instant('TOAST.USER_STATUS_UPDATED.ERROR'));
-      const closeBtn = document.querySelector('.viewDetailsbtn') as HTMLElement;
-      closeBtn?.click();
-    },
-    complete: () => {
-      this.spinnerService.hide();
+  updateUserStatus(status: number) {
+    if (!this.user.id || !status) {
+      return;
     }
-  });
-}
+
+    this.spinnerService.show();
+
+    this.userService.updateUserStatus({ userStatus: status, userId: this.user.id }).subscribe({
+      next: (res) => {
+        this.spinnerService.hide();
+
+        let messageKey = '';
+        switch (status) {
+          case 2:
+            messageKey = 'TOAST.USER_STATUS_UPDATED.ACTIVATED';
+            break;
+          case 3:
+            messageKey = 'TOAST.USER_STATUS_UPDATED.REJECTED';
+            break;
+          case 4:
+            messageKey = 'TOAST.USER_STATUS_UPDATED.BLOCKED';
+            break;
+          default:
+            messageKey = 'TOAST.USER_STATUS_UPDATED.GENERIC';
+        }
+
+        this.toastr.success(this.translate.instant(messageKey));
+
+        const closeBtn = document.querySelector('.viewDetailsbtn') as HTMLElement;
+        closeBtn?.click();
+      },
+      error: (err) => {
+        this.spinnerService.hide();
+        this.toastr.error(this.translate.instant('TOAST.USER_STATUS_UPDATED.ERROR'));
+        const closeBtn = document.querySelector('.viewDetailsbtn') as HTMLElement;
+        closeBtn?.click();
+      },
+      complete: () => {
+        this.spinnerService.hide();
+      }
+    });
+  }
+
+  private buildColumnDefs(): void {
+    this.columnDefs = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('AuthenticationResorceName.name'), field: 'nameEn', width: 200 },
+      { headerName: this.translate.instant('AuthenticationResorceName.userName'), field: 'userName', width: 200 },
+      { headerName: this.translate.instant('AuthenticationResorceName.userTypeName'), field: 'userTypeName', width: 200 },
+      { headerName: this.translate.instant('AuthenticationResorceName.userStatusName'), field: 'userStatusName', width: 200 },
+      { headerName: this.translate.instant('AuthenticationResorceName.foundationName'), field: 'foundationName', width: 200 },
+    ];
+  }
+
+  onTableAction(event: { action: string, row: any }) {
+    if (event.action === 'onDepartmentInfo') {
+      this.openAssignDepartmentsModal(event.row);
+    }
+
+    if (event.action === 'onEntitiesInfo') {
+      this.openAssignIntitiesModal(event.row);
+    }
+
+    if (event.action === 'onUserInfo') {
+      this.getUserPermissions(event.row?.id);
+    }
+
+    if (event.action === 'onEditInfo') {
+      this.openEditModal(event.row);
+    }
+
+    if (event.action === 'onDeletdInfo') {
+      this.selectUserToDelete(event.row);
+    }
+
+    if (event.action === 'onRoleInfo') {
+      this.openRolesModal(event.row?.roles);
+    }
+
+    if (event.action === 'onViewInfo') {
+      this.onViewDetails(event.row);
+    }
+  }
+
+  onPageChange(event: { pageNumber: number; pageSize: number }): void {
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+  }
+
+  onTableSearch(text: string): void {
+    this.searchText = text;
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
 
 }

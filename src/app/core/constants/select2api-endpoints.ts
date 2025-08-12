@@ -45,9 +45,11 @@ export class Select2APIEndpoint {
     GetSpCaseSelect2List: '/SpCases/GetSpCaseSelect2List',
     GetScProjectStatusSelect2List: '/ScProject/GetScProjectStatusSelect2List',
     GetScProjectTypeSelect2List: '/ScProject/GetScProjectTypeSelect2List',
-    GetBranchesSelect2List:"/GlAccDetails/select2",
+    GetBranchesSelect2List: "/GlAccDetails/select2",
+    GetReceiptsAndPaymentsSelect2: '/ChartType/ReceiptsAndPayments',
     ChartTypeGuarantees: '/ChartType/Guarantees',
-  
+    GetSocialCasesChartTypeSelect2: '/ChartType/SocialCases',
+    GetProjectsChartTypeSelect2: '/ChartType/Projects',
   };
 }
 

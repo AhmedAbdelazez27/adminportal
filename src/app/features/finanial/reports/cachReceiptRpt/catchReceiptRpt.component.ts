@@ -346,9 +346,9 @@ export class catchReceiptRptComponent {
                 const data = response?.data || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.catchReceipt_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.catchReceipt_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.catchReceipt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('FinancialReportResourceName.catchReceiptRpt_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.catchReceiptRpt_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.catchReceiptRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
                     { label: this.translate.instant('FinancialReportResourceName.collectorName'), value: this.searchParams.collectorNamestr },
@@ -451,7 +451,8 @@ export class catchReceiptRptComponent {
                   totalKeys: ['receipT_AMOUNTstr', 'chequE_AMOUNTstr', 'casH_AMOUNTstr', 'administrativE_AMOUNTstr']
                 };
 
-                this.openStandardReportService.openStandardReportPDF(reportConfig);
+                    this.openStandardReportService.openStandardReportPDF(reportConfig);
+                    this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();

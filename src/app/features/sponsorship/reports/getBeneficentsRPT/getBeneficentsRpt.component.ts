@@ -292,8 +292,8 @@ export class getBeneficentsRptComponent {
             totalLabel: this.translate.instant('Common.Total'),
             totalKeys: ['caseamountstr']
           };
-          this.spinnerService.hide();
-          this.openStandardReportService.openStandardReportExcel(reportConfig);
+              this.openStandardReportService.openStandardReportExcel(reportConfig);
+              this.spinnerService.hide();
         },
         error: () => {
           this.spinnerService.hide();
@@ -352,8 +352,8 @@ export class getBeneficentsRptComponent {
                   totalLabel: this.translate.instant('Common.Total'),
                   totalKeys: ['caseamountstr']
                 };
-                this.spinnerService.hide();
-                this.openStandardReportService.openStandardReportPDF(reportConfig);
+                    this.openStandardReportService.openStandardReportPDF(reportConfig);
+                    this.spinnerService.hide
               },
               error: () => {
                 this.spinnerService.hide();

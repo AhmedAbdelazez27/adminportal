@@ -10,11 +10,11 @@ export class ApiEndpoints {
     DeleteActionPermission: '/Permission/DeleteUserPermission',
     UserType: '/UserTypes',
     ChangePassword: '/ChangePassword',
-    ForgotPassword : '/ForgotPassword ',
-    verifyOtp : '/Otp/Verify',
-    OtpSendViaEmail : '/Otp/SendViaEmail',
-    ResetPassword : '/ResetPassword',
-    UpdateUserStatus : '/UpdateUserStatus'
+    ForgotPassword: '/ForgotPassword ',
+    verifyOtp: '/Otp/Verify',
+    OtpSendViaEmail: '/Otp/SendViaEmail',
+    ResetPassword: '/ResetPassword',
+    UpdateUserStatus: '/UpdateUserStatus'
 
   };
 
@@ -64,6 +64,15 @@ export class ApiEndpoints {
 
   static readonly AvailableNumber = {
     Base: '/AvailableNumber',
+    Create: '/Create',
+    Update: '/Update',
+    GetAll: '/GetAll',
+    GetById: (id: number) => `/GetById/${id}`,
+    Delete: (id: number) => `/Delete/${id}`,
+  };
+
+  static readonly ContactInformation = {
+    Base: '/ContactInformation',
     Create: '/Create',
     Update: '/Update',
     GetAll: '/GetAll',
@@ -216,18 +225,18 @@ export class ApiEndpoints {
     AidRequestsStudiesBase: '/AidRequestsStudies',
     QuotationHeaderBase: '/QuotationHeader',
     GetAll: '/GetAll',
-    GetShowDetailById: (caseCode: string, entityId: string) => `/GetPortaCAidRequest/${caseCode}/${entityId}`,
+    GetShowDetailById: (caseCode: string, entityId: string, caseId: string) => `/GetPortaCAidRequest/${caseCode}/${entityId}/${caseId}`,
     GetZakatStudyDetailById: (headerId: string, entityId: string) => `/GetAidRequestsZakat/${headerId}/${entityId}`,
     GetAidRequestsStudyDetailById: (headerId: string, entityId: string) => `/GetAidRequestsStudy/${headerId}/${entityId}`,
     GetQuotationHeaderDetailById: (headerId: string, entityId: string) => `/GetQuotationHeader/${headerId}/${entityId}`,
   };
 
-    static readonly SocialCasesReports = {
-        Base: '/SocialCasesReports',
-        GetOrdersListRptEndPoint: '/GetOrdersListRpt',
-        GetCasesEntitiesRptEndPoint: '/GetCasesEntitiesRpt',
-        GetCaseHelpRptEndPoint: '/GetCaseHelpRpt',
-    };
+  static readonly SocialCasesReports = {
+    Base: '/SocialCasesReports',
+    GetOrdersListRptEndPoint: '/GetOrdersListRpt',
+    GetCasesEntitiesRptEndPoint: '/GetCasesEntitiesRpt',
+    GetCaseHelpRptEndPoint: '/GetCaseHelpRpt',
+  };
 
   static readonly caseSearch = {
     Base: '/SpCases',
@@ -247,9 +256,9 @@ export class ApiEndpoints {
     Base: '/ServiceRequestsReports',
     GetServiceRequestsDetailsRptEndPoint: '/GetServiceRequestsDetailsRpt',
     GetTotalServiceRequestsRptEndPoint: '/GetTotalServiceRequestsRpt',
-};
+  };
 
- static readonly Regions = {
+  static readonly Regions = {
     Base: '/Regions',
     Create: '/Create',
     GetAll: '/GetAll',
@@ -257,28 +266,33 @@ export class ApiEndpoints {
     Update: '/Update',
     Delete: (id: number) => `/Delete/${id}`,
     Select2: '/Select2',
-};
+  };
 
-    static readonly ProjectReports = {
-        Base: '/ProjectReports',
-        GetProjectListRptEndPoint: '/GetProjectListRpt ',
-    };
+  static readonly ProjectReports = {
+    Base: '/ProjectReports',
+    GetProjectListRptEndPoint: '/GetProjectListRpt ',
+  };
 
-    static readonly ScProject = {
-        Base: '/ScProject',
-        GetAll: '/GetAllProject',
-        GetDetailsByIdBase: '/ProjectsHdr',
-        GetDetailsById: (projectId: string, entityId: string) => `/GetProjectHeader/${projectId}/${entityId}`,
-        GetRecieptProjectsDetailsByIdBase: '/ArMiscReciptHeader',
-        GetRecieptProjectsDetailsById: (projectId: string, entityId: string) => `/GetMiscRecieptProjects/${projectId}/${entityId}`,
-        GetProjectImplement: (projectId: string, entityId: string) => `/CpProjectImplement/${projectId}/${entityId}`,
-    };
-    static readonly Charts = {
-     Base: '/Charts',
-    RevenueAndExpenses : '/RevenueAndExpenses',
-    GetRevenueComparison : '/GetRevenueComparison',
-    GetExpensesComparison : '/GetExpensesComparison',
-    GuaranteesCharts : '/GuaranteesCharts'
+  static readonly ScProject = {
+    Base: '/ScProject',
+    GetAll: '/GetAllProject',
+    GetDetailsByIdBase: '/ProjectsHdr',
+    GetDetailsById: (projectId: string, entityId: string) => `/GetProjectHeader/${projectId}/${entityId}`,
+    GetRecieptProjectsDetailsByIdBase: '/ArMiscReciptHeader',
+    GetRecieptProjectsDetailsById: (projectId: string, entityId: string) => `/GetMiscRecieptProjects/${projectId}/${entityId}`,
+    GetProjectImplement: (projectId: string, entityId: string) => `/CpProjectImplement/${projectId}/${entityId}`,
+  };
+  static readonly Charts = {
+    Base: '/Charts',
+    RevenueAndExpenses: '/RevenueAndExpenses',
+    ReceiptsAndPayments: '/ReceiptsAndPayments',
+    GetRevenueComparison: '/GetRevenueComparison',
+    GetExpensesComparison: '/GetExpensesComparison',
+    GetReceiptsComparison: '/GetReceiptsComparison',
+    GetPaymentsComparison: '/GetPaymentsComparison',
+      GetSocialCasesCharts: '/SocialCasesCharts',
+      GetProjectCharts: '/ProjectCharts',
+      GuaranteesCharts : '/GuaranteesCharts'
   };
 
   static readonly Services = {

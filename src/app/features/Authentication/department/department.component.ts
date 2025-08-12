@@ -1,6 +1,6 @@
 import { Data } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -23,6 +23,11 @@ import {
   PagedResultDto,
 } from '../../../core/dtos/Authentication/Department/department.dto';
 import { UserDepartmentDto } from '../../../core/dtos/Authentication/Department/user-department.dto';
+import { ColDef, GridOptions } from 'ag-grid-community';
+import { PagedDto, Pagination } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { GenericDataTableComponent } from '../../../../shared/generic-data-table/generic-data-table.component';
+import { Subject } from 'rxjs';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-department',
@@ -32,12 +37,15 @@ import { UserDepartmentDto } from '../../../core/dtos/Authentication/Department/
     ReactiveFormsModule,
     TranslateModule,
     NgSelectModule,
+    GenericDataTableComponent
   ],
   templateUrl: './department.component.html',
   styleUrl: './department.component.scss',
 })
 export class DepartmentComponent implements OnInit {
+  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
   departments: DepartmentDto[] = [];
+  loadgridData: DepartmentDto[] = [];
   totalCount: number = 0;
   currentPage: number = 1;
   itemsPerPage: number = 10;
@@ -77,6 +85,19 @@ export class DepartmentComponent implements OnInit {
   showAction: boolean = true;
   actionTypes: string[] = ['view', 'edit', 'delete'];
 
+  searchParams = new PagedDto();
+  searchInput$ = new Subject<string>();
+  translatedHeaders: string[] = [];
+  pagination = new Pagination();
+
+  columnDefs: ColDef[] = [];
+  columnDefslineData: ColDef[] = [];
+  gridOptions: GridOptions = { pagination: false };
+  searchText: string = '';
+  columnHeaderMap: { [key: string]: string } = {};
+  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
+
+
   constructor(
     private departmentService: DepartmentService,
     private userDepartmentService: UserDepartmentService,
@@ -109,6 +130,49 @@ export class DepartmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDepartments(1);
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+
+        this.buildColumnDefs();
+        this.rowActions = [
+            { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
+            { label: this.translate.instant('Common.edit'), icon: 'icon-frame-edit', action: 'onEditInfo' },
+            { label: this.translate.instant('Common.userdept'), icon: 'icon-frame-user', action: 'onUsersInfo' },
+            { label: this.translate.instant('Common.deletd'), icon: 'icon-frame-delete', action: 'onDeletdInfo' },
+        ];
+    }
+
+  private cleanFilterObject(obj: any): any {
+    const cleaned = { ...obj };
+    Object.keys(cleaned).forEach((key) => {
+      if (cleaned[key] === '') {
+        cleaned[key] = null;
+      }
+    });
+    return cleaned;
+  }
+
+  getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    const skip = (event.pageNumber - 1) * event.pageSize;
+    this.searchParams.skip = skip;
+    this.searchParams.take = event.pageSize;
+    this.searchParams.isActive = this.isActiveFilter;
+    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+    cleanedFilters.searchValue = cleanedFilters.searchValue != null ? cleanedFilters.searchValue : '';
+
+    this.spinnerService.show();
+    this.departmentService.getAllDepartments(cleanedFilters).subscribe(
+      (data: any) => {
+        this.loadgridData = data.data;
+        this.pagination.totalCount = data.totalCount;
+        this.spinnerService.hide();
+      },
+      (error) => {
+        this.toastr.error();
+        this.spinnerService.hide();
+      }
+    );
   }
 
   getDepartments(page: number, searchValue: string = ''): void {
@@ -347,19 +411,39 @@ export class DepartmentComponent implements OnInit {
   // Table event handlers
   onViewDetails(department: DepartmentDto): void {
     this.openViewModal(department);
+    const modalElement = document.getElementById('Department');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    };
   }
 
   onEdit(department: DepartmentDto): void {
     this.openEditModal(department);
+    const modalElement = document.getElementById('Department');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    };
   }
 
   onDelete(department: DepartmentDto): void {
     this.selectDepartmentToDelete(department);
+    const modalElement = document.getElementById('deleteDepartmentModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    };
   }
 
   onViewUsersInDepartment(department: DepartmentDto): void {
     this.selectedDepartment = department;
     this.loadUsersInDepartment(department.dept_ID);
+    const modalElement = document.getElementById('usersInDepartmentModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    };
   }
 
   loadUsersInDepartment(departmentId: number): void {
@@ -419,5 +503,61 @@ export class DepartmentComponent implements OnInit {
 
   getStatusText(isActive: boolean): string {
     return isActive ? 'Active' : 'Inactive';
+  }
+
+  private buildColumnDefs(): void {
+    this.columnDefs = [
+      {
+        headerName: '#',
+        valueGetter: (params) =>
+          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
+        width: 60,
+        colId: 'serialNumber'
+      },
+      { headerName: this.translate.instant('AuthenticationResorceName.nameAr'), field: 'aname', width: 200 },
+      { headerName: this.translate.instant('AuthenticationResorceName.nameEn'), field: 'ename', width: 200 },
+      {
+        field: 'isActive',
+        headerName: this.translate.instant('AuthenticationResorceName.status'),
+        width: 100,
+        sortable: true,
+        filter: true,
+        cellRenderer: (params: any) => {
+          const isActive = params.value;
+          return `<span class="badge ${isActive ? 'status-approved' : 'status-rejected'
+            }">${isActive ? 'Active' : 'Inactive'}</span>`;
+        },
+      },
+      { headerName: this.translate.instant('AuthenticationResorceName.lastModification'), field: 'last_Modify', width: 200 },
+    ];
+  }
+
+  onTableAction(event: { action: string, row: any }) {
+    if (event.action === 'onViewInfo') {
+      this.onViewDetails(event.row);
+    }
+
+    if (event.action === 'onEditInfo') {
+      this.onEdit(event.row);
+    }
+
+    if (event.action === 'onUsersInfo') {
+      this.onViewUsersInDepartment(event.row);
+    }
+
+    if (event.action === 'onDeletdInfo') {
+      this.onDelete(event.row);
+    }
+  }
+
+  onPageChange(event: { pageNumber: number; pageSize: number }): void {
+    this.pagination.currentPage = event.pageNumber;
+    this.pagination.take = event.pageSize;
+    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+  }
+
+  onTableSearch(text: string): void {
+    this.searchText = text;
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 }

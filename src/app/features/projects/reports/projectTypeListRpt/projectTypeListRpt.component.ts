@@ -452,7 +452,8 @@ export class projectTypeListRptComponent {
                   totalKeys: ['local_coststr', 'misC_RECEIPT_AMOUNTstr', 'local_coststr']
                 };
 
-                this.openStandardReportService.openStandardReportPDF(reportConfig);
+                    this.openStandardReportService.openStandardReportPDF(reportConfig);
+                    this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();

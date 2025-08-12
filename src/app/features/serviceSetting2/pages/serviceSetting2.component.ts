@@ -158,17 +158,17 @@ export class ServiceSetting2Component {
     this.rowActions = [
       {
         label: this.translate.instant('SERVICE_SETTING.VIEW'),
-        icon: 'fas fa-eye',
+        icon: 'icon-frame-view',
         action: 'view',
       },
       {
         label: this.translate.instant('SERVICE_SETTING.EDIT'),
-        icon: 'fas fa-edit',
+        icon: 'icon-frame-edit',
         action: 'edit',
       },
       {
         label: this.translate.instant('SERVICE_SETTING.ADD_WORKFLOW'),
-        icon: 'fas fa-sitemap',
+        icon: 'icon-frame-entities',
         action: 'addWorkFlow',
       },
     ];

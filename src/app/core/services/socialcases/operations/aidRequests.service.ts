@@ -27,10 +27,10 @@ export class aidRequestsService {
   }
 
   getShowDetailById(params: filteraidRequestsByIdDto): Observable<aidRequestsShowDetailsDto> {
-    if (!params.caseCode || !params.entityId) {
+    if (!params.caseCode || !params.entityId || !params.caseId) {
       throw new Error('caseCode and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.AidRequest.GetShowDetailById(params.caseCode, params.entityId)}`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.AidRequest.GetShowDetailById(params.caseCode, params.entityId, params.caseId)}`;
     return this.http.get<aidRequestsShowDetailsDto>(apiUrl);
   }
 

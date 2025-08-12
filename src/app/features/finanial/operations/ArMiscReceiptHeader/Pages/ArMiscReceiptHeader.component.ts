@@ -99,7 +99,7 @@ export class ArMiscReceiptHeaderComponent {
   ngOnInit(): void {
     this.buildColumnDefs();
     this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
     ];
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -512,9 +512,9 @@ export class ArMiscReceiptHeaderComponent {
                 const data = response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceipt_Title'),
-                  reportTitle: this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceipt_Title'),
-                  fileName: `${this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceipt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceiptRpt_Title'),
+                  reportTitle: this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceiptRpt_Title'),
+                  fileName: `${this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceiptRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.EntityId'), value: this.searchParams.entityIdstr },
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.DocumentNumber'), value: this.searchParams.receiptNumber },

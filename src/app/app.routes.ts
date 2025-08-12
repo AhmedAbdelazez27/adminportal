@@ -8,6 +8,7 @@ import { NoPermissionComponent } from './shared/components/no-permission/no-perm
 import { ForgetpasswordComponent } from './features/auth/forgetpassword/forgetpassword.component';
 import { VerifyotpComponent } from './features/auth/verifyotp/verifyotp.component';
 import { ResetpasswordComponent } from './features/auth/resetpassword/resetpassword.component';
+import { StatisticsOfBeneficiaryFamiliesComponents } from './features/socialcases/charts/statistics-Benf-Families/statistics-Benf-Families.component';
 
 
 export const routes: Routes = [
@@ -23,6 +24,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
+     
       {
         path: 'authentication',
         children: [
@@ -74,6 +76,15 @@ export const routes: Routes = [
               import(
                 './features/UserSetting/setting-regions-component/setting-regions-component.routes'
               ).then((m) => m.settingRegionsRoutes),
+            //canActivate: [authGuard],
+            data: { permission: 'Settings.View' },
+          },
+          {
+            path: 'contact-information',
+            loadChildren: () =>
+              import(
+                './features/UserSetting/contact-information/contact-information.routes'
+              ).then((m) => m.contactInformationRoutes),
             //canActivate: [authGuard],
             data: { permission: 'Settings.View' },
           },
@@ -149,7 +160,6 @@ export const routes: Routes = [
               import('./features/socialcases/operations/operations.routes').then(
                 (m) => m.operationsRoutes
               ),
-
           },
           {
             path: 'reports',
@@ -157,7 +167,14 @@ export const routes: Routes = [
               import('./features/socialcases/reports/reports.routes').then(
                 (m) => m.ReportsRoutes
               ),
+          },
 
+          {
+            path: 'charts',
+            loadChildren: () =>
+              import('./features/socialcases/charts/charts.routes').then(
+                (m) => m.chartsRoutes
+              ),
           },
         ],
       },
@@ -171,7 +188,6 @@ export const routes: Routes = [
               import('./features/projects/operations/operations.routes').then(
                 (m) => m.operationsRoutes
               ),
-
           },
           {
             path: 'reports',
@@ -179,7 +195,13 @@ export const routes: Routes = [
               import('./features/projects/reports/reports.routes').then(
                 (m) => m.reportsRoutes
               ),
-
+          },
+          {
+            path: 'charts',
+            loadChildren: () =>
+              import('./features/projects/charts/charts.routes').then(
+                (m) => m.chartsRoutes
+              ),
           },
         ],
       },

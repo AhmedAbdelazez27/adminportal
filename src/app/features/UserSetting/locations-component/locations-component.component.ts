@@ -130,16 +130,16 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
       sortable: true,
       cellRenderer: (params: any) => {
         return params.value
-          ? '<span class="badge bg-success">Active</span>'
-          : '<span class="badge bg-danger">Inactive</span>';
+          ? '<span class="status-active">Active</span>'
+          : '<span class="status-inactive">Inactive</span>';
       },
     },
   ];
 
   rowActions = [
-    { label: 'View', action: 'view', icon: 'fas fa-eye' },
-    { label: 'Edit', action: 'edit', icon: 'fas fa-edit' },
-    { label: 'Delete', action: 'delete', icon: 'fas fa-trash' },
+    { label: 'View', action: 'view', icon: 'icon-frame-view' },
+    { label: 'Edit', action: 'edit', icon: 'icon-frame-edit' },
+    { label: 'Delete', action: 'delete', icon: 'icon-frame-delete' },
   ];
 
   constructor(

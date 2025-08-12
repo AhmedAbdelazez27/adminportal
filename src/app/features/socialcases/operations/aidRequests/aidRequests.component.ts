@@ -118,8 +118,8 @@ export class aidRequestsComponent {
   ngOnInit(): void {
     this.buildColumnDefs();
     this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.StudyDetails'), icon: 'fas fa-eye', action: 'onViewStudyDetailsInfo' },
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.StudyDetails'), icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' },
     ];
 
     this.entitySearchInput$
@@ -551,8 +551,8 @@ export class aidRequestsComponent {
     this.aidRequestsService.getAll(cleanedFilters)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
-          this.loadgridData = response || [];
-          this.pagination.totalCount = response[0]?.rowsCount || 0;
+          this.loadgridData = response.data || [];
+          this.pagination.totalCount = response.data[0]?.rowsCount || 0;
           this.spinnerService.hide();
         },
         error: () => {
@@ -711,6 +711,7 @@ export class aidRequestsComponent {
   }
 
   onTableAction(event: { action: string, row: any }) {
+    console.log("event", event);
     var data = event.row.composeKey.split(',');
     var source = data[0];
     var studyId = data[1];
@@ -742,7 +743,7 @@ export class aidRequestsComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse[0]?.rowsCount || initialResponse?.data?.length || 0;
+          const totalCount = initialResponse.data[0]?.rowsCount || initialResponse?.data?.length || 0;
 
           this.aidRequestsService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))

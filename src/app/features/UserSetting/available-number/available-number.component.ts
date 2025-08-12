@@ -599,17 +599,17 @@ export class AvailableNumberComponent implements OnInit, OnDestroy {
     this.rowActions = [
       {
         label: this.translate.instant('COMMON.VIEW'),
-        icon: 'fas fa-eye',
+        icon: 'icon-frame-view',
         action: 'view',
       },
       {
         label: this.translate.instant('COMMON.EDIT'),
-        icon: 'fas fa-edit',
+        icon: 'icon-frame-edit',
         action: 'edit',
       },
       {
         label: this.translate.instant('COMMON.DELETE'),
-        icon: 'fas fa-trash',
+        icon: 'icon-frame-delete',
         action: 'delete',
       },
     ];

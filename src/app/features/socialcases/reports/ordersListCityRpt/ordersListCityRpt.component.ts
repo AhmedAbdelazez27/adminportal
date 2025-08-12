@@ -515,8 +515,8 @@ export class ordersListCityRptComponent {
                   totalLabel: this.translate.instant('Common.Total'),
                   totalKeys: ['toT_INCOMEstr', 'toT_DUTIESstr']
                 };
-
-                this.openStandardReportService.openStandardReportPDF(reportConfig);
+                    this.openStandardReportService.openStandardReportPDF(reportConfig);
+                    this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();

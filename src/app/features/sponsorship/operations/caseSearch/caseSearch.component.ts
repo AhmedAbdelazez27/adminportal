@@ -129,10 +129,10 @@ export class caseSearchComponent {
   ngOnInit(): void {
     this.buildColumnDefs();
     this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.ViewHistoryInfo'), icon: 'fas fa-eye', action: 'onViewcasehistorydetailsInfo' },
-      { label: this.translate.instant('Common.ViewPaymentInfo'), icon: 'fas fa-eye', action: 'onViewCasePaimentDetailsInfo' },
-      { label: this.translate.instant('Common.ViewContractInfo'), icon: 'fas fa-eye', action: 'onViewContractDetailsInfo' },
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.ViewHistoryInfo'), icon: 'icon-frame-view', action: 'onViewcasehistorydetailsInfo' },
+      { label: this.translate.instant('Common.ViewPaymentInfo'), icon: 'icon-frame-view', action: 'onViewCasePaimentDetailsInfo' },
+      { label: this.translate.instant('Common.ViewContractInfo'), icon: 'icon-frame-view', action: 'onViewContractDetailsInfo' },
     ];
 
     this.entitySearchInput$

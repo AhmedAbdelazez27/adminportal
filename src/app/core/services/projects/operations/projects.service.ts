@@ -13,6 +13,7 @@ import { filterprojectsByIdDto, filterprojectsDto, projectImplementDto, projects
 export class projectsService {
 
   private readonly BASE_URL = `${environment.apiBaseUrl}${ApiEndpoints.ScProject.Base}`;
+  private readonly BASEURL = `${environment.apiBaseUrl}`;
   private readonly DetailsBASE_URL = `${environment.apiBaseUrl}${ApiEndpoints.ScProject.GetDetailsByIdBase}`;
   private readonly RecieptProjectsDetailsBASE_URL = `${environment.apiBaseUrl}${ApiEndpoints.ScProject.GetRecieptProjectsDetailsByIdBase}`;
   constructor(private http: HttpClient) { }
@@ -44,7 +45,7 @@ export class projectsService {
     if (!params.projectId || !params.entityId) {
       throw new Error('projectId and entityId must not be null');
     }
-    const apiUrl = `${ApiEndpoints.ScProject.GetProjectImplement(params.projectId, params.entityId)}`;
+    const apiUrl = `${this.BASEURL}${ApiEndpoints.ScProject.GetProjectImplement(params.projectId, params.entityId)}`;
     return this.http.get<projectImplementDto[]>(apiUrl);
   }
 }

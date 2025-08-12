@@ -108,7 +108,7 @@ export class spContractsComponent {
   ngOnInit(): void {
     this.buildColumnDefs();
     this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'fas fa-eye', action: 'onViewInfo' },
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
     ];
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))

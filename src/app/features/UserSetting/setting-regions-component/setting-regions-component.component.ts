@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RegionsComponentComponent } from '../regions-component/regions-component.component';
 import { LocationsComponentComponent } from '../locations-component/locations-component.component';
 import { AvailableNumberComponent } from '../available-number/available-number.component';
+import { ContactInformationComponent } from '../contact-information/contact-information.component';
 import { AttachmentsConfigComponent } from '../attachments-config/attachments-config.component';
 
 @Component({
@@ -13,16 +14,17 @@ import { AttachmentsConfigComponent } from '../attachments-config/attachments-co
     RegionsComponentComponent,
     LocationsComponentComponent,
     AvailableNumberComponent,
+    ContactInformationComponent,
     AttachmentsConfigComponent,
   ],
   templateUrl: './setting-regions-component.component.html',
   styleUrl: './setting-regions-component.component.scss',
 })
 export class SettingRegionsComponentComponent {
-  activeTab: 'regions' | 'locations' | 'other' | 'attachments-config' =
+  activeTab: 'regions' | 'locations' | 'other' | 'contact-information' | 'attachments-config' =
     'regions';
 
-  setActiveTab(tab: 'regions' | 'locations' | 'other' | 'attachments-config') {
+  setActiveTab(tab: 'regions' | 'locations' | 'other' | 'contact-information' | 'attachments-config') {
     this.activeTab = tab;
   }
 }

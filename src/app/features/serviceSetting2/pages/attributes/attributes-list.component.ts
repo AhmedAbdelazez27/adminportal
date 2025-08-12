@@ -372,7 +372,7 @@ export class AttributesListComponent implements OnInit, OnDestroy {
     if (this.canViewAttribute()) {
       this.rowActions.push({
         label: this.translate.instant('COMMON.VIEW'),
-        icon: 'fas fa-eye',
+        icon: 'icon-frame-view',
         action: 'view',
       });
     }
@@ -382,7 +382,7 @@ export class AttributesListComponent implements OnInit, OnDestroy {
       if (this.canEditAttribute()) {
         this.rowActions.push({
           label: this.translate.instant('COMMON.UPDATE'),
-          icon: 'fas fa-edit',
+          icon: 'icon-frame-edit',
           action: 'edit',
         });
       }
@@ -390,7 +390,7 @@ export class AttributesListComponent implements OnInit, OnDestroy {
       if (this.canDeleteAttribute()) {
         this.rowActions.push({
           label: this.translate.instant('COMMON.DELETE'),
-          icon: 'fas fa-trash',
+          icon: 'icon-frame-delete',
           action: 'delete',
         });
       }
