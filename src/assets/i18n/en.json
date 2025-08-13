@@ -216,13 +216,11 @@
   "PASSWORD_GUIDELINES": "Password must be at least 6 characters and include uppercase, lowercase, numbers, and special characters.",
   "ENTITIES_ASSIGNED": "Entities assigned successfully.",
   "ENTITIES_ASSIGN_FAILED": "Failed to assign entities.",
-
   "CORECT_EMAIL": "Please enter a valid email address",
   "OTP": {
     "VERIFY_SUCCESS": "OTP Verified Successfully!",
     "VERIFY_FAILED": "Invalid OTP. Please try again."
   },
-
   "RESET_PASSWORD": "Reset Password",
   "ENTER_NEW_PASSWORD": "Enter your new password",
   "CONFIRM": "Confirm",
@@ -279,7 +277,6 @@
   "period_and_branches": "Period & Branches",
   "branches_and_accounts": "Branches & Accounts",
   "branches_and_departments": "Branches & Departments",
-
   "navbarMenu": {
     "dashboard": "DashBoard",
     "profile": "Profile",
@@ -335,7 +332,6 @@
     "requestDetailsReportTitle": "Applied Requests Reports",
     "totalRequestsReportTitle": "Total Requests Reports"
   },
-
   "Common": {
     "Action": "Action",
     "ViewInfo": "Show Details",
@@ -369,7 +365,6 @@
     "userdept": "Users in Department",
     "deleteWarning": "Are you sure you want delete"
   },
-
   "AuthenticationResorceName": {
     "titleRole": "Roles",
     "name": "name",
@@ -425,7 +420,6 @@
     "deleteConfirmMsg": "Are you sure you want to delete this department? This action cannot be undone.",
     "noUserFound": "No users found in this department."
   },
-
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "Entity Name",
     "DocumentNumber": "Document No",
@@ -468,7 +462,6 @@
     "NoData": "No data available to display",
     "SearchTitle": "Filter"
   },
-
   "ApPaymentsTransactionHDRResourceName": {
     "EntityId": "Entity Name",
     "PaymentNumber": "Document No",
@@ -484,7 +477,6 @@
     "Notes": "Notes",
     "Title": "Payment Details"
   },
-
   "InvoiceHdResourceName": {
     "Title": "Invoice",
     "TrTitle": "Invoice Details",
@@ -514,7 +506,6 @@
     "total_Amount": "Total Amount",
     "total_TR": "Total Tax"
   },
-
   "PaymentVoucherResourceName": {
     "Title": "Payment Voucher",
     "PaymentDetailTitle": "Cheque Details",
@@ -546,7 +537,6 @@
     "accountNameEn": "Account Name",
     "accountNameAr": "Account Name"
   },
-
   "vendorResourceName": {
     "entityId": "EntityId",
     "vendorName": "Vendor Name",
@@ -562,7 +552,6 @@
     "mobile": "Mobile",
     "workTEL": "Work Tel"
   },
-
   "glJEResourceName": {
     "title": "GL_JE",
     "entityId": "EntityId",
@@ -589,7 +578,6 @@
     "totalCredit": "Total Credit",
     "title_details": "Details"
   },
-
   "beneficentResourceName": {
     "Title": "Beneficent",
     "title_details": "Details",
@@ -614,7 +602,6 @@
     "city": "City",
     "titleDto": "Title"
   },
-
   "CasePaymentResourceName": {
     "Title": "Payment Inquiry",
     "entityId": "Entity Name",
@@ -638,7 +625,6 @@
     "kafalA_STATUS_DESC": "Kafala Status",
     "iS_RECEIVED": "Is Received",
     "receivE_DATE": "Receive Date",
-
     "casE_PAYMENT_CODE": "",
     "paymenT_CODE": "",
     "statuS_CODE": "",
@@ -653,7 +639,6 @@
     "deliverY_METHOD_DESC": "",
     "attacheD_FILE": ""
   },
-
   "SpContractsResourceName": {
     "Title": "Contract Search",
     "Title_SpContractCase": "Details",
@@ -688,7 +673,6 @@
     "sponceR_CATEGORY_DESC": "Sponsorship Type",
     "startdate": "Start Date"
   },
-
   "FinancialReportResourceName": {
     "catchReceiptRpt_Title": "Receipt Voucher",
     "generalLJournalRpt_Title": "Balance Sheet",
@@ -696,7 +680,6 @@
     "receiptRpt_Title": "Payment Voucher",
     "vendorsPayTransRPT_Title": "Vendor Balance Sheet",
     "totlaBenDonationsRPT_Title": "Beneficent Total Donation",
-
     "entityId": "Entity Name",
     "collectorId": "Collector",
     "fromDate": "From Date",
@@ -761,7 +744,6 @@
     "miscReceiptAmount": "MiscReceipt Amount",
     "administrative": "Administrative Amount"
   },
-
   "AidRequestsResourceName": {
     "Title": "Aid Request",
     "aiD_REQUEST_DATE": "Request Date",
@@ -825,7 +807,6 @@
     "wifE_NAME": "Spouse Name",
     "wifeiD_END_DATE": "Spouse emirates ID expiry date"
   },
-
   "SponsorshipReportResourceName": {
     "arabicValue": "Arabic Value",
     "benifcientTotalRpt_Title": "Total No of Beneficiaries",
@@ -900,7 +881,6 @@
     "value": "Value",
     "wifeId": "Wife Id"
   },
-
   "SocialCaseReportsResourceName": {
     "ordersListCityRptTitle": "Aid Requests City Reports",
     "orderListBranchRptTitle": "Aid Requests Branch Reports",
@@ -914,7 +894,6 @@
     "type": "Type",
     "fromDate": "From Date",
     "toDate": "To Date",
-
     "referencenumber": "Reference No",
     "aiD_REQUEST_DATE": "Request Date",
     "requesT_TYPE_DESC": "Request Type",
@@ -933,7 +912,6 @@
     "entitY_NAME": "Entity Name",
     "ord": "Order"
   },
-
   "ServiceRequestsReportsResourceName": {
     "requestDetailsEntitiesRPT_Title": "Applied Requests Reports",
     "totalRequestsEntitiesRPT_Title": "Total Requests Report",
@@ -954,7 +932,6 @@
     "rejectedRequestsNo": "Rejected Request No",
     "postedRequestsNo": "Posted Request No"
   },
-
   "CaseSearchResourceName": {
     "Title": "Case Search Survey Form",
     "MenuBarTitle": "Case Search",
@@ -1053,7 +1030,6 @@
     "total3": "Total",
     "NoContract": "No Contracts"
   },
-
   "AVAILABLE_NUMBER": {
     "TITLE": "Available Numbers",
     "ADD_NEW": "Add New Available Number",
@@ -1067,7 +1043,6 @@
     "ENTER_ALLOWED_NUMBER": "Enter allowed number",
     "DELETE_CONFIRMATION": "Are you sure you want to delete this available number? This action cannot be undone."
   },
-
   "CONTACT_INFORMATION": {
     "TITLE": "Contact Information",
     "ADD_NEW": "Add New Contact",
@@ -1088,7 +1063,6 @@
     "UPDATE_SUCCESS": "Contact updated successfully",
     "DELETE_SUCCESS": "Contact deleted successfully"
   },
-
   "ATTACHMENTS_CONFIG": {
     "TITLE": "Attachments Configuration",
     "ADD_NEW": "Add New Attachment Config",
@@ -1109,7 +1083,6 @@
     "CREATE": "Create",
     "UPDATE": "Update"
   },
-
   "LOCATIONS": {
     "TITLE": "Locations Management",
     "ADD_NEW": "Add New Location",
@@ -1150,7 +1123,6 @@
     "CREATE": "Create",
     "UPDATE": "Update"
   },
-
   "REGIONS": {
     "TITLE": "Regions Management",
     "ADD_NEW": "Add New Region",
@@ -1175,7 +1147,6 @@
     "CREATE": "Create",
     "UPDATE": "Update"
   },
-
   "ProjectReportResourceName": {
     "projectTypeListRpt_Title": "Projects by Type",
     "projectCountryListRpt_Title": "Projects by Country",
@@ -1199,7 +1170,6 @@
     "projecT_TYPE_DESC": "Status",
     "countrY_code": "Country"
   },
-
   "SERVICE_SETTING": {
     "TITLE": "Service Settings",
     "ADD_NEW": "Add New Service",
@@ -1287,7 +1257,6 @@
     "SERVICE_DEPARTMENT_UPDATED_SUCCESS": "Service department updated successfully",
     "SERVICE_DEPARTMENT_DELETED_SUCCESS": "Service department deleted successfully"
   },
-
   "ProjectsResourceName": {
     "Title": "Prohect Details",
     "Tab1_Title": " Receipts",
@@ -1339,7 +1308,6 @@
     "finisH_DATE": "End Implement",
     "imP_TYPE": "Implement Type"
   },
-
   "FinancialCharts": {
     "charts": "Charts",
     "titleForReceiptPaymentAnalysis": "Analysis of Receipts and Payments",
@@ -1370,7 +1338,6 @@
     "month": "Month",
     "start": "Start"
   },
-
   "SocialServiceCharts": {
     "charts": "Charts",
     "titleForstatisticsofBenfFamilies": "Statistics of beneficiary families",
@@ -1381,7 +1348,6 @@
     "menutotalAidsbyCategory": "Total Aids by Category of Applicant",
     "titleForRequeststatistics": "Requests Statistics"
   },
-
   "ProjectCharts": {
     "charts": "Charts",
     "titleForcostofProject": "Costs of Projects",
@@ -1389,5 +1355,24 @@
     "titleForprojectReceipt": "Project Receipts",
     "menubyCountry": "By Country",
     "menubyType": "By Type"
+  },
+  "sponsorshipchart": {
+    "charts": "Charts",
+    "numbersOfSponsors": "Numbers of sponsors",
+    "numbersByPeriodAndType": "Number of sponsors by period and type of sponsorship",
+    "numbersByTypeAndNationality": "Number of sponsors by type of sponsorship and nationality",
+    "totalDonationsByType": "Total donations by type of sponsorship",
+    "contractStatsByPaymentMethod": "Contract statistics by payment method",
+    "numbersByEntityAndType": "Number of sponsors by entity and type of sponsorship",
+    "numbersInOutCountry": "Numbers of sponsors in & out the country",
+    "comparisonOfCases": "Comparison of Cases",
+    "byTypeOfSponsorship": "Type of sponsorship",
+    "byNationality": "By Nationality",
+    "byEntityOffice": "Office of entity",
+    "casesAvailableForSponsorship": "Cases Available for bail",
+    "office": "Office",
+    "entity": "Entity",
+    "year": "Year",
+    "month": "Month"
   }
 }

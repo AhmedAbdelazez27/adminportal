@@ -213,7 +213,6 @@
   "PASSWORDS_MATCH": "كلمتا المرور متطابقتان!",
   "ENTITIES_ASSIGNED": "تم تعيين الجمعيات بنجاح.",
   "ENTITIES_ASSIGN_FAILED": "فشل في تعيين الجمعيات.",
-
   "CORECT_EMAIL": "الرجاء إدخال بريد إلكتروني صحيح",
   "OTP": {
     "VERIFY_SUCCESS": "تم التحقق من OTP بنجاح!",
@@ -223,7 +222,6 @@
   "ENTER_NEW_PASSWORD": "أدخل كلمة المرور الجديدة",
   "PASSWORD_GUIDELINES": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل وأن تحتوي على حرف خاص.",
   "CONFIRM": "تأكيد",
-
   "foundation_name": "اسم المؤسسة",
   "foundation_type": "نوع المؤسسة",
   "license_number": "رقم الترخيص",
@@ -277,7 +275,6 @@
   "period_and_branches": "الفترات والفروع",
   "branches_and_accounts": "الفروع والحسابات",
   "branches_and_departments": "الفروع والأقسام",
-
   "navbarMenu": {
     "dashboard": "لوحة القيادة",
     "profile": "حساب تعريفي",
@@ -333,7 +330,6 @@
     "requestDetailsReportTitle": "الطلبات المقدمه",
     "totalRequestsReportTitle": "اجمالي الطلبات المقدمه"
   },
-
   "Common": {
     "Action": "العمليات",
     "ViewInfo": "عرض التفاصيل",
@@ -367,7 +363,6 @@
     "userdept": "المستخدمون في القسم",
     "deleteWarning": "هل أنت متأكد أنك تريد الحذف؟"
   },
-
   "AuthenticationResorceName": {
     "titleRole": "الدور الوظيفي",
     "name": "اسم",
@@ -419,9 +414,7 @@
     "deleteConfirm": "تأكيد الحذف",
     "deleteConfirmMsg": "هل أنت متأكد أنك تريد حذف هذا القسم؟ لا يمكن التراجع عن هذا الإجراء.",
     "noUserFound": "لم يتم العثور على مستخدمين في هذا القسم."
-
   },
-
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "اسم الجمعية",
     "DocumentNumber": "رقم السند",
@@ -464,7 +457,6 @@
     "NoData": "لا توجد بيانات متاحة للعرض,",
     "SearchTitle": "بحث فى عمليات الصرف"
   },
-
   "ApPaymentsTransactionHDRResourceName": {
     "EntityId": "اسم الجمعية",
     "PaymentNumber": "رقم السند",
@@ -480,7 +472,6 @@
     "Notes": "ملاحظات",
     "Title": "تفاصيل عمليات الصرف"
   },
-
   "InvoiceHdResourceName": {
     "Title": "الفواتير",
     "TrTitle": " تفاصيل الفاتوره",
@@ -509,7 +500,6 @@
     "total_Amount": "اجمالى المبلغ",
     "total_TR": "اجمالى الضريبه"
   },
-
   "PaymentVoucherResourceName": {
     "Title": "سندات صرف",
     "PaymentDetailTitle": " تفاصيل الشيك",
@@ -543,7 +533,6 @@
     "accountNameEn": " اسم الحساب ",
     "accountNameAr": " اسم الحساب "
   },
-
   "vendorResourceName": {
     "entityId": "اسم الجمعية",
     "vendorName": "اسم المورد",
@@ -553,13 +542,12 @@
     "category": " الفئه",
     "notes": "ملاحظات التقييم",
     "address": "العنوان",
-    "fax": "فاكس", 
+    "fax": "فاكس",
     "email": "بريد إلكتروني",
     "website": "موقع إلكتروني",
     "mobile": "موبايل",
     "workTEL": "هاتف العمل"
   },
-
   "glJEResourceName": {
     "title": "القيود",
     "entityId": "اسم الجمعية",
@@ -585,7 +573,6 @@
     "totalDebit": "اجمالى دائن",
     "totalCredit": "اجمالى مدين"
   },
-
   "beneficentResourceName": {
     "Title": "بحث فى المتبرعين,",
     "EntityId": "اسم الجمعية",
@@ -608,7 +595,6 @@
     "gender": "الجنس",
     "city": "الإمارة"
   },
-
   "CasePaymentResourceName": {
     "Title": "تفاصيل الصرفيات ",
     "HdrTitle": "التفاصيل ",
@@ -650,7 +636,6 @@
     "deliverY_METHOD_DESC": "",
     "attacheD_FILE": ""
   },
-
   "SpContractsResourceName": {
     "Title": "بحث فى استعلام العقود",
     "Title_SpContractCase": "التفاصيل",
@@ -686,7 +671,6 @@
     "sponceR_CATEGORY_DESC": "نوع الكفاله",
     "startdate": " تاريخ البدايه  "
   },
-
   "FinancialReportResourceName": {
     "catchReceiptRpt_Title": "سندات القبض",
     "generalLJournalRpt_Title": "كشف حركه حساب",
@@ -761,7 +745,6 @@
     "miscReceiptAmount": "القيمه",
     "administrative": "القيمه الاداريه"
   },
-
   "SponsorshipReportResourceName": {
     "arabicValue": "",
     "benifcientTotalRpt_Title": "اجمالى عدد المستفيدين",
@@ -835,7 +818,6 @@
     "value": "",
     "wifeId": ""
   },
-
   "AidRequestsResourceName": {
     "Title": "بحث في الحالات",
     "aiD_REQUEST_DATE": "تاريخ الطلب",
@@ -898,7 +880,6 @@
     "wifE_NAME": "اسم الزوج/الزوجة",
     "wifeiD_END_DATE": "تاريخ انتهاء هوية الزوج/الزوجة"
   },
-
   "SocialCaseReportsResourceName": {
     "ordersListBranchRptTitle": "قائمه الطلبات حسب الفرع",
     "ordersListCityRptTitle": "قائمه الطلبات حسب الاماره",
@@ -929,7 +910,6 @@
     "statuS_DESC": "حاله الساعده",
     "entitY_NAME": "الجمعيه"
   },
-
   "ServiceRequestsReportsResourceName": {
     "requestDetailsEntitiesRPT_Title": "الطلبات المقدمه",
     "totalRequestsEntitiesRPT_Title": "اجمالي الطلبات المقدمه",
@@ -950,7 +930,6 @@
     "rejectedRequestsNo": "الطلبات المرفوضه",
     "postedRequestsNo": "الطلبات المعتمده"
   },
-
   "CaseSearchResourceName": {
     "Title": " بحث الاستمارات",
     "MenuBarTitle": " استعلام كفالات",
@@ -1046,7 +1025,6 @@
     "trX_DATEstr": " تاريخ العمليه ",
     "trX_DESC": ""
   },
-
   "AVAILABLE_NUMBER": {
     "TITLE": "الأرقام المتاحة",
     "ADD_NEW": "إضافة رقم متاح جديد",
@@ -1060,7 +1038,6 @@
     "ENTER_ALLOWED_NUMBER": "أدخل الرقم المسموح",
     "DELETE_CONFIRMATION": "هل أنت متأكد من حذف هذا الرقم المتاح؟ لا يمكن التراجع عن هذا الإجراء."
   },
-
   "CONTACT_INFORMATION": {
     "TITLE": "معلومات الاتصال",
     "ADD_NEW": "إضافة جهة اتصال جديدة",
@@ -1081,7 +1058,6 @@
     "UPDATE_SUCCESS": "تم تحديث جهة الاتصال بنجاح",
     "DELETE_SUCCESS": "تم حذف جهة الاتصال بنجاح"
   },
-
   "ATTACHMENTS_CONFIG": {
     "TITLE": "إعدادات المرفقات",
     "ADD_NEW": "إضافة إعداد مرفق جديد",
@@ -1102,7 +1078,6 @@
     "CREATE": "إنشاء",
     "UPDATE": "تحديث"
   },
-
   "LOCATIONS": {
     "TITLE": "إدارة المواقع",
     "ADD_NEW": "إضافة موقع جديد",
@@ -1143,7 +1118,6 @@
     "CREATE": "إنشاء",
     "UPDATE": "تحديث"
   },
-
   "REGIONS": {
     "TITLE": "إعدادات الخدمات",
     "ADD_NEW": "إضافة منطقة جديدة",
@@ -1168,7 +1142,6 @@
     "CREATE": "إنشاء",
     "UPDATE": "تحديث"
   },
-
   "ProjectReportResourceName": {
     "projectTypeListRpt_Title": "كشف مشاريع حسب النوع",
     "projectCountryListRpt_Title": "كشف مشاريع حسب الدوله ",
@@ -1192,7 +1165,6 @@
     "projecT_TYPE_DESC": "حاله المشروع",
     "countrY_code": "الدوله"
   },
-
   "SERVICE_SETTING": {
     "TITLE": "إعدادات الخدمات",
     "ADD_NEW": "إضافة خدمة جديدة",
@@ -1280,7 +1252,6 @@
     "SERVICE_DEPARTMENT_UPDATED_SUCCESS": "تم تحديث قسم الخدمة بنجاح",
     "SERVICE_DEPARTMENT_DELETED_SUCCESS": "تم حذف قسم الخدمة بنجاح"
   },
-
   "ProjectsResourceName": {
     "Title": " تفاصيل المشاريع",
     "Tab1_Title": " المقبوضات",
@@ -1322,7 +1293,6 @@
     "starT_IMPLEMENT": " تاريخ بدايه التنفيذ ",
     "finisH_DATE": " تاريخ الانتهاء "
   },
-
   "FinancialCharts": {
     "charts": "التقارير",
     "titleForReceiptPaymentAnalysis": "تحليل المقبوضات والمدفوعات",
@@ -1353,7 +1323,6 @@
     "month": "شهر",
     "start": "يبدأ"
   },
-
   "SocialServiceCharts": {
     "charts": "التقارير",
     "titleForstatisticsofBenfFamilies": "احصائيات الاسر المستفيدة",
@@ -1364,7 +1333,6 @@
     "menutotalAidsbyCategory": "اجمالى المساعدات حسب فئه المتقدم",
     "titleForRequeststatistics": "احصائيات الطلبات"
   },
-
   "ProjectCharts": {
     "charts": "التقارير",
     "titleForcostofProject": "تكلفه المشاريع",
@@ -1372,5 +1340,24 @@
     "titleForprojectReceipt": "مقبوضات المشاريع",
     "menubyCountry": "حسب الدوله",
     "menubyType": "حسب النوع"
+  },
+  "sponsorshipchart": {
+    "charts": "التقارير",
+    "numbersOfSponsors": "اعداد المكفولين",
+    "numbersByPeriodAndType": "اعداد المكفولين حسب الفترات ونوع الكفالة",
+    "numbersByTypeAndNationality": "اعداد المكفولين حسب نوع الكفالة والجنسيات",
+    "totalDonationsByType": "إجمالي التبرعات حسب نوع الكفالة",
+    "contractStatsByPaymentMethod": "إحصائيات العقود حسب طريقة الدفع",
+    "numbersByEntityAndType": "أعداد المكفولين حسب مكتب الجمعية ونوع الكفالة",
+    "numbersInOutCountry": "أعداد المكفولين داخل وخارج الدولة",
+    "comparisonOfCases": "مقارنات الكفالات",
+    "byTypeOfSponsorship": "حسب نوع الكفالة",
+    "byNationality": "حسب الجنسية",
+    "byEntityOffice": "حسب مكتب الجمعية",
+    "casesAvailableForSponsorship": "الحالات المتاحة للكفالة",
+    "office": "مكتب الجمعية",
+    "year": "سنة",
+    "entity": "الجمعيه",
+    "month": "شهر"
   }
 }
