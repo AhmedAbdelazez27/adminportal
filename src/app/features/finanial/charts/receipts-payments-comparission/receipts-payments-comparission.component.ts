@@ -29,7 +29,22 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
   yearsList: any = [];
   accountList: any = [];
 
-  monthsList: any[] = [];
+ // monthsList: any[] = [];
+ monthsList: any = [
+    { id: 1, text: 'يناير', textEn: 'January' },
+    { id: 2, text: 'فبراير', textEn: 'February' },
+    { id: 3, text: 'مارس', textEn: 'March' },
+    { id: 4, text: 'أبريل', textEn: 'April' },
+    { id: 5, text: 'مايو', textEn: 'May' },
+    { id: 6, text: 'يونيو', textEn: 'June' },
+    { id: 7, text: 'يوليو', textEn: 'July' },
+    { id: 8, text: 'أغسطس', textEn: 'August' },
+    { id: 9, text: 'سبتمبر', textEn: 'September' },
+    { id: 10, text: 'أكتوبر', textEn: 'October' },
+    { id: 11, text: 'نوفمبر', textEn: 'November' },
+    { id: 12, text: 'ديسمبر', textEn: 'December' }
+  ];
+
   selectedMonthId: number | null = null;
 
   selectedYearId: any[] = [];
@@ -76,7 +91,7 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
       this.getYearAndChartTypesList();
     });
     this.getYearAndChartTypesList();
-    this.monthsList = MonthConstants.monthsList;
+  //  this.monthsList = MonthConstants.monthsList;
   }
 
 
@@ -124,8 +139,11 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
     };
     this._ChartsService.getReceiptsandPaymentsComparison(payload, this.typeService).subscribe({
       next: (res) => {
-        if (typeChange == 1) {
+         if (typeChange == 1) {
           this.transformToChartData(res?.data, 'categoriees', 'seriesData');
+           this.onYearChange(2);
+        }else if (typeChange == 2){
+          this.transformToChartData(res?.data, 'categoriees2', 'seriesData2');
         }
 
         this.spinnerService.forceHide();

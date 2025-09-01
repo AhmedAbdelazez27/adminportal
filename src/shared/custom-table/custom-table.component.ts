@@ -31,8 +31,7 @@ export class CustomTableComponent implements OnChanges {
   totalPages: number = 0;
 
   constructor(private translate: TranslateService) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
 

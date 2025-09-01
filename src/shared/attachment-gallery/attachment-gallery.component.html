@@ -1,0 +1,21 @@
+<div id="collapse3" class="collapse show" aria-labelledby="headingthree">
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-3" *ngFor="let item of attachments">
+        <div class="card h-100 shadow-sm p-2 text-center">
+
+          <div class="mt-2">
+            <a [href]="item.imgPath" target="_blank">
+              <img [src]="item.imgPath"
+                   class="img-fluid rounded"
+                   style="height:120px; object-fit:cover; width:100%;">
+            </a>
+          </div>
+          <a [href]="item.imgPath" target="_blank" class="fw-bold d-block text-truncate">
+            {{ item.attachmentTitle }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

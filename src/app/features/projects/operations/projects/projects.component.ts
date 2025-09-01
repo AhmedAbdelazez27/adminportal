@@ -101,8 +101,7 @@ export class projectsComponent {
     private fb: FormBuilder
   )
   {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
     this.userEntityForm = this.fb.group({
       entityIds: [[], Validators.required]
     });
@@ -518,7 +517,7 @@ export class projectsComponent {
     });
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.translate.get([
       'ProjectsResourceName.projecT_NUMBER',
       'ProjectsResourceName.projecT_NAME',

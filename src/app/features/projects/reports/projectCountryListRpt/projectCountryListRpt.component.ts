@@ -69,8 +69,7 @@ export class projectCountryListRptComponent {
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
   ) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
   ngOnInit(): void {
@@ -292,7 +291,7 @@ export class projectCountryListRptComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.translate.get([
       'ProjectReportResourceName.projecT_NAME',
       'ProjectReportResourceName.projecT_NUMBER',
@@ -382,7 +381,7 @@ export class projectCountryListRptComponent {
                     rowNo: index + 1
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['local_coststr', 'misC_RECEIPT_AMOUNTstr', 'local_coststr']
+                  totalKeys: ['local_coststr', 'misC_RECEIPT_AMOUNTstr']
                 };
 
                 this.openStandardReportService.openStandardReportExcel(reportConfig);
@@ -449,7 +448,7 @@ export class projectCountryListRptComponent {
                   ],
                   data,
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['local_coststr', 'misC_RECEIPT_AMOUNTstr', 'local_coststr']
+                  totalKeys: ['local_coststr', 'misC_RECEIPT_AMOUNTstr']
                 };
 
                     this.openStandardReportService.openStandardReportPDF(reportConfig);

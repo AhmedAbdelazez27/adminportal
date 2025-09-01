@@ -1,9 +1,118 @@
  <div class="main-wrapper">
-     
-      <app-navbar></app-navbar>
+      
+      <app-navbar data-html2canvas-ignore="true"></app-navbar>
 
       
       <div class="page-content">
+        <app-export-toolbar data-html2canvas-ignore="true" [captureFullPage]="true" fileName="charts"></app-export-toolbar>
+
+      <div class="offcanvas offcanvas-end" data-bs-scroll="true"  tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+          <h4 class="offcanvas-title bold gold" id="offcanvasScrollingLabel">Notifications</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z" fill="#5B5B5B"/>
+          </svg>
+          </button>
+        </div>
+        <div class="offcanvas-body">
+          
+          <div class="notification-box" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <div class="d-flex justify-content-between gap-3 mb-3 w-100 align-items-center">
+              <span class="notification-title">Notification title</span>
+              <span class="notification-date">10 mins ago</span>
+            </div>
+
+            <p class="notification-content mb-0">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+            </p>
+
+          </div>
+          <div class="notification-box" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <div class="d-flex justify-content-between gap-3 mb-3 w-100 align-items-center">
+              <span class="notification-title">Notification title</span>
+              <span class="notification-date">10 mins ago</span>
+            </div>
+
+            <p class="notification-content mb-0" >
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+            </p>
+
+          </div>
+          <div class="notification-box read" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <div class="d-flex justify-content-between gap-3 mb-3 w-100 align-items-center">
+              <span class="notification-title">Notification title</span>
+              <span class="notification-date">10 mins ago</span>
+            </div>
+
+            <p class="notification-content mb-0">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+            </p>
+
+          </div>
+          <div class="notification-box" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <div class="d-flex justify-content-between gap-3 mb-3 w-100 align-items-center">
+              <span class="notification-title">Notification title</span>
+              <span class="notification-date">10 mins ago</span>
+            </div>
+
+            <p class="notification-content mb-0">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+            </p>
+
+          </div>
+          <div class="notification-box read" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <div class="d-flex justify-content-between gap-3 mb-3 w-100 align-items-center">
+              <span class="notification-title">Notification title</span>
+              <span class="notification-date">10 mins ago</span>
+            </div>
+
+            <p class="notification-content mb-0">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+            </p>
+
+          </div>
+          
+        </div>
+      </div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Notification title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M16.2887 14.9615C16.4649 15.1376 16.5638 15.3765 16.5638 15.6256C16.5638 15.8746 16.4649 16.1135 16.2887 16.2896C16.1126 16.4657 15.8737 16.5647 15.6247 16.5647C15.3756 16.5647 15.1367 16.4657 14.9606 16.2896L10.0005 11.3279L5.03874 16.2881C4.86261 16.4642 4.62374 16.5631 4.37467 16.5631C4.1256 16.5631 3.88673 16.4642 3.71061 16.2881C3.53449 16.1119 3.43555 15.8731 3.43555 15.624C3.43555 15.3749 3.53449 15.136 3.71061 14.9599L8.67233 9.99977L3.71217 5.03805C3.53605 4.86193 3.43711 4.62306 3.43711 4.37399C3.43711 4.12492 3.53605 3.88605 3.71217 3.70993C3.88829 3.53381 4.12716 3.43486 4.37624 3.43486C4.62531 3.43486 4.86418 3.53381 5.0403 3.70993L10.0005 8.67165L14.9622 3.70915C15.1383 3.53303 15.3772 3.43408 15.6262 3.43408C15.8753 3.43408 16.1142 3.53303 16.2903 3.70915C16.4664 3.88527 16.5654 4.12414 16.5654 4.37321C16.5654 4.62228 16.4664 4.86115 16.2903 5.03727L11.3286 9.99977L16.2887 14.9615Z" fill="#525252"/>
+        </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+         <div class="notification-modal" >
+          <div class="mb-3">
+            <span class="notification-date">10 mins ago</span>
+          </div>
+            <p class="notification-content mb-0" style="text-align: justify;">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the 
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+            </p>
+
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-gold" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
         <router-outlet></router-outlet>
       </div>
     </div>

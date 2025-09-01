@@ -1,0 +1,114 @@
+/* Leaflet Map Container Styles */
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  min-height: 400px;
+}
+
+/* Leaflet Map Specific Styles */
+.leaflet-map {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  position: relative;
+}
+
+#locationMap {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  position: relative;
+}
+
+/* Ensure Leaflet container takes full space */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  font-family: inherit;
+  background: #fff;
+}
+
+/* Fix for Leaflet tiles loading */
+.leaflet-tile-pane {
+  z-index: 1;
+}
+
+.leaflet-tile {
+  filter: inherit;
+  visibility: inherit;
+  opacity: 1;
+}
+
+/* Fix marker visibility */
+.leaflet-marker-icon {
+  z-index: 1000 !important;
+}
+
+/* Map Loading Indicator */
+.map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 8px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  color: #6c757d;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.map-loading i {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #007bff;
+}
+
+/* Hide map loading when map is initialized */
+.leaflet-container + .map-loading {
+  display: none;
+}
+
+/* Custom marker styles */
+.custom-marker {
+  background: transparent;
+  border: none;
+}
+
+/* Ensure Leaflet controls are properly styled */
+.leaflet-control-zoom a {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #f4f4f4;
+}
+
+/* Map container responsiveness */
+@media (max-width: 768px) {
+  .map-container {
+    height: 300px;
+  }
+}
+
+/* Popup styles for the map */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
+
+.leaflet-popup-content {
+  margin: 8px 12px;
+  font-size: 14px;
+}

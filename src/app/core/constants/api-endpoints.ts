@@ -303,4 +303,20 @@ export class ApiEndpoints {
     Delete: (id: number) => `/Delete/${id}`,
   };
 
+  static readonly MainApplyService = {
+    Base: '/MainApplyRequestService',
+    saveCommentBase: '/WorkFlowComments',
+    GetAll: '/GetAll',
+    GetById: (id: string) => `/Get/${id}`,
+    GetUserById: (id: string) => `/User/${id}`,
+    Update: '/Update',
+    saveComment: '/Create',
+  };
+
+  static readonly Home = {
+    Base: '/Home',
+    GetHomePageKpisData: '/GetHomePageKpisData',
+        GetHomeChartData: '/GetHomeChartData',
+
+  };
 }

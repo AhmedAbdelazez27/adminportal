@@ -77,8 +77,7 @@ export class ApPaymentsTransactionHDRComponent {
     private Select2Service: Select2Service,
     private fb: FormBuilder
   ) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
     this.userEntityForm = this.fb.group({
       entityIds: [[], Validators.required]
     });
@@ -285,7 +284,7 @@ export class ApPaymentsTransactionHDRComponent {
     this.pagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;
     this.searchParams.skip = skip;
-    this.searchParams.take = event.pageSize;    
+    this.searchParams.take = event.pageSize;
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
     this.spinnerService.show();
     this.apPaymentsTransactionHDRService.getAll(cleanedFilters)
@@ -330,7 +329,7 @@ export class ApPaymentsTransactionHDRComponent {
       });
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',

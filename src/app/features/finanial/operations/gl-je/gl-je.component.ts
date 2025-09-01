@@ -88,8 +88,7 @@ export class GLJEComponent implements OnInit {
     private Select2Service: Select2Service,
     private fb: FormBuilder
   ) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
   ngOnInit(): void {
@@ -97,7 +96,7 @@ export class GLJEComponent implements OnInit {
     this.rowActions = [
       { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
     ];
-   
+
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
       .subscribe(() => this.fetchentitySelect2());
@@ -405,7 +404,7 @@ export class GLJEComponent implements OnInit {
     });
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',

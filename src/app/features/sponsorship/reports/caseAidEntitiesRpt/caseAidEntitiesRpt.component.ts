@@ -60,8 +60,7 @@ export class caseAidEntitiesRptComponent {
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
   ) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
   ngOnInit(): void {
@@ -230,7 +229,7 @@ export class caseAidEntitiesRptComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       { headerName: '#', valueGetter: 'node.rowIndex + 1', width: 40, colId: '#' },
       { headerName: this.translate.instant('SponsorshipReportResourceName.entityName'), field: 'entitY_NAME', width: 150 },
@@ -347,8 +346,8 @@ export class caseAidEntitiesRptComponent {
             totalLabel: this.translate.instant('Common.Total'),
             totalKeys: ['caseAmountstr']
           };
-          this.spinnerService.hide();
           this.openStandardReportService.openStandardReportPDF(reportConfig);
+          this.spinnerService.hide();
         },
         error: () => {
           this.spinnerService.hide();

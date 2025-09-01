@@ -1,0 +1,47 @@
+:host, highcharts-chart {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+}
+
+.chart-wrapper {
+  cursor: zoom-in;
+}
+
+.preview-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.preview-container {
+  background: #fff;
+  width: min(900px, 96vw);
+  height: min(650px, 90vh);
+  padding: 12px 16px 16px;
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-container highcharts-chart {
+  flex: 1;
+  min-height: 0;
+}
+
+.close-btn {
+  position: absolute;
+  top: 6px;
+  inset-inline-end: 8px;
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+

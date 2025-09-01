@@ -18,10 +18,6 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/adminportal",
-            "allowedCommonJsDependencies": [
-              "highcharts",
-              "leaflet"
-            ],
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -42,57 +38,42 @@
               "node_modules/ngx-spinner/animations/square-jelly-box.css",
               "node_modules/ngx-spinner/animations/timer.css",
               "node_modules/ngx-toastr/toastr.css",
+              "node_modules/owl.carousel/dist/assets/owl.carousel.min.css",
+              "node_modules/owl.carousel/dist/assets/owl.theme.default.min.css",
+              "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.css",
+              "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.css",
+              "node_modules/@ng-select/ng-select/themes/default.theme.css",
+              "node_modules/leaflet/dist/leaflet.css",
               "src/styles.scss",
               "node_modules/ag-grid-community/styles/ag-grid.css",
               "node_modules/ag-grid-community/styles/ag-theme-alpine.css"
             ],
             "scripts": [
-              "node_modules/@popperjs/core/dist/umd/popper.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/owl.carousel/dist/owl.carousel.min.js"
             ]
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractLicenses": true,
-              "namedChunks": false,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4MB",
-                  "maximumError": "5MB"
+                  "maximumWarning": "1.5MB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "16kB",
-                  "maximumError": "64kB"
+                  "maximumWarning": "12kB",
+                  "maximumError": "16kB"
                 }
-              ]
+              ],
+              "outputHashing": "all"
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.staging.ts"
-                }
-              ],
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "outputHashing": "none"
             }
           },
           "defaultConfiguration": "production"
@@ -100,14 +81,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "development": {
-              "buildTarget": "adminportal:build:development"
-            },
-            "staging": {
-              "buildTarget": "adminportal:build:staging"
-            },
             "production": {
               "buildTarget": "adminportal:build:production"
+            },
+            "development": {
+              "buildTarget": "adminportal:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -135,5 +113,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

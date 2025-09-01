@@ -185,7 +185,8 @@
                             (actionClick)="onTableAction($event)"
                             (pageChange)="onPageChange($event)"
                             [showActionColumn]="true"
-                            (search)="onTableSearch($event)">
+                            (search)="onTableSearch($event)"
+                            (languageChanged)="buildColumnDefs()">
     </app-generic-data-table>
     
   <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
@@ -244,7 +245,8 @@
                                     [columnHeaderMap]="columnHeaderMap"
                                     (pageChange)="onPageChangelineData($event)"
                                     [showActionColumn]="false"
-                                    (search)="onTableSearchlineData($event)">
+                                    (search)="onTableSearchlineData($event)"
+                                    (languageChanged)="buildColumnDefs()">
             </app-generic-data-table>
 
             <div class="row mt-4">

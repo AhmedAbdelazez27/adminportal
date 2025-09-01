@@ -70,10 +70,8 @@ export class caseSearchListRptComponent {
     private openStandardReportService: openStandardReportService,
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
-  )
-  {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+  ) {
+
   }
 
   ngOnInit(): void {
@@ -287,7 +285,7 @@ export class caseSearchListRptComponent {
     this.searchParams.skip = skip;
     this.searchParams.take = event.pageSize;
     this.spinnerService.show();
-   
+
     this.sponsorshipReportService.getcaseSearchListRptData(this.searchParams)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
@@ -336,7 +334,7 @@ export class caseSearchListRptComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       { headerName: '#', valueGetter: 'node.rowIndex + 1', width: 40, colId: '#' },
       { headerName: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), field: 'sponceR_CATEGORY_DESC', width: 200 },
@@ -377,39 +375,39 @@ export class caseSearchListRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-            title: this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title'),
-            reportTitle: this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title'),
-            fileName: `${this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-            fields: [
-              { label: this.translate.instant('SponsorshipReportResourceName.entityId'), value: this.searchParams.entityName },
-              { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), value: this.searchParams.nationalityDescName },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseStatusDesc'), value: this.searchParams.caseStatusName },
-              { label: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), value: this.searchParams.sponcerCatName }
-            ],
-            columns: [
-              { label: '#', key: 'rowNo', title: '#' },
-              { label: this.translate.instant('SponsorshipReportResourceName.entityName'), key: 'sponceR_CATEGORY' },
-              { label: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), key: 'sponceR_CATEGORY_DESC' },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseNo'), key: 'casE_NO' },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseName'), key: 'casename' },
-              { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), key: 'nationalitY_DESC' },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseContractStatus'), key: 'casE_CONTRACT_STATUS_DESC' },
-              { label: this.translate.instant('SponsorshipReportResourceName.beneficenNo'), key: 'beneficenT_NO' },
-              { label: this.translate.instant('SponsorshipReportResourceName.beneficentName'), key: 'beneficentname' },
-              { label: this.translate.instant('SponsorshipReportResourceName.startDate'), key: 'startdatestr' },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseAmount'), key: 'caseamountstr' },
-            ],
-            data: data.map((item: any, index: number) => ({
-              ...item,
-              rowNo: index + 1
-            })),
-            totalLabel: this.translate.instant('Common.Total'),
-            totalKeys: ['caseamountstr']
-          };
+                  title: this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title'),
+                  reportTitle: this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title'),
+                  fileName: `${this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('SponsorshipReportResourceName.entityId'), value: this.searchParams.entityName },
+                    { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), value: this.searchParams.nationalityDescName },
+                    { label: this.translate.instant('SponsorshipReportResourceName.caseStatusDesc'), value: this.searchParams.caseStatusName },
+                    { label: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), value: this.searchParams.sponcerCatName }
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.entityName'), key: 'sponceR_CATEGORY' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), key: 'sponceR_CATEGORY_DESC' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.caseNo'), key: 'casE_NO' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.caseName'), key: 'casename' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), key: 'nationalitY_DESC' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.caseContractStatus'), key: 'casE_CONTRACT_STATUS_DESC' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.beneficenNo'), key: 'beneficenT_NO' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.beneficentName'), key: 'beneficentname' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.startDate'), key: 'startdatestr' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.caseAmount'), key: 'caseamountstr' },
+                  ],
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: ['caseamountstr']
+                };
 
-          this.openStandardReportService.openStandardReportExcel(reportConfig);
-          this.spinnerService.hide();
-        },
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();
+              },
               error: () => {
                 this.spinnerService.hide();
               }
@@ -444,38 +442,38 @@ export class caseSearchListRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-            title: this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title'),
-            reportTitle: this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title'),
-            fileName: `${this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-            fields: [
-              { label: this.translate.instant('SponsorshipReportResourceName.entityId'), value: this.searchParams.entityName },
-              { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), value: this.searchParams.nationalityDescName },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseStatusDesc'), value: this.searchParams.caseStatusName },
-              { label: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), value: this.searchParams.sponcerCatName }
-            ],
-            columns: [
-              { label: '#', key: 'rowNo', title: '#' },
-              { label: this.translate.instant('SponsorshipReportResourceName.entityName'), key: 'sponceR_CATEGORY' },
-              { label: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), key: 'sponceR_CATEGORY_DESC' },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseNo'), key: 'casE_NO' },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseName'), key: 'casename' },
-              { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), key: 'nationalitY_DESC' },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseContractStatus'), key: 'casE_CONTRACT_STATUS_DESC' },
-              { label: this.translate.instant('SponsorshipReportResourceName.beneficenNo'), key: 'beneficenT_NO' },
-              { label: this.translate.instant('SponsorshipReportResourceName.beneficentName'), key: 'beneficentname' },
-              { label: this.translate.instant('SponsorshipReportResourceName.startDate'), key: 'startdatestr' },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseAmount'), key: 'caseamountstr' },
-            ],
-            data: data.map((item: any, index: number) => ({
-              ...item,
-              rowNo: index + 1
-            })),
-            totalLabel: this.translate.instant('Common.Total'),
-            totalKeys: ['caseamountstr']
-          };
-          this.spinnerService.hide();
-          this.openStandardReportService.openStandardReportPDF(reportConfig);
-        },
+                  title: this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title'),
+                  reportTitle: this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title'),
+                  fileName: `${this.translate.instant('SponsorshipReportResourceName.caseSearchListRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('SponsorshipReportResourceName.entityId'), value: this.searchParams.entityName },
+                    { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), value: this.searchParams.nationalityDescName },
+                    { label: this.translate.instant('SponsorshipReportResourceName.caseStatusDesc'), value: this.searchParams.caseStatusName },
+                    { label: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), value: this.searchParams.sponcerCatName }
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.entityName'), key: 'sponceR_CATEGORY' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), key: 'sponceR_CATEGORY_DESC' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.caseNo'), key: 'casE_NO' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.caseName'), key: 'casename' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), key: 'nationalitY_DESC' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.caseContractStatus'), key: 'casE_CONTRACT_STATUS_DESC' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.beneficenNo'), key: 'beneficenT_NO' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.beneficentName'), key: 'beneficentname' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.startDate'), key: 'startdatestr' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.caseAmount'), key: 'caseamountstr' },
+                  ],
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: ['caseamountstr']
+                };
+                this.openStandardReportService.openStandardReportPDF(reportConfig);
+                this.spinnerService.hide();
+              },
               error: () => {
                 this.spinnerService.hide();
               }

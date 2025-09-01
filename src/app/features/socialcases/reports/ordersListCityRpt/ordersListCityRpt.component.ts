@@ -78,8 +78,7 @@ export class ordersListCityRptComponent {
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
   ) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
   ngOnInit(): void {
@@ -346,7 +345,7 @@ export class ordersListCityRptComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.translate.get([
       'SocialCaseReportsResourceName.referencenumber',
       'SocialCaseReportsResourceName.aiD_REQUEST_DATE',

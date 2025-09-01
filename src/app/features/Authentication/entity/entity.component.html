@@ -221,7 +221,7 @@
           </div>
         </div>
         <div class="modal-footer" *ngIf="mode !== 'view'">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             {{ 'COMMON.CANCEL' | translate }}
           </button>
           <button type="submit" class="btn btn-gold" [disabled]="submitted || !areMandatoryFieldsValid()">
@@ -229,7 +229,7 @@
           </button>
         </div>
         <div class="modal-footer" *ngIf="mode === 'view'">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             {{ 'COMMON.CLOSE' | translate }}
           </button>
         </div>
@@ -252,7 +252,7 @@
         <p>{{ 'ENTITY.DELETE_CONFIRMATION' | translate }}</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary btn-delete" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-outline-secondary btn-delete" data-bs-dismiss="modal">
           {{ 'COMMON.CANCEL' | translate }}
         </button>
         <button type="button" class="btn btn-danger" (click)="deleteEntity()">

@@ -82,10 +82,10 @@ export class PaymentVoucherComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildColumnDefs();
-        this.rowActions = [
-          { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
-        ];
-      
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
+    ];
+
     this.beneficiaryNameSearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
       .subscribe(() => this.fetchApbeneficiaryNameSelect2());
@@ -258,13 +258,15 @@ export class PaymentVoucherComponent implements OnInit {
     this.paginationDetailData.take = event.pageSize;
     const paymentId = this.searchParamsById.paymentId || '';
     const entityId = this.searchParamsById.entityId || '';
-    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationDetailData.take }, paymentId, entityId);  }
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationDetailData.take }, paymentId, entityId);
+  }
 
   onTableSearchDetailData(text: string): void {
     this.searchText = text;
     const paymentId = this.searchParamsById.paymentId || '';
     const entityId = this.searchParamsById.entityId || '';
-    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationDetailData.take }, paymentId, entityId);  }
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationDetailData.take }, paymentId, entityId);
+  }
 
 
 
@@ -273,7 +275,8 @@ export class PaymentVoucherComponent implements OnInit {
     this.paginationLineData.take = event.pageSize;
     const paymentId = this.searchParamsById.paymentId || '';
     const entityId = this.searchParamsById.entityId || '';
-    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationLineData.take }, paymentId, entityId);  }
+    this.getFormDatabyId({ pageNumber: 1, pageSize: this.paginationLineData.take }, paymentId, entityId);
+  }
 
   onTableSearchLineData(text: string): void {
     this.searchText = text;
@@ -363,10 +366,10 @@ export class PaymentVoucherComponent implements OnInit {
         };
         this.spinnerService.hide();
       },
-        error: (err) => {
-          this.spinnerService.hide();
-        }
-      });
+      error: (err) => {
+        this.spinnerService.hide();
+      }
+    });
   }
 
 

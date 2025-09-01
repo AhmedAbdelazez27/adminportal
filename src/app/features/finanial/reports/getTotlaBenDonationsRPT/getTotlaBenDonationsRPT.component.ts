@@ -68,8 +68,7 @@ export class getTotlaBenDonationsRPTComponent {
     private Select2Service: Select2Service
   )
   {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
   ngOnInit(): void {
@@ -242,7 +241,7 @@ export class getTotlaBenDonationsRPTComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',
@@ -394,6 +393,7 @@ export class getTotlaBenDonationsRPTComponent {
                 };
 
                 this.openStandardReportService.openStandardReportPDF(reportConfig);
+                this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();

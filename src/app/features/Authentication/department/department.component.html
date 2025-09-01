@@ -142,13 +142,13 @@
           </div>
         </div>
         <div class="modal-footer" *ngIf="mode !== 'view'">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
           <button type="submit" class="btn btn-gold" [disabled]="submitted">
             {{ mode === 'add' ? 'Create' : 'Update' }}
           </button>
         </div>
         <div class="modal-footer" *ngIf="mode === 'view'">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
         </div>
       </form>
     </div>
@@ -168,7 +168,7 @@
         <p>{{ 'AuthenticationResorceName.deleteConfirmMsg' | translate }}</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary btn-delete" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
+        <button type="button" class="btn btn-outline-secondary btn-delete" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
         <button type="button" class="btn btn-danger" (click)="deleteDepartment()">{{ 'Common.deletd' | translate }}</button>
       </div>
     </div>
@@ -211,7 +211,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
       </div>
     </div>
   </div>

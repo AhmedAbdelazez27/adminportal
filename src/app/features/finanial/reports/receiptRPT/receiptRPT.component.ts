@@ -60,8 +60,7 @@ export class receiptRPTComponent {
     private Select2Service: Select2Service
   )
   {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
   ngOnInit(): void {
@@ -194,7 +193,7 @@ export class receiptRPTComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',
@@ -244,9 +243,9 @@ export class receiptRPTComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.receiptRPT_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.receiptRPT_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.receiptRPT_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('FinancialReportResourceName.receiptRpt_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.receiptRpt_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.receiptRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
                     { label: this.translate.instant('FinancialReportResourceName.fromDate'), value: this.searchParams.fromDate },
@@ -270,7 +269,7 @@ export class receiptRPTComponent {
                     rowNo: index + 1
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['debiT_AMOUNTstr', 'crediT_AMOUNTstr']
+                  totalKeys: ['amounTstr']
                 };
 
                 this.openStandardReportService.openStandardReportExcel(reportConfig);
@@ -315,9 +314,9 @@ export class receiptRPTComponent {
               next: (response: any) => {
                 const data = response?.data || response || [];
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.receiptRPT_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.receiptRPT_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.receiptRPT_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('FinancialReportResourceName.receiptRpt_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.receiptRpt_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.receiptRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
                     { label: this.translate.instant('FinancialReportResourceName.fromDate'), value: this.searchParams.fromDate },
@@ -338,10 +337,10 @@ export class receiptRPTComponent {
                   ],
                   data,
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['debiT_AMOUNTstr', 'crediT_AMOUNTstr']
+                  totalKeys: ['amounTstr']
                 };
-
                 this.openStandardReportService.openStandardReportPDF(reportConfig);
+                this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();

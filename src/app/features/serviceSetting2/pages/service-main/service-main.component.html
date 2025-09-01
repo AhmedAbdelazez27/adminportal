@@ -5,7 +5,7 @@
     </span>
   </h2>
 
-  <form [formGroup]="form" (ngSubmit)="submit()" class="card p-4 mt-3">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="main-container">
     <div class="row">
       <div class="col-md-6 mb-3">
         <label class="form-label">{{ 'SERVICE_SETTING.SERVICE_NAME' | translate }}</label>
@@ -76,7 +76,7 @@
             [attr.aria-expanded]="!attributesCollapsed" aria-controls="attributesCollapse">
             <i class="fas" [class.fa-chevron-down]="attributesCollapsed"
               [class.fa-chevron-up]="!attributesCollapsed"></i>
-            {{ attributesCollapsed ? ('COMMON.SHOW' | translate) : ('COMMON.HIDE' | translate) }}
+           
           </button>
         </div>
       </div>
@@ -99,7 +99,7 @@
             [attr.aria-expanded]="!attachmentsCollapsed" aria-controls="attachmentsCollapse">
             <i class="fas" [class.fa-chevron-down]="attachmentsCollapsed"
               [class.fa-chevron-up]="!attachmentsCollapsed"></i>
-            {{ attachmentsCollapsed ? ('COMMON.SHOW' | translate) : ('COMMON.HIDE' | translate) }}
+           
           </button>
         </div>
       </div>

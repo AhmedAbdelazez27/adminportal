@@ -63,8 +63,7 @@ export class casesEntitiesRptComponent {
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
   ) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
   ngOnInit(): void {
@@ -239,7 +238,7 @@ export class casesEntitiesRptComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.translate.get([
       'SocialCaseReportsResourceName.namE_AR',
       'SocialCaseReportsResourceName.casE_ID_NUMBER',
@@ -392,8 +391,8 @@ export class casesEntitiesRptComponent {
                   totalLabel: this.translate.instant('Common.Total'),
                   totalKeys: []
                 };
-                this.spinnerService.hide();
                 this.openStandardReportService.openStandardReportPDF(reportConfig);
+                this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();

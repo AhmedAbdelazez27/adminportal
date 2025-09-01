@@ -215,7 +215,8 @@
                             (actionClick)="onTableAction($event)"
                             (pageChange)="onPageChange($event)"
                             [showActionColumn]="true"
-                            (search)="onTableSearch($event)">
+                            (search)="onTableSearch($event)"
+                            (languageChanged)="buildColumnDefs()">
     </app-generic-data-table>
     
 
@@ -460,7 +461,8 @@
                                   (actionClick)="onTableAction($event)"
                                   (pageChange)="onPageChangeCaseHistory($event)"
                                   [showActionColumn]="true"
-                                  (search)="onTableSearchCaseHistory($event)">
+                                  (search)="onTableSearchCaseHistory($event)"
+                                  (languageChanged)="buildColumnDefs()">
           </app-generic-data-table>
         </div>
         <div class="modal-footer">
@@ -503,7 +505,8 @@
                                   (actionClick)="onTableAction($event)"
                                   (pageChange)="onPageChangePaymentHdr($event)"
                                   [showActionColumn]="true"
-                                  (search)="onTableSearchPaymentHdr($event)">
+                                  (search)="onTableSearchPaymentHdr($event)"
+                                  (languageChanged)="buildColumnDefs()">
           </app-generic-data-table>
           <div class="row">
             <div class="col-xxl-4 col-xl-6">
@@ -583,7 +586,8 @@
                                   (actionClick)="onTableAction($event)"
                                   (pageChange)="onPageChangeContract($event)"
                                   [showActionColumn]="true"
-                                  (search)="onTableSearchContract($event)">
+                                  (search)="onTableSearchContract($event)"
+                                  (languageChanged)="buildColumnDefs()">
           </app-generic-data-table>
         </div>
         <div class="modal-footer">

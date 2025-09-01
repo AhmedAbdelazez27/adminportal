@@ -6,62 +6,35 @@
     <div class="row">
         <div class="col-xl-6 mb-3">
             <div class="main-container h-100">
-                <div class="row  ">
-                    <div class="col-2 mb-3">
-                      <label class="form-label mr-2">{{ 'FinancialCharts.entity' | translate }}</label>
-                    </div>
-                    <div class="col-5">
-                        <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
+                <div class="d-flex gap-3 mb-3">
+                   <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
                             [multiple]="true" [closeOnSelect]="true" class="ng-select-custom" [maxSelectedItems]="4"
-                            (change)="onEntityChange(4,'selectedEntity')">
+                            (change)="onEntityChange(4,'selectedEntity')" placeholder="{{ 'FinancialCharts.entity' | translate }}">
                         </ng-select>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-2">
-                        <label class="form-label mr-2">{{ 'FinancialCharts.year' | translate }}</label>
-                    </div>
-                    <div class="col-5 my-1">
-                        <ng-select [items]="yearsList" bindLabel="text" bindValue="id" [(ngModel)]="selectedYearId"
+
+                         <ng-select [items]="yearsList" bindLabel="text" bindValue="id" [(ngModel)]="selectedYearId"
                             [multiple]="true" [closeOnSelect]="true" class="ng-select-custom" [maxSelectedItems]="2"
-                            (change)="onEntityChange(2,'selectedYearId')">
+                            (change)="onEntityChange(2,'selectedYearId')" placeholder="{{ 'FinancialCharts.year' | translate }}">
                         </ng-select>
-                        <!-- <div *ngIf="selectedYearId.length >= 2" class="text-danger mt-1">
-                            لا يمكنك اختيار أكثر من عنصرين
-                        </div> -->
-                    </div>
-                    <button class="col-1 btn btn-info my-1" [disabled]="!(selectedYearId.length&&selectedEntity.length)" (click)="onYearChange(1)">Start</button>
+                        <button class="btn btn-gold btn-chart" [disabled]="!(selectedYearId.length&&selectedEntity.length)" (click)="onYearChange(1)">Start</button>
+
                 </div>
-                <div class="row mb-3" *ngIf="defaultChartType == 'revenueByDepartment'||  defaultChartType == 'expensesByDepartment'">
-                    <div class="col-2">
-                        <label class="form-label mr-2">Department</label>
-                    </div>
-                    <div class="col-8">
-                        <ng-select [items]="departmentList" bindLabel="text" bindValue="id"
+               
+                <div class=" mb-3" *ngIf="defaultChartType == 'revenueByDepartment'||  defaultChartType == 'expensesByDepartment'">
+                     <ng-select [items]="departmentList" bindLabel="text" bindValue="id"
                             [(ngModel)]="selectedDepartmentId" [closeOnSelect]="true"
-                            class="ng-select-custom">
+                            class="ng-select-custom" placeholder="Department">
                         </ng-select>
-                    </div>
                 </div>
-                <div class="row mb-3" *ngIf="defaultChartType == 'revenueByBranch'|| defaultChartType == 'expensesByBranch'">
-                    <div class="col-2">
-                        <label class="form-label mr-2">Branch</label>
-                    </div>
-                    <div class="col-8">
-                        <ng-select [items]="branchList" bindLabel="text" bindValue="id" [(ngModel)]="selectedBranchId"
-                            [closeOnSelect]="true" class="ng-select-custom">
+                <div class=" mb-3" *ngIf="defaultChartType == 'revenueByBranch'|| defaultChartType == 'expensesByBranch'">
+                         <ng-select [items]="branchList" bindLabel="text" bindValue="id" [(ngModel)]="selectedBranchId"
+                            [closeOnSelect]="true" class="ng-select-custom" placeholder="Branch">
                         </ng-select>
-                    </div>
                 </div>
-                <div class="row mb-3" *ngIf="defaultChartType == 'revenueByAccount'|| defaultChartType == 'expensesByAccount'">
-                    <div class="col-2">
-                        <label class="form-label mr-2">Account</label>
-                    </div>
-                    <div class="col-8">
-                        <ng-select [items]="accountList" bindLabel="text" bindValue="id" [(ngModel)]="selectedAccountId"
-                            [closeOnSelect]="true" class="ng-select-custom">
+                <div class=" mb-3" *ngIf="defaultChartType == 'revenueByAccount'|| defaultChartType == 'expensesByAccount'">
+                      <ng-select [items]="accountList" bindLabel="text" bindValue="id" [(ngModel)]="selectedAccountId"
+                            [closeOnSelect]="true" class="ng-select-custom" placeholder="Account">
                         </ng-select>
-                    </div>
                 </div>
                 <!-- *ngIf="seriesData.length" -->
                 <ng-container *ngIf="seriesData.length">
@@ -71,14 +44,10 @@
             </div>
         </div>
 
-        <div class="col-xl-6 mb-3 h-100">
-            <div class="main-container">
-                <div class="row mb-3">
-                    <div class="col-2">
-                        <label class="form-label mr-2">Month</label>
-                    </div>
-                    <div class="col-5 my-1">
-                        <ng-select [items]="monthsList" bindValue="id" [(ngModel)]="selectedmonthId" [multiple]="true"
+        <div class="col-xl-6 mb-3 ">
+            <div class="main-container h-100">
+                <div class="d-flex gap-3 mb-3">
+                    <ng-select [items]="monthsList" bindValue="id" [(ngModel)]="selectedmonthId" [multiple]="true" placeholder="Month" style=" min-width: 67%;"
                             [closeOnSelect]="true" class="ng-select-custom">
 
                             <ng-template ng-option-tmp let-item="item">
@@ -91,9 +60,7 @@
 
                         </ng-select>
 
-
-                    </div>
-                    <button class="col-1 btn btn-info my-1" (click)="onYearChange(2)">Start</button>
+                    <button class="btn btn-gold btn-chart" (click)="onYearChange(2)">Start</button>
                 </div>
                 <ng-container *ngIf="seriesData2.length">
                     <app-bar-chart [categories]="categoriees2" [seriesData]="seriesData2">

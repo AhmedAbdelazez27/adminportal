@@ -23,7 +23,7 @@
         <form #filterForm="ngForm">
           <div class="row mb-3">
             <div class="col-xl-4 mb-3">
-              <label class="form-label">{{ 'CasePaymentResourceName.EntityId' | translate }}</label>
+              <label class="form-label">{{ 'CasePaymentResourceName.entityId' | translate }}</label>
               <ng-select class="ng-select-custom"
                          name="entitySelect2"
                          [(ngModel)]="selectedentitySelect2Obj"
@@ -150,7 +150,8 @@
                             (actionClick)="onTableAction($event)"
                             (pageChange)="onPageChange($event)"
                             [showActionColumn]="true"
-                            (search)="onTableSearch($event)">
+                            (search)="onTableSearch($event)"
+                            (languageChanged)="buildColumnDefs()">
     </app-generic-data-table>
     
   <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
@@ -193,7 +194,8 @@
                                   (actionClick)="onTableAction($event)"
                                   (pageChange)="onPageChangePaymentHdr($event)"
                                   [showActionColumn]="false"
-                                  (search)="onTableSearch($event)">
+                                  (search)="onTableSearch($event)"
+                                  (languageChanged)="buildColumnDefs()">
           </app-generic-data-table>
 
           <div class="row">

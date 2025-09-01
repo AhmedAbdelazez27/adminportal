@@ -260,4 +260,24 @@ export class Select2Service {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetProjectsChartTypeSelect2}`
     return this.http.get<SelectdropdownResult>(apiUrl);
   }
+
+  getMainServiceStatusSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetMainServiceStatusSelect2}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getServiceSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetServiceSelect2}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getUsersSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetUsersSelect2}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getServiceTypeSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetServiceTypeSelect2}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
 }

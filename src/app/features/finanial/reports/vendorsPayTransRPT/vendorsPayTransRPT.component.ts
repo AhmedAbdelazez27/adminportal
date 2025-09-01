@@ -63,8 +63,7 @@ export class vendorsPayTransRPTComponent {
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service)
   {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
 
@@ -388,7 +387,7 @@ export class vendorsPayTransRPTComponent {
       });
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',

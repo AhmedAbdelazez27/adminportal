@@ -60,8 +60,7 @@ export class getBeneficentsRptComponent {
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
   ) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
   ngOnInit(): void {
@@ -230,7 +229,7 @@ export class getBeneficentsRptComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       { headerName: '#', valueGetter: 'node.rowIndex + 1', width: 40, colId: '#' },
       { headerName: this.translate.instant('SponsorshipReportResourceName.beneficenNo'), field: 'beneficenT_NO', width: 150 },
@@ -292,8 +291,8 @@ export class getBeneficentsRptComponent {
             totalLabel: this.translate.instant('Common.Total'),
             totalKeys: ['caseamountstr']
           };
-              this.openStandardReportService.openStandardReportExcel(reportConfig);
-              this.spinnerService.hide();
+          this.openStandardReportService.openStandardReportExcel(reportConfig);
+          this.spinnerService.hide();
         },
         error: () => {
           this.spinnerService.hide();
@@ -352,8 +351,8 @@ export class getBeneficentsRptComponent {
                   totalLabel: this.translate.instant('Common.Total'),
                   totalKeys: ['caseamountstr']
                 };
-                    this.openStandardReportService.openStandardReportPDF(reportConfig);
-                    this.spinnerService.hide
+                this.openStandardReportService.openStandardReportPDF(reportConfig);
+                this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();

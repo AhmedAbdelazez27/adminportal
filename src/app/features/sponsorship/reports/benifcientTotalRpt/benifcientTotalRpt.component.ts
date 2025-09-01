@@ -64,10 +64,8 @@ export class benifcientTotalRptComponent {
     private openStandardReportService: openStandardReportService,
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
-  )
-  {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+  ) {
+
   }
 
   ngOnInit(): void {
@@ -234,7 +232,7 @@ export class benifcientTotalRptComponent {
     this.searchParams.skip = skip;
     this.searchParams.take = event.pageSize;
     this.spinnerService.show();
-   
+
     this.sponsorshipReportService.getbenifcientTotalRptData(this.searchParams)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
@@ -284,7 +282,7 @@ export class benifcientTotalRptComponent {
   }
 
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       { headerName: '#', valueGetter: 'node.rowIndex + 1', width: 40, colId: '#' },
       { headerName: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), field: 'nationalityDesc', width: 150 },
@@ -323,35 +321,35 @@ export class benifcientTotalRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-            title: this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title'),
-            reportTitle: this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title'),
-            fileName: `${this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-            fields: [
-              { label: this.translate.instant('SponsorshipReportResourceName.entityId'), value: this.searchParams.entityId },
-              { label: this.translate.instant('SponsorshipReportResourceName.sponcerCatName'), value: this.searchParams.sponcerCatName },
-              { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), value: this.searchParams.nationalityName }
-            ],
-            columns: [
-              { label: '#', key: 'rowNo', title: '#' },
-              { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), key: 'nationalityDesc' },
-              { label: this.translate.instant('SponsorshipReportResourceName.newCase'), key: 'neW_CASE' },
-              { label: this.translate.instant('SponsorshipReportResourceName.neworofficepost'), key: 'neworofficepost' },
-              { label: this.translate.instant('SponsorshipReportResourceName.posted'), key: 'posted' },
-              { label: this.translate.instant('SponsorshipReportResourceName.reserved'), key: 'reserved' },
-              { label: this.translate.instant('SponsorshipReportResourceName.stoped'), key: 'stoped' },
-              { label: this.translate.instant('SponsorshipReportResourceName.sponsoredCase'), key: 'sponsoreD_CASE' },
-              { label: this.translate.instant('SponsorshipReportResourceName.cancelCase'), key: 'canceL_CASE' },
-            ],
-            data: data.map((item: any, index: number) => ({
-              ...item,
-              rowNo: index + 1
-            })),
-            totalLabel: this.translate.instant('Common.Total'),
-            totalKeys: ['debiT_AMOUNT', 'crediT_AMOUNT']
-          };
-          this.spinnerService.hide();
-          this.openStandardReportService.openStandardReportExcel(reportConfig);
-        },
+                  title: this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title'),
+                  reportTitle: this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title'),
+                  fileName: `${this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('SponsorshipReportResourceName.entityId'), value: this.searchParams.entityId },
+                    { label: this.translate.instant('SponsorshipReportResourceName.sponcerCatName'), value: this.searchParams.sponcerCatName },
+                    { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), value: this.searchParams.nationalityName }
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), key: 'nationalityDesc' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.newCase'), key: 'neW_CASE' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.neworofficepost'), key: 'neworofficepost' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.posted'), key: 'posted' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.reserved'), key: 'reserved' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.stoped'), key: 'stoped' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.sponsoredCase'), key: 'sponsoreD_CASE' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.cancelCase'), key: 'canceL_CASE' },
+                  ],
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: []
+                };
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();
+              },
               error: () => {
                 this.spinnerService.hide();
               }
@@ -385,39 +383,39 @@ export class benifcientTotalRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-            title: this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title'),
-            reportTitle: this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title'),
-            fileName: `${this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-            fields: [
-              { label: this.translate.instant('SponsorshipReportResourceName.entityId'), value: this.searchParams.entityId },
-              { label: this.translate.instant('SponsorshipReportResourceName.sponcerCatName'), value: this.searchParams.sponcerCatName },
-              { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), value: this.searchParams.nationalityName }
-            ],
-            columns: [
-              { label: '#', key: 'rowNo', title: '#' },
-              { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), key: 'nationalityDesc' },
-              { label: this.translate.instant('SponsorshipReportResourceName.newCase'), key: 'neW_CASE' },
-              { label: this.translate.instant('SponsorshipReportResourceName.neworofficepost'), key: 'neworofficepost' },
-              { label: this.translate.instant('SponsorshipReportResourceName.posted'), key: 'posted' },
-              { label: this.translate.instant('SponsorshipReportResourceName.reserved'), key: 'reserved' },
-              { label: this.translate.instant('SponsorshipReportResourceName.stoped'), key: 'stoped' },
-              { label: this.translate.instant('SponsorshipReportResourceName.sponsoredCase'), key: 'sponsoreD_CASE' },
-              { label: this.translate.instant('SponsorshipReportResourceName.cancelCase'), key: 'canceL_CASE' },
-            ],
-            data: data.map((item: any, index: number) => ({
-              ...item,
-              rowNo: index + 1
-            })),
-            totalLabel: this.translate.instant('Common.Total'),
-            totalKeys: ['debiT_AMOUNT', 'crediT_AMOUNT']
-          };
-          this.spinnerService.hide();
-          this.openStandardReportService.openStandardReportPDF(reportConfig);
-        },
-        error: () => {
-          this.spinnerService.hide();
-        }
-      });
+                  title: this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title'),
+                  reportTitle: this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title'),
+                  fileName: `${this.translate.instant('SponsorshipReportResourceName.benifcientTotalRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('SponsorshipReportResourceName.entityId'), value: this.searchParams.entityId },
+                    { label: this.translate.instant('SponsorshipReportResourceName.sponcerCatName'), value: this.searchParams.sponcerCatName },
+                    { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), value: this.searchParams.nationalityName }
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), key: 'nationalityDesc' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.newCase'), key: 'neW_CASE' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.neworofficepost'), key: 'neworofficepost' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.posted'), key: 'posted' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.reserved'), key: 'reserved' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.stoped'), key: 'stoped' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.sponsoredCase'), key: 'sponsoreD_CASE' },
+                    { label: this.translate.instant('SponsorshipReportResourceName.cancelCase'), key: 'canceL_CASE' },
+                  ],
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: []
+                };
+                this.openStandardReportService.openStandardReportPDF(reportConfig);
+                this.spinnerService.hide();
+              },
+              error: () => {
+                this.spinnerService.hide();
+              }
+            });
         },
         error: () => {
           this.spinnerService.hide();

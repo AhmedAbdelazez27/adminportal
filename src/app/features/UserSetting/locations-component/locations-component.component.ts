@@ -32,7 +32,10 @@ import {
 } from '../../../core/dtos/attachments/attachments-config.dto';
 import { UpdateAttachmentBase64Dto } from '../../../core/dtos/attachments/attachment.dto';
 import { forkJoin } from 'rxjs';
-import * as L from 'leaflet'; 
+import * as L from 'leaflet';
+
+// Fix Leaflet marker icon issue at module level
+declare let require: any; 
 
 @Component({
   selector: 'app-locations-component',
@@ -168,7 +171,7 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
     this.loadLocations();
     this.loadRegionsAndLocationTypes();
     this.loadAttachmentsConfig();
-    this.initializeCustomIcon();
+    this.fixLeafletIcons();
   }
 
   ngOnDestroy(): void {
@@ -177,14 +180,68 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
     }
   }
 
-  initializeCustomIcon(): void {
-    this.customIcon = L.divIcon({
-      className: 'custom-marker',
-      html: '<div style="background-color: #ff4444; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); position: relative;"><div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid #ff4444;"></div></div>',
-      iconSize: [20, 28],
-      iconAnchor: [10, 28],
-      popupAnchor: [0, -28],
-    });
+  fixLeafletIcons(): void {
+    try {
+      // Fix Leaflet default marker icon paths issue
+      const iconDefault = L.icon({
+        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      });
+      
+      // Set as default
+      L.Marker.prototype.options.icon = iconDefault;
+
+      // Custom location marker icon with improved styling
+      this.customIcon = L.icon({
+        iconUrl: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36">
+            <path d="M12,2A10,10 0 0,0 2,12C2,16.5 6,22.22 12,34C18,22.22 22,16.5 22,12A10,10 0 0,0 12,2Z" fill="#dc3545" stroke="#fff" stroke-width="2"/>
+            <circle cx="12" cy="12" r="6" fill="#fff"/>
+            <circle cx="12" cy="12" r="3" fill="#dc3545"/>
+          </svg>
+        `),
+        iconSize: [24, 36],
+        iconAnchor: [12, 36],
+        popupAnchor: [0, -36],
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+        shadowSize: [41, 41],
+        shadowAnchor: [12, 41]
+      });
+      
+    } catch (error) {
+    }
+  }
+
+  // Test function to verify Leaflet is working
+  testLeaflet(): void {
+    
+    // Test if CSS is loaded
+    const leafletCSS = document.querySelector('link[href*="leaflet"]') || 
+                      document.querySelector('style[data-href*="leaflet"]');
+    
+    // Check map container
+    const mapContainer = document.getElementById('locationMap');
+    
+    // Test basic map creation
+    if (typeof L !== 'undefined' && mapContainer) {
+      try {
+        const testMap = L.map(mapContainer).setView([25.2048, 55.2708], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(testMap);
+        
+        // Clean up test map
+        setTimeout(() => {
+          testMap.remove();
+        }, 2000);
+        
+      } catch (error) {
+      }
+    }
+    
   }
 
   loadLocations(): void {
@@ -651,8 +708,15 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
     if (modal) {
       const bootstrapModal = new (window as any).bootstrap.Modal(modal);
       bootstrapModal.show();
+      
+      // Initialize map after modal is shown
+      modal.addEventListener('shown.bs.modal', () => {
+        setTimeout(() => this.initMap(), 200);
+      }, { once: true });
+    } else {
+      // Fallback if modal not found
+      setTimeout(() => this.initMap(), 500);
     }
-    setTimeout(() => this.initMap(), 500);
   }
 
   closeModal(): void {
@@ -675,66 +739,188 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
   }
 
   initMap(): void {
+    
     try {
-      if (!L || !document.getElementById('locationMap')) return;
-
-      if (this.map) {
-        this.map.remove();
-        this.map = null;
+      // Check if Leaflet is available
+      if (typeof L === 'undefined') {
+        this.toastr.error('Map library not loaded. Please refresh the page.');
+        return;
       }
 
+      // Wait for DOM element to be available
       setTimeout(() => {
+        const mapElement = document.getElementById('locationMap');
+        if (!mapElement) {
+          return;
+        }
+
+        // Clean up existing map
+        if (this.map) {
+          try {
+            this.map.remove();
+          } catch (e) {
+          }
+          this.map = null;
+        }
+
+        // Hide loading indicator
+        const loadingElement = mapElement.querySelector('.map-loading') as HTMLElement;
+        if (loadingElement) {
+          loadingElement.style.display = 'none';
+        }
+
+        
+
+        // UAE coordinates (Dubai)
         const defaultLat = 25.2048;
         const defaultLng = 55.2708;
 
-        this.map = L.map('locationMap').setView([defaultLat, defaultLng], 13);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors',
-          maxZoom: 19,
-        }).addTo(this.map);
-
-        if (this.selectedCoordinates) {
-          this.marker = L.marker(
-            [this.selectedCoordinates.lat, this.selectedCoordinates.lng],
-            {
-              icon: this.customIcon,
-            }
-          ).addTo(this.map);
-          this.map.setView(
-            [this.selectedCoordinates.lat, this.selectedCoordinates.lng],
-            15
-          );
-        }
-
-        this.map.on('click', (e: any) => {
-          if (this.mode !== 'view') {
-            const lat = e.latlng.lat;
-            const lng = e.latlng.lng;
-
-            if (this.marker) {
-              this.map.removeLayer(this.marker);
-            }
-
-            this.marker = L.marker([lat, lng], { icon: this.customIcon }).addTo(
-              this.map
-            );
-            this.selectedCoordinates = { lat, lng };
-            this.locationForm.patchValue({
-              locationCoordinates: `${lat}/${lng}`,
-            });
-          }
+        // Create map with explicit options
+        this.map = L.map('locationMap', {
+          center: [defaultLat, defaultLng],
+          zoom: 13,
+          zoomControl: true,
+          attributionControl: true,
+          scrollWheelZoom: true,
+          doubleClickZoom: true,
+          boxZoom: true,
+          keyboard: true,
+          dragging: true,
+          touchZoom: true,
+          maxZoom: 18,
+          minZoom: 3
         });
 
+        // Add OpenStreetMap tiles with error handling
+        const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 18,
+          minZoom: 3,
+          subdomains: ['a', 'b', 'c'],
+          errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+        });
+
+        tileLayer.addTo(this.map);
+
+        // Add tile load error handler
+        tileLayer.on('tileerror', (e: any) => {
+        });
+
+        // Add existing coordinates marker if available
+        if (this.selectedCoordinates) {
+          this.addMarkerToMap(this.selectedCoordinates.lat, this.selectedCoordinates.lng);
+          this.map.setView([this.selectedCoordinates.lat, this.selectedCoordinates.lng], 15);
+        }
+
+        // Add click event for non-view modes
+        if (this.mode !== 'view') {
+          this.map.on('click', (e: any) => {
+            const lat = parseFloat(e.latlng.lat.toFixed(6));
+            const lng = parseFloat(e.latlng.lng.toFixed(6));
+            this.addMarkerToMap(lat, lng);
+            this.updateCoordinates(lat, lng);
+          });
+        }
+
+        // Ensure map renders properly after initialization
         setTimeout(() => {
           if (this.map) {
             this.map.invalidateSize();
           }
-        }, 200);
-      }, 100);
+        }, 100);
+
+        // Add map ready event
+        this.map.whenReady(() => {
+          setTimeout(() => {
+            if (this.map) {
+              this.map.invalidateSize();
+            }
+          }, 50);
+        });
+
+      }, 200); // Reduced timeout for better responsiveness
+
     } catch (error) {
-      // Handle map initialization error
     }
+  }
+
+  private addMarkerToMap(lat: number, lng: number): void {
+    if (!this.map) {
+      return;
+    }
+
+    
+
+    // Remove existing marker
+    if (this.marker) {
+      try {
+        this.map.removeLayer(this.marker);
+      } catch (e) {
+      }
+      this.marker = null;
+    }
+
+    try {
+      // Add new marker with custom icon
+      this.marker = L.marker([lat, lng], { 
+        icon: this.customIcon,
+        draggable: this.mode !== 'view',
+        title: this.mode === 'view' ? 'Location marker' : 'Click and drag to move the marker'
+      }).addTo(this.map);
+
+      // Add drag event for non-view modes
+      if (this.mode !== 'view') {
+        this.marker.on('dragend', (e: any) => {
+          const position = e.target.getLatLng();
+          const newLat = parseFloat(position.lat.toFixed(6));
+          const newLng = parseFloat(position.lng.toFixed(6));
+          this.updateCoordinates(newLat, newLng);
+          // Update popup content
+          this.marker.setPopupContent(`
+            <div style="font-family: inherit; font-size: 14px;">
+              <strong>📍 Selected Location</strong><br/>
+              <strong>Lat:</strong> ${newLat.toFixed(6)}<br/>
+              <strong>Lng:</strong> ${newLng.toFixed(6)}<br/>
+              <small style="color: #666;">Drag marker to adjust position</small>
+            </div>
+          `);
+        });
+
+        this.marker.on('dragstart', (e: any) => {
+        });
+      }
+
+      // Add popup with coordinates
+      const popupContent = `
+        <div style="font-family: inherit; font-size: 14px;">
+          <strong>📍 ${this.mode === 'view' ? 'Location' : 'Selected Location'}</strong><br/>
+          <strong>Lat:</strong> ${lat.toFixed(6)}<br/>
+          <strong>Lng:</strong> ${lng.toFixed(6)}<br/>
+          ${this.mode !== 'view' ? '<small style="color: #666;">Drag marker to adjust position</small>' : ''}
+        </div>
+      `;
+      
+      this.marker.bindPopup(popupContent, {
+        offset: [0, -30],
+        closeButton: true,
+        autoClose: false
+      });
+
+      // Show popup automatically for new selections (not in view mode)
+      if (this.mode !== 'view') {
+        this.marker.openPopup();
+        this.toastr.success('Location selected! You can drag the marker to adjust the position.');
+      }
+
+    } catch (error) {
+    }
+  }
+
+  private updateCoordinates(lat: number, lng: number): void {
+    this.selectedCoordinates = { lat, lng };
+    this.locationForm.patchValue({
+      locationCoordinates: `${lat}/${lng}`,
+    });
   }
 
   onFileSelected(event: any): void {
@@ -801,6 +987,13 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
       this.map.removeLayer(this.marker);
       this.marker = null;
     }
+    
+    // Reset map view to default position
+    if (this.map) {
+      const defaultLat = 25.2048;
+      const defaultLng = 55.2708;
+      this.map.setView([defaultLat, defaultLng], 13);
+    }
   }
 
   getCoordinatesFromAddress(): void {
@@ -825,18 +1018,11 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
           const lat = parseFloat(result.lat);
           const lng = parseFloat(result.lon);
 
-          this.selectedCoordinates = { lat, lng };
-          this.locationForm.patchValue({
-            locationCoordinates: `${lat}/${lng}`,
-          });
+          // Use the improved methods
+          this.addMarkerToMap(lat, lng);
+          this.updateCoordinates(lat, lng);
 
           if (this.map) {
-            if (this.marker) {
-              this.map.removeLayer(this.marker);
-            }
-            this.marker = L.marker([lat, lng], { icon: this.customIcon }).addTo(
-              this.map
-            );
             this.map.setView([lat, lng], 15);
           }
 

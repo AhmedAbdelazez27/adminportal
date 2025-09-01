@@ -1,9 +1,20 @@
 <ng-container *ngIf="chartOptionsBar">
+  <div class="chart-wrapper" (click)="onChartClick($event)">
+    <highcharts-chart
+      [Highcharts]="Highcharts"
+      [options]="chartOptionsBar"
+      (chartInstance)="addComponentRef($event)"
+    ></highcharts-chart>
+  </div>
 
-  <highcharts-chart
-    [Highcharts]="Highcharts"
-    [options]="chartOptionsBar"
-    (chartInstance)="addComponentRef($event)"
-    
-  ></highcharts-chart>
-</ng-container> 
+  <div class="preview-backdrop" *ngIf="isPreviewOpen" (click)="closePreview()">
+    <div class="preview-container" (click)="$event.stopPropagation()">
+      <button type="button" class="close-btn" (click)="closePreview()">×</button>
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="chartOptionsBar"
+        (chartInstance)="addPreviewComponentRef($event)"
+      ></highcharts-chart>
+    </div>
+  </div>
+</ng-container>

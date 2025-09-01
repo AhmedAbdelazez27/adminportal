@@ -91,8 +91,7 @@ export class generalLJournalRptComponent {
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
   ) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
   ngOnInit(): void {
@@ -456,7 +455,7 @@ export class generalLJournalRptComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',
@@ -610,10 +609,11 @@ export class generalLJournalRptComponent {
                     rowNo: index + 1
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['debiT_AMOUNT', 'crediT_AMOUNT']
+                  totalKeys: ['debiT_AMOUNTstr', 'crediT_AMOUNTstr']
                 };
 
                 this.openStandardReportService.openStandardReportPDF(reportConfig);
+                this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();

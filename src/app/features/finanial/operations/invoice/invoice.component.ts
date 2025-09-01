@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy, Simpl
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
 import { forkJoin, Observable, Subject } from 'rxjs';
-import { debounceTime,takeUntil } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { FndLookUpValuesSelect2RequestDto, Pagination, Select2RequestDto, SelectdropdownResult, SelectdropdownResultResults, reportPrintConfig } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -75,11 +75,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     private openStandardReportService: openStandardReportService,
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service,
-    private fb: FormBuilder)
+    private fb: FormBuilder) {
 
-  {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
     this.userEntityForm = this.fb.group({
       entityIds: [[], Validators.required]
     });
@@ -347,8 +344,8 @@ export class InvoiceComponent implements OnInit, OnDestroy {
         }
       });
   }
- 
-  private buildColumnDefs(): void {
+
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',

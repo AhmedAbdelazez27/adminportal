@@ -87,10 +87,8 @@ export class ArMiscReceiptHeaderComponent {
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service,
     private fb: FormBuilder
-  )
-  {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+  ) {
+
     this.userEntityForm = this.fb.group({
       entityIds: [[], Validators.required]
     });
@@ -375,21 +373,21 @@ export class ArMiscReceiptHeaderComponent {
     this.pagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;
     this.searchParams.skip = skip;
-   
+
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
     this.spinnerService.show();
 
     this.arMiscReceiptHeaderService.getAll(cleanedFilters)
       .pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response: any) => {
+        next: (response: any) => {
           this.loadgridData = response || [];
           this.pagination.totalCount = response[0]?.rowsCount || 0;
           this.spinnerService.hide();
-      },
+        },
         error: (error) => {
           this.spinnerService.hide();;
-      }
-    });
+        }
+      });
   }
 
   getFormDatabyId(event: { pageNumber: number; pageSize: number }, miscReceiptId: string, entitY_ID: string): void {
@@ -422,11 +420,11 @@ export class ArMiscReceiptHeaderComponent {
       },
       error: (err) => {
         this.spinnerService.hide();;
-     }
+      }
     });
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',
@@ -498,7 +496,7 @@ export class ArMiscReceiptHeaderComponent {
     }
     this.spinnerService.show();;
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
-   
+
     this.arMiscReceiptHeaderService.getAll({ ...cleanedFilters, skip: 0, take: 1 })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -512,9 +510,9 @@ export class ArMiscReceiptHeaderComponent {
                 const data = response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceiptRpt_Title'),
-                  reportTitle: this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceiptRpt_Title'),
-                  fileName: `${this.translate.instant('ArMiscReceiptHeaderResourceName.catchReceiptRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('ArMiscReceiptHeaderResourceName.Title'),
+                  reportTitle: this.translate.instant('ArMiscReceiptHeaderResourceName.Title'),
+                  fileName: `${this.translate.instant('ArMiscReceiptHeaderResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.EntityId'), value: this.searchParams.entityIdstr },
                     { label: this.translate.instant('ArMiscReceiptHeaderResourceName.DocumentNumber'), value: this.searchParams.receiptNumber },
@@ -543,7 +541,7 @@ export class ArMiscReceiptHeaderComponent {
                 };
 
                 this.openStandardReportService.openStandardReportExcel(reportConfig);
-                this.spinnerService.hide();;
+                this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();

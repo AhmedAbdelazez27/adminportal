@@ -108,8 +108,7 @@ export class aidRequestsComponent {
     private Select2Service: Select2Service,
     private fb: FormBuilder
   ) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
     this.userEntityForm = this.fb.group({
       entityIds: [[], Validators.required]
     });
@@ -677,7 +676,7 @@ export class aidRequestsComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.translate.get([
       'AidRequestsResourceName.entitY_NAME',
       'AidRequestsResourceName.namE_AR',

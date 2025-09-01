@@ -69,10 +69,8 @@ export class BeneficentComponent {
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service,
     private fb: FormBuilder
-  )
-  {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+  ) {
+
     this.userEntityForm = this.fb.group({
       entityIds: [[], Validators.required]
     });
@@ -294,7 +292,7 @@ export class BeneficentComponent {
       });
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',
@@ -366,6 +364,8 @@ export class BeneficentComponent {
                     ...item,
                     rowNo: index + 1
                   })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: []
                 };
 
                 this.openStandardReportService.openStandardReportExcel(reportConfig);

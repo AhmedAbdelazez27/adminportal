@@ -5,8 +5,8 @@ export class FilterUserDto {
   licenseNumber: string | null = null;
   entityInfoId: string | null = null;
   entityId: string | null = null;
-  userType: number = 1;
-  userStatus: number = 1;
+  userType: number | null = null;
+  userStatus: number | null = null;
   applyDate: Date | null = null;
   searchValue: string | null = null;
   skip: number = 1;

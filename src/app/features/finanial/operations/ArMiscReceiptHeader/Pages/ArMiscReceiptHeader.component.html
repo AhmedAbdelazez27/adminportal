@@ -256,7 +256,8 @@
                                       [currentPage]="paginationDetailData.currentPage - 1"
                                       (pageChange)="onPageChangeDetailData($event)"
                                       [showActionColumn]="false"
-                                      (search)="onTableSearchDetailData($event)">
+                                      (search)="onTableSearchDetailData($event)"
+                                      (languageChanged)="buildColumnDefs()">
               </app-generic-data-table>
             </div>
           </div>

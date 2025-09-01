@@ -1,9 +1,14 @@
 <div class="container-fluid">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="title">{{ 'LOCATIONS.TITLE' | translate }}</h1>
-    <button class="btn btn-gold" (click)="openAddModal()">
-      <i class="fas fa-plus"></i> {{ 'LOCATIONS.ADD_NEW' | translate }}
-    </button>
+    <div>
+      <button class="btn btn-gold" (click)="openAddModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM18 12.75H12.75V18C12.75 18.41 12.41 18.75 12 18.75C11.59 18.75 11.25 18.41 11.25 18V12.75H6C5.59 12.75 5.25 12.41 5.25 12C5.25 11.59 5.59 11.25 6 11.25H11.25V6C11.25 5.59 11.59 5.25 12 5.25C12.41 5.25 12.75 5.59 12.75 6V11.25H18C18.41 11.25 18.75 11.59 18.75 12C18.75 12.41 18.41 12.75 18 12.75Z" fill="white"/>
+</svg> 
+{{ 'LOCATIONS.ADD_NEW' | translate }}
+      </button>
+    </div>
   </div>
 
   <!-- Filter Section -->
@@ -144,8 +149,7 @@
               <div class="col-xl-6 mb-3">
                 <label for="locationTypeId" class="form-label">Location Type</label>
                 <div *ngIf="mode === 'view'" class="form-control bg-light">
-                  {{ getLocationTypeDisplayText(locationForm.get('locationTypeId')?.value) || 'No location type
-                  selected' }}
+                  {{ getLocationTypeDisplayText(locationForm.get('locationTypeId')?.value) || 'No location type selected' }}
                 </div>
                 <ng-select *ngIf="mode !== 'view'" id="locationTypeId" formControlName="locationTypeId"
                   [items]="locationTypes" [clearable]="false" [searchable]="true" placeholder="Select Location Type"
@@ -182,15 +186,27 @@
               <div class="col-xl-12 mb-3">
                 <label class="form-label">Location on Map</label>
                 <div class="d-flex justify-content-between align-items-center mb-2" *ngIf="mode !== 'view'">
-                  <small class="text-muted">Click on the map to set the location coordinates</small>
-                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="getCoordinatesFromAddress()"
-                    [disabled]="!locationForm.get('address')?.value">
-                    <i class="fas fa-map-marker-alt"></i> Get from Address
-                  </button>
+                  <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Click on the map to place a marker or drag an existing marker to adjust the position
+                  </small>
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-gold" (click)="getCoordinatesFromAddress()"
+                      [disabled]="!locationForm.get('address')?.value">
+                      <i class="fas fa-map-marker-alt"></i> Get from Address
+                    </button>
+                    <button type="button" class="btn  btn-outline-secondary" (click)="clearCoordinates()"
+                      [disabled]="!selectedCoordinates">
+                      <i class="fas fa-times"></i> Clear
+                    </button>
+                  </div>
                 </div>
-                <div id="locationMap" class="map-container">
-                  <div class="map-loading">
-                    <div>Map Loading...</div>
+                <div class="map-container">
+                  <div id="locationMap" class="leaflet-map">
+                    <div class="map-loading">
+                      <i class="fas fa-spinner fa-spin"></i>
+                      <div>Loading Map...</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -216,10 +232,7 @@
             <div class="row" *ngIf="mode !== 'view'">
               <div class="col-xl-12 mb-3">
                 <div class="file-upload-section">
-                  <label for="locationImage" class="form-label">
-                    <i class="fas fa-image me-2"></i>Location Image
-                    <span class="text-danger">*</span>
-                  </label>
+                 
 
                   <!-- Enhanced Existing Image Display for Edit Mode -->
                   <div *ngIf="existingImageUrl && mode === 'edit'" class="existing-image-container mb-3">
@@ -249,36 +262,48 @@
 
                   <!-- Enhanced File Input Area -->
                   <div class="file-input-container">
+                    
                     <div class="file-drop-zone" [class.has-file]="selectedFile || (existingImageUrl && mode === 'edit')"
                       [class.is-dragover]="isDragOver" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
                       (drop)="onDrop($event)">
                       <div class="file-drop-content">
-                        <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="41" viewBox="0 0 40 41" fill="none">
+                          <path d="M34.167 16.9999H29.3503C25.4003 16.9999 22.1837 13.7832 22.1837 9.83319V5.01652C22.1837 4.09985 21.4337 3.34985 20.517 3.34985H13.4503C8.31699 3.34985 4.16699 6.68319 4.16699 12.6332V27.3999C4.16699 33.3499 8.31699 36.6832 13.4503 36.6832H26.5503C31.6837 36.6832 35.8337 33.3499 35.8337 27.3999V18.6665C35.8337 17.7499 35.0837 16.9999 34.167 16.9999ZM19.217 22.5665C18.967 22.8165 18.6503 22.9332 18.3337 22.9332C18.017 22.9332 17.7003 22.8165 17.4503 22.5665L16.2503 21.3665V28.3499C16.2503 29.0332 15.6837 29.5999 15.0003 29.5999C14.317 29.5999 13.7503 29.0332 13.7503 28.3499V21.3665L12.5503 22.5665C12.067 23.0499 11.267 23.0499 10.7837 22.5665C10.3003 22.0832 10.3003 21.2832 10.7837 20.7999L14.117 17.4665C14.2337 17.3665 14.3503 17.2832 14.4837 17.2165C14.517 17.1999 14.567 17.1832 14.6003 17.1665C14.7003 17.1332 14.8003 17.1165 14.917 17.0999C14.967 17.0999 15.0003 17.0999 15.0503 17.0999C15.1837 17.0999 15.317 17.1332 15.4503 17.1832C15.467 17.1832 15.467 17.1832 15.4837 17.1832C15.617 17.2332 15.7503 17.3332 15.8503 17.4332C15.867 17.4499 15.8837 17.4499 15.8837 17.4665L19.217 20.7999C19.7003 21.2832 19.7003 22.0832 19.217 22.5665Z" fill="#CDAD5F"/>
+                          <path d="M29.0501 14.7C30.6335 14.7167 32.8335 14.7167 34.7168 14.7167C35.6668 14.7167 36.1668 13.6 35.5001 12.9333C33.1001 10.5167 28.8001 6.16667 26.3335 3.7C25.6501 3.01667 24.4668 3.48334 24.4668 4.43334V10.25C24.4668 12.6833 26.5335 14.7 29.0501 14.7Z" fill="#CDAD5F"/>
+                        </svg>
                         <h6 class="file-upload-title">
-                          {{ selectedFile ? 'File Selected' : (existingImageUrl && mode === 'edit' ? 'Current Image
-                          Available' : 'Drop your image here') }}
+                          {{ selectedFile ? 'File Selected' : (existingImageUrl && mode === 'edit' ? 'Current Image Available' : 'Drop your image here') }}
                         </h6>
-                        <p class="file-upload-subtitle">
+                        <!-- <p class="file-upload-subtitle">
                           {{ selectedFile ? selectedFile.name : 'or click to browse' }}
-                        </p>
-                        <div class="file-requirements">
+                        </p> -->
+                       
+                      </div>
+                      <input type="file" class="form-control file-input" id="locationImage"
+                        accept=".jpg,.jpeg,.png,.pdf" (change)="onFileSelected($event)">
+
+                        <label for="locationImage" class="form-label" >
+                        or click to browse
+                        </label>
+                    </div>
+                     
+                  </div>
+                   <div class="file-requirements">
                           <small class="text-muted">
                             <i class="fas fa-info-circle me-1"></i>
                             Supported formats: JPG, PNG, PDF (Max 2MB)
                           </small>
                         </div>
-                      </div>
-                      <input type="file" class="form-control file-input" id="locationImage"
-                        accept=".jpg,.jpeg,.png,.pdf" (change)="onFileSelected($event)">
-                    </div>
-                  </div>
 
                   <!-- Enhanced New File Preview -->
                   <div *ngIf="filePreview" class="new-file-preview mt-3">
-                    <div class="preview-header">
-                      <div class="preview-info">
-                        <i class="icon-frame-view text-primary me-2"></i>
-                        <span class="text-primary fw-bold">New File Preview</span>
+                    <div class="preview-header mb-3">
+                      <div class="d-flex align-items-center gap-2 mb-2">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M17.7082 7.62506C15.7832 4.60006 12.9665 2.8584 9.99984 2.8584C8.5165 2.8584 7.07484 3.29173 5.75817 4.10007C4.4415 4.91673 3.25817 6.1084 2.2915 7.62506C1.45817 8.9334 1.45817 11.0584 2.2915 12.3667C4.2165 15.4001 7.03317 17.1334 9.99984 17.1334C11.4832 17.1334 12.9248 16.7001 14.2415 15.8917C15.5582 15.0751 16.7415 13.8834 17.7082 12.3667C18.5415 11.0667 18.5415 8.9334 17.7082 7.62506ZM9.99984 13.3667C8.13317 13.3667 6.63317 11.8584 6.63317 10.0001C6.63317 8.14173 8.13317 6.6334 9.99984 6.6334C11.8665 6.6334 13.3665 8.14173 13.3665 10.0001C13.3665 11.8584 11.8665 13.3667 9.99984 13.3667Z" fill="#5B5B5B"/>
+                        <path d="M10 7.6167C8.69167 7.6167 7.625 8.68337 7.625 10C7.625 11.3084 8.69167 12.375 10 12.375C11.3083 12.375 12.3833 11.3084 12.3833 10C12.3833 8.6917 11.3083 7.6167 10 7.6167Z" fill="#5B5B5B"/>
+                      </svg>
+                        <span class="">New File Preview</span>
                       </div>
                       <div class="preview-actions">
                         <button type="button" class="btn btn-sm btn-outline-success me-2"
@@ -291,7 +316,7 @@
                       </div>
                     </div>
                     <div class="preview-container">
-                      <img [src]="filePreview" alt="File Preview" class="enhanced-img-preview">
+                      <img [src]="filePreview" alt="File Preview" class="enhanced-img-preview" style="width: 100%;">
                     </div>
                   </div>
 

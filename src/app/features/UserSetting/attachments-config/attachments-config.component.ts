@@ -46,6 +46,8 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
   searchValue: string = '';
   attachmentsConfigForm: FormGroup;
   submitted: boolean = false;
+  isSubmitting: boolean = false;
+  isDeleting: boolean = false;
   mode: 'add' | 'edit' | 'view' = 'add';
   editingConfigId: number | null = null;
   selectedConfigToDelete: AttachmentsConfigDto | null = null;
@@ -189,6 +191,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
     this.attachmentsConfigForm.reset();
     this.attachmentsConfigForm.enable();
     this.submitted = false;
+    this.isSubmitting = false;
     this.mode = 'add';
     this.editingConfigId = null;
   }
@@ -390,7 +393,13 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
   submit(): void {
     this.submitted = true;
 
+    // Prevent multiple submissions
+    if (this.isSubmitting) {
+      return;
+    }
+
     if (this.attachmentsConfigForm.valid) {
+      this.isSubmitting = true;
       this.spinnerService.show();
       const formValue = this.attachmentsConfigForm.value;
 
@@ -409,6 +418,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
             this.closeModal();
             this.loadData();
             this.spinnerService.hide();
+            this.isSubmitting = false;
           },
           error: (error) => {
             this.toastr.error(
@@ -416,6 +426,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
                 (error.error?.message || error.message || 'Unknown error')
             );
             this.spinnerService.hide();
+            this.isSubmitting = false;
           },
         });
       } else {
@@ -434,6 +445,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
             this.closeModal();
             this.loadData();
             this.spinnerService.hide();
+            this.isSubmitting = false;
           },
           error: (error) => {
             this.toastr.error(
@@ -441,6 +453,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
                 (error.error?.message || error.message || 'Unknown error')
             );
             this.spinnerService.hide();
+            this.isSubmitting = false;
           },
         });
       }
@@ -561,7 +574,8 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
   }
 
   deleteConfig(): void {
-    if (this.selectedConfigToDelete) {
+    if (this.selectedConfigToDelete && !this.isDeleting) {
+      this.isDeleting = true;
       this.spinnerService.show();
       this.attachmentsConfigService
         .deleteAsync(this.selectedConfigToDelete.id)
@@ -572,6 +586,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
             this.deleteModal?.hide();
             this.loadData();
             this.spinnerService.hide();
+            this.isDeleting = false;
           },
           error: (error) => {
             this.toastr.error(
@@ -579,6 +594,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
                 (error.error?.message || error.message || 'Unknown error')
             );
             this.spinnerService.hide();
+            this.isDeleting = false;
           },
         });
     }
@@ -586,11 +602,12 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
 
   cancelDelete(): void {
     this.selectedConfigToDelete = null;
+    this.isDeleting = false;
     this.deleteModal?.hide();
   }
 
   applyFilter(): void {
-    this.currentPage = 0;
+    this.currentPage = 1;
     this.getAttachmentsConfigs(this.currentPage);
   }
 

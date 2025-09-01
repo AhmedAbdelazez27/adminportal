@@ -12,7 +12,7 @@ import { Select2Service } from '../../../../core/services/Select2.service';
 import { EntityService } from '../../../../core/services/entit.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { PieChartComponent } from '../../../../../shared/charts/pie-chart/pie-chart.component';
-
+ 
 @Component({
   selector: 'app-no-of-project',
   standalone: true,

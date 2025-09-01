@@ -124,7 +124,8 @@
                             (actionClick)="onTableAction($event)"
                             (pageChange)="onPageChange($event)"
                             [showActionColumn]="true"
-                            (search)="onTableSearch($event)">
+                            (search)="onTableSearch($event)"
+                            (languageChanged)="buildColumnDefs()">
     </app-generic-data-table>
     
 

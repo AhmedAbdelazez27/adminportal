@@ -50,6 +50,11 @@ export class Select2APIEndpoint {
     ChartTypeGuarantees: '/ChartType/Guarantees',
     GetSocialCasesChartTypeSelect2: '/ChartType/SocialCases',
     GetProjectsChartTypeSelect2: '/ChartType/Projects',
+    GetMainApplyServiceSelect2: '/MainApplyRequestService/GetSelect2',
+    GetMainServiceStatusSelect2: '/Lookup/MainServiceStatus',
+    GetServiceSelect2: '/Services/GetServiceSelect2',
+    GetUsersSelect2: '/User/GetUsersSelect2List',
+    GetServiceTypeSelect2: '/Lookup/ServiceType',
   };
 }
 

@@ -78,8 +78,7 @@ export class VendorComponent implements OnInit {
     private Select2Service: Select2Service,
     private fb: FormBuilder,
     public cdr: ChangeDetectorRef) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
   ngOnInit(): void {
@@ -342,7 +341,7 @@ export class VendorComponent implements OnInit {
     });
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',

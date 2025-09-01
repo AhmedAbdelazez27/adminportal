@@ -15,14 +15,17 @@ import { confirmPasswordValidator } from '../../../shared/customValidators/confi
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DepartmentService } from '../../../core/services/department.service';
 import { EntityService } from '../../../core/services/entit.service';
-import { Subject, forkJoin, of, take } from 'rxjs';
+import { Subject, forkJoin, of, take, takeUntil } from 'rxjs';
 import { EntityInfoService } from '../../../core/services/entitIfo.service';
-import { FndLookUpValuesSelect2RequestDto } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { FndLookUpValuesSelect2RequestDto, reportPrintConfig } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2Service } from '../../../core/services/Select2.service';
+import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
 import { FilterUserDto } from '../../../core/dtos/search-user.dto';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { PagedDto, Pagination } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { GenericDataTableComponent } from '../../../../shared/generic-data-table/generic-data-table.component';
+import { AttachmentGalleryComponent } from '../../../../shared/attachment-gallery/attachment-gallery.component';
+import { Gender, UserStatus, UserType } from '../../../core/enum/user-type.enum';
 declare var bootstrap: any;
 
 @Component({
@@ -34,13 +37,15 @@ declare var bootstrap: any;
     TranslateModule,
     NgSelectModule,
     FormsModule,
-    GenericDataTableComponent
+    GenericDataTableComponent,
+    AttachmentGalleryComponent
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss',
 })
 export class UsersListComponent implements OnInit {
   @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
+  private destroy$ = new Subject<void>();
 
   users: any[] = [];
   loadgridData: any[] = [];
@@ -95,6 +100,7 @@ export class UsersListComponent implements OnInit {
   userTypesOptions: any[] = [];
   userRoles: any[] = [];
   user: any
+  attachment: any[] = [];
 
   searchParams = new PagedDto();
   searchInput$ = new Subject<string>();
@@ -119,6 +125,7 @@ export class UsersListComponent implements OnInit {
     private fb: FormBuilder,
     private entityInfoService: EntityInfoService,
     private select2Service: Select2Service,
+    private openStandardReportService: openStandardReportService,
   ) {
     this.userDepartmentForm = this.fb.group({
       departmentIds: [[], Validators.required],
@@ -187,22 +194,28 @@ export class UsersListComponent implements OnInit {
         const updated = selected.filter((s: string) => allowed.includes(s));
         this.filterForm.get('selectedScreens')?.setValue(updated);
       });
-
+    this.filterUserCriteria.userStatus = UserStatus.New;
+    this.filterUserCriteria.userType = UserType.Admin;
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
     this.buildColumnDefs();
 
-        this.rowActions = [
-            { label: this.translate.instant('Common.dept'), icon: 'icon-frame-department', action: 'onDepartmentInfo' },
-            { label: this.translate.instant('Common.entities'), icon: 'icon-frame-entities', action: 'onEntitiesInfo' },
-            { label: this.translate.instant('Common.permissions'), icon: 'icon-frame-user', action: 'onUserInfo' },
-            { label: this.translate.instant('Common.edit'), icon: 'icon-frame-edit', action: 'onEditInfo' },
-            { label: this.translate.instant('Common.deletd'), icon: 'icon-frame-delete', action: 'onDeletdInfo' },
-            { label: this.translate.instant('Common.role'), icon: 'icon-frame-role', action: 'onRoleInfo' },
-            { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
-        ];
-    }
+    this.rowActions = [
+      { label: this.translate.instant('Common.dept'), icon: 'icon-frame-department', action: 'onDepartmentInfo' },
+      { label: this.translate.instant('Common.entities'), icon: 'icon-frame-entities', action: 'onEntitiesInfo' },
+      { label: this.translate.instant('Common.permissions'), icon: 'icon-frame-user', action: 'onUserInfo' },
+      { label: this.translate.instant('Common.edit'), icon: 'icon-frame-edit', action: 'onEditInfo' },
+      { label: this.translate.instant('Common.deletd'), icon: 'icon-frame-delete', action: 'onDeletdInfo' },
+      { label: this.translate.instant('Common.role'), icon: 'icon-frame-role', action: 'onRoleInfo' },
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
+    ];
+  }
 
-
+  ngOnDestroy(): void {
+    this.filterUserCriteria.userStatus = null;
+    this.filterUserCriteria.userType = null;
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   private cleanFilterObject(obj: any): any {
     const cleaned = { ...obj };
     Object.keys(cleaned).forEach((key) => {
@@ -226,7 +239,6 @@ export class UsersListComponent implements OnInit {
     this.userService.getUsers(cleanedFilters).subscribe(
       (data: any) => {
         this.loadgridData = data.data;
-        console.log("loadgridData", data.data);
         this.pagination.totalCount = data.totalCount;
         this.spinnerService.hide();
       },
@@ -284,7 +296,7 @@ export class UsersListComponent implements OnInit {
     }
   }
   onSearch(): void {
-    this.getUsers(1);
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
   clear() {
@@ -331,6 +343,15 @@ export class UsersListComponent implements OnInit {
     }
 
     const formData = this.userForm.value;
+    if (formData.gender != null && formData.gender == false) {
+      formData.gender = Gender.male;
+    }
+    else if (formData.gender != null && formData.gender == true) {
+      formData.gender = Gender.female;
+    }
+    else {
+      formData.gender = null;
+    }
     if (this.mode === 'edit') {
       delete formData.password;
       delete formData.confirmPassword;
@@ -385,10 +406,19 @@ export class UsersListComponent implements OnInit {
     this.mode = 'edit';
     this.editingUserId = user.id;
     this.submitted = false;
+    let genderValue: boolean | null = null;
+    if (user.gender == Gender.male) {
+      genderValue = false;
+    } else if (user.gender == Gender.female) {
+      genderValue = true;
+    } else {
+      genderValue = null;
+    }
     this.userForm.patchValue({
       ...user,
       roles: user.roles?.map((r: any) => r.id) || [],
-      gender: user.gender ?? false,
+
+      gender: genderValue,
       id: user.id ?? null,
       masterId: user?.masterId ?? null,
     });
@@ -802,8 +832,6 @@ export class UsersListComponent implements OnInit {
     this.entityInfoService.getEntitiesInfoSelect2(0, 6000).subscribe({
       next: (res) => {
         this.entitiesInfo = res?.results
-        console.log(this.entitiesInfo);
-
       },
       error: (err) => {
 
@@ -841,8 +869,6 @@ export class UsersListComponent implements OnInit {
     this.userService.getUserTypes().subscribe({
       next: (response: any) => {
         this.userTypesOptions = response || [];
-        console.log(this.userTypesOptions, response);
-
       },
       error: (err: any) => {
         this.toastr.error('Failed to load Country.', 'Error');
@@ -862,8 +888,9 @@ export class UsersListComponent implements OnInit {
 
   // view details
   onViewDetails(user: any) {
-    console.log(user);
-    this.user = user
+    this.user = user;
+    this.attachment = user?.attachments ?? [];
+
     const modalElement = document.getElementById('details');
     if (modalElement) {
       const modal = new bootstrap.Modal(modalElement);
@@ -915,7 +942,7 @@ export class UsersListComponent implements OnInit {
     });
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',
@@ -971,6 +998,70 @@ export class UsersListComponent implements OnInit {
   onTableSearch(text: string): void {
     this.searchText = text;
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+  }
+
+
+  printExcel(): void {
+    this.spinnerService.show();;
+    const cleanedFilters = this.cleanFilterObject(this.filterUserCriteria);
+
+    this.userService.getUsers({ ...cleanedFilters, skip: 0, take: 1 })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (initialResponse: any) => {
+          const totalCount = initialResponse.totalCount || 0;
+
+          this.userService.getUsers({ ...cleanedFilters, skip: 0, take: totalCount })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (response: any) => {
+                const data = response?.data || [];
+
+                const reportConfig: reportPrintConfig = {
+                  title: this.translate.instant('AuthenticationResorceName.titleUser'),
+                  reportTitle: this.translate.instant('AuthenticationResorceName.titleUser'),
+                  fileName: `${this.translate.instant('AuthenticationResorceName.titleUser')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('AuthenticationResorceName.name'), value: this.filterUserCriteria.name },
+                    { label: this.translate.instant('AuthenticationResorceName.id'), value: this.filterUserCriteria.idNumber },
+                    { label: this.translate.instant('AuthenticationResorceName.entityInfo'), value: this.filterUserCriteria.entityInfoId },
+                    { label: this.translate.instant('AuthenticationResorceName.entity'), value: this.filterUserCriteria.entityId },
+                    { label: this.translate.instant('AuthenticationResorceName.userStatusName'), value: this.filterUserCriteria.userStatus },
+                    { label: this.translate.instant('AuthenticationResorceName.userTypeName'), value: this.filterUserCriteria.userType },
+                    { label: this.translate.instant('AuthenticationResorceName.applyDate'), value: this.filterUserCriteria.applyDate },
+                    { label: this.translate.instant('AuthenticationResorceName.userName'), value: this.filterUserCriteria.searchValue },
+                    { label: this.translate.instant('AuthenticationResorceName.organization'), value: this.filterUserCriteria.foundationName },
+                    { label: this.translate.instant('AuthenticationResorceName.license'), value: this.filterUserCriteria.licenseNumber },
+                  ],
+
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('AuthenticationResorceName.name'), key: 'nameEn' },
+                    { label: this.translate.instant('AuthenticationResorceName.userName'), key: 'userName' },
+                    { label: this.translate.instant('AuthenticationResorceName.userTypeName'), key: 'userTypeName' },
+                    { label: this.translate.instant('AuthenticationResorceName.userStatusName'), key: 'userStatusName' },
+                    { label: this.translate.instant('AuthenticationResorceName.foundationName'), key: 'foundationName' },
+                  ],
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: []
+                };
+
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();;
+              },
+              error: () => {
+                this.spinnerService.hide();
+              }
+            });
+        },
+        error: () => {
+          this.spinnerService.hide();
+        }
+      });
   }
 
 }

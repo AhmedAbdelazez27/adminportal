@@ -76,10 +76,8 @@ export class orderListBranchRptComponent {
     private openStandardReportService: openStandardReportService,
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
-  )
-  {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+  ) {
+
   }
 
   ngOnInit(): void {
@@ -312,7 +310,7 @@ export class orderListBranchRptComponent {
 
 
   onSearch(): void {
-   this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
   onPageChange(event: { pageNumber: number; pageSize: number }): void {
@@ -345,7 +343,7 @@ export class orderListBranchRptComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.translate.get([
       'SocialCaseReportsResourceName.referencenumber',
       'SocialCaseReportsResourceName.aiD_REQUEST_DATE',
@@ -379,8 +377,8 @@ export class orderListBranchRptComponent {
       ];
     });
   }
-  
-  onTableAction(event: { action: string, row: any }) {}
+
+  onTableAction(event: { action: string, row: any }) { }
 
 
   printExcel(): void {
@@ -409,42 +407,42 @@ export class orderListBranchRptComponent {
               next: (response: any) => {
                 const data = response?.data || response || [];
 
-          const reportConfig: reportPrintConfig = {
-            title: this.translate.instant('SocialCaseReportsResourceName.orderListBranchRptTitle'),
-            reportTitle: this.translate.instant('SocialCaseReportsResourceName.orderListBranchRptTitle'),
-            fileName: `${this.translate.instant('SocialCaseReportsResourceName.orderListBranchRptTitle')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
-            fields: [
-              { label: this.translate.instant('SocialCaseReportsResourceName.entityId'), value: this.searchParams.entityName },
-              { label: this.translate.instant('SocialCaseReportsResourceName.type'), value: this.searchParams.caseName },
-              { label: this.translate.instant('SocialCaseReportsResourceName.collectorName'), value: this.searchParams.brancheName },
-              { label: this.translate.instant('SocialCaseReportsResourceName.fromNo'), value: this.searchParams.cityDesc },
-              { label: this.translate.instant('SocialCaseReportsResourceName.toDate'), value: this.searchParams.toDatestr },
-              { label: this.translate.instant('SocialCaseReportsResourceName.fromDate'), value: this.searchParams.fromDatestr },
-            ],
-            columns: [
-              { label: '#', key: 'rowNo', title: '#' },
-              { label: this.translate.instant('SocialCaseReportsResourceName.referencenumber'), key: 'referencenumber' },
-              { label: this.translate.instant('SocialCaseReportsResourceName.aiD_REQUEST_DATE'), key: 'aiD_REQUEST_DATEstr' },
-              { label: this.translate.instant('SocialCaseReportsResourceName.requesT_TYPE_DESC'), key: 'requesT_TYPE_DESC' },
-              { label: this.translate.instant('SocialCaseReportsResourceName.namE_AR'), key: 'namE_AR' },
-              { label: this.translate.instant('SocialCaseReportsResourceName.casE_ID_NUMBER'), key: 'casE_ID_NUMBER' },
-              { label: this.translate.instant('SocialCaseReportsResourceName.familY_PERS_NO'), key: 'familY_PERS_NO' },
-              { label: this.translate.instant('SocialCaseReportsResourceName.toT_INCOME'), key: 'toT_INCOMEstr' },
-              { label: this.translate.instant('SocialCaseReportsResourceName.toT_DUTIES'), key: 'toT_DUTIESstr' },
-              { label: this.translate.instant('SocialCaseReportsResourceName.statuS_DESC'), key: 'statuscodE_DESC' },
-              { label: this.translate.instant('SocialCaseReportsResourceName.brancH_DESC'), key: 'brancH_DESC' },
-            ],
-            data: data.map((item: any, index: number) => ({
-              ...item,
-              rowNo: index + 1
-            })),
-            totalLabel: this.translate.instant('Common.Total'),
-            totalKeys: ['toT_INCOMEstr', 'toT_DUTIESstr']
-          };
+                const reportConfig: reportPrintConfig = {
+                  title: this.translate.instant('SocialCaseReportsResourceName.orderListBranchRptTitle'),
+                  reportTitle: this.translate.instant('SocialCaseReportsResourceName.orderListBranchRptTitle'),
+                  fileName: `${this.translate.instant('SocialCaseReportsResourceName.orderListBranchRptTitle')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  fields: [
+                    { label: this.translate.instant('SocialCaseReportsResourceName.entityId'), value: this.searchParams.entityName },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.type'), value: this.searchParams.caseName },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.collectorName'), value: this.searchParams.brancheName },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.fromNo'), value: this.searchParams.cityDesc },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.toDate'), value: this.searchParams.toDatestr },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.fromDate'), value: this.searchParams.fromDatestr },
+                  ],
+                  columns: [
+                    { label: '#', key: 'rowNo', title: '#' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.referencenumber'), key: 'referencenumber' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.aiD_REQUEST_DATE'), key: 'aiD_REQUEST_DATEstr' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.requesT_TYPE_DESC'), key: 'requesT_TYPE_DESC' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.namE_AR'), key: 'namE_AR' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.casE_ID_NUMBER'), key: 'casE_ID_NUMBER' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.familY_PERS_NO'), key: 'familY_PERS_NO' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.toT_INCOME'), key: 'toT_INCOMEstr' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.toT_DUTIES'), key: 'toT_DUTIESstr' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.statuS_DESC'), key: 'statuscodE_DESC' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.brancH_DESC'), key: 'brancH_DESC' },
+                  ],
+                  data: data.map((item: any, index: number) => ({
+                    ...item,
+                    rowNo: index + 1
+                  })),
+                  totalLabel: this.translate.instant('Common.Total'),
+                  totalKeys: ['toT_INCOMEstr', 'toT_DUTIESstr']
+                };
 
-          this.openStandardReportService.openStandardReportExcel(reportConfig);
-          this.spinnerService.hide();
-        },
+                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.spinnerService.hide();
+              },
               error: () => {
                 this.spinnerService.hide();
               }

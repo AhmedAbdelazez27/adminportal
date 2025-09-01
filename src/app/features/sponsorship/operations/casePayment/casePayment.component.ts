@@ -87,8 +87,7 @@ export class casePaymentComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   )
   {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
     this.userEntityForm = this.fb.group({
       entityIds: [[], Validators.required]
     });
@@ -341,10 +340,10 @@ export class casePaymentComponent implements OnInit, OnDestroy {
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
     if (!this.searchParams.entityId) {
       this.translate
-        .get(['CasePaymentResourceName.EntityId', 'Common.Required'])
+        .get(['CasePaymentResourceName.entityId', 'Common.Required'])
         .subscribe(translations => {
           this.toastr.warning(
-            `${translations['CasePaymentResourceName.EntityId']} ${translations['Common.Required']}`,
+            `${translations['CasePaymentResourceName.entityId']} ${translations['Common.Required']}`,
             'Warning'
           );
         });
@@ -401,7 +400,7 @@ export class casePaymentComponent implements OnInit, OnDestroy {
       });
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',
@@ -448,9 +447,9 @@ export class casePaymentComponent implements OnInit, OnDestroy {
 
   printExcel(): void {
     if (!this.searchParams.entityId) {
-      this.translate.get(['CasePaymentResourceName.EntityId', 'Common.Required'])
+      this.translate.get(['CasePaymentResourceName.entityId', 'Common.Required'])
         .subscribe(translations => {
-          this.toastr.warning(`${translations['CasePaymentResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
+          this.toastr.warning(`${translations['CasePaymentResourceName.entityId']} ${translations['Common.Required']}`, 'Warning');
         });
       return;
     }

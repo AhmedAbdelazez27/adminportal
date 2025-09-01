@@ -9,6 +9,7 @@ import { ForgetpasswordComponent } from './features/auth/forgetpassword/forgetpa
 import { VerifyotpComponent } from './features/auth/verifyotp/verifyotp.component';
 import { ResetpasswordComponent } from './features/auth/resetpassword/resetpassword.component';
 import { StatisticsOfBeneficiaryFamiliesComponents } from './features/socialcases/charts/statistics-Benf-Families/statistics-Benf-Families.component';
+import { MainApplyServiceComponent } from './features/services/mainApplyService/mainApplyService.component';
 
 
 export const routes: Routes = [
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgetpasswordComponent },
   { path: 'verify-otp', component: VerifyotpComponent },
   { path: 'reset-password', component: ResetpasswordComponent },
+  { path: 'MainServices', component: MainApplyServiceComponent },
 
   {
     path: '',
@@ -230,6 +232,13 @@ export const routes: Routes = [
         data: { permission: 'ServiceSetting.View' },
       },
 
+      {
+        path: 'mainServices',
+        loadChildren: () =>
+          import('./features/services/services.routes').then(
+            (m) => m.servicesRoutes
+          ),
+      },
 
     ],
   },

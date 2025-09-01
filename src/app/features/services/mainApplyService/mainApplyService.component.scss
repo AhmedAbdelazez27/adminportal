@@ -1,0 +1,194 @@
+.modal-backdrop.show:nth-of-type(2) {
+  z-index: 1061 !important;
+}
+
+#addcomments {
+  z-index: 1062 !important;
+}
+
+.step-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  position: relative;
+  width: 100%;
+}
+
+.mt-step-col {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mt-step-number {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  font-weight: bold;
+  background: #fff;
+  z-index: 1;
+  position: relative;
+  margin: 0 auto 10px;
+  line-height: 36px;
+}
+
+.mt-step-title {
+  margin-top: 10px;
+  font-size: 14px;
+  word-wrap: break-word;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.mt-step-col::before,
+.mt-step-col::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  width: 50%;
+  height: 2px;
+  background: #dcdcdc;
+  z-index: 0;
+}
+
+.mt-step-col::before {
+  left: 0;
+}
+
+.mt-step-col::after {
+  left: 50%;
+}
+
+.mt-step-col:first-child::before {
+  display: none;
+}
+
+.mt-step-col:last-child::after {
+  display: none;
+}
+
+
+.mt-step-col.done .mt-step-number {
+  border: 2px solid #28a745;
+  color: #28a745;
+}
+
+.mt-step-col.done::before,
+.mt-step-col.done::after {
+  background: #28a745;
+}
+
+.mt-step-col.error .mt-step-number {
+  border: 2px solid #dc3545;
+  color: #dc3545;
+}
+
+.mt-step-col.error::before {
+  background: #28a745;
+}
+
+.mt-step-col.error::after {
+  background: #dc3545;
+}
+
+.mt-step-col.pending .mt-step-number {
+  border: 2px solid #ffc107;
+  color: #ffc107;
+}
+
+.mt-step-col.pending::before,
+.mt-step-col.pending::after {
+  background: #ffc107;
+}
+
+.mt-step-col.default .mt-step-number {
+  border: 2px solid #dcdcdc;
+  color: #999;
+}
+
+.mt-step-col.default::before,
+.mt-step-col.default::after {
+  background: #dcdcdc;
+}
+.mt-step-col {
+  position: relative;
+  text-align: center;
+}
+
+.mt-step-number {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  display: inline-block;
+  z-index: 2;
+  position: relative;
+}
+
+/* Common line */
+.mt-step-col::before,
+.mt-step-col::after {
+  content: '';
+  position: absolute;
+  top: 20px; /* middle of circle */
+  height: 4px;
+  width: 50%;
+  background-color: #ccc; /* default gray */
+  z-index: 1;
+}
+
+.mt-step-col::before {
+  left: 0;
+}
+
+.mt-step-col::after {
+  right: 0;
+}
+
+/* DONE = green */
+.mt-step-col.done::before {
+  background-color: green;
+}
+
+.mt-step-col.done::after {
+  background-color: green;
+}
+
+/* ERROR = red (half red before, half red after) */
+.mt-step-col.error::before {
+  background-color: red;
+}
+
+.mt-step-col.error::after {
+  background-color: red;
+}
+
+/* PENDING = gray (circle visible but no progress color) */
+.mt-step-col.pending .mt-step-number {
+  border: 2px solid #ccc;
+  background-color: white;
+}
+
+/* Ensure circle always visible */
+.mt-step-col .mt-step-number {
+  border: 2px solid #ccc;
+}
+
+.mt-step-col.done .mt-step-number {
+  border-color: green;
+}
+
+.mt-step-col.error .mt-step-number {
+  border-color: red;
+}

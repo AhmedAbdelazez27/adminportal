@@ -115,6 +115,7 @@
                           [rowActions]="rowActions"
                            (pageChange)="onPageChange($event)"
                           [showActionColumn]="false"
-                          (search)="onTableSearch($event)">
+                          (search)="onTableSearch($event)"
+                          (languageChanged)="buildColumnDefs()">
   </app-generic-data-table>
 </div>

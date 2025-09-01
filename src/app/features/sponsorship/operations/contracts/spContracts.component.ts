@@ -98,8 +98,7 @@ export class spContractsComponent {
     private fb: FormBuilder
   )
   {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
     this.userEntityForm = this.fb.group({
       entityIds: [[], Validators.required]
     });
@@ -514,7 +513,7 @@ export class spContractsComponent {
     });
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.columnDefs = [
       {
         headerName: '#',

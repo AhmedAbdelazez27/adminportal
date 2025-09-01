@@ -64,8 +64,7 @@ export class requestDetailsEntitiesRPTComponent {
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
   ) {
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+
   }
 
   ngOnInit(): void {
@@ -241,7 +240,7 @@ export class requestDetailsEntitiesRPTComponent {
     }
   }
 
-  private buildColumnDefs(): void {
+  public buildColumnDefs(): void {
     this.translate.get([
       'ServiceRequestsReportsResourceName.requestNo',
       'ServiceRequestsReportsResourceName.requestDate',
