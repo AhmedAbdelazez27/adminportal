@@ -1041,13 +1041,13 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
    * Updates an existing attachment separately from the location update
    */
   private updateAttachmentSeparately(attachmentDto: AttachmentBase64Dto): void {
-    if (!this.existingAttachment?.id) {
+    if (!this.existingAttachment?.masterId) {
       this.spinnerService.hide();
       return;
     }
 
     const updateAttachmentDto: UpdateAttachmentBase64Dto = {
-      id: this.existingAttachment.id,
+      id: this.existingAttachment.masterId,
       fileBase64: attachmentDto.fileBase64,
       fileName: attachmentDto.fileName,
       masterId: attachmentDto.masterId,

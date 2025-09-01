@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiEndpoints } from '../constants/api-endpoints';
+import { HomeTotalRequestSummaryDto } from '../dtos/home/home-request-summary.dto';
 
 export interface HomeKpiApiItem {
   id?: string;
@@ -50,6 +51,10 @@ getHomeChartData() {
     return this.http.get<HomeKpiApiItem[]>(url); // body فاضي
 }
 
+getHomeTotalRequestSummary(): Observable<HomeTotalRequestSummaryDto> {
+  const url = `${this.BASE_URL}${ApiEndpoints.Home.GetHomeTotalRequestSummary}`;
+  return this.http.get<HomeTotalRequestSummaryDto>(url);
+}
 
 }
 

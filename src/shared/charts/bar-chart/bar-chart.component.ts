@@ -66,8 +66,8 @@ export class BarChartComponent implements OnChanges {
     const xAxis = shouldUseHorizontalBars
       ? ({
           title: { text: NULL_TEXT },
-          gridLineWidth: 1,
-          gridLineColor: '#ccc',
+          gridLineWidth: 0,
+          gridLineColor: '#fffefeff',
           labels: {
             formatter() { return H.numberFormat(Number(this.value), 0, '.', ','); },
             style: { fontSize: '10px', color: '#777' }
@@ -87,8 +87,8 @@ export class BarChartComponent implements OnChanges {
           categories,
           reversed: false,
           title: { text: NULL_TEXT },
-          gridLineWidth: 1,
-          gridLineColor: '#eee',
+          gridLineWidth: 0,
+             gridLineColor: '#fffefeff',
         labels: {
             useHTML: true,
             align: isRtl ? 'right' : 'left',
@@ -102,11 +102,11 @@ export class BarChartComponent implements OnChanges {
       : ({
           min: 0,
         title: { text: NULL_TEXT },
-        gridLineWidth: 1,
-        gridLineColor: '#ccc',
+        gridLineWidth: 0,
+         gridLineColor: '#fffefeff',
         labels: {
             formatter() { return H.numberFormat(Number(this.value), 0, '.', ','); },
-          style: { fontSize: '10px', color: '#777' }
+          style: { fontSize: '0px', color: '#ffffff' }
         }
         } as Highcharts.YAxisOptions);
 
@@ -140,7 +140,7 @@ export class BarChartComponent implements OnChanges {
       },
     plotOptions: {
   column: {
-    pointWidth: 20,           
+    pointWidth: 40,           
      pointPadding: 0,         
     borderRadius: '10%',   
      borderWidth: 0,

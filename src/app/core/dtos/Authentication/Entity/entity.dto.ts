@@ -1,45 +1,78 @@
 export interface EntityDto {
+  ENTITY_ID: string;
+  ENTITY_NAME: string;
+  ENTITY_NAME_EN?: string;
+  ENTITY_LOCALTION?: string;
+  ENTITY_PHONE?: string;
+  ENTITY_WEBSITE?: string;
+  ENTITY_MAIL?: string;
+  ACC_DETAILS_ID?: string;
+  DescriptionAr?: string;
+  DescriptionEn?: string;
+  IsShowInPortal: boolean;
+  MasterId: number; // Changed to long type to match backend
+  Attachment?: AttachmentDto; // Single attachment object from API response
+}
+
+// Backend response structure (for mapping purposes)
+export interface BackendEntityDto {
   entitY_ID: string;
   entitY_NAME: string;
-  entitY_NAME_EN: string;
-  entitY_LOCALTION: string;
-  entitY_PHONE: string;
-  entitY_WEBSITE: string;
-  entitY_MAIL: string;
-  acC_DETAILS_ID: string;
+  entitY_NAME_EN?: string;
+  entitY_LOCALTION?: string;
+  entitY_PHONE?: string;
+  entitY_WEBSITE?: string;
+  entitY_MAIL?: string;
+  acC_DETAILS_ID?: string;
+  descriptionAr?: string;
+  descriptionEn?: string;
+  isShowInPortal: boolean;
+  masterId: number; // Changed to long type to match backend
+  attachment?: AttachmentDto; // Single object, not array
 }
 
 export interface CreateEntityDto {
-  entitY_ID: string;
-  entitY_NAME: string;
-  entitY_NAME_EN: string;
-  entitY_LOCALTION: string;
-  entitY_PHONE: string;
-  entitY_WEBSITE: string;
-  entitY_MAIL: string;
-  acC_DETAILS_ID: string;
+  ENTITY_NAME: string;
+  ENTITY_NAME_EN: string;
+  ENTITY_LOCALTION?: string;
+  ENTITY_PHONE?: string;
+  ENTITY_WEBSITE?: string;
+  ENTITY_MAIL?: string;
+  ACC_DETAILS_ID?: string;
+  DescriptionAr?: string;
+  DescriptionEn?: string;
+  IsShowInPortal: boolean; // Changed from optional to required boolean
+  Attachment?: AttachmentBase64Dto;
 }
 
 export interface UpdateEntityDto {
-  entitY_ID: string;
-  entitY_NAME: string;
-  entitY_NAME_EN: string;
-  entitY_LOCALTION: string;
-  entitY_PHONE: string;
-  entitY_WEBSITE: string;
-  entitY_MAIL: string;
-  acC_DETAILS_ID: string;
+  ENTITY_ID: string;
+  ENTITY_NAME?: string;
+  ENTITY_NAME_EN?: string;
+  ENTITY_LOCALTION?: string;
+  ENTITY_PHONE?: string;
+  ENTITY_WEBSITE?: string;
+  ENTITY_MAIL?: string;
+  ACC_DETAILS_ID?: string;
+  DescriptionAr?: string;
+  DescriptionEn?: string;
+  IsShowInPortal: boolean; // Changed from optional to required boolean
 }
 
 export interface GetEntityByIdDto {
-  entitY_ID: string;
-  entitY_NAME: string;
-  entitY_NAME_EN: string;
-  entitY_LOCALTION: string;
-  entitY_PHONE: string;
-  entitY_WEBSITE: string;
-  entitY_MAIL: string;
-  acC_DETAILS_ID: string;
+  ENTITY_ID: string;
+  ENTITY_NAME: string;
+  ENTITY_NAME_EN?: string;
+  ENTITY_LOCALTION?: string;
+  ENTITY_PHONE?: string;
+  ENTITY_WEBSITE?: string;
+  ENTITY_MAIL?: string;
+  ACC_DETAILS_ID?: string;
+  DescriptionAr?: string;
+  DescriptionEn?: string;
+  IsShowInPortal: boolean;
+  MasterId: number; // Changed to long type to match backend
+  Attachment?: AttachmentDto; // Single attachment object from API response
 }
 
 export interface GetAllEntitiesResponseDto {
@@ -50,6 +83,7 @@ export interface GetAllEntitiesResponseDto {
 export interface EntityParameter {
   searchValue?: string;
   entityId?: string;
+  isShowInPortal: boolean;
   skip: number;
   take: number;
 }
@@ -75,4 +109,22 @@ export interface Select2ResultItem {
   id: string;
   text: string;
   altText?: string;
+}
+
+// Attachment DTOs
+export interface AttachmentDto {
+  id: number;
+  imgPath?: string;
+  masterType?: number;
+  masterId?: number;
+  attachmentTitle?: string;
+  attConfigID?: number;
+  lastModified?: Date;
+}
+
+export interface AttachmentBase64Dto {
+  fileBase64: string;
+  fileName: string;
+  masterId: number;
+  attConfigID: number;
 }

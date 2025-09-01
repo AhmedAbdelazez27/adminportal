@@ -5,8 +5,8 @@ import * as XLSX from 'xlsx';
 import { environment } from '../../../../../environments/environment';
 import { ApiEndpoints } from '../../../constants/api-endpoints';
 import { PagedResult } from '../../../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { catchReceiptRptInputDto, generalLJournalRptInputDto, receiptRPTInputDto, vendorsPayTransRPTInputDto, getTotlaBenDonationsRPTInputDto } from '../../../dtos/FinancialDtos/Reports/FinancialReportsInput.dto';
-import { catchReceiptRptOutputDto, generalLJournalRptOutputDto, receiptRPTOutputDto, vendorsPayTransRPTOutputDto, getTotlaBenDonationsRPTOutputDto } from '../../../dtos/FinancialDtos/Reports/FinancialReportsOutput.dto';
+import { catchReceiptRptInputDto, generalLJournalRptInputDto, receiptRPTInputDto, vendorsPayTransRPTInputDto, getTotlaBenDonationsRPTInputDto, balanceReviewRptInputDto } from '../../../dtos/FinancialDtos/Reports/FinancialReportsInput.dto';
+import { catchReceiptRptOutputDto, generalLJournalRptOutputDto, receiptRPTOutputDto, vendorsPayTransRPTOutputDto, getTotlaBenDonationsRPTOutputDto, balanceReviewRptOutputDto } from '../../../dtos/FinancialDtos/Reports/FinancialReportsOutput.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -46,19 +46,19 @@ export class FinancialReportService {
     return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
   }
 
-  getgetgltrialbalancesRPTData(params: getTotlaBenDonationsRPTInputDto): Observable<PagedResult<getTotlaBenDonationsRPTOutputDto[]>> {
+  getgetgltrialbalancesRPTData(params: balanceReviewRptInputDto): Observable<PagedResult<balanceReviewRptOutputDto[]>> {
     const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetGetGlTrialBalancesRptEndPoint}`;
-    return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
+    return this.http.post<PagedResult<balanceReviewRptOutputDto[]>>(apiUrl, params);
   }
 
-  getgetGeneralBalanceSheetRptData(params: getTotlaBenDonationsRPTInputDto): Observable<PagedResult<getTotlaBenDonationsRPTOutputDto[]>> {
+  getgetGeneralBalanceSheetRptData(params: balanceReviewRptInputDto): Observable<PagedResult<balanceReviewRptOutputDto[]>> {
     const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetGeneralBalanceSheetRptEndPoint}`;
-    return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
+    return this.http.post<PagedResult<balanceReviewRptOutputDto[]>>(apiUrl, params);
   }
 
-  getgetGeneralProLosRPTData(params: getTotlaBenDonationsRPTInputDto): Observable<PagedResult<getTotlaBenDonationsRPTOutputDto[]>> {
+  getgetGeneralProLosRPTData(params: balanceReviewRptInputDto): Observable<PagedResult<balanceReviewRptOutputDto[]>> {
     const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetGeneralProLosRptEndPoint}`;
-    return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
+    return this.http.post<PagedResult<balanceReviewRptOutputDto[]>>(apiUrl, params);
   }
 
   formatToYYYYMMDD(dateStr: string): string {

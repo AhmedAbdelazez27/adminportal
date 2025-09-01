@@ -164,3 +164,273 @@
     min-height: 350px;
   }
 }
+
+/* Shortcuts styles */
+.widjet {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.btn-remove-widjet {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: transparent;
+  padding: 4px;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  opacity: 0;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    opacity: 1;
+    background-color: rgba(202, 72, 50, 0.1);
+    transform: scale(1.1);
+  }
+  
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.widjet:hover .btn-remove-widjet {
+  opacity: 1;
+}
+
+/* Removed old shortcut-check styles as they're replaced by custom-checkbox-wrapper */
+
+.text-gold {
+  color: #8D734D !important;
+}
+
+.spinner-border.text-gold {
+  color: #8D734D !important;
+}
+
+/* Modal shortcut selection styles - Custom checkbox implementation */
+.shortcut-option {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.custom-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 15px 20px;
+  border: 2px solid #e6e6e6;
+  border-radius: 12px;
+  background-color: #fff;
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: left;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-height: 60px;
+  
+  &:hover {
+    border-color: #8D734D;
+    background-color: rgba(141, 115, 77, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  &.selected {
+    border-color: #8D734D;
+    background-color: rgba(141, 115, 77, 0.1);
+    color: #8D734D;
+    
+    .checkbox-indicator {
+      background-color: #8D734D;
+      border-color: #8D734D;
+      
+      svg {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  }
+}
+
+.custom-checkbox {
+  position: relative;
+  margin-right: 12px;
+  flex-shrink: 0;
+  
+  input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.checkbox-indicator {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  
+  svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.2s ease;
+  }
+}
+
+.shortcut-content {
+  flex: 1;
+  
+  .shortcut-text {
+    display: block;
+    line-height: 1.4;
+  }
+}
+
+.shortcut-selectable {
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: #8D734D;
+    background-color: rgba(141, 115, 77, 0.05);
+  }
+  
+  &.selected {
+    border-color: #8D734D;
+    background-color: rgba(141, 115, 77, 0.1);
+    
+    .selection-indicator {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+.selection-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background-color: #8D734D;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+/* Modal styles */
+.modal {
+  z-index: 1050;
+  
+  &.show {
+    display: block;
+  }
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+}
+
+.modal-dialog {
+  z-index: 1055;
+}
+
+/* Selection controls styles */
+.selection-info {
+  font-size: 14px;
+}
+
+.selection-controls {
+  .btn {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.help-text {
+  background-color: rgba(141, 115, 77, 0.05);
+  border-radius: 8px;
+  padding: 12px;
+  border-left: 3px solid #8D734D;
+  
+  small {
+    line-height: 1.4;
+  }
+}
+
+/* Request Summary Styles */
+.request-summary-card {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .status-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.75rem;
+  }
+  
+  .request-count {
+    font-weight: 700;
+    color: #8D734D;
+    margin-bottom: 0.25rem;
+  }
+  
+  .request-percent {
+    color: #6c757d;
+    font-size: 0.875rem;
+  }
+}
+
+/* Loading spinner styles */
+.spinner-border.text-gold {
+  color: #8D734D !important;
+}

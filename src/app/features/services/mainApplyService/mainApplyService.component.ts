@@ -14,15 +14,15 @@ import { Select2Service } from '../../../core/services/Select2.service';
 import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
 import { Pagination, FndLookUpValuesSelect2RequestDto, SelectdropdownResultResults, Select2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { MainApplyService } from '../../../core/services/mainApplyService/mainApplyService.service';
-import { AttachmentGalleryComponent } from '../../../../shared/attachment-gallery/attachment-gallery.component';
 import { ServiceDataType } from '../../../core/enum/user-type.enum';
+import { ActivatedRoute, Router } from '@angular/router';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-mainApplyService',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent, AttachmentGalleryComponent, NgSelectModule, ReactiveFormsModule
+  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent, NgSelectModule, ReactiveFormsModule
   ],
   templateUrl: './mainApplyService.component.html',
   styleUrls: ['./mainApplyService.component.scss']
@@ -121,7 +121,9 @@ export class MainApplyServiceComponent {
     private openStandardReportService: openStandardReportService,
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.rejectResonsForm = this.fb.group({
       reasonTxt: [[], Validators.required]
@@ -143,7 +145,7 @@ export class MainApplyServiceComponent {
       { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceConfirmationData' },
       { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceInqueryData' },
       { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewFastingServiceInqueryData' },
-    ];
+  ];
 
     this.serviceSearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -456,6 +458,9 @@ export class MainApplyServiceComponent {
 
   clear(): void {
     this.searchParams = new FiltermainApplyServiceDto();
+    if (this.filterForm) {
+      this.filterForm.resetForm();
+    }
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
@@ -484,6 +489,10 @@ export class MainApplyServiceComponent {
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.loadgridData = response.data || [];
+          this.loadgridData.forEach((c) => {
+            c.applyDate = this.formatDate(c.applyDate);
+          });
+
           this.pagination.totalCount = response.totalCount || 0;
 
           this.loadgridData = response.data.map((row: any) => {
@@ -864,6 +873,18 @@ export class MainApplyServiceComponent {
     );
   }
 
+  formatDate(date: Date | string | null): string {
+    if (!date) return '';
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return d.toLocaleDateString();
+  }
+
+  formatDateTime(date: Date | string | null): string {
+    if (!date) return '';
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return d.toLocaleString();
+  }
+
 
   public buildColumnDefs(): void {
     this.columnDefs = [
@@ -874,13 +895,39 @@ export class MainApplyServiceComponent {
         width: 60,
         colId: 'serialNumber'
       },
-      { headerName: this.translate.instant('mainApplyServiceResourceName.ordername'), field: 'user.name', width: 200 },
-      { headerName: this.translate.instant('mainApplyServiceResourceName.ServiceType'), field: 'service.serviceTypeName', width: 200 },
-      { headerName: this.translate.instant('mainApplyServiceResourceName.sevicet'), field: 'service.serviceName', width: 200 },
       { headerName: this.translate.instant('mainApplyServiceResourceName.RefNo'), field: 'applyNo', width: 200 },
-      { headerName: this.translate.instant('mainApplyServiceResourceName.statues'), field: 'lastStatus', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.sevicet'), field: 'service.serviceName', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.ordername'), field: 'user.foundationName', width: 200 },
       { headerName: this.translate.instant('mainApplyServiceResourceName.applydate'), field: 'applyDate', width: 200 },
+      {
+        headerName: this.translate.instant('mainApplyServiceResourceName.statues'),
+        field: 'lastStatus',
+        width: 200,
+        cellRenderer: (params: { value: any; }) => {
+          const value = params.value;
+          let color = 'black';
+
+          switch (value) {
+            case 'تم تقديم الطلب':
+              color = 'blue';
+              break;
+            case 'جاري مراجعة الطلب': 
+              color = 'orange';
+              break;
+            case 'تم رفض الطلب لسبب':
+            case 'تم رفض الطلب':  
+              color = 'red';
+              break;
+            case 'تمت الموافقة علي الطلب':
+              color = 'green';
+              break;
+          }
+
+          return `<span style="color:${color}; font-weight:600;">${value}</span>`;
+        }
+      },
     ];
+
 
     this.requestAdvertisementTargetcolumnDefs = [
       {
@@ -977,18 +1024,15 @@ export class MainApplyServiceComponent {
     }
 
     if (event.action === 'onViewServiceConfirmationData') {
-      var pagination = this.paginationrequestAdvertisementTarget.take || this.paginationrequestAdvertisementAdMethod.take || this.paginationrequestAdvertisementAdLocation.take || this.paginationrequestPlaintReason.take || this.paginationrequestPlaintevidence.take || this.paginationrequestPlaintJustification.take;
-      this.getServiceConfirmationFormDatabyId({ pageNumber: 1, pageSize: pagination }, event.row.id);
+      window.open(`/mainServices/services/serviceconfirmation/${event.row.id}`, '_blank');
     }
 
     if (event.action === 'onViewServiceInqueryData') {
-      var pagination = this.paginationrequestAdvertisementTarget.take || this.paginationrequestAdvertisementAdMethod.take || this.paginationrequestAdvertisementAdLocation.take || this.paginationrequestPlaintReason.take || this.paginationrequestPlaintevidence.take || this.paginationrequestPlaintJustification.take;
-      this.getServiceInqueryFormDatabyId({ pageNumber: 1, pageSize: pagination }, event.row.id);
+      window.open(`/mainServices/services/serviceinquery/${event.row.id}`, '_blank');
     }
 
     if (event.action === 'onViewFastingServiceInqueryData') {
-      var pagination = this.paginationrequestAdvertisementTarget.take || this.paginationrequestAdvertisementAdMethod.take || this.paginationrequestAdvertisementAdLocation.take || this.paginationrequestPlaintReason.take || this.paginationrequestPlaintevidence.take || this.paginationrequestPlaintJustification.take;
-      this.getFastingServiceInqueryFormDatabyId({ pageNumber: 1, pageSize: pagination }, event.row.id);
+      window.open(`/mainServices/services/fastingserviceinquery/${event.row.id}`, '_blank');
     }
   }
 

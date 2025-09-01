@@ -35,7 +35,6 @@
 [class*=" icon-"] {
     /* use !important to prevent issues with browser extensions that change fonts */
     font-family: 'icomoon' !important;
-    speak: never;
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
@@ -211,9 +210,12 @@ li {
 .title {
     color: var(--Color-25, #8D734D);
     font-family: 'Cairo-bold';
-    font-size: 32px;
+    font-size: 22px;
     font-style: normal;
-    line-height: 27px;
+ 
+    line-height: 20px;
+   
+ 
     letter-spacing: 0.16px;
 }
 
@@ -843,7 +845,7 @@ li {
 .add-shortcut {
     display: flex;
     width: 100%;
-    height: 184px;
+    height: 147px;
     padding: 16px;
     flex-direction: column;
     justify-content: center;
@@ -857,7 +859,10 @@ li {
     font-family: 'Cairo-bold';
     text-decoration: none;
     transition: ease 0.3s;
-    font-size: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px dashed var(--Color-25, #8D734D);
 }
 
 .add-shortcut:hover {
@@ -866,9 +871,9 @@ li {
 
 .shortcut-icon {
     display: flex;
-    width: 60px;
-    height: 60px;
-    padding: 18px;
+    width: 48px;
+    height: 48px;
+    padding: 14px;
     align-items: center;
     gap: 10px;
     flex-shrink: 0;
@@ -880,7 +885,7 @@ li {
 .widjet {
     display: flex;
     width: 100%;
-    height: 184px;
+    height: 147px;
     padding: 16px;
     flex-direction: column;
     justify-content: center;
@@ -894,7 +899,7 @@ li {
     font-family: 'Cairo-reg';
     text-decoration: none;
     transition: ease 0.3s;
-    font-size: 20px;
+    font-size: 16px;
     cursor: pointer;
 }
 
@@ -904,9 +909,9 @@ li {
 
 .widjet-icon {
     display: flex;
-    width: 60px;
-    height: 60px;
-    padding: 18px;
+    width: 48px;
+    height: 48px;
+    padding: 14px;
     align-items: center;
     gap: 10px;
     flex-shrink: 0;
@@ -998,7 +1003,7 @@ li {
 
 
 .modal-body {
-    max-height: 600px;
+    max-height: 700px;
     overflow-y: auto;
 }
 
@@ -1103,6 +1108,18 @@ li {
 
 /*=========================================================== Print ============================================================================*/
 @media print {
+
+.table-responsive{
+width: 940px !important;
+.ag-header-cell, .ag-header-group-cell, .ag-cell {
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    white-space: break-spaces !important;
+}
+}
+        
 
 
     .filter,
@@ -1925,6 +1942,52 @@ button.dropdown-item:hover {
 }
 
 
+.kpi-modern__track{
+        margin-left: 50px;
+    margin-right: 50px;
+}
+
+// .kpi-modern__card{
+//         flex: 0 0 342px !important;
+// }
+
+
+.kpi-modern__arrow{
+    padding: 0 !important;
+}
+
+
+.mt-step-number{
+    width: 40px;
+    height: 40px;
+    line-height: unset;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+}
+
+.mt-step-col.done  .mt-step-number{
+    border: 2px solid #8D734D !important;
+    color: #fff !important;
+    background-color: #8D734D !important;
+}
+
+.mt-step-col.done::after{
+    background-color: #8D734D !important;
+}
+
+
+.portlet-body{
+        width: 100%;
+    overflow-x: auto;
+    height: max-content;
+    overflow-y: clip;
+    padding:8px 0;
+}
+
+
+
 
 
 
@@ -2271,7 +2334,7 @@ button.dropdown-item:hover {
     font-family: 'Cairo-bold';
 }
 
-.btn-outline-secondary {
+.btn-s {
     display: flex;
     padding: 12px 24px;
     justify-content: center;
@@ -2652,7 +2715,7 @@ button.dropdown-item:hover {
 .add-shortcut {
     display: flex;
     width: 100%;
-    height: 184px;
+    height: 147px;
     padding: 16px;
     flex-direction: column;
     justify-content: center;
@@ -2667,6 +2730,9 @@ button.dropdown-item:hover {
     text-decoration: none;
     transition: ease 0.3s;
     font-size: 20px;
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px dashed var(--Color-25, #8D734D);
 }
 
 .add-shortcut:hover {
@@ -2689,7 +2755,7 @@ button.dropdown-item:hover {
 .widjet {
     display: flex;
     width: 100%;
-    height: 184px;
+    height: 147px;
     padding: 16px;
     flex-direction: column;
     justify-content: center;
@@ -2807,7 +2873,7 @@ button.dropdown-item:hover {
 
 
 .modal-body {
-    max-height: 600px;
+    max-height: 700px;
     overflow-y: auto;
 }
 
@@ -3745,4 +3811,32 @@ direction: rtl !important;
             left: 0 !important;
     }
 
+}
+
+// Poll links styling for brown color
+.poll-link,
+.ag-theme-alpine .ag-cell a.poll-link,
+.ag-theme-alpine .ag-cell a[href] {
+  color: #8D734D !important;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.poll-link:hover,
+.ag-theme-alpine .ag-cell a.poll-link:hover,
+.ag-theme-alpine .ag-cell a[href]:hover {
+  color: #a7895d !important;
+  text-decoration: underline;
+}
+
+.poll-link:visited,
+.ag-theme-alpine .ag-cell a.poll-link:visited,
+.ag-theme-alpine .ag-cell a[href]:visited {
+  color: #8D734D !important;
+}
+
+.poll-link:active,
+.ag-theme-alpine .ag-cell a.poll-link:active,
+.ag-theme-alpine .ag-cell a[href]:active {
+  color: #6b5a3a !important;
 }

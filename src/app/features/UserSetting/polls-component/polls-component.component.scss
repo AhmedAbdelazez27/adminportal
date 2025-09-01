@@ -1,0 +1,44 @@
+// Polls component styles
+// Add custom styles here if needed
+
+// Style for poll links in the table - using more specific selectors for AG Grid
+:host ::ng-deep .poll-link,
+:host ::ng-deep .ag-cell a.poll-link,
+:host ::ng-deep .ag-theme-alpine .ag-cell a.poll-link {
+  color: #8D734D !important;
+  text-decoration: none;
+  font-weight: 500;
+  
+  &:hover {
+    color: #a7895d !important;
+    text-decoration: underline;
+  }
+  
+  &:visited {
+    color: #8D734D !important;
+  }
+  
+  &:active {
+    color: #6b5a3a !important;
+  }
+}
+
+// Alternative approach - target all links in the polls component
+:host ::ng-deep .ag-theme-alpine .ag-cell a[href] {
+  color: #8D734D !important;
+  text-decoration: none;
+  font-weight: 500;
+  
+  &:hover {
+    color: #a7895d !important;
+    text-decoration: underline;
+  }
+  
+  &:visited {
+    color: #8D734D !important;
+  }
+  
+  &:active {
+    color: #6b5a3a !important;
+  }
+}

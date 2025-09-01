@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="title">{{ 'ENTITY.TITLE' | translate }}</h1>
-    <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#Entity" (click)="openAddModal()">
+    <button class="btn btn-gold" (click)="openAddModal()">
       {{ 'ENTITY.ADD_NEW' | translate }}
     </button>
   </div>
@@ -33,7 +33,7 @@
         <div class="row mb-3">
           <div class="col-xl-4 mb-3">
             <label for="searchName" class="form-label">{{ 'AuthenticationResorceName.searchName' | translate }}</label>
-            <input type="text" class="form-control" id="searchName" placeholder="Search by Arabic or English name"
+            <input type="text" class="form-control" id="searchName" placeholder="{{ 'AuthenticationResorceName.searchPlaceholder' | translate }}"
                    [(ngModel)]="searchValue">
           </div>
         </div>
@@ -44,14 +44,14 @@
               <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
                     fill="#5B5B5B" />
             </svg>
-            Clear
+            {{ 'COMMON.CLEAR' | translate }}
           </button>
           <button class="btn btn-gold" (click)="onSearch()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
                     fill="white" />
             </svg>
-            Apply
+            {{ 'COMMON.APPLY' | translate }}
           </button>
         </div>
       </div>
@@ -66,6 +66,8 @@
       <span class="visually-hidden">{{ 'AuthenticationResorceName.loading' | translate }}</span>
     </div>
   </div>
+
+
 
   <app-generic-data-table [columnDefs]="columnDefs"
                           [rowData]="loadgridData"
@@ -90,7 +92,7 @@
           {{ mode === 'add' ? ('ENTITY.ADD_NEW' | translate) : mode === 'edit' ? ('ENTITY.EDIT' | translate) :
           ('ENTITY.VIEW' | translate) }}
         </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
       </div>
       <form [formGroup]="entityForm" (ngSubmit)="submit()">
         <div class="modal-body">
@@ -110,118 +112,304 @@
 
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="entitY_NAME" class="form-label">
+              <label for="ENTITY_NAME" class="form-label">
                 {{ 'ENTITY.ARABIC_NAME' | translate }} *
               </label>
-              <input type="text" class="form-control" id="entitY_NAME" formControlName="entitY_NAME" maxlength="4000"
-                [class.is-invalid]="isFieldInvalid('entitY_NAME')" [class.is-valid]="isFieldValid('entitY_NAME')"
-                placeholder="{{ 'ENTITY.ENTER_ARABIC_NAME' | translate }}" (blur)="onFieldBlur('entitY_NAME')">
-              <div class="invalid-feedback" *ngIf="isFieldInvalid('entitY_NAME')">
-                {{ getFieldError('entitY_NAME') }}
+              <input type="text" class="form-control" id="ENTITY_NAME" formControlName="ENTITY_NAME" maxlength="4000"
+                [class.is-invalid]="isFieldInvalid('ENTITY_NAME')" [class.is-valid]="isFieldValid('ENTITY_NAME')"
+                placeholder="{{ 'ENTITY.ENTER_ARABIC_NAME' | translate }}" (blur)="onFieldBlur('ENTITY_NAME')">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('ENTITY_NAME')">
+                {{ getFieldError('ENTITY_NAME') }}
               </div>
-              <div class="valid-feedback" *ngIf="isFieldValid('entitY_NAME')">
+              <div class="valid-feedback" *ngIf="isFieldValid('ENTITY_NAME')">
                 {{ 'VALIDATION.LOOKS_GOOD' | translate }}
               </div>
             </div>
             <div class="col-md-6 mb-3">
-              <label for="entitY_NAME_EN" class="form-label">
+              <label for="ENTITY_NAME_EN" class="form-label">
                 {{ 'ENTITY.ENGLISH_NAME' | translate }} *
               </label>
-              <input type="text" class="form-control" id="entitY_NAME_EN" formControlName="entitY_NAME_EN"
-                maxlength="4000" [class.is-invalid]="isFieldInvalid('entitY_NAME_EN')"
-                [class.is-valid]="isFieldValid('entitY_NAME_EN')"
-                placeholder="{{ 'ENTITY.ENTER_ENGLISH_NAME' | translate }}" (blur)="onFieldBlur('entitY_NAME_EN')">
-              <div class="invalid-feedback" *ngIf="isFieldInvalid('entitY_NAME_EN')">
-                {{ getFieldError('entitY_NAME_EN') }}
+              <input type="text" class="form-control" id="ENTITY_NAME_EN" formControlName="ENTITY_NAME_EN"
+                maxlength="4000" [class.is-invalid]="isFieldInvalid('ENTITY_NAME_EN')"
+                [class.is-valid]="isFieldValid('ENTITY_NAME_EN')"
+                placeholder="{{ 'ENTITY.ENTER_ENGLISH_NAME' | translate }}" (blur)="onFieldBlur('ENTITY_NAME_EN')">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('ENTITY_NAME_EN')">
+                {{ getFieldError('ENTITY_NAME_EN') }}
               </div>
-              <div class="valid-feedback" *ngIf="isFieldValid('entitY_NAME_EN')">
+              <div class="valid-feedback" *ngIf="isFieldValid('ENTITY_NAME_EN')">
                 {{ 'VALIDATION.LOOKS_GOOD' | translate }}
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="entitY_LOCALTION" class="form-label">
+              <label for="ENTITY_LOCALTION" class="form-label">
                 {{ 'ENTITY.LOCATION' | translate }}
               </label>
-              <input type="text" class="form-control" id="entitY_LOCALTION" formControlName="entitY_LOCALTION"
-                maxlength="4000" [class.is-invalid]="isFieldInvalid('entitY_LOCALTION')"
-                [class.is-valid]="isFieldValid('entitY_LOCALTION')"
-                placeholder="{{ 'ENTITY.ENTER_LOCATION' | translate }}" (blur)="onFieldBlur('entitY_LOCALTION')">
-              <div class="invalid-feedback" *ngIf="isFieldInvalid('entitY_LOCALTION')">
-                {{ getFieldError('entitY_LOCALTION') }}
+              <input type="text" class="form-control" id="ENTITY_LOCALTION" formControlName="ENTITY_LOCALTION"
+                maxlength="4000" [class.is-invalid]="isFieldInvalid('ENTITY_LOCALTION')"
+                [class.is-valid]="isFieldValid('ENTITY_LOCALTION')"
+                placeholder="{{ 'ENTITY.ENTER_LOCATION' | translate }}" (blur)="onFieldBlur('ENTITY_LOCALTION')">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('ENTITY_LOCALTION')">
+                {{ getFieldError('ENTITY_LOCALTION') }}
               </div>
-              <div class="valid-feedback" *ngIf="isFieldValid('entitY_LOCALTION')">
+              <div class="valid-feedback" *ngIf="isFieldValid('ENTITY_LOCALTION')">
                 {{ 'VALIDATION.LOOKS_GOOD' | translate }}
               </div>
             </div>
             <div class="col-md-6 mb-3">
-              <label for="entitY_PHONE" class="form-label">
+              <label for="ENTITY_PHONE" class="form-label">
                 {{ 'ENTITY.PHONE' | translate }}
               </label>
-              <input type="tel" class="form-control" id="entitY_PHONE" formControlName="entitY_PHONE" maxlength="100"
-                [class.is-invalid]="isFieldInvalid('entitY_PHONE')" [class.is-valid]="isFieldValid('entitY_PHONE')"
-                placeholder="{{ 'ENTITY.ENTER_PHONE' | translate }}" (blur)="onFieldBlur('entitY_PHONE')">
-              <div class="invalid-feedback" *ngIf="isFieldInvalid('entitY_PHONE')">
-                {{ getFieldError('entitY_PHONE') }}
+              <input type="tel" class="form-control" id="ENTITY_PHONE" formControlName="ENTITY_PHONE" maxlength="100"
+                [class.is-invalid]="isFieldInvalid('ENTITY_PHONE')" [class.is-valid]="isFieldValid('ENTITY_PHONE')"
+                placeholder="{{ 'ENTITY.ENTER_PHONE' | translate }}" (blur)="onFieldBlur('ENTITY_PHONE')">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('ENTITY_PHONE')">
+                {{ getFieldError('ENTITY_PHONE') }}
               </div>
-              <div class="valid-feedback" *ngIf="isFieldValid('entitY_PHONE')">
+              <div class="valid-feedback" *ngIf="isFieldValid('ENTITY_PHONE')">
                 {{ 'VALIDATION.LOOKS_GOOD' | translate }}
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="entitY_WEBSITE" class="form-label">
+              <label for="ENTITY_WEBSITE" class="form-label">
                 {{ 'ENTITY.WEBSITE' | translate }}
               </label>
-              <input type="url" class="form-control" id="entitY_WEBSITE" formControlName="entitY_WEBSITE"
-                maxlength="100" [class.is-invalid]="isFieldInvalid('entitY_WEBSITE')"
-                [class.is-valid]="isFieldValid('entitY_WEBSITE')" placeholder="{{ 'ENTITY.ENTER_WEBSITE' | translate }}"
-                (blur)="onFieldBlur('entitY_WEBSITE')">
-              <div class="invalid-feedback" *ngIf="isFieldInvalid('entitY_WEBSITE')">
-                {{ getFieldError('entitY_WEBSITE') }}
+              <input type="url" class="form-control" id="ENTITY_WEBSITE" formControlName="ENTITY_WEBSITE"
+                maxlength="100" [class.is-invalid]="isFieldInvalid('ENTITY_WEBSITE')"
+                [class.is-valid]="isFieldValid('ENTITY_WEBSITE')" placeholder="{{ 'ENTITY.ENTER_WEBSITE' | translate }}"
+                (blur)="onFieldBlur('ENTITY_WEBSITE')">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('ENTITY_WEBSITE')">
+                {{ getFieldError('ENTITY_WEBSITE') }}
               </div>
-              <div class="valid-feedback" *ngIf="isFieldValid('entitY_WEBSITE')">
+              <div class="valid-feedback" *ngIf="isFieldValid('ENTITY_WEBSITE')">
                 {{ 'VALIDATION.LOOKS_GOOD' | translate }}
               </div>
             </div>
             <div class="col-md-6 mb-3">
-              <label for="entitY_MAIL" class="form-label">
+              <label for="ENTITY_MAIL" class="form-label">
                 {{ 'ENTITY.EMAIL' | translate }}
               </label>
-              <input type="email" class="form-control" id="entitY_MAIL" formControlName="entitY_MAIL" maxlength="100"
-                [class.is-invalid]="isFieldInvalid('entitY_MAIL')" [class.is-valid]="isFieldValid('entitY_MAIL')"
-                placeholder="{{ 'ENTITY.ENTER_EMAIL' | translate }}" (blur)="onFieldBlur('entitY_MAIL')">
-              <div class="invalid-feedback" *ngIf="isFieldInvalid('entitY_MAIL')">
-                {{ getFieldError('entitY_MAIL') }}
+              <input type="email" class="form-control" id="ENTITY_MAIL" formControlName="ENTITY_MAIL" maxlength="100"
+                [class.is-invalid]="isFieldInvalid('ENTITY_MAIL')" [class.is-valid]="isFieldValid('ENTITY_MAIL')"
+                placeholder="{{ 'ENTITY.ENTER_EMAIL' | translate }}" (blur)="onFieldBlur('ENTITY_MAIL')">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('ENTITY_MAIL')">
+                {{ getFieldError('ENTITY_MAIL') }}
               </div>
-              <div class="valid-feedback" *ngIf="isFieldValid('entitY_MAIL')">
+              <div class="valid-feedback" *ngIf="isFieldValid('ENTITY_MAIL')">
                 {{ 'VALIDATION.LOOKS_GOOD' | translate }}
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="acC_DETAILS_ID" class="form-label">
+              <label for="ACC_DETAILS_ID" class="form-label">
                 {{ 'ENTITY.ACCOUNT_DETAILS' | translate }}
               </label>
-              <ng-select id="acC_DETAILS_ID" formControlName="acC_DETAILS_ID" [items]="accountDetailsOptions"
+              <ng-select id="ACC_DETAILS_ID" formControlName="ACC_DETAILS_ID" [items]="accountDetailsOptions"
                 bindLabel="text" bindValue="id" [placeholder]="'ENTITY.SELECT_ACCOUNT_DETAILS' | translate"
-                [clearable]="true" [searchable]="true" [class.is-invalid]="isFieldInvalid('acC_DETAILS_ID')"
-                [class.is-valid]="isFieldValid('acC_DETAILS_ID')">
+                [clearable]="true" [searchable]="true" [class.is-invalid]="isFieldInvalid('ACC_DETAILS_ID')"
+                [class.is-valid]="isFieldValid('ACC_DETAILS_ID')">
               </ng-select>
-              <div class="invalid-feedback" *ngIf="isFieldInvalid('acC_DETAILS_ID')">
-                {{ getFieldError('acC_DETAILS_ID') }}
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('ACC_DETAILS_ID')">
+                {{ getFieldError('ACC_DETAILS_ID') }}
               </div>
-              <div class="valid-feedback" *ngIf="isFieldValid('acC_DETAILS_ID')">
+              <div class="valid-feedback" *ngIf="isFieldValid('ACC_DETAILS_ID')">
                 {{ 'VALIDATION.LOOKS_GOOD' | translate }}
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="IsShowInPortal" class="form-label">
+                {{ 'ENTITY.SHOW_IN_PORTAL' | translate }}
+              </label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="IsShowInPortal" formControlName="IsShowInPortal">
+                <label class="form-check-label" for="IsShowInPortal">
+                  {{ 'ENTITY.SHOW_IN_PORTAL_DESC' | translate }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description Fields -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="DescriptionAr" class="form-label">
+                {{ 'ENTITY.DESCRIPTION_AR' | translate }}
+              </label>
+              <textarea class="form-control" id="DescriptionAr" formControlName="DescriptionAr" rows="3"
+                maxlength="4000" [class.is-invalid]="isFieldInvalid('DescriptionAr')"
+                [class.is-valid]="isFieldValid('DescriptionAr')"
+                placeholder="{{ 'ENTITY.ENTER_DESCRIPTION_AR' | translate }}"></textarea>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('DescriptionAr')">
+                {{ getFieldError('DescriptionAr') }}
+              </div>
+              <div class="valid-feedback" *ngIf="isFieldValid('DescriptionAr')">
+                {{ 'VALIDATION.LOOKS_GOOD' | translate }}
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="DescriptionEn" class="form-label">
+                {{ 'ENTITY.DESCRIPTION_EN' | translate }}
+              </label>
+              <textarea class="form-control" id="DescriptionEn" formControlName="DescriptionEn" rows="3"
+                maxlength="4000" [class.is-invalid]="isFieldInvalid('DescriptionEn')"
+                [class.is-valid]="isFieldValid('DescriptionEn')"
+                placeholder="{{ 'ENTITY.ENTER_DESCRIPTION_EN' | translate }}"></textarea>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('DescriptionEn')">
+                {{ getFieldError('DescriptionEn') }}
+              </div>
+              <div class="valid-feedback" *ngIf="isFieldValid('DescriptionEn')">
+                {{ 'VALIDATION.LOOKS_GOOD' | translate }}
+              </div>
+            </div>
+          </div>
+
+          <!-- File Upload Section -->
+          <div class="row" *ngIf="mode !== 'view'">
+            <div class="col-xl-12 mb-3">
+              <div class="file-upload-section">
+                <!-- Enhanced Existing Image Display for Edit Mode -->
+                <div *ngIf="existingImageUrl && mode === 'edit'" class="existing-image-container mb-3">
+                  <div class="image-header">
+                    <div class="image-info">
+                      <i class="fas fa-check-circle text-success me-2"></i>
+                      <span class="text-success fw-bold">{{ 'FILE.CURRENT_IMAGE' | translate }}</span>
+                    </div>
+                    <div class="image-actions">
+                      <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeExistingImage()">
+                        <i class="fas fa-trash"></i> {{ 'FILE.REMOVE' | translate }}
+                      </button>
+                    </div>
+                  </div>
+                  <div class="image-preview-container">
+                    <img [src]="existingImageUrl" alt="Current Entity Image" class="enhanced-img-preview"
+                      (error)="onImageError($event)" (load)="onImageLoad($event)">
+                    <div class="image-overlay">
+                      <div class="image-actions-overlay">
+                        <button type="button" class="btn btn-sm btn-light" (click)="openImageInNewTab()">
+                          <i class="fas fa-external-link-alt"></i> {{ 'FILE.VIEW_FULL' | translate }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Enhanced File Input Area -->
+                <div class="file-input-container">
+                  <div class="file-drop-zone" [class.has-file]="selectedFile || (existingImageUrl && mode === 'edit')"
+                    [class.is-dragover]="isDragOver" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+                    (drop)="onDrop($event)">
+                    <div class="file-drop-content">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="41" viewBox="0 0 40 41" fill="none">
+                        <path d="M34.167 16.9999H29.3503C25.4003 16.9999 22.1837 13.7832 22.1837 9.83319V5.01652C22.1837 4.09985 21.4337 3.34985 20.517 3.34985H13.4503C8.31699 3.34985 4.16699 6.68319 4.16699 12.6332V27.3999C4.16699 33.3499 8.31699 36.6832 13.4503 36.6832H26.5503C31.6837 36.6832 35.8337 33.3499 35.8337 27.3999V18.6665C35.8337 17.7499 35.0837 16.9999 34.167 16.9999ZM19.217 22.5665C18.967 22.8165 18.6503 22.9332 18.3337 22.9332C18.017 22.9332 17.7003 22.8165 17.4503 22.5665L16.2503 21.3665V28.3499C16.2503 29.0332 15.6837 29.5999 15.0003 29.5999C14.317 29.5999 13.7503 29.0332 13.7503 28.3499V21.3665L12.5503 22.5665C12.067 23.0499 11.267 23.0499 10.7837 22.5665C10.3003 22.0832 10.3003 21.2832 10.7837 20.7999L14.117 17.4665C14.2337 17.3665 14.3503 17.2832 14.4837 17.2165C14.517 17.1999 14.567 17.1832 14.6003 17.1665C14.7003 17.1332 14.8003 17.1165 14.917 17.0999C14.967 17.0999 15.0003 17.0999 15.0503 17.0999C15.1837 17.0999 15.317 17.1332 15.4503 17.1832C15.467 17.1832 15.467 17.1832 15.4837 17.1832C15.617 17.2332 15.7503 17.3332 15.8503 17.4332C15.867 17.4499 15.8837 17.4499 15.8837 17.4665L19.217 20.7999C19.7003 21.2832 19.7003 22.0832 19.217 22.5665Z" fill="#CDAD5F"/>
+                        <path d="M29.0501 14.7C30.6335 14.7167 32.8335 14.7167 34.7168 14.7167C35.6668 14.7167 36.1668 13.6 35.5001 12.9333C33.1001 10.5167 28.8001 6.16667 26.3335 3.7C25.6501 3.01667 24.4668 3.48334 24.4668 4.43334V10.25C24.4668 12.6833 26.5335 14.7 29.0501 14.7Z" fill="#CDAD5F"/>
+                      </svg>
+                      <h6 class="file-upload-title">
+                        {{ selectedFile ? ('FILE.FILE_SELECTED' | translate) : (existingImageUrl && mode === 'edit' ? ('FILE.CURRENT_IMAGE_AVAILABLE' | translate) : ('FILE.DROP_IMAGE_HERE' | translate)) }}
+                      </h6>
+                    </div>
+                    <input type="file" class="form-control file-input" id="entityImage"
+                      accept=".jpg,.jpeg,.png,.pdf" (change)="onFileSelected($event)">
+                    <label for="entityImage" class="form-label">
+                      {{ 'FILE.OR_CLICK_TO_BROWSE' | translate }}
+                    </label>
+                  </div>
+                </div>
+                <div class="file-requirements">
+                  <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    {{ 'FILE.SUPPORTED_FORMATS' | translate }}
+                  </small>
+                </div>
+
+                <!-- Enhanced New File Preview -->
+                <div *ngIf="filePreview" class="new-file-preview mt-3">
+                  <div class="preview-header mb-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M17.7082 7.62506C15.7832 4.60006 12.9665 2.8584 9.99984 2.8584C8.5165 2.8584 7.07484 3.29173 5.75817 4.10007C4.4415 4.91673 3.25817 6.1084 2.2915 7.62506C1.45817 8.9334 1.45817 11.0584 2.2915 12.3667C4.2165 15.4001 7.03317 17.1334 9.99984 17.1334C11.4832 17.1334 12.9248 16.7001 14.2415 15.8917C15.5582 15.0751 16.7415 13.8834 17.7082 12.3667C18.5415 11.0667 18.5415 8.9334 17.7082 7.62506ZM9.99984 13.3667C8.13317 13.3667 6.63317 11.8584 6.63317 10.0001C6.63317 8.14173 8.13317 6.6334 9.99984 6.6334C11.8665 6.6334 13.3665 8.14173 13.3665 10.0001C13.3665 11.8584 11.8665 13.3667 9.99984 13.3667Z" fill="#5B5B5B"/>
+                        <path d="M10 7.6167C8.69167 7.6167 7.625 8.68337 7.625 10C7.625 11.3084 8.69167 12.375 10 12.375C11.3083 12.375 12.3833 11.3084 12.3833 10C12.3833 8.6917 11.3083 7.6167 10 7.6167Z" fill="#5B5B5B"/>
+                      </svg>
+                      <span class="">{{ 'FILE.NEW_FILE_PREVIEW' | translate }}</span>
+                    </div>
+                    <div class="preview-actions">
+                                              <button type="button" class="btn btn-sm btn-outline-success me-2"
+                          (click)="confirmFileSelection()">
+                          <i class="fas fa-check"></i> {{ 'FILE.CONFIRM' | translate }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeFile()">
+                          <i class="fas fa-times"></i> {{ 'FILE.REMOVE_FILE' | translate }}
+                        </button>
+                    </div>
+                  </div>
+                  <div class="preview-container">
+                    <img [src]="filePreview" alt="File Preview" class="enhanced-img-preview" style="width: 100%;">
+                  </div>
+                </div>
+
+                <!-- File Upload Progress (if needed) -->
+                <div *ngIf="uploadProgress > 0 && uploadProgress < 100" class="upload-progress mt-3">
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                      [style.width.%]="uploadProgress" [attr.aria-valuenow]="uploadProgress" aria-valuemin="0"
+                      aria-valuemax="100">
+                      {{ uploadProgress }}%
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Enhanced Validation Messages -->
+                <div class="validation-messages mt-2">
+                  <div *ngIf="fileValidationErrors.length > 0" class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <ul class="mb-0">
+                      <li *ngFor="let error of fileValidationErrors">{{ error }}</li>
+                    </ul>
+                  </div>
+                  <div *ngIf="fileValidationSuccess" class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {{ 'FILE.FILE_VALID_READY' | translate }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Enhanced File Display Section for View Mode -->
+          <div class="row" *ngIf="mode === 'view'">
+            <div class="col-xl-12 mb-3">
+              <div class="view-image-section">
+                <label class="form-label">
+                  <i class="fas fa-image me-2"></i>{{ 'ENTITY.IMAGE' | translate }}
+                </label>
+                
+                <!-- Show image if available -->
+                <div *ngIf="existingImageUrl" class="view-image-container">
+                  <img [src]="existingImageUrl" alt="Entity Image" class="enhanced-img-preview view-mode"
+                    (error)="onImageError($event)" (load)="onImageLoad($event)">
+                  <div class="view-image-overlay">
+                    <button type="button" class="btn btn-sm btn-light" (click)="openImageInNewTab()">
+                      <i class="fas fa-external-link-alt"></i> {{ 'FILE.VIEW_FULL' | translate }}
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Show message if no image -->
+                <div *ngIf="!existingImageUrl" class="no-image-message">
+                  <div class="text-center p-4">
+                    <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                    <p class="text-muted mb-0">{{ 'ENTITY.NO_IMAGE' | translate }}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer" *ngIf="mode !== 'view'">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">
             {{ 'COMMON.CANCEL' | translate }}
           </button>
           <button type="submit" class="btn btn-gold" [disabled]="submitted || !areMandatoryFieldsValid()">
@@ -229,7 +417,7 @@
           </button>
         </div>
         <div class="modal-footer" *ngIf="mode === 'view'">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">
             {{ 'COMMON.CLOSE' | translate }}
           </button>
         </div>
@@ -244,18 +432,50 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="deleteEntityModalLabel">{{ 'COMMON.CONFIRM' | translate }} {{ 'COMMON.DELETE' |
-          translate }}</h5>
-        <button type="button" class="btn-close btn-delete" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="deleteEntityModalLabel">{{ 'COMMON.DELETE_CONFIRMATION' | translate }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>{{ 'ENTITY.DELETE_CONFIRMATION' | translate }}</p>
+        <div *ngIf="selectedEntityObject" class="delete-confirmation-details">
+          <strong>{{ 'ENTITY.ARABIC_NAME' | translate }}:</strong> {{ selectedEntityObject.ENTITY_NAME || 'N/A' }}<br>
+          <strong>{{ 'ENTITY.ENGLISH_NAME' | translate }}:</strong> {{ selectedEntityObject.ENTITY_NAME_EN || 'N/A' }}<br>
+          <strong>{{ 'ENTITY.LOCATION' | translate }}:</strong> {{ selectedEntityObject.ENTITY_LOCALTION || 'N/A' }}<br>
+          <strong>{{ 'ENTITY.PHONE' | translate }}:</strong> {{ selectedEntityObject.ENTITY_PHONE || 'N/A' }}<br>
+          <strong>{{ 'ENTITY.WEBSITE' | translate }}:</strong> {{ selectedEntityObject.ENTITY_WEBSITE || 'N/A' }}<br>
+          <strong>{{ 'ENTITY.EMAIL' | translate }}:</strong> {{ selectedEntityObject.ENTITY_MAIL || 'N/A' }}<br>
+          <strong>{{ 'ENTITY.ACCOUNT_DETAILS' | translate }}:</strong> {{ getAccountDetailsName(selectedEntityObject.ACC_DETAILS_ID || '') }}<br>
+          <strong>{{ 'ENTITY.STATUS' | translate }}:</strong> {{ selectedEntityObject.IsShowInPortal ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
+        </div>
+        <p class="text-danger mt-3">{{ 'COMMON.ACTION_CANNOT_BE_UNDONE' | translate }}</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary btn-delete" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-outline" (click)="closeDeleteModal()">
           {{ 'COMMON.CANCEL' | translate }}
         </button>
-        <button type="button" class="btn btn-danger" (click)="deleteEntity()">
+        <button type="button" class="btn btn-danger" (click)="deleteEntity()" data-bs-dismiss="modal">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Attachment Confirmation Modal -->
+<div class="modal fade" id="deleteAttachmentModal" tabindex="-1" aria-labelledby="deleteAttachmentModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteAttachmentModalLabel">{{ 'FILE.DELETE_ATTACHMENT_CONFIRM' | translate }}</h5>
+        <button type="button" class="btn-close" (click)="closeDeleteAttachmentModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ 'FILE.DELETE_ATTACHMENT_CONFIRM' | translate }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeDeleteAttachmentModal()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="button" class="btn btn-danger" (click)="confirmDeleteAttachment()">
           {{ 'COMMON.DELETE' | translate }}
         </button>
       </div>

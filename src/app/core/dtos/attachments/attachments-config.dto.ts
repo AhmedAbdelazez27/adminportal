@@ -72,4 +72,8 @@ export enum AttachmentsConfigType {
   RequestADistributionSitePermit = 1001,
   LocationImage = 1002,
   Comment = 1003,
+  Partner = 1004,
+  Entity = 1005,
+  Initiative = 1006,
+  HeroSection = 1007,
 }

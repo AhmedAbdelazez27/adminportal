@@ -1,0 +1,409 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="title">{{ 'HERO_SECTION_SETTING.TITLE' | translate }}</h1>
+    <div>
+      <button class="btn btn-gold" (click)="openAddModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM18 12.75H12.75V18C12.75 18.41 12.41 18.75 12 18.75C11.59 18.75 11.25 18.41 11.25 18V12.75H6C5.59 12.75 5.25 12.41 5.25 12C5.25 11.59 5.59 11.25 6 11.25H11.25V6C11.25 5.59 11.59 5.25 12 5.25C12.41 5.25 12.75 5.59 12.75 6V11.25H18C18.41 11.25 18.75 11.59 18.75 12C18.75 12.41 18.41 12.75 18 12.75Z" fill="white"/>
+</svg> 
+{{ 'HERO_SECTION_SETTING.ADD_NEW' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filter mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="filter-title mb-0">{{ 'Common.SearchTitle' | translate }}</h4>
+      <button class="btn btn-filter" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilterTab">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z"
+            fill="" />
+          <path
+            d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z"
+            fill="" />
+          <path
+            d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z"
+            fill="" />
+          <path
+            d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z"
+            fill="" />
+          <path
+            d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z"
+            fill="" />
+          <path
+            d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z"
+            fill="" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="collapse" id="collapseFilterTab">
+      <div class="card card-body">
+        <div class="row mb-3">
+          <div class="col-xl-6 mb-3">
+            <label for="searchName" class="form-label">{{ 'HERO_SECTION_SETTING.SEARCH_NAME' | translate }}</label>
+            <input type="text" class="form-control" id="searchName"
+              placeholder="{{ 'HERO_SECTION_SETTING.SEARCH_PLACEHOLDER' | translate }}" [(ngModel)]="searchValue"
+              name="searchName">
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-center">
+          <button class="btn btn-outline" (click)="clear()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
+                fill="#5B5B5B" />
+            </svg>
+            {{ 'Common.Clear' | translate }}
+          </button>
+          <button class="btn btn-gold" (click)="onSearch(searchValue)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+                fill="white" />
+            </svg>
+            {{ 'Common.Search' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generic Data Table -->
+  <app-generic-data-table [columnDefs]="columnDefs" [rowData]="heroSectionSettings" [totalCount]="totalCount"
+    [pageSize]="pageSize" [currentPage]="currentPage" [showActionColumn]="true" [rowActions]="rowActions"
+    (actionClick)="onActionClick($event)" (pageChange)="onPageChange($event)" (search)="onSearch($event)">
+  </app-generic-data-table>
+
+  <!-- Hero Section Modal -->
+  <div class="modal fade" id="heroSectionModal" tabindex="-1" aria-labelledby="heroSectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="heroSectionModalLabel">
+            {{ mode === 'add' ? ('HERO_SECTION_SETTING.ADD_NEW' | translate) : mode === 'edit' ? ('HERO_SECTION_SETTING.EDIT' | translate) :
+            ('HERO_SECTION_SETTING.VIEW' | translate) }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" [attr.aria-label]="'COMMON.CLOSE' | translate"></button>
+        </div>
+
+        <form [formGroup]="heroSectionForm" (ngSubmit)="submit()">
+          <div class="modal-body">
+            <!-- Basic Information -->
+            <div class="row">
+              <div class="col-xl-6 mb-3">
+                <label for="titleAr" class="form-label">{{ 'HERO_SECTION_SETTING.TITLE_AR' | translate }}</label>
+                <input type="text" id="titleAr" class="form-control"
+                  [ngClass]="{'is-invalid': heroSectionForm.get('titleAr')?.invalid && (heroSectionForm.get('titleAr')?.touched || submitted)}"
+                  formControlName="titleAr" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_TITLE_AR' | translate }}">
+                <div class="invalid-feedback" *ngIf="heroSectionForm.get('titleAr')?.invalid && (heroSectionForm.get('titleAr')?.touched || submitted)">
+                  <div *ngIf="heroSectionForm.get('titleAr')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                  <div *ngIf="heroSectionForm.get('titleAr')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' | translate: {max: 200} }}</div>
+                </div>
+              </div>
+
+              <div class="col-xl-6 mb-3">
+                <label for="titleEn" class="form-label">{{ 'HERO_SECTION_SETTING.TITLE_EN' | translate }}</label>
+                <input type="text" id="titleEn" class="form-control"
+                  [ngClass]="{'is-invalid': heroSectionForm.get('titleEn')?.invalid && (heroSectionForm.get('titleEn')?.touched || submitted)}"
+                  formControlName="titleEn" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_TITLE_EN' | translate }}">
+                <div class="invalid-feedback" *ngIf="heroSectionForm.get('titleEn')?.invalid && (heroSectionForm.get('titleEn')?.touched || submitted)">
+                  <div *ngIf="heroSectionForm.get('titleEn')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                  <div *ngIf="heroSectionForm.get('titleEn')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' | translate: {max: 200} }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xl-6 mb-3">
+                <label for="descriptionAr" class="form-label">{{ 'HERO_SECTION_SETTING.DESCRIPTION_AR' | translate }}</label>
+                <textarea id="descriptionAr" class="form-control" rows="4"
+                  [ngClass]="{'is-invalid': heroSectionForm.get('descriptionAr')?.invalid && (heroSectionForm.get('descriptionAr')?.touched || submitted)}"
+                  formControlName="descriptionAr" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_DESCRIPTION_AR' | translate }}"></textarea>
+                <div class="invalid-feedback" *ngIf="heroSectionForm.get('descriptionAr')?.invalid && (heroSectionForm.get('descriptionAr')?.touched || submitted)">
+                  <div *ngIf="heroSectionForm.get('descriptionAr')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                  <div *ngIf="heroSectionForm.get('descriptionAr')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' | translate: {max: 1000} }}</div>
+                </div>
+              </div>
+
+              <div class="col-xl-6 mb-3">
+                <label for="descriptionEn" class="form-label">{{ 'HERO_SECTION_SETTING.DESCRIPTION_EN' | translate }}</label>
+                <textarea id="descriptionEn" class="form-control" rows="4"
+                  [ngClass]="{'is-invalid': heroSectionForm.get('descriptionEn')?.invalid && (heroSectionForm.get('descriptionEn')?.touched || submitted)}"
+                  formControlName="descriptionEn" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_DESCRIPTION_EN' | translate }}"></textarea>
+                <div class="invalid-feedback" *ngIf="heroSectionForm.get('descriptionEn')?.invalid && (heroSectionForm.get('descriptionEn')?.touched || submitted)">
+                  <div *ngIf="heroSectionForm.get('descriptionEn')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                  <div *ngIf="heroSectionForm.get('descriptionEn')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' | translate: {max: 1000} }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xl-6 mb-3">
+                <label for="link" class="form-label">{{ 'HERO_SECTION_SETTING.LINK' | translate }}</label>
+                <input type="url" id="link" class="form-control"
+                  [ngClass]="{'is-invalid': heroSectionForm.get('link')?.invalid && (heroSectionForm.get('link')?.touched || submitted)}"
+                  formControlName="link" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_LINK' | translate }}">
+                <div class="invalid-feedback" *ngIf="heroSectionForm.get('link')?.invalid && (heroSectionForm.get('link')?.touched || submitted)">
+                  {{ getFieldError('link') }}
+                </div>
+              </div>
+
+              <div class="col-xl-3 mb-3">
+                <label for="viewOrder" class="form-label">{{ 'HERO_SECTION_SETTING.VIEW_ORDER' | translate }}</label>
+                <input type="number" id="viewOrder" class="form-control"
+                  [ngClass]="{'is-invalid': heroSectionForm.get('viewOrder')?.invalid && (heroSectionForm.get('viewOrder')?.touched || submitted)}"
+                  formControlName="viewOrder" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_VIEW_ORDER' | translate }}">
+                <div class="invalid-feedback" *ngIf="heroSectionForm.get('viewOrder')?.invalid && (heroSectionForm.get('viewOrder')?.touched || submitted)">
+                  <div *ngIf="heroSectionForm.get('viewOrder')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
+                  <div *ngIf="heroSectionForm.get('viewOrder')?.errors?.['min']">{{ 'VALIDATION.MIN_VALUE' | translate: {min: 0} }}</div>
+                </div>
+              </div>
+
+              <div class="col-xl-6 mb-3">
+                <label for="isActive" class="form-label">{{ 'HERO_SECTION_SETTING.STATUS' | translate }}</label>
+                <!-- Show checkbox for edit/add mode -->
+                <div class="form-check form-switch" *ngIf="mode !== 'view'">
+                  <input class="form-check-input" type="checkbox" id="isActive" formControlName="isActive">
+                  <label class="form-check-label" for="isActive">
+                    {{ 'HERO_SECTION_SETTING.ACTIVE' | translate }}
+                  </label>
+                </div>
+                <!-- Show badge for view mode -->
+                <div *ngIf="mode === 'view'">
+                  <span class="badge" [ngClass]="heroSectionForm.get('isActive')?.value ? 'status-approved' : 'status-rejected'">
+                    {{ heroSectionForm.get('isActive')?.value ? 'Active' : 'Inactive' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- File Upload Section -->
+            <div class="row" *ngIf="mode !== 'view'">
+              <div class="col-xl-12 mb-3">
+                <div class="file-upload-section">
+                 
+
+                  <!-- Enhanced Existing Image Display for Edit Mode -->
+                  <div *ngIf="existingImageUrl && mode === 'edit'" class="existing-image-container mb-3">
+                    <div class="image-header">
+                      <div class="image-info">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <span class="text-success fw-bold">{{ 'HERO_SECTION_SETTING.CURRENT_IMAGE' | translate }}</span>
+                      </div>
+                      <div class="image-actions">
+                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeExistingImage()">
+                          <i class="fas fa-trash"></i> {{ 'HERO_SECTION_SETTING.REMOVE' | translate }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteAttachment()">
+                          <i class="fas fa-trash-alt"></i> {{ 'HERO_SECTION_SETTING.DELETE_PERMANENTLY' | translate }}
+                        </button>
+                      </div>
+                    </div>
+                    <div class="image-preview-container">
+                      <img [src]="existingImageUrl" alt="Current Hero Section Image" class="enhanced-img-preview"
+                        (error)="onImageError($event)" (load)="onImageLoad($event)">
+                      <div class="image-overlay">
+                        <div class="image-actions-overlay">
+                          <button type="button" class="btn btn-sm btn-light" (click)="openImageInNewTab()">
+                            <i class="fas fa-external-link-alt"></i> {{ 'HERO_SECTION_SETTING.VIEW_FULL' | translate }}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Enhanced File Input Area -->
+                  <div class="file-input-container">
+                    
+                    <div class="file-drop-zone" [class.has-file]="selectedFile || (existingImageUrl && mode === 'edit')"
+                      [class.is-dragover]="isDragOver" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+                      (drop)="onDrop($event)">
+                      <div class="file-drop-content">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="41" viewBox="0 0 40 41" fill="none">
+                          <path d="M34.167 16.9999H29.3503C25.4003 16.9999 22.1837 13.7832 22.1837 9.83319V5.01652C22.1837 4.09985 21.4337 3.34985 20.517 3.34985H13.4503C8.31699 3.34985 4.16699 6.68319 4.16699 12.6332V27.3999C4.16699 33.3499 8.31699 36.6832 13.4503 36.6832H26.5503C31.6837 36.6832 35.8337 33.3499 35.8337 27.3999V18.6665C35.8337 17.7499 35.0837 16.9999 34.167 16.9999ZM19.217 22.5665C18.967 22.8165 18.6503 22.9332 18.3337 22.9332C18.017 22.9332 17.7003 22.8165 17.4503 22.5665L16.2503 21.3665V28.3499C16.2503 29.0332 15.6837 29.5999 15.0003 29.5999C14.317 29.5999 13.7503 29.0332 13.7503 28.3499V21.3665L12.5503 22.5665C12.067 23.0499 11.267 23.0499 10.7837 22.5665C10.3003 22.0832 10.3003 21.2832 10.7837 20.7999L14.117 17.4665C14.2337 17.3665 14.3503 17.2832 14.4837 17.2165C14.517 17.1999 14.567 17.1832 14.6003 17.1665C14.7003 17.1332 14.8003 17.1165 14.917 17.0999C14.967 17.0999 15.0003 17.0999 15.0503 17.0999C15.1837 17.0999 15.317 17.1332 15.4503 17.1832C15.467 17.1832 15.467 17.1832 15.4837 17.1832C15.617 17.2332 15.7503 17.3332 15.8503 17.4332C15.867 17.4499 15.8837 17.4499 15.8837 17.4665L19.217 20.7999C19.7003 21.2832 19.7003 22.0832 19.217 22.5665Z" fill="#CDAD5F"/>
+                          <path d="M29.0501 14.7C30.6335 14.7167 32.8335 14.7167 34.7168 14.7167C35.6668 14.7167 36.1668 13.6 35.5001 12.9333C33.1001 10.5167 28.8001 6.16667 26.3335 3.7C25.6501 3.01667 24.4668 3.48334 24.4668 4.43334V10.25C24.4668 12.6833 26.5335 14.7 29.0501 14.7Z" fill="#CDAD5F"/>
+                        </svg>
+                        <h6 class="file-upload-title">
+                          {{ selectedFile ? ('HERO_SECTION_SETTING.FILE_SELECTED' | translate) : (existingImageUrl && mode === 'edit' ? ('HERO_SECTION_SETTING.CURRENT_IMAGE_AVAILABLE' | translate) : ('HERO_SECTION_SETTING.DROP_YOUR_IMAGE_HERE' | translate)) }}
+                        </h6>
+                        <!-- <p class="file-upload-subtitle">
+                          {{ selectedFile ? selectedFile.name : 'or click to browse' }}
+                        </p> -->
+                       
+                      </div>
+                      <input type="file" class="form-control file-input" id="heroSectionImage"
+                        accept=".jpg,.jpeg,.png,.pdf" (change)="onFileSelected($event)">
+
+                        <label for="heroSectionImage" class="form-label" >
+                        {{ 'HERO_SECTION_SETTING.OR_CLICK_TO_BROWSE' | translate }}
+                        </label>
+                    </div>
+                     
+                  </div>
+                   <div class="file-requirements">
+                          <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            {{ 'HERO_SECTION_SETTING.SUPPORTED_FORMATS' | translate }}
+                          </small>
+                        </div>
+
+                  <!-- Enhanced New File Preview -->
+                  <div *ngIf="filePreview" class="new-file-preview mt-3">
+                    <div class="preview-header mb-3">
+                      <div class="d-flex align-items-center gap-2 mb-2">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M17.7082 7.62506C15.7832 4.60006 12.9665 2.8584 9.99984 2.8584C8.5165 2.8584 7.07484 3.29173 5.75817 4.10007C4.4415 4.91673 3.25817 6.1084 2.2915 7.62506C1.45817 8.9334 1.45817 11.0584 2.2915 12.3667C4.2165 15.4001 7.03317 17.1334 9.99984 17.1334C11.4832 17.1334 12.9248 16.7001 14.2415 15.8917C15.5582 15.0751 16.7415 13.8834 17.7082 12.3667C18.5415 11.0667 18.5415 8.9334 17.7082 7.62506ZM9.99984 13.3667C8.13317 13.3667 6.63317 11.8584 6.63317 10.0001C6.63317 8.14173 8.13317 6.6334 9.99984 6.6334C11.8665 6.6334 13.3665 8.14173 13.3665 10.0001C13.3665 11.8584 11.8665 13.3667 9.99984 13.3667Z" fill="#5B5B5B"/>
+                        <path d="M10 7.6167C8.69167 7.6167 7.625 8.68337 7.625 10C7.625 11.3084 8.69167 12.375 10 12.375C11.3083 12.375 12.3833 11.3084 12.3833 10C12.3833 8.6917 11.3083 7.6167 10 7.6167Z" fill="#5B5B5B"/>
+                      </svg>
+                        <span class="">{{ 'HERO_SECTION_SETTING.NEW_FILE_PREVIEW' | translate }}</span>
+                      </div>
+                      <div class="preview-actions">
+                        <button type="button" class="btn btn-sm btn-outline-success me-2"
+                          (click)="confirmFileSelection()">
+                          <i class="fas fa-check"></i> {{ 'HERO_SECTION_SETTING.CONFIRM' | translate }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeFile()">
+                          <i class="fas fa-times"></i> {{ 'HERO_SECTION_SETTING.REMOVE' | translate }}
+                        </button>
+                      </div>
+                    </div>
+                    <div class="preview-container">
+                      <img [src]="filePreview" alt="File Preview" class="enhanced-img-preview" style="width: 100%;">
+                    </div>
+                  </div>
+
+                  <!-- File Upload Progress (if needed) -->
+                  <div *ngIf="uploadProgress > 0 && uploadProgress < 100" class="upload-progress mt-3">
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        [style.width.%]="uploadProgress" [attr.aria-valuenow]="uploadProgress" aria-valuemin="0"
+                        aria-valuemax="100">
+                        {{ uploadProgress }}%
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Enhanced Validation Messages -->
+                  <div class="validation-messages mt-2">
+                    <div *ngIf="fileValidationErrors.length > 0" class="alert alert-danger">
+                      <i class="fas fa-exclamation-triangle me-2"></i>
+                      <ul class="mb-0">
+                        <li *ngFor="let error of fileValidationErrors">{{ error }}</li>
+                      </ul>
+                    </div>
+                    <div *ngIf="fileValidationSuccess" class="alert alert-success">
+                      <i class="fas fa-check-circle me-2"></i>
+                      {{ 'HERO_SECTION_SETTING.FILE_VALID' | translate }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enhanced File Display Section for View Mode -->
+            <div class="row" *ngIf="mode === 'view' && existingImageUrl">
+              <div class="col-xl-12 mb-3">
+                <div class="view-image-section">
+                  <label class="form-label">
+                    <i class="fas fa-image me-2"></i>{{ 'HERO_SECTION_SETTING.HERO_SECTION_IMAGE' | translate }}
+                  </label>
+                  <div class="view-image-container">
+                    <img [src]="existingImageUrl" alt="Hero Section Image" class="enhanced-img-preview view-mode"
+                      (error)="onImageError($event)" (load)="onImageLoad($event)">
+                    <div class="view-image-overlay">
+                      <button type="button" class="btn btn-sm btn-light" (click)="openImageInNewTab()">
+                        <i class="fas fa-external-link-alt"></i> {{ 'HERO_SECTION_SETTING.VIEW_FULL_SIZE' | translate }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+              {{ 'Common.Cancel' | translate }}
+            </button>
+            <button type="submit" class="btn btn-gold" [disabled]="heroSectionForm.invalid || mode === 'view'">
+              <span *ngIf="mode === 'add'">{{ 'Common.Create' | translate }}</span>
+              <span *ngIf="mode === 'edit'">{{ 'Common.Update' | translate }}</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">{{ 'HERO_SECTION_SETTING.DELETE_CONFIRMATION_TITLE' | translate }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" [attr.aria-label]="'COMMON.CLOSE' | translate"></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ 'HERO_SECTION_SETTING.DELETE_CONFIRMATION' | translate }}</p>
+          <div *ngIf="selectedHeroSectionToDelete" class="delete-confirmation-details">
+            <strong>{{ 'HERO_SECTION_SETTING.TITLE_AR' | translate }}:</strong> {{ selectedHeroSectionToDelete.titleAr || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.TITLE_EN' | translate }}:</strong> {{ selectedHeroSectionToDelete.titleEn || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.DESCRIPTION_AR' | translate }}:</strong> {{ selectedHeroSectionToDelete.descriptionAr || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.DESCRIPTION_EN' | translate }}:</strong> {{ selectedHeroSectionToDelete.descriptionEn || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.LINK' | translate }}:</strong> {{ selectedHeroSectionToDelete.link || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.STATUS' | translate }}:</strong> 
+            <span class="badge" [ngClass]="selectedHeroSectionToDelete.isActive ? 'status-approved' : 'status-rejected'">
+              {{ selectedHeroSectionToDelete.isActive ? 'Active' : 'Inactive' }}
+            </span><br>
+            <strong>{{ 'HERO_SECTION_SETTING.VIEW_ORDER' | translate }}:</strong> {{ selectedHeroSectionToDelete.viewOrder || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.ATTACHMENT' | translate }}:</strong> {{ selectedHeroSectionToDelete.attachment ? 'Yes' : 'No' }}
+          </div>
+          <p class="text-danger">{{ 'HERO_SECTION_SETTING.DELETE_WARNING' | translate }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+            {{ 'Common.Cancel' | translate }}
+          </button>
+          <button type="button" class="btn btn-danger" (click)="confirmDelete()">
+            {{ 'Common.Delete' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Attachment Confirmation Modal -->
+  <div class="modal fade" id="deleteAttachmentModal" tabindex="-1" aria-labelledby="deleteAttachmentModalLabel"
+    aria-hidden="true" (hidden.bs.modal)="cancelDeleteAttachment()">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteAttachmentModalLabel">{{ 'HERO_SECTION_SETTING.DELETE_ATTACHMENT_CONFIRMATION_TITLE' | translate }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="cancelDeleteAttachment()"></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ 'HERO_SECTION_SETTING.DELETE_ATTACHMENT_CONFIRMATION' | translate }}</p>
+          <div *ngIf="selectedAttachmentToDelete" class="delete-confirmation-details">
+            <strong>{{ 'HERO_SECTION_SETTING.ATTACHMENT_TITLE' | translate }}:</strong> {{ selectedAttachmentToDelete.attachmentTitle || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.FILE_PATH' | translate }}:</strong> {{ selectedAttachmentToDelete.imgPath || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.MASTER_TYPE' | translate }}:</strong> {{ selectedAttachmentToDelete.masterType || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.MASTER_ID' | translate }}:</strong> {{ selectedAttachmentToDelete.masterId || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.CONFIG_ID' | translate }}:</strong> {{ selectedAttachmentToDelete.attConfigID || 'N/A' }}
+          </div>
+          <p class="text-danger">{{ 'HERO_SECTION_SETTING.DELETE_ATTACHMENT_WARNING' | translate }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal"
+            (click)="cancelDeleteAttachment()">{{ 'Common.Cancel' | translate }}</button>
+          <button type="button" class="btn btn-danger" (click)="confirmDeleteAttachment()"
+            data-bs-dismiss="modal">{{ 'Common.Delete' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,36 +7,47 @@ import { ArMiscReceiptHeaderComponent } from './ArMiscReceiptHeader/Pages/ArMisc
 import { VendorComponent } from './vendor/vendor.component';
 import { authGuard } from '../../../core/guards/auth/auth-guars';
 import { ApPaymentsTransactionHDRComponent } from './ApPaymentsTransactionHDR/Pages/ApPaymentsTransactionHDR.component';
+import { GlAccountComponent } from './glAccount/glAccount.component';
+import { GlAccountEntityComponent } from './glAccountEntity/glAccountEntity.component';
 
 export const operationsRoutes: Routes = [
-    {
-        path: 'general-journal', component: GLJEComponent, 
-        canActivate: [authGuard],
-        data: {pagePermission: 'GlJeHeader' } // GlJeHeader  ,   GlJeHeader.View
-    },
-    {
-        path: 'invoice', component: InvoiceComponent, 
-        canActivate: [authGuard],
-        data: { pagePermission: 'VwApInvoiceHd' }  //VwApInvoiceHd  , VwApInvoiceHd.View
-    },
-    {
-        path: 'payment-voucher', component: PaymentVoucherComponent, 
-        canActivate: [authGuard],
-        data: { pagePermission: 'ApMiscPaymentHeader' } // ApMiscPaymentHeader 
-    },
-    {
-        path: 'receipt-voucher', component: ArMiscReceiptHeaderComponent, 
-        canActivate: [authGuard],
-        data: { pagePermission: 'ArMiscReciptHeader' } //ArMiscReciptHeader   ,   ArMiscReciptHeader.View
-    },
-    {
-        path: 'receipt-operations', component: ApPaymentsTransactionHDRComponent, 
-        canActivate: [authGuard],
-        data: { pagePermission: 'ApPaymentTransactionsHdr' } // ApPaymentTransactionsHdr ,   ApPaymentTransactionsHdr.View
-    },
-    { path: 'vendor', component: VendorComponent  ,canActivate: [authGuard],
-        data: { pagePermission: 'ApVendor' } //ApVendor   , ApVendor.View
-    }
+  {
+    path: 'general-journal', component: GLJEComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'GlJeHeader' } // GlJeHeader  ,   GlJeHeader.View
+  },
+  {
+    path: 'invoice', component: InvoiceComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'VwApInvoiceHd' }  //VwApInvoiceHd  , VwApInvoiceHd.View
+  },
+  {
+    path: 'payment-voucher', component: PaymentVoucherComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'ApMiscPaymentHeader' } // ApMiscPaymentHeader 
+  },
+  {
+    path: 'receipt-voucher', component: ArMiscReceiptHeaderComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'ArMiscReciptHeader' } //ArMiscReciptHeader   ,   ArMiscReciptHeader.View
+  },
+  {
+    path: 'receipt-operations', component: ApPaymentsTransactionHDRComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'ApPaymentTransactionsHdr' } // ApPaymentTransactionsHdr ,   ApPaymentTransactionsHdr.View
+  },
+  {
+    path: 'vendor', component: VendorComponent, canActivate: [authGuard],
+    data: { pagePermission: 'ApVendor' } //ApVendor   , ApVendor.View
+  },
+  {
+    path: 'glAccount', component: GlAccountComponent, canActivate: [authGuard],
+    data: { pagePermission: 'GlAccount' } //GlAccount   , GlAccount.View
+  },
+  {
+    path: 'glAccountEntity', component: GlAccountEntityComponent, canActivate: [authGuard],
+    data: { pagePermission: 'GlAccountEntity' } //GlAccountEntity   , GlAccountEntity.View
+  }
 ];
 
 // { path: 'invoice', component: InvoiceComponent }, //  invoice

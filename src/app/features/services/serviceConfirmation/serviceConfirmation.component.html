@@ -1,0 +1,2043 @@
+<div class="view-distribution-site-permit-container">
+  <section>
+    <div class="container-fluid">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="title mb-0">{{ 'mainApplyServiceResourceName.title' | translate }}</h4>
+        <button type="button" class="btn btn-gray" (click)="goBack()">
+          <i class="fas fa-arrow-left me-2"></i>
+          {{ 'Common.BACK' | translate }}
+        </button>
+      </div>
+
+      <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">{{ 'Common.LOADING' | translate }}</span>
+        </div>
+        <p class="mt-3">{{ 'Common.LOADING_DATA' | translate }}</p>
+      </div>
+
+      <div *ngIf="hasError && !isLoading" class="text-center py-5">
+        <div class="error-container">
+          <i class="fas fa-exclamation-triangle text-danger" style="font-size: 3rem;"></i>
+          <h4 class="text-danger mt-3">{{ 'Common.ERROR_OCCURRED' | translate }}</h4>
+          <p class="text-muted">{{ errorMessage }}</p>
+          <div *ngIf="errorDetails" class="alert alert-light mt-3">
+            <small class="text-muted">{{ 'Common.ERROR_DETAILS' | translate }}:</small>
+            <br>
+            <code>{{ errorDetails }}</code>
+          </div>
+          <div class="alert alert-info mt-3">
+            <small class="text-muted">{{ 'Common.SUGGESTIONS' | translate }}:</small>
+            <br>
+            <span>{{ getErrorContext() }}</span>
+          </div>
+          <div class="mt-4">
+            <button type="button" class="btn btn-primary me-2" (click)="retryLoadingData()">
+              <i class="fas fa-redo me-2"></i>{{ 'Common.RETRY' | translate }}
+            </button>
+            <button type="button" class="btn btn-warning me-2" (click)="refreshPage()">
+              <i class="fas fa-sync-alt me-2"></i>{{ 'Common.REFRESH_PAGE' | translate }}
+            </button>
+            <button type="button" class="btn btn-success me-2" (click)="checkServiceAvailability()">
+              <i class="fas fa-check-circle me-2"></i>{{ 'Common.CHECK_SERVICE' | translate }}
+            </button>
+            <button type="button" class="btn btn-info me-2" (click)="contactSupport()">
+              <i class="fas fa-headset me-2"></i>{{ 'Common.CONTACT_SUPPORT' | translate }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary me-2" (click)="copyErrorDetails()">
+              <i class="fas fa-copy me-2"></i>{{ 'Common.COPY_ERROR' | translate }}
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="goBack()">
+              <i class="fas fa-arrow-left me-2"></i>{{ 'Common.BACK' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && loadformData" class="row">
+        <div class="col-lg-3 mb-4">
+          <div class="main-container h-100">
+            <div id="workFlowStep" class="mb-3">
+              <div *ngIf="loadformData?.workFlowSteps?.length">
+                <h6 class="fw-bold mb-3 text-primary">
+                  <i class="fas fa-route me-2"></i>
+                  {{ 'mainApplyServiceResourceName.WORKFLOW.PROCESS_STEPS' | translate }}
+                </h6>
+
+                <div class="workflow-timeline">
+                  <div *ngFor="let step of workFlowSteps; let i = index; trackBy: trackByStepId"
+                       class="workflow-step-item"
+                       [class.completed]="isStepCompleted(step.serviceStatus)"
+                       [class.rejected]="isStepRejected(step.serviceStatus)"
+                       [class.pending]="isStepPending(step.serviceStatus)"
+                       [class.last-step]="i === workFlowSteps.length - 1">
+
+                    <div class="step-circle"
+                         [style.background-color]="getStatusColor(step.serviceStatus)"
+                         [style.border-color]="getStatusColor(step.serviceStatus)">
+                      <i [class]="getStatusIcon(step.serviceStatus)"></i>
+                    </div>
+
+                    <div class="step-line" *ngIf="i < workFlowSteps.length - 1"
+                         [class.completed-line]="isStepCompleted(step.serviceStatus)">
+                    </div>
+
+                    <div class="step-content mb-4">
+                      <div class="step-header">
+                        <div class="step-number">
+                          {{ 'mainApplyServiceResourceName.WORKFLOW.STEP' | translate }} {{ step.stepOrder }}
+                        </div>
+                        <div class="step-status" [style.color]="getStatusColor(step.serviceStatus)">
+                          <i [class]="getStatusIcon(step.serviceStatus)" class="me-1"></i>
+                          {{ step.serviceStatusName || (getStatusLabel(step.serviceStatus) | translate) }}
+                        </div>
+                      </div>
+                      <h6 class="department-name">{{ step.departmentName }}</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="col-lg-9 mb-4">
+          <div class="main-container mb-4">
+            <div id="workFlowStep" class="mb-3">
+              <div *ngIf="workFlowQuery?.length; else noWorkflow">
+                <div *ngIf="workFlowQuery[0].serviceStatus == 1" class="alert alert-success text-center">
+                  {{ 'mainApplyServiceResourceName.agree' | translate }}
+                </div>
+
+                <div *ngIf="workFlowQuery[0].serviceStatus == 2" class="alert alert-danger text-center">
+                  {{ 'mainApplyServiceResourceName.disagree' | translate }}
+                </div>
+
+                <div *ngIf="workFlowQuery[0].serviceStatus == 3" class="alert alert-warning text-center">
+                  <div class="popover__wrapper">
+                    <a href="javascript:void(0);">
+                      <span class="btn btn-info">{{ loadformData.lastStatus }}</span>
+                    </a>
+                    <div class="popover__content w-60">
+                      <p class="popover__message">{{ workFlowQuery[0].refuseReason }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1
+                && workFlowQuery[0].serviceStatus != 2
+                && workFlowQuery[0].serviceStatus != 3">
+                  <ng-template #returnForModification>
+                    <div class="alert alert-warning text-center">
+                      <div class="popover__wrapper">
+                        <a href="javascript:void(0);">
+                          <span class="btn btn-info">{{ loadformData.lastStatus }}</span>
+                        </a>
+                        <div class="popover__content w-60">
+                          <p class="popover__message">{{ loadformData.reasonForModification }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+
+                  <div *ngIf="loadformData.lastStatus != 'إرجاع الطلب للتعديل'; else returnForModification"
+                       class="d-flex flex-wrap gap-2 justify-content-center">
+                    <button type="button" (click)="acceptbtn()" class="btn btn-success">
+                      {{ 'mainApplyServiceResourceName.accep' | translate }}
+                    </button>
+
+                    <button type="button" (click)="rejectWithReasonbtn()" class="btn btn-danger">
+                      {{ 'mainApplyServiceResourceName.refusefor' | translate }}
+                    </button>
+
+                    <button *ngIf="loadformData.serviceId == 1 || loadformData.serviceId == 1001"
+                            type="button" (click)="returnForModificationsbtn()" class="btn btn-dark">
+                      {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
+                    </button>
+                  </div>
+                </ng-container>
+              </div>
+
+              <ng-template #noWorkflow>
+                <ng-template #noWorkflowReturn>
+                  <div class="alert alert-warning text-center">
+                    <div class="popover__wrapper">
+                      <a href="javascript:void(0);">
+                        <span class="btn btn-info">{{ loadformData.lastStatus }}</span>
+                      </a>
+                      <div class="popover__content w-60">
+                        <p class="popover__message">{{ loadformData.reasonForModification }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+
+                <div *ngIf="loadformData.lastStatus != 'إرجاع الطلب للتعديل'; else noWorkflowReturn"
+                     class="d-flex flex-wrap gap-2 justify-content-center">
+                  <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
+                    {{ 'mainApplyServiceResourceName.taksis' | translate }}
+                  </button>
+
+                  <button type="button" (click)="acceptbtn()" class="btn btn-success">
+                    {{ 'mainApplyServiceResourceName.accep' | translate }}
+                  </button>
+
+                  <button type="button" (click)="rejectbtn()" class="btn btn-danger">
+                    {{ 'mainApplyServiceResourceName.refu' | translate }}
+                  </button>
+
+                  <button type="button" (click)="rejectWithReasonbtn()" class="btn btn-warning">
+                    {{ 'mainApplyServiceResourceName.refusefor' | translate }}
+                  </button>
+
+                  <button *ngIf="loadformData.serviceId == 1 || loadformData.serviceId == 1001"
+                          type="button" (click)="returnForModificationsbtn()" class="btn btn-secondary">
+                    {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
+                  </button>
+                </div>
+              </ng-template>
+
+              <div *ngIf="!workFlowQuery?.length
+     || workFlowQuery[0].serviceStatus == 4
+     || workFlowQuery[0].serviceStatus == 5; else readonlyNotes"
+                   class="mt-3">
+                <div class="form-group">
+                  <label for="NotesForApproving" class="control-label mb-2">
+                    {{ 'mainApplyServiceResourceName.notesConsent' | translate }}
+                  </label>
+                  <textarea id="NotesForApproving" class="form-control"
+                            [(ngModel)]="loadformData.notesForApproving"
+                            (ngModelChange)="onNotesChange($event)">
+</textarea>
+                </div>
+              </div>
+
+              <ng-template #readonlyNotes>
+                <div class="form-group">
+                  <label for="NotesForApproving" class="control-label col-md-12">
+                    {{ 'mainApplyServiceResourceName.notes' | translate }}
+                  </label>
+                  <textarea id="NotesForApproving" class="form-control" readonly>
+  {{ loadformData.notesForApproving }}
+</textarea>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+
+          <div id="mainInfo">
+            <div *ngIf="loadformData.serviceId == 1">
+              <div class="main-container mb-4">
+                <div class="service-info-card  p-3 bg-light rounded mb-4">
+                  <h6 class="fw-bold">{{ loadformData.service?.serviceName }}</h6>
+                  <div class="row">
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyNo' | translate  }}:</strong>
+                        {{loadformData.applyNo}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
+                        {{formatDate(loadformData.applyDate)}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
+                        {{loadformData.userName}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-0" *ngIf="loadformData.permitNumber">
+                        <strong>{{ 'mainApplyServiceResourceName.permitNumber' | translate }}: </strong>
+                        {{loadformData.permitNumber}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <span class="badge bg-primary">{{loadformData.lastStatus}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.BASIC_INFORMATION' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-6 mb-3">
+                      <label for="locationType" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationtype' | translate }}</label>
+                      <p id="locationType">{{ loadformData.fastingTentService.locationType }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorName' | translate }}</label>
+                      <p id="supervisorName">{{ loadformData.fastingTentService.supervisorName }}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.jopTitle' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.jopTitle}}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorMobile" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorMobile' | translate }}</label>
+                      <p id="supervisorMobile">{{ loadformData.fastingTentService.supervisorMobile }}</p>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                      <div class="col-xxl-4 col-xl-6">
+                        <label for="notes" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.notes' | translate }}</label>
+                        <p id="notes">{{ loadformData.fastingTentService.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.LOCATION.DETAILS' | translate }}</h5>
+
+                  <div *ngIf="loadformData.fastingTentService">
+                    <div class="row mb-4">
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.ownerName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.ownerName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.locationName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.regionname' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.regionName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="streetName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.streetname' | translate }}</label>
+                        <p id="streetName">{{ loadformData.fastingTentService.streetName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="groundNo" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.groundNo' | translate }}</label>
+                        <p id="groundNo">{{ loadformData.fastingTentService.groundNo }}</p>
+                      </div>
+
+                      <div class="col-md-12 mb-3">
+                        <label for="address" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.address1' | translate }}</label>
+                        <p id="address">{{ loadformData.fastingTentService.address }}</p>
+                      </div>
+                    </div>
+
+                    <div *ngIf="loadformData.fastingTentService.locationPhotoPath">
+                      <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold mb-0">{{ 'mainApplyServiceResourceName.LOCATION.ON_MAP' | translate }}</h6>
+                        <div>
+                          <button type="button" class="btn btn-sm btn-outline-primary"
+                                  (click)="refreshMap1()" title="Refresh Map">
+                            <i class="fas fa-sync-alt me-1"></i>
+                            {{ 'Common.REFRESH' | translate }}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div id="viewMap" style="height: 400px; width: 100%;" class="border rounded"></div>
+
+                      <div *ngIf="mapLoadError" class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>{{ 'mainApplyServiceResourceName.MAP.LOADING_ISSUE' | translate }}:</strong> {{'mainApplyServiceResourceName.MAP.LOADING_ERROR' | translate }}
+                        <button type="button" class="btn btn-sm btn-outline-warning ms-2"
+                                (click)="refreshMap1()">
+                          <i class="fas fa-redo me-1"></i>
+                          {{ 'mainApplyServiceResourceName.MAP.TRY_AGAIN' | translate }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="!loadformData.fastingTentService" class="alert alert-info">
+                    {{ 'mainApplyServiceResourceName.LOCATION.NO_INFO' | translate }}
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.DATE_DETAILS' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-4 mb-3">
+                      <label for="tentConstructDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.tentConstructDate' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.tentConstructDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="startDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimasd' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.startDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimaed' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.endDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.TentDate' | translate}}</label>
+                      <p id="address">{{ loadformData.fastingTentService.tentDate }}</p>
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold d-block mb-2">
+                          {{ 'mainApplyServiceResourceName.TentIsSetUp' | translate }}
+                        </label>
+
+                        <div class="d-flex justify-content-start">
+                          <ng-container *ngIf="loadformData.fastingTentService.tentIsSetUp; else notSetUp">
+                            <span class="status-box success">✔</span>
+                          </ng-container>
+
+                          <ng-template #notSetUp>
+                            <span class="status-box error">✖</span>
+                          </ng-template>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantName' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.consultantName ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantNumber" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantNumber' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.consultantNumber ?? null}}</p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantApprovedFromPolice" disabled
+                               id="consultantApprovedView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantApprovedFromPolice' | translate }}</label>
+                      </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantFromAjman" disabled
+                               id="consultantFromAjmanView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantFromAjman' | translate }}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="loadformData.serviceId == 1001">
+              <div class="main-container mb-4">
+                <div class="service-info-card  p-3 bg-light rounded mb-4">
+                  <h6 class="fw-bold">{{ loadformData.service?.serviceName }}</h6>
+                  <div class="row">
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyNo' | translate  }}:</strong>
+                        {{loadformData.applyNo}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
+                        {{formatDate(loadformData.applyDate)}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
+                        {{loadformData.userName}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-0" *ngIf="loadformData.permitNumber">
+                        <strong>{{ 'mainApplyServiceResourceName.permitNumber' | translate }}: </strong>
+                        {{loadformData.permitNumber}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <span class="badge bg-primary">{{loadformData.lastStatus}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.BASIC_INFORMATION' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-6 mb-3">
+                      <label for="locationType" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationtype' | translate }}</label>
+                      <p id="locationType">{{ loadformData.fastingTentService.locationType }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorName' | translate }}</label>
+                      <p id="supervisorName">{{ loadformData.fastingTentService.supervisorName }}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.jopTitle' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.jopTitle}}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorMobile" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorMobile' | translate }}</label>
+                      <p id="supervisorMobile">{{ loadformData.fastingTentService.supervisorMobile }}</p>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                      <div class="col-xxl-4 col-xl-6">
+                        <label for="notes" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.notes' | translate }}</label>
+                        <p id="notes">{{ loadformData.fastingTentService.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.LOCATION.DETAILS' | translate }}</h5>
+
+                  <div *ngIf="loadformData.fastingTentService">
+                    <div class="row mb-4">
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.ownerName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.ownerName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.locationName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.regionname' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.regionName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="streetName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.streetname' | translate }}</label>
+                        <p id="streetName">{{ loadformData.fastingTentService.streetName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="groundNo" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.groundNo' | translate }}</label>
+                        <p id="groundNo">{{ loadformData.fastingTentService.groundNo }}</p>
+                      </div>
+
+                      <div class="col-md-12 mb-3">
+                        <label for="address" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.address1' | translate }}</label>
+                        <p id="address">{{ loadformData.fastingTentService.address }}</p>
+                      </div>
+                    </div>
+
+                    <div *ngIf="loadformData.fastingTentService.distributionSiteCoordinators">
+                      <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold mb-0">{{ 'mainApplyServiceResourceName.LOCATION.ON_MAP' | translate }}</h6>
+                        <div>
+                          <button type="button" class="btn btn-sm btn-outline-primary"
+                                  (click)="refreshMap()" title="Refresh Map">
+                            <i class="fas fa-sync-alt me-1"></i>
+                            {{ 'Common.REFRESH' | translate }}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div id="viewMap" style="height: 400px; width: 100%;" class="border rounded"></div>
+
+                      <div *ngIf="mapLoadError" class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>{{ 'mainApplyServiceResourceName.MAP.LOADING_ISSUE' | translate }}:</strong> {{'mainApplyServiceResourceName.MAP.LOADING_ERROR' | translate }}
+                        <button type="button" class="btn btn-sm btn-outline-warning ms-2"
+                                (click)="refreshMap()">
+                          <i class="fas fa-redo me-1"></i>
+                          {{ 'mainApplyServiceResourceName.MAP.TRY_AGAIN' | translate }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="!loadformData.fastingTentService" class="alert alert-info">
+                    {{ 'mainApplyServiceResourceName.LOCATION.NO_INFO' | translate }}
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.DATE_DETAILS' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-4 mb-3">
+                      <label for="tentConstructDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.tentConstructDate' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.tentConstructDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="startDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimasd' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.startDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimaed' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.endDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantName' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.consultantName ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantNumber" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantNumber' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.consultantNumber ?? null}}</p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantApprovedFromPolice" disabled
+                               id="consultantApprovedView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantApprovedFromPolice' | translate }}</label>
+                      </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantFromAjman" disabled
+                               id="consultantFromAjmanView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantFromAjman' | translate }}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="loadformData.serviceId == 2">
+              <div class="main-container mb-4">
+                <div class="service-info-card  p-3 bg-light rounded mb-4">
+                  <h6 class="fw-bold">{{ loadformData.service?.serviceName }}</h6>
+                  <div class="row">
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyNo' | translate  }}:</strong>
+                        {{loadformData.applyNo}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
+                        {{formatDate(loadformData.applyDate)}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
+                        {{loadformData.userName}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-0" *ngIf="loadformData.permitNumber">
+                        <strong>{{ 'mainApplyServiceResourceName.permitNumber' | translate }}: </strong>
+                        {{loadformData.permitNumber}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <span class="badge bg-primary">{{loadformData.lastStatus}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.BASIC_INFORMATION' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-6 mb-3">
+                      <label for="locationType" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationtype' | translate }}</label>
+                      <p id="locationType">{{ loadformData.fastingTentService.locationType }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorName' | translate }}</label>
+                      <p id="supervisorName">{{ loadformData.fastingTentService.supervisorName }}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.jopTitle' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.jopTitle}}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorMobile" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorMobile' | translate }}</label>
+                      <p id="supervisorMobile">{{ loadformData.fastingTentService.supervisorMobile }}</p>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                      <div class="col-xxl-4 col-xl-6">
+                        <label for="notes" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.notes' | translate }}</label>
+                        <p id="notes">{{ loadformData.fastingTentService.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.LOCATION.DETAILS' | translate }}</h5>
+
+                  <div *ngIf="loadformData.fastingTentService">
+                    <div class="row mb-4">
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.ownerName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.ownerName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.locationName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.regionname' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.regionName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="streetName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.streetname' | translate }}</label>
+                        <p id="streetName">{{ loadformData.fastingTentService.streetName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="groundNo" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.groundNo' | translate }}</label>
+                        <p id="groundNo">{{ loadformData.fastingTentService.groundNo }}</p>
+                      </div>
+
+                      <div class="col-md-12 mb-3">
+                        <label for="address" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.address1' | translate }}</label>
+                        <p id="address">{{ loadformData.fastingTentService.address }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="!loadformData.fastingTentService" class="alert alert-info">
+                    {{ 'mainApplyServiceResourceName.LOCATION.NO_INFO' | translate }}
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.DATE_DETAILS' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-4 mb-3">
+                      <label for="tentConstructDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.tentConstructDate' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.tentConstructDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="startDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimasd' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.startDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimaed' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.endDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantName' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.consultantName ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantNumber" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantNumber' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.consultantNumber ?? null}}</p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantApprovedFromPolice" disabled
+                               id="consultantApprovedView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantApprovedFromPolice' | translate }}</label>
+                      </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantFromAjman" disabled
+                               id="consultantFromAjmanView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantFromAjman' | translate }}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="loadformData.serviceId == 3">
+              <div class="main-container mb-4">
+                <div class="service-info-card  p-3 bg-light rounded mb-4">
+                  <h6 class="fw-bold">{{ loadformData.service?.serviceName }}</h6>
+                  <div class="row">
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyNo' | translate  }}:</strong>
+                        {{loadformData.applyNo}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
+                        {{formatDate(loadformData.applyDate)}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
+                        {{loadformData.userName}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-0" *ngIf="loadformData.permitNumber">
+                        <strong>{{ 'mainApplyServiceResourceName.permitNumber' | translate }}: </strong>
+                        {{loadformData.permitNumber}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <span class="badge bg-primary">{{loadformData.lastStatus}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.BASIC_INFORMATION' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-6 mb-3">
+                      <label for="locationType" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationtype' | translate }}</label>
+                      <p id="locationType">{{ loadformData.fastingTentService.locationType }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorName' | translate }}</label>
+                      <p id="supervisorName">{{ loadformData.fastingTentService.supervisorName }}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.jopTitle' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.jopTitle}}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorMobile" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorMobile' | translate }}</label>
+                      <p id="supervisorMobile">{{ loadformData.fastingTentService.supervisorMobile }}</p>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                      <div class="col-xxl-4 col-xl-6">
+                        <label for="notes" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.notes' | translate }}</label>
+                        <p id="notes">{{ loadformData.fastingTentService.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.LOCATION.DETAILS' | translate }}</h5>
+
+                  <div *ngIf="loadformData.fastingTentService">
+                    <div class="row mb-4">
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.ownerName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.ownerName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.locationName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.regionname' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.regionName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="streetName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.streetname' | translate }}</label>
+                        <p id="streetName">{{ loadformData.fastingTentService.streetName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="groundNo" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.groundNo' | translate }}</label>
+                        <p id="groundNo">{{ loadformData.fastingTentService.groundNo }}</p>
+                      </div>
+
+                      <div class="col-md-12 mb-3">
+                        <label for="address" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.address1' | translate }}</label>
+                        <p id="address">{{ loadformData.fastingTentService.address }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="!loadformData.fastingTentService" class="alert alert-info">
+                    {{ 'mainApplyServiceResourceName.LOCATION.NO_INFO' | translate }}
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.DATE_DETAILS' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-4 mb-3">
+                      <label for="tentConstructDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.tentConstructDate' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.tentConstructDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="startDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimasd' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.startDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimaed' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.endDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantName' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.consultantName ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantNumber" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantNumber' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.consultantNumber ?? null}}</p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantApprovedFromPolice" disabled
+                               id="consultantApprovedView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantApprovedFromPolice' | translate }}</label>
+                      </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantFromAjman" disabled
+                               id="consultantFromAjmanView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantFromAjman' | translate }}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="loadformData.serviceId == 4">
+              <div class="main-container mb-4">
+                <div class="service-info-card  p-3 bg-light rounded mb-4">
+                  <h6 class="fw-bold">{{ loadformData.service?.serviceName }}</h6>
+                  <div class="row">
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyNo' | translate  }}:</strong>
+                        {{loadformData.applyNo}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
+                        {{formatDate(loadformData.applyDate)}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
+                        {{loadformData.userName}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-0" *ngIf="loadformData.permitNumber">
+                        <strong>{{ 'mainApplyServiceResourceName.permitNumber' | translate }}: </strong>
+                        {{loadformData.permitNumber}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <span class="badge bg-primary">{{loadformData.lastStatus}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.BASIC_INFORMATION' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-6 mb-3">
+                      <label for="locationType" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationtype' | translate }}</label>
+                      <p id="locationType">{{ loadformData.fastingTentService.locationType }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorName' | translate }}</label>
+                      <p id="supervisorName">{{ loadformData.fastingTentService.supervisorName }}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.jopTitle' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.jopTitle}}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorMobile" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorMobile' | translate }}</label>
+                      <p id="supervisorMobile">{{ loadformData.fastingTentService.supervisorMobile }}</p>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                      <div class="col-xxl-4 col-xl-6">
+                        <label for="notes" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.notes' | translate }}</label>
+                        <p id="notes">{{ loadformData.fastingTentService.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.LOCATION.DETAILS' | translate }}</h5>
+
+                  <div *ngIf="loadformData.fastingTentService">
+                    <div class="row mb-4">
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.ownerName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.ownerName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.locationName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.regionname' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.regionName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="streetName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.streetname' | translate }}</label>
+                        <p id="streetName">{{ loadformData.fastingTentService.streetName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="groundNo" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.groundNo' | translate }}</label>
+                        <p id="groundNo">{{ loadformData.fastingTentService.groundNo }}</p>
+                      </div>
+
+                      <div class="col-md-12 mb-3">
+                        <label for="address" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.address1' | translate }}</label>
+                        <p id="address">{{ loadformData.fastingTentService.address }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="!loadformData.fastingTentService" class="alert alert-info">
+                    {{ 'mainApplyServiceResourceName.LOCATION.NO_INFO' | translate }}
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.DATE_DETAILS' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-4 mb-3">
+                      <label for="tentConstructDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.tentConstructDate' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.tentConstructDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="startDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimasd' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.startDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimaed' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.endDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantName' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.consultantName ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantNumber" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantNumber' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.consultantNumber ?? null}}</p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantApprovedFromPolice" disabled
+                               id="consultantApprovedView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantApprovedFromPolice' | translate }}</label>
+                      </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantFromAjman" disabled
+                               id="consultantFromAjmanView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantFromAjman' | translate }}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="loadformData.serviceId == 5">
+              <div class="main-container mb-4">
+                <div class="service-info-card  p-3 bg-light rounded mb-4">
+                  <h6 class="fw-bold">{{ loadformData.service?.serviceName }}</h6>
+                  <div class="row">
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyNo' | translate  }}:</strong>
+                        {{loadformData.applyNo}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
+                        {{formatDate(loadformData.applyDate)}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
+                        {{loadformData.userName}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-0" *ngIf="loadformData.permitNumber">
+                        <strong>{{ 'mainApplyServiceResourceName.permitNumber' | translate }}: </strong>
+                        {{loadformData.permitNumber}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <span class="badge bg-primary">{{loadformData.lastStatus}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.BASIC_INFORMATION' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-6 mb-3">
+                      <label for="locationType" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationtype' | translate }}</label>
+                      <p id="locationType">{{ loadformData.fastingTentService.locationType }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorName' | translate }}</label>
+                      <p id="supervisorName">{{ loadformData.fastingTentService.supervisorName }}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.jopTitle' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.jopTitle}}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorMobile" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorMobile' | translate }}</label>
+                      <p id="supervisorMobile">{{ loadformData.fastingTentService.supervisorMobile }}</p>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                      <div class="col-xxl-4 col-xl-6">
+                        <label for="notes" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.notes' | translate }}</label>
+                        <p id="notes">{{ loadformData.fastingTentService.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.LOCATION.DETAILS' | translate }}</h5>
+
+                  <div *ngIf="loadformData.fastingTentService">
+                    <div class="row mb-4">
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.ownerName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.ownerName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.locationName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.regionname' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.regionName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="streetName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.streetname' | translate }}</label>
+                        <p id="streetName">{{ loadformData.fastingTentService.streetName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="groundNo" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.groundNo' | translate }}</label>
+                        <p id="groundNo">{{ loadformData.fastingTentService.groundNo }}</p>
+                      </div>
+
+                      <div class="col-md-12 mb-3">
+                        <label for="address" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.address1' | translate }}</label>
+                        <p id="address">{{ loadformData.fastingTentService.address }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="!loadformData.fastingTentService" class="alert alert-info">
+                    {{ 'mainApplyServiceResourceName.LOCATION.NO_INFO' | translate }}
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.DATE_DETAILS' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-4 mb-3">
+                      <label for="tentConstructDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.tentConstructDate' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.tentConstructDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="startDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimasd' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.startDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimaed' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.endDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantName' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.consultantName ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantNumber" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantNumber' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.consultantNumber ?? null}}</p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantApprovedFromPolice" disabled
+                               id="consultantApprovedView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantApprovedFromPolice' | translate }}</label>
+                      </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantFromAjman" disabled
+                               id="consultantFromAjmanView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantFromAjman' | translate }}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="loadformData.serviceId == 6">
+              <div class="main-container mb-4">
+                <div class="service-info-card  p-3 bg-light rounded mb-4">
+                  <h6 class="fw-bold">{{ loadformData.service?.serviceName }}</h6>
+                  <div class="row">
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyNo' | translate  }}:</strong>
+                        {{loadformData.applyNo}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
+                        {{formatDate(loadformData.applyDate)}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
+                        {{loadformData.userName}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-0" *ngIf="loadformData.permitNumber">
+                        <strong>{{ 'mainApplyServiceResourceName.permitNumber' | translate }}: </strong>
+                        {{loadformData.permitNumber}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <span class="badge bg-primary">{{loadformData.lastStatus}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.BASIC_INFORMATION' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-6 mb-3">
+                      <label for="locationType" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationtype' | translate }}</label>
+                      <p id="locationType">{{ loadformData.fastingTentService.locationType }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorName' | translate }}</label>
+                      <p id="supervisorName">{{ loadformData.fastingTentService.supervisorName }}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.jopTitle' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.jopTitle}}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorMobile" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorMobile' | translate }}</label>
+                      <p id="supervisorMobile">{{ loadformData.fastingTentService.supervisorMobile }}</p>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                      <div class="col-xxl-4 col-xl-6">
+                        <label for="notes" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.notes' | translate }}</label>
+                        <p id="notes">{{ loadformData.fastingTentService.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.LOCATION.DETAILS' | translate }}</h5>
+
+                  <div *ngIf="loadformData.fastingTentService">
+                    <div class="row mb-4">
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.ownerName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.ownerName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.locationName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.regionname' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.regionName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="streetName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.streetname' | translate }}</label>
+                        <p id="streetName">{{ loadformData.fastingTentService.streetName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="groundNo" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.groundNo' | translate }}</label>
+                        <p id="groundNo">{{ loadformData.fastingTentService.groundNo }}</p>
+                      </div>
+
+                      <div class="col-md-12 mb-3">
+                        <label for="address" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.address1' | translate }}</label>
+                        <p id="address">{{ loadformData.fastingTentService.address }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="!loadformData.fastingTentService" class="alert alert-info">
+                    {{ 'mainApplyServiceResourceName.LOCATION.NO_INFO' | translate }}
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.DATE_DETAILS' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-4 mb-3">
+                      <label for="tentConstructDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.tentConstructDate' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.tentConstructDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="startDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimasd' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.startDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimaed' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.endDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantName' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.consultantName ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantNumber" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantNumber' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.consultantNumber ?? null}}</p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantApprovedFromPolice" disabled
+                               id="consultantApprovedView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantApprovedFromPolice' | translate }}</label>
+                      </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantFromAjman" disabled
+                               id="consultantFromAjmanView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantFromAjman' | translate }}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="loadformData.serviceId == 7">
+              <div class="main-container mb-4">
+                <div class="service-info-card  p-3 bg-light rounded mb-4">
+                  <h6 class="fw-bold">{{ loadformData.service?.serviceName }}</h6>
+                  <div class="row">
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyNo' | translate  }}:</strong>
+                        {{loadformData.applyNo}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
+                        {{formatDate(loadformData.applyDate)}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-1">
+                        <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
+                        {{loadformData.userName}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <p class="mb-0" *ngIf="loadformData.permitNumber">
+                        <strong>{{ 'mainApplyServiceResourceName.permitNumber' | translate }}: </strong>
+                        {{loadformData.permitNumber}}
+                      </p>
+                    </div>
+                    <div class="col-xl-6">
+                      <span class="badge bg-primary">{{loadformData.lastStatus}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.BASIC_INFORMATION' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-6 mb-3">
+                      <label for="locationType" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationtype' | translate }}</label>
+                      <p id="locationType">{{ loadformData.fastingTentService.locationType }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorName' | translate }}</label>
+                      <p id="supervisorName">{{ loadformData.fastingTentService.supervisorName }}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.jopTitle' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.jopTitle}}</p>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label for="supervisorMobile" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorMobile' | translate }}</label>
+                      <p id="supervisorMobile">{{ loadformData.fastingTentService.supervisorMobile }}</p>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                      <div class="col-xxl-4 col-xl-6">
+                        <label for="notes" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.notes' | translate }}</label>
+                        <p id="notes">{{ loadformData.fastingTentService.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.LOCATION.DETAILS' | translate }}</h5>
+
+                  <div *ngIf="loadformData.fastingTentService">
+                    <div class="row mb-4">
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.ownerName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.ownerName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationName' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.locationName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.regionname' | translate }}</label>
+                        <p id="regionName">{{ loadformData.fastingTentService.regionName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="streetName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.streetname' | translate }}</label>
+                        <p id="streetName">{{ loadformData.fastingTentService.streetName }}</p>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label for="groundNo" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.groundNo' | translate }}</label>
+                        <p id="groundNo">{{ loadformData.fastingTentService.groundNo }}</p>
+                      </div>
+
+                      <div class="col-md-12 mb-3">
+                        <label for="address" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.address1' | translate }}</label>
+                        <p id="address">{{ loadformData.fastingTentService.address }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="!loadformData.fastingTentService" class="alert alert-info">
+                    {{ 'mainApplyServiceResourceName.LOCATION.NO_INFO' | translate }}
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.DATE_DETAILS' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.fastingTentService">
+                    <div class="col-md-4 mb-3">
+                      <label for="tentConstructDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.tentConstructDate' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.tentConstructDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="startDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimasd' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.startDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimaed' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.endDate ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantName' | translate }}</label>
+                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.consultantName ?? null)}}</p>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label for="consultantNumber" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantNumber' | translate }}</label>
+                      <p class="mb-0">{{loadformData.fastingTentService.consultantNumber ?? null}}</p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantApprovedFromPolice" disabled
+                               id="consultantApprovedView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantApprovedFromPolice' | translate }}</label>
+                      </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox"
+                               [checked]="loadformData.fastingTentService?.isConsultantFromAjman" disabled
+                               id="consultantFromAjmanView">
+                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantFromAjman' | translate }}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          <div class="accordion" id="accordionExample">
+            <div *ngIf="loadformData.serviceId == 5">
+              <div class="main-container p-0 mb-4">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapserequestAdvertisementTarget" aria-expanded="true" aria-controls="collapserequestAdvertisementTarget">
+                      {{ 'mainApplyServiceResourceName.requestAdvertisementTarget' | translate }}
+                    </button>
+                  </h2>
+                  <div id="collapserequestAdvertisementTarget" class="accordion-collapse collapse show"
+                       data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="step-content mb-4">
+
+                        <div *ngIf="loadRequestAdvertisementTargetListformData && loadRequestAdvertisementTargetListformData.length > 0">
+                          <app-generic-data-table class="mt-3"
+                                                  [columnDefs]="requestAdvertisementTargetcolumnDefs"
+                                                  [rowData]="loadRequestAdvertisementTargetListformData"
+                                                  [totalCount]="paginationrequestAdvertisementTarget.totalCount"
+                                                  [pageSize]="paginationrequestAdvertisementTarget.take"
+                                                  [currentPage]="paginationrequestAdvertisementTarget.currentPage - 1"
+                                                  [columnHeaderMap]="columnHeaderMap"
+                                                  (pageChange)="onPageChangerequestAdvertisementTarget($event)"
+                                                  [showActionColumn]="false"
+                                                  (search)="onTableSearchrequestAdvertisementTarget($event)">
+                          </app-generic-data-table>
+                        </div>
+
+                        <div *ngIf="!loadRequestAdvertisementTargetListformData || loadRequestAdvertisementTargetListformData.length === 0" class="alert alert-info">
+                          {{ 'Common.NoData' | translate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="main-container p-0 mb-4">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapserequestAdvertisementAdMethod" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod">
+                      {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod' | translate }}
+                    </button>
+                  </h2>
+                  <div id="collapserequestAdvertisementAdMethod" class="accordion-collapse collapse show"
+                       data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="step-content mb-4">
+
+                        <div *ngIf="loadRequestAdvertisementAdMethodListformData && loadRequestAdvertisementAdMethodListformData.length > 0">
+                          <app-generic-data-table class="mt-3"
+                                                  [columnDefs]="requestAdvertisementAdMethodcolumnDefs"
+                                                  [rowData]="loadRequestAdvertisementAdMethodListformData"
+                                                  [totalCount]="paginationrequestAdvertisementAdMethod.totalCount"
+                                                  [pageSize]="paginationrequestAdvertisementAdMethod.take"
+                                                  [currentPage]="paginationrequestAdvertisementAdMethod.currentPage - 1"
+                                                  [columnHeaderMap]="columnHeaderMap"
+                                                  (pageChange)="onPageChangerequestAdvertisementAdMethod($event)"
+                                                  [showActionColumn]="false"
+                                                  (search)="onTableSearchrequestAdvertisementAdMethod($event)">
+                          </app-generic-data-table>
+                        </div>
+
+                        <div *ngIf="!loadRequestAdvertisementAdMethodListformData || loadRequestAdvertisementAdMethodListformData.length === 0" class="alert alert-info">
+                          {{ 'Common.NoData' | translate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="main-container p-0 mb-4">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapserequestAdvertisementAdMethod" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod">
+                      {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod' | translate }}
+                    </button>
+                  </h2>
+                  <div id="collapserequestAdvertisementAdMethod" class="accordion-collapse collapse show"
+                       data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="step-content mb-4">
+
+                        <div *ngIf="loadRequestAdvertisementAdMethodListformData && loadRequestAdvertisementAdMethodListformData.length > 0">
+                          <app-generic-data-table class="mt-3"
+                                                  [columnDefs]="requestAdvertisementAdMethodcolumnDefs"
+                                                  [rowData]="loadRequestAdvertisementAdMethodListformData"
+                                                  [totalCount]="paginationrequestAdvertisementAdMethod.totalCount"
+                                                  [pageSize]="paginationrequestAdvertisementAdMethod.take"
+                                                  [currentPage]="paginationrequestAdvertisementAdMethod.currentPage - 1"
+                                                  [columnHeaderMap]="columnHeaderMap"
+                                                  (pageChange)="onPageChangerequestAdvertisementAdMethod($event)"
+                                                  [showActionColumn]="false"
+                                                  (search)="onTableSearchrequestAdvertisementAdMethod($event)">
+                          </app-generic-data-table>
+                        </div>
+
+                        <div *ngIf="!loadRequestAdvertisementAdMethodListformData || loadRequestAdvertisementAdMethodListformData.length === 0" class="alert alert-info">
+                          {{ 'Common.NoData' | translate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="loadformData.serviceId == 7">
+              <div class="main-container p-0 mb-4">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapserequestAdvertisementTarget1" aria-expanded="true" aria-controls="collapserequestAdvertisementTarget1">
+                      {{ 'mainApplyServiceResourceName.requestAdvertisementTarget1' | translate }}
+                    </button>
+                  </h2>
+                  <div id="collapserequestAdvertisementTarget1" class="accordion-collapse collapse show"
+                       data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="step-content mb-4">
+
+                        <div *ngIf="loadRequestPlaintReasonListformData && loadRequestPlaintReasonListformData.length > 0">
+                          <app-generic-data-table class="mt-3"
+                                                  [columnDefs]="requestPlaintReasoncolumnDefs"
+                                                  [rowData]="loadRequestPlaintReasonListformData"
+                                                  [totalCount]="paginationrequestPlaintReason.totalCount"
+                                                  [pageSize]="paginationrequestPlaintReason.take"
+                                                  [currentPage]="paginationrequestPlaintReason.currentPage - 1"
+                                                  [columnHeaderMap]="columnHeaderMap"
+                                                  (pageChange)="onPageChangerequestPlaintReason($event)"
+                                                  [showActionColumn]="false"
+                                                  (search)="onTableSearchrequestPlaintReason($event)">
+                          </app-generic-data-table>
+                        </div>
+
+                        <div *ngIf="!loadRequestPlaintReasonListformData || loadRequestPlaintReasonListformData.length === 0" class="alert alert-info">
+                          {{ 'Common.NoData' | translate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="main-container p-0 mb-4">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapserequestAdvertisementAdMethod1" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod1">
+                      {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod1' | translate }}
+                    </button>
+                  </h2>
+                  <div id="collapserequestAdvertisementAdMethod1" class="accordion-collapse collapse show"
+                       data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="step-content mb-4">
+
+                        <div *ngIf="loadRequestPlaintevidenceListformData && loadRequestPlaintevidenceListformData.length > 0">
+                          <app-generic-data-table class="mt-3"
+                                                  [columnDefs]="requestPlaintevidencecolumnDefs"
+                                                  [rowData]="loadRequestPlaintevidenceListformData"
+                                                  [totalCount]="paginationrequestPlaintevidence.totalCount"
+                                                  [pageSize]="paginationrequestPlaintevidence.take"
+                                                  [currentPage]="paginationrequestPlaintevidence.currentPage - 1"
+                                                  [columnHeaderMap]="columnHeaderMap"
+                                                  (pageChange)="onPageChangerequestPlaintevidence($event)"
+                                                  [showActionColumn]="false"
+                                                  (search)="onTableSearchrequestPlaintevidence($event)">
+                          </app-generic-data-table>
+                        </div>
+
+                        <div *ngIf="!loadRequestPlaintevidenceListformData || loadRequestPlaintevidenceListformData.length === 0" class="alert alert-info">
+                          {{ 'Common.NoData' | translate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="main-container p-0 mb-4">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapserequestAdvertisementAdMethod1" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod1">
+                      {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod1' | translate }}
+                    </button>
+                  </h2>
+                  <div id="collapserequestAdvertisementAdMethod1" class="accordion-collapse collapse show"
+                       data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="step-content mb-4">
+
+                        <div *ngIf="loadRequestPlaintJustificationListformData && loadRequestPlaintJustificationListformData.length > 0">
+                          <app-generic-data-table class="mt-3"
+                                                  [columnDefs]="requestPlaintJustificationcolumnDefs"
+                                                  [rowData]="loadRequestPlaintJustificationListformData"
+                                                  [totalCount]="paginationrequestPlaintJustification.totalCount"
+                                                  [pageSize]="paginationrequestPlaintJustification.take"
+                                                  [currentPage]="paginationrequestPlaintJustification.currentPage - 1"
+                                                  [columnHeaderMap]="columnHeaderMap"
+                                                  (pageChange)="onPageChangerequestPlaintJustification($event)"
+                                                  [showActionColumn]="false"
+                                                  (search)="onTableSearchrequestPlaintJustification($event)">
+                          </app-generic-data-table>
+                        </div>
+
+                        <div *ngIf="!loadRequestPlaintJustificationListformData || loadRequestPlaintJustificationListformData.length === 0" class="alert alert-info">
+                          {{ 'Common.NoData' | translate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="main-container p-0 mb-4">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                          data-bs-target="#collapseworkFlowComment" aria-expanded="false" aria-controls="collapseworkFlowComment">
+                    {{ 'mainApplyServiceResourceName.Comments' | translate }}
+                  </button>
+                </h2>
+                <div id="collapseworkFlowComment" class="accordion-collapse collapse"
+                     data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="step-content mb-4">
+                      <div id="addDiv" class="col-12 d-flex justify-content-end mb-4 mt-2"
+                           *ngIf="!workFlowQuery?.length || workFlowQuery[0]?.serviceStatus == 4 || workFlowQuery[0]?.serviceStatus == 5">
+                        <button type="button" class="btn btn-gold" (click)="openCommenttxt()">
+                          {{ 'mainApplyServiceResourceName.addcomm' | translate }}
+                        </button>
+                      </div>
+                      <br />
+                      <div *ngIf="loadWorkFlowCommentListformData && loadWorkFlowCommentListformData.length > 0">
+                        <app-generic-data-table class="mt-3"
+                                                [columnDefs]="workFlowCommentcolumnDefs"
+                                                [rowData]="loadWorkFlowCommentListformData"
+                                                [totalCount]="paginationworkFlowComment.totalCount"
+                                                [pageSize]="paginationworkFlowComment.take"
+                                                [currentPage]="paginationworkFlowComment.currentPage - 1"
+                                                [columnHeaderMap]="columnHeaderMap"
+                                                (pageChange)="onPageChangeworkFlowComment($event)"
+                                                [showActionColumn]="false"
+                                                (search)="onTableSearchworkFlowComment($event)">
+                        </app-generic-data-table>
+                      </div>
+
+                      <div *ngIf="!loadWorkFlowCommentListformData || loadWorkFlowCommentListformData.length === 0" class="alert alert-info">
+                        {{ 'Common.NoData' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="main-container p-0 mb-4">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                          data-bs-target="#collapseuserattachments" aria-expanded="false" aria-controls="collapseuserattachments">
+                    {{ 'mainApplyServiceResourceName.att' | translate }}
+                  </button>
+                </h2>
+                <div id="collapseuserattachments" class="accordion-collapse collapse"
+                     data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="step-content mb-4">
+                      <div *ngIf="loaduserattachmentsListServiceformData && loaduserattachmentsListServiceformData.length > 0">
+                        <div class="row">
+                          <div class="col-xl-4 col-lg-6 mb-4"
+                               *ngFor="let attachment of loaduserattachmentsListServiceformData">
+                            <div class="attachment-box">
+                              <h6 class="card-title">
+                                {{attachment.attachmentTitle || ('mainApplyServiceResourceName.ATTACHMENTS.ATTACHMENT' | translate) }}
+                              </h6>
+                              <p class="mb-4">
+                                {{ 'Common.UPLOADED_ON' | translate }}:
+                                {{formatDateTime(attachment.lastModified)}}
+                              </p>
+                              <div class="d-flex justify-content-between mt-auto">
+                                <button class="btn btn-next-style me-2"
+                                        (click)="viewAttachment(attachment)">
+                                  <i class="fas fa-eye me-1"></i>
+                                  {{ 'Common.VIEW' | translate }}
+                                </button>
+                                <button class="btn btn-download-style"
+                                        (click)="downloadAttachment(attachment)">
+                                  <i class="fas fa-download me-1"></i>
+                                  {{ 'Common.DOWNLOAD' | translate }}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div *ngIf="!loaduserattachmentsListServiceformData || loaduserattachmentsListServiceformData.length === 0"
+                           class="alert alert-info">
+                        {{ 'Common.NoData' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <div *ngIf="!isLoading && !loadformData" class="alert alert-danger text-center">
+        <h5>{{ 'Common.ERROR' | translate }}</h5>
+        <p>{{ 'Common.DATA_NOT_FOUND' | translate }}</p>
+        <button class="btn btn-secondary" (click)="goBack()">
+          {{ 'Common.GO_BACK' | translate }}
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+  <div class="modal fade" id="addcomments" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="gold bold">{{ 'mainApplyServiceResourceName.Comments' | translate }}</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z" fill="#5B5B5B" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="">
+            <form [formGroup]="userForm">
+              <div class="row">
+                <div class="col-xl-12 mb-3">
+                  <label for="comment" class="form-label">{{ 'mainApplyServiceResourceName.Comments' | translate }}</label>
+                  <textarea id="comment" class="form-control" rows="3"
+                            [ngClass]="{'is-invalid': userForm.get('comment')?.invalid && (userForm.get('comment')?.touched || submitted)}"
+                            formControlName="comment"
+                            placeholder="{{ 'comment' | translate }}"></textarea>
+                  <div *ngIf="userForm.get('comment')?.invalid && (userForm.get('comment')?.touched || submitted)"
+                       class="invalid-feedback">
+                  </div>
+                </div>
+
+                <div class="col-xl-6 mb-3">
+                  <label for="commentTypeId" class="form-label">{{ 'mainApplyServiceResourceName.commentType' | translate }}</label>
+                  <select id="commentTypeId" class="form-select"
+                          [ngClass]="{'is-invalid': userForm.get('commentTypeId')?.invalid && (userForm.get('commentTypeId')?.touched || submitted)}"
+                          formControlName="commentTypeId">
+                    <option [ngValue]="null">{{ 'SELECT' | translate }}</option>
+                    <option [ngValue]=1>{{ 'Internal' | translate }}</option>
+                    <option [ngValue]=2>{{ 'External' | translate }}</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer mt-3">
+          <button type="button" class="btn btn-gold" (click)="submitComment()">{{ 'Common.save' | translate }}</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModalReject" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editLabel">{{ 'mainApplyServiceResourceName.refusereason' | translate }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z" fill="#5B5B5B" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="">
+            <form [formGroup]="rejectResonsForm">
+              <div class="row">
+                <div class="col-xl-12 mb-3">
+                  <label for="reasonTxt" class="form-label">{{ 'mainApplyServiceResourceName.reason' | translate }}</label>
+                  <textarea id="reasonTxt" class="form-control" rows="3"
+                            [ngClass]="{'is-invalid': rejectResonsForm.get('reasonTxt')?.invalid && (rejectResonsForm.get('reasonTxt')?.touched || submitted)}"
+                            formControlName="reasonTxt"
+                            placeholder="{{ 'reasonTxt' | translate }}"></textarea>
+                  <div *ngIf="rejectResonsForm.get('reasonTxt')?.invalid && (rejectResonsForm.get('reasonTxt')?.touched || submitted)"
+                       class="invalid-feedback">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer mt-3">
+          <button type="button" class="btn btn-gold" (click)="rejectReasonSave()">{{ 'Common.save' | translate }}</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModalReturnModification" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editLabel">سبب ارجاع الطلب للتعديل</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z" fill="#5B5B5B" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="">
+            <form [formGroup]="returnModificationForm">
+              <div class="row">
+                <div class="col-xl-12 mb-3">
+                  <label for="returnModificationreasonTxt" class="form-label">{{ 'mainApplyServiceResourceName.reason' | translate }}</label>
+                  <textarea id="returnModificationreasonTxt" class="form-control" rows="3"
+                            [ngClass]="{'is-invalid': returnModificationForm.get('returnModificationreasonTxt')?.invalid && (returnModificationForm.get('returnModificationreasonTxt')?.touched || submitted)}"
+                            formControlName="returnModificationreasonTxt"
+                            placeholder="{{ 'returnModificationreasonTxt' | translate }}"></textarea>
+                  <div *ngIf="returnModificationForm.get('returnModificationreasonTxt')?.invalid && (returnModificationForm.get('returnModificationreasonTxt')?.touched || submitted)"
+                       class="invalid-feedback">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer mt-3">
+          <button type="button" class="btn btn-gold" (click)="returnModficationReasonSave()">{{ 'Common.save' | translate }}</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>

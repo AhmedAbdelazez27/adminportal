@@ -82,3 +82,24 @@ export class getTotlaBenDonationsRPTOutputDto {
   misC_RECEIPT_AMOUNTstr?: string | null = null;
   administrativEstr?: string | null = null;
 }
+
+
+export class balanceReviewRptOutputDto {
+  level_desc?: string | null = null;
+  acc_code?: string | null = null;
+  acC_DESC?: string | null = null;
+  amount?: string | null = null;
+  balance?: string | null = null;
+  debit?: string | null = null;
+  credit?: string | null = null;
+  ob_debit?: string | null = null;
+  ob_credit?: string | null = null;
+  entity_id?: string | null = null;
+  user_id?: string | null = null;
+  rn?: string | null = null;
+  deptOBCalc?: string | null = null;
+  creditOBCalc?: string | null = null;
+  endDept?: string | null = null;
+  endCredit?: string | null = null;
+  oB_Amount?: string | null = null;
+}

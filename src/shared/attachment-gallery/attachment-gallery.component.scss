@@ -1,0 +1,37 @@
+.attachment-card {
+  height: 200px; /* Set minimum card height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.attachment-preview {
+  position: relative;
+  height: 140px; /* Set height for image container */
+  overflow: hidden;
+}
+
+.attachment-img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.download-btn {
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent bg */
+  color: white;
+  border: none;
+  padding: 4px 6px;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.download-btn:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+}
+
+.no-preview {
+  height: 100%;
+  background-color: #f0f0f0;
+}

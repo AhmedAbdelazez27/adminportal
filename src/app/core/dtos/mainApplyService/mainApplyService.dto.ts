@@ -28,8 +28,8 @@ export class mainApplyServiceDto {
   userId?: string | null = null;
   userName?: string | null = null;
   serviceId?: number | null = null;
-  applyDate?: Date | null = null;
-  lastModified?: Date | null = null;
+  applyDate: string | null = null;
+  lastModified: Date | null = null;
   applyNo?: string | null = null;
   parentId?: number | null = null;
   lastStatus?: string | null = null;
@@ -139,7 +139,7 @@ export class AttachmentDto {
   imgPath?: string | null = null;
   masterType?: number | null = null;
   attachmentTitle?: string | null = null;
-  lastModified?: Date | null = null;
+  lastModified: Date | null = null;
   lastModifiedstr?: string | null = null;
   attConfigID?: number | null = null;
   attachmentBinary?: string | null = null;
@@ -164,7 +164,7 @@ export class AppUserDto {
   foundationType?: string | null = null;
   foundationName?: string | null = null;
   licenseNumber?: string | null = null;
-  licenseEndDate?: Date | null = null;
+  licenseEndDate: Date | null = null;
   licenseEndDatestr?: string | null = null;
   civilId?: string | null = null;
   fax?: string | null = null;
@@ -184,7 +184,7 @@ export class WorkFlowStepDto {
   empId?: string | null = null;
   deptId?: number | null = null;
   mainApplyServiceId?: number | null = null;
-  serviceStatus?: number | null = null;
+  serviceStatus: number | null = null;
   serviceStatusName?: string | null = null;
   refuseReason?: string | null = null;
   stepOrder?: number | null = null;

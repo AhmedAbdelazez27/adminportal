@@ -10,6 +10,7 @@ import { VerifyotpComponent } from './features/auth/verifyotp/verifyotp.componen
 import { ResetpasswordComponent } from './features/auth/resetpassword/resetpassword.component';
 import { StatisticsOfBeneficiaryFamiliesComponents } from './features/socialcases/charts/statistics-Benf-Families/statistics-Benf-Families.component';
 import { MainApplyServiceComponent } from './features/services/mainApplyService/mainApplyService.component';
+import { GlAccountComponent } from './features/finanial/operations/glAccount/glAccount.component';
 
 
 export const routes: Routes = [
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'verify-otp', component: VerifyotpComponent },
   { path: 'reset-password', component: ResetpasswordComponent },
   { path: 'MainServices', component: MainApplyServiceComponent },
+  { path: 'GlAccounts', component: GlAccountComponent },
 
   {
     path: '',
@@ -87,6 +89,13 @@ export const routes: Routes = [
               import(
                 './features/UserSetting/contact-information/contact-information.routes'
               ).then((m) => m.contactInformationRoutes),
+            //canActivate: [authGuard],
+            data: { permission: 'Settings.View' },
+          },
+          {
+            path: 'polls',
+            loadChildren: () =>
+              import('./features/UserSetting/polls-component/polls-component.routes').then((m) => m.pollsComponentRoutes),
             //canActivate: [authGuard],
             data: { permission: 'Settings.View' },
           },

@@ -39,6 +39,16 @@ export class generalLJournalRptInputDto {
   toDatestr?: string | null = null;
 }
 
+export class balanceReviewRptInputDto {
+  level?: number | null = null;
+  user_ID?: string | null = null;
+  take: number | number = 10;
+  skip?: number;
+  orderByValue?: string | null = null;
+  searchValue?: string | null = null;
+}
+
+
 export class receiptRPTInputDto {
   entityId?: string | null = null;
   fromDate?: string | null = null;

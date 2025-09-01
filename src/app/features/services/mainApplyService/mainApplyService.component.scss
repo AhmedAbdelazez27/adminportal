@@ -192,3 +192,27 @@
 .mt-step-col.error .mt-step-number {
   border-color: red;
 }
+
+.status-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.status-box.success {
+  color: green;
+  border-color: green;
+  background-color: #e6f4ea;
+}
+
+.status-box.error {
+  color: red;
+  border-color: red;
+  background-color: #fbeaea;
+}

@@ -280,4 +280,19 @@ export class Select2Service {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetServiceTypeSelect2}`
     return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
+
+  getGlAccountSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetGlAccountSelect2}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  glAccountEntitySelect2(params: FndLookUpValuesSelect2RequestbyIdDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GlAccountEntitySelect2}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getAccountStatusSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GlAccountEntitySelect2}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
 }

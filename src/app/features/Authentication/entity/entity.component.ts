@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -18,15 +18,21 @@ import { environment } from '../../../../environments/environment';
 import { ApiEndpoints } from '../../../core/constants/api-endpoints';
 import {
     EntityDto,
+    BackendEntityDto,
     CreateEntityDto,
     UpdateEntityDto,
     EntityParameter,
     PagedResultDto,
+    AttachmentDto,
+    AttachmentBase64Dto,
 } from '../../../core/dtos/Authentication/Entity/entity.dto';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { PagedDto, Pagination } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { GenericDataTableComponent } from '../../../../shared/generic-data-table/generic-data-table.component';
 import { Subject } from 'rxjs';
+import { AttachmentService } from '../../../core/services/attachments/attachment.service';
+import { AttachmentsConfigType, AttachmentsConfigDto } from '../../../core/dtos/attachments/attachments-config.dto';
+import { UpdateAttachmentBase64Dto } from '../../../core/dtos/attachments/attachment.dto';
 
 declare var bootstrap: any;
 @Component({
@@ -42,7 +48,7 @@ declare var bootstrap: any;
     templateUrl: './entity.component.html',
     styleUrl: './entity.component.scss',
 })
-export class EntityComponent implements OnInit {
+export class EntityComponent implements OnInit, OnDestroy {
     @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent
     entities: EntityDto[] = [];
     loadgridData: EntityDto[] = [];
@@ -56,8 +62,23 @@ export class EntityComponent implements OnInit {
     mode: 'add' | 'edit' | 'view' = 'add';
     editingEntityId: string | null = null;
     selectedEntityToDelete: string | null = null;
+    selectedEntityObject: EntityDto | null = null;
     isLoading: boolean = false;
     Math = Math; // Make Math available in template
+    environment = environment; // Make environment available in template
+
+    // Attachment-related properties
+    selectedFile: File | null = null;
+    filePreview: string | null = null;
+    existingAttachment: AttachmentDto | null = null;
+    existingImageUrl: string | null = null;
+    isDragOver: boolean = false;
+    uploadProgress: number = 0;
+    fileValidationErrors: string[] = [];
+    fileValidationSuccess: boolean = false;
+    selectedAttachmentToDelete: AttachmentDto | null = null;
+    attachmentConfigs: AttachmentsConfigDto[] = [];
+    isLoadingDropdowns: boolean = false;
 
     // Account Details dropdown options (static data as requested)
     accountDetailsOptions: any[] = [
@@ -82,19 +103,25 @@ export class EntityComponent implements OnInit {
     ];
     headerKeys: string[] = [
         'serial',
-        'entity_NAME_EN',
-        'entity_NAME',
-        'entity_LOCALTION',
-        'entity_PHONE',
-        'entity_WEBSITE',
-        'entity_MAIL',
-        'acC_DETAILS_ID',
+        'ENTITY_NAME_EN',
+        'ENTITY_NAME',
+        'ENTITY_LOCALTION',
+        'ENTITY_PHONE',
+        'ENTITY_WEBSITE',
+        'ENTITY_MAIL',
+        'ACC_DETAILS_ID',
         'actions',
     ];
     showAction: boolean = true;
     actionTypes: string[] = ['view', 'edit', 'delete'];
 
-    searchParams = new PagedDto();
+    searchParams: EntityParameter = {
+        searchValue: '',
+        entityId: undefined,
+        isShowInPortal: false,
+        skip: 0,
+        take: 10
+    };
     searchInput$ = new Subject<string>();
     translatedHeaders: string[] = [];
     pagination = new Pagination();
@@ -106,15 +133,21 @@ export class EntityComponent implements OnInit {
     columnHeaderMap: { [key: string]: string } = {};
     rowActions: Array<{ label: string, icon?: string, action: string }> = [];
 
+    // Modal instances for proper cleanup
+    private mainModalInstance: any = null;
+    private deleteModalInstance: any = null;
+    private deleteAttachmentModalInstance: any = null;
+
     constructor(
         private entityService: EntityService,
         private spinnerService: SpinnerService,
         private toastr: ToastrService,
         public translate: TranslateService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private attachmentService: AttachmentService
     ) {
         this.entityForm = this.fb.group({
-            entitY_NAME: [
+            ENTITY_NAME: [
                 '',
                 [
                     Validators.required,
@@ -123,7 +156,7 @@ export class EntityComponent implements OnInit {
                     this.noWhitespaceValidator,
                 ],
             ],
-            entitY_NAME_EN: [
+            ENTITY_NAME_EN: [
                 '',
                 [
                     Validators.required,
@@ -132,31 +165,49 @@ export class EntityComponent implements OnInit {
                     this.noWhitespaceValidator,
                 ],
             ],
-            entitY_LOCALTION: [
+            ENTITY_LOCALTION: [
                 '',
                 [Validators.maxLength(4000), this.noWhitespaceValidator],
             ],
-            entitY_PHONE: ['', [Validators.maxLength(100), this.phoneValidator]],
-            entitY_WEBSITE: ['', [Validators.maxLength(100), this.websiteValidator]],
-            entitY_MAIL: [
+            ENTITY_PHONE: ['', [Validators.maxLength(100), this.phoneValidator]],
+            ENTITY_WEBSITE: ['', [Validators.maxLength(100), this.websiteValidator]],
+            ENTITY_MAIL: [
                 '',
                 [Validators.maxLength(100), Validators.email, this.emailValidator],
             ],
-            acC_DETAILS_ID: [null],
-            entitY_ID: [null],
+            ACC_DETAILS_ID: [null],
+            ENTITY_ID: [null],
+            DescriptionAr: ['', [Validators.maxLength(4000)]],
+            DescriptionEn: ['', [Validators.maxLength(4000)]],
+            IsShowInPortal: [false],
         });
     }
 
     ngOnInit(): void {
-        this.getEntities(1);
+        // Remove the conflicting getEntities call and only use getLoadDataGrid
         this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+        this.loadAttachmentsConfig();
 
-        this.buildColumnDefs();
-        this.rowActions = [
-            { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
-            { label: this.translate.instant('Common.edit'), icon: 'icon-frame-edit', action: 'onEditInfo' },
-            { label: this.translate.instant('Common.deletd'), icon: 'icon-frame-delete', action: 'onDeletdInfo' },
-        ]
+        // Build column definitions and row actions after a short delay to ensure translations are ready
+        setTimeout(() => {
+            this.buildColumnDefs();
+            this.rowActions = [
+                { label: this.translate.instant('COMMON.VIEW_INFO'), icon: 'icon-frame-view', action: 'onViewInfo' },
+                { label: this.translate.instant('COMMON.EDIT_INFO'), icon: 'icon-frame-edit', action: 'onEditInfo' },
+                { label: this.translate.instant('COMMON.DELETE_INFO'), icon: 'icon-frame-delete', action: 'onDeleteInfo' },
+            ];
+        }, 100);
+    }
+
+    ngOnDestroy(): void {
+        // Clean up modal instances
+        this.disposeAllModals();
+        
+        // Clear any remaining modal backdrops
+        this.clearModalBackdrops();
+        
+        // Restore body scroll if locked
+        this.restoreBodyScroll();
     }
 
     // Custom validators
@@ -250,7 +301,7 @@ export class EntityComponent implements OnInit {
         if (!this.submitted) return false;
 
         // Check if mandatory fields have errors
-        const mandatoryFields = ['entitY_NAME', 'entitY_NAME_EN'];
+        const mandatoryFields = ['ENTITY_NAME', 'ENTITY_NAME_EN'];
         for (const fieldName of mandatoryFields) {
             const control = this.entityForm.get(fieldName);
             if (control && control.invalid) {
@@ -268,7 +319,7 @@ export class EntityComponent implements OnInit {
         let errorCount = 0;
 
         // Count errors in mandatory fields
-        const mandatoryFields = ['entitY_NAME', 'entitY_NAME_EN'];
+        const mandatoryFields = ['ENTITY_NAME', 'ENTITY_NAME_EN'];
         for (const fieldName of mandatoryFields) {
             const control = this.entityForm.get(fieldName);
             if (control && control.errors) {
@@ -287,7 +338,7 @@ export class EntityComponent implements OnInit {
         const control = this.entityForm.get(fieldName);
 
         // For mandatory fields, show errors if invalid and touched/submitted
-        if (fieldName === 'entitY_NAME' || fieldName === 'entitY_NAME_EN') {
+        if (fieldName === 'ENTITY_NAME' || fieldName === 'ENTITY_NAME_EN') {
             return !!(
                 control &&
                 control.invalid &&
@@ -309,7 +360,7 @@ export class EntityComponent implements OnInit {
         const control = this.entityForm.get(fieldName);
 
         // Only show "Looks good" for mandatory fields when they have valid data
-        if (fieldName === 'entitY_NAME' || fieldName === 'entitY_NAME_EN') {
+        if (fieldName === 'ENTITY_NAME' || fieldName === 'ENTITY_NAME_EN') {
             return !!(
                 control &&
                 control.valid &&
@@ -331,8 +382,8 @@ export class EntityComponent implements OnInit {
 
     // Check if mandatory fields are valid for enabling create/update button
     areMandatoryFieldsValid(): boolean {
-        const arabicNameControl = this.entityForm.get('entitY_NAME');
-        const englishNameControl = this.entityForm.get('entitY_NAME_EN');
+        const arabicNameControl = this.entityForm.get('ENTITY_NAME');
+        const englishNameControl = this.entityForm.get('ENTITY_NAME_EN');
 
         return !!(
             arabicNameControl &&
@@ -349,11 +400,11 @@ export class EntityComponent implements OnInit {
     // Get optional fields that have validation errors
     getOptionalFieldsWithErrors(): string[] {
         const optionalFields = [
-            'entitY_LOCALTION',
-            'entitY_PHONE',
-            'entitY_WEBSITE',
-            'entitY_MAIL',
-            'acC_DETAILS_ID',
+            'ENTITY_LOCALTION',
+            'ENTITY_PHONE',
+            'ENTITY_WEBSITE',
+            'ENTITY_MAIL',
+            'ACC_DETAILS_ID',
         ];
         const fieldsWithErrors: string[] = [];
 
@@ -377,6 +428,31 @@ export class EntityComponent implements OnInit {
         return cleaned;
     }
 
+    // Helper method to transform backend data to expected format
+    private transformBackendData(data: BackendEntityDto[]): EntityDto[] {
+        const transformed = data.map(item => {
+            const transformedItem: EntityDto = {
+                ENTITY_ID: item.entitY_ID || (item as any).ENTITY_ID,
+                ENTITY_NAME: item.entitY_NAME || (item as any).ENTITY_NAME,
+                ENTITY_NAME_EN: item.entitY_NAME_EN || (item as any).ENTITY_NAME_EN,
+                ENTITY_LOCALTION: item.entitY_LOCALTION || (item as any).ENTITY_LOCALTION,
+                ENTITY_PHONE: item.entitY_PHONE || (item as any).ENTITY_PHONE,
+                ENTITY_WEBSITE: item.entitY_WEBSITE || (item as any).ENTITY_WEBSITE,
+                ENTITY_MAIL: item.entitY_MAIL || (item as any).ENTITY_MAIL,
+                ACC_DETAILS_ID: item.acC_DETAILS_ID || (item as any).ACC_DETAILS_ID,
+                DescriptionAr: item.descriptionAr || (item as any).DescriptionAr,
+                DescriptionEn: item.descriptionEn || (item as any).DescriptionEn,
+                IsShowInPortal: item.isShowInPortal !== undefined ? item.isShowInPortal : (item as any).IsShowInPortal,
+                MasterId: item.masterId || (item as any).MasterId,
+                // Handle single attachment object
+                Attachment: item.attachment || (item as any).attachment
+            };
+            return transformedItem;
+        });
+        
+        return transformed;
+    }
+
     getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
         this.pagination.currentPage = event.pageNumber;
         this.pagination.take = event.pageSize;
@@ -389,8 +465,68 @@ export class EntityComponent implements OnInit {
         this.spinnerService.show();
         this.entityService.getAllEntities(cleanedFilters).subscribe(
             (data: any) => {
-                this.loadgridData = data.data;
-                this.pagination.totalCount = data.totalCount;
+                
+                // Handle different response formats
+                let allData: EntityDto[] = [];
+                let totalCount: number = 0;
+
+                if (data && data.data) {
+                    // API response with data property
+                    allData = this.transformBackendData(data.data);
+                    totalCount = data.totalCount || data.total || data.data.length || 0;
+                } else if (data && data.items) {
+                    // Standard PagedResultDto format
+                    allData = this.transformBackendData(data.items);
+                    totalCount = data.totalCount || 0;
+                } else if (data && Array.isArray(data)) {
+                    // Direct array response
+                    allData = this.transformBackendData(data);
+                    totalCount = data.length;
+                } else if (data && data.results) {
+                    // Select2 format
+                    allData = this.transformBackendData(data.results);
+                    totalCount = data.total || data.results.length;
+                } else {
+                    // Empty or unexpected format
+                    allData = [];
+                    totalCount = 0;
+                }
+
+                // If no data and we're in development, show some mock data for testing
+                if (allData.length === 0 && !environment.production) {
+                    allData = [
+                        {
+                            ENTITY_ID: 'ENT001',
+                            ENTITY_NAME: 'شركة تجريبية',
+                            ENTITY_NAME_EN: 'Test Company',
+                            ENTITY_LOCALTION: 'Dubai, UAE',
+                            ENTITY_PHONE: '+971-50-123-4567',
+                            ENTITY_WEBSITE: 'www.testcompany.com',
+                            ENTITY_MAIL: 'info@testcompany.com',
+                            ACC_DETAILS_ID: 'ACC001',
+                            IsShowInPortal: true,
+                            MasterId: 1,
+                        },
+                        {
+                            ENTITY_ID: 'ENT002',
+                            ENTITY_NAME: 'مؤسسة تجريبية',
+                            ENTITY_NAME_EN: 'Test Foundation',
+                            ENTITY_LOCALTION: 'Abu Dhabi, UAE',
+                            ENTITY_PHONE: '+971-2-123-4567',
+                            ENTITY_WEBSITE: 'www.testfoundation.com',
+                            ENTITY_MAIL: 'contact@testfoundation.com',
+                            ACC_DETAILS_ID: 'ACC002',
+                            IsShowInPortal: false,
+                            MasterId: 2,
+                        },
+                    ];
+                    totalCount = 2;
+                }
+
+                // Update component properties
+                this.loadgridData = allData;
+                this.pagination.totalCount = totalCount;
+                
                 this.spinnerService.hide();
             },
             (error) => {
@@ -412,6 +548,7 @@ export class EntityComponent implements OnInit {
             skip: skip,
             take: this.itemsPerPage,
             searchValue: searchValue,
+            isShowInPortal: false,
         };
 
         this.entityService.getAllEntities(parameters).subscribe({
@@ -422,19 +559,19 @@ export class EntityComponent implements OnInit {
 
                 if (data && data.data) {
                     // API response with data property
-                    allData = data.data;
+                    allData = this.transformBackendData(data.data);
                     totalCount = data.totalCount || data.total || data.data.length || 0;
                 } else if (data && data.items) {
                     // Standard PagedResultDto format
-                    allData = data.items;
+                    allData = this.transformBackendData(data.items);
                     totalCount = data.totalCount || 0;
                 } else if (data && Array.isArray(data)) {
                     // Direct array response
-                    allData = data;
+                    allData = this.transformBackendData(data);
                     totalCount = data.length;
                 } else if (data && data.results) {
                     // Select2 format
-                    allData = data.results;
+                    allData = this.transformBackendData(data.results);
                     totalCount = data.total || data.results.length;
                 } else {
                     // Empty or unexpected format
@@ -446,24 +583,28 @@ export class EntityComponent implements OnInit {
                 if (allData.length === 0 && !environment.production) {
                     allData = [
                         {
-                            entitY_ID: 'ENT001',
-                            entitY_NAME: 'شركة تجريبية',
-                            entitY_NAME_EN: 'Test Company',
-                            entitY_LOCALTION: 'Dubai, UAE',
-                            entitY_PHONE: '+971-50-123-4567',
-                            entitY_WEBSITE: 'www.testcompany.com',
-                            entitY_MAIL: 'info@testcompany.com',
-                            acC_DETAILS_ID: 'ACC001',
+                            ENTITY_ID: 'ENT001',
+                            ENTITY_NAME: 'شركة تجريبية',
+                            ENTITY_NAME_EN: 'Test Company',
+                            ENTITY_LOCALTION: 'Dubai, UAE',
+                            ENTITY_PHONE: '+971-50-123-4567',
+                            ENTITY_WEBSITE: 'www.testcompany.com',
+                            ENTITY_MAIL: 'info@testcompany.com',
+                            ACC_DETAILS_ID: 'ACC001',
+                            IsShowInPortal: true,
+                            MasterId: 1,
                         },
                         {
-                            entitY_ID: 'ENT002',
-                            entitY_NAME: 'مؤسسة تجريبية',
-                            entitY_NAME_EN: 'Test Foundation',
-                            entitY_LOCALTION: 'Abu Dhabi, UAE',
-                            entitY_PHONE: '+971-2-123-4567',
-                            entitY_WEBSITE: 'www.testfoundation.com',
-                            entitY_MAIL: 'contact@testfoundation.com',
-                            acC_DETAILS_ID: 'ACC002',
+                            ENTITY_ID: 'ENT002',
+                            ENTITY_NAME: 'مؤسسة تجريبية',
+                            ENTITY_NAME_EN: 'Test Foundation',
+                            ENTITY_LOCALTION: 'Abu Dhabi, UAE',
+                            ENTITY_PHONE: '+971-2-123-4567',
+                            ENTITY_WEBSITE: 'www.testfoundation.com',
+                            ENTITY_MAIL: 'contact@testfoundation.com',
+                            ACC_DETAILS_ID: 'ACC002',
+                            IsShowInPortal: false,
+                            MasterId: 2,
                         },
                     ];
                     totalCount = 2;
@@ -499,29 +640,31 @@ export class EntityComponent implements OnInit {
             return;
         }
 
-        this.getEntities(page, this.searchValue);
+        this.getLoadDataGrid({ pageNumber: page, pageSize: this.pagination.take });
     }
 
     changePerPage(event: any): void {
         const perPage = parseInt(event.target.value, 10);
         if (!isNaN(perPage) && perPage > 0) {
-            this.itemsPerPage = perPage;
-            this.currentPage = 1; // Reset to first page
-            this.getEntities(1, this.searchValue);
+            this.pagination.take = perPage;
+            this.pagination.currentPage = 1; // Reset to first page
+            this.getLoadDataGrid({ pageNumber: 1, pageSize: perPage });
         }
     }
 
     onSearch(): void {
-        this.getEntities(1, this.searchValue);
+        this.searchParams.searchValue = this.searchValue;
+        this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
     }
 
     clear(): void {
         this.searchValue = '';
-        this.getEntities(1, '');
+        this.searchParams.searchValue = '';
+        this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
     }
 
     // Form submission
-    submit(): void {
+    async submit(): Promise<void> {
         this.submitted = true;
 
         // Mark all fields as touched to trigger validation display
@@ -548,63 +691,118 @@ export class EntityComponent implements OnInit {
         }
 
         const formData = this.entityForm.value;
+        
+        // Attachment validation (similar to locations component)
+        const entityImageConfig = this.getEntityImageConfig();
+        const hasExistingAttachment = !!this.existingAttachment;
+        const hasNewFile = !!this.selectedFile;
+
+        if (entityImageConfig) {
+            if (this.mode === 'add' && !hasNewFile) {
+                this.toastr.error(this.translate.instant('FILE.ENTITY_IMAGE_REQUIRED'));
+                return;
+            }
+            if (this.mode === 'edit' && !hasExistingAttachment && !hasNewFile) {
+                this.toastr.error(this.translate.instant('FILE.ENTITY_IMAGE_REQUIRED'));
+                return;
+            }
+        }
+
         this.spinnerService.show();
 
-        if (this.mode === 'add') {
-            const createData: CreateEntityDto = {
-                entitY_ID: formData.entitY_ID,
-                entitY_NAME: formData.entitY_NAME?.trim(),
-                entitY_NAME_EN: formData.entitY_NAME_EN?.trim(),
-                entitY_LOCALTION: formData.entitY_LOCALTION?.trim() || null,
-                entitY_PHONE: formData.entitY_PHONE?.trim() || null,
-                entitY_WEBSITE: formData.entitY_WEBSITE?.trim() || null,
-                entitY_MAIL: formData.entitY_MAIL?.trim() || null,
-                acC_DETAILS_ID: formData.acC_DETAILS_ID,
-            };
+        try {
+            let attachmentDto: AttachmentBase64Dto | null = null;
 
-            this.entityService.createEntity(createData).subscribe({
-                next: (res) => {
-                    this.toastr.success(this.translate.instant('TOAST.ENTITY_CREATED'));
-                    this.getEntities(this.currentPage, this.searchValue);
-                    this.closeModal();
-                },
-                error: (err) => {
-                    this.toastr.error(this.translate.instant('TOAST.CREATE_ERROR'));
-                    this.spinnerService.hide();
-                },
-                complete: () => this.spinnerService.hide(),
-            });
-        } else if (this.mode === 'edit') {
-            const updateData: UpdateEntityDto = {
-                entitY_ID: formData.entitY_ID,
-                entitY_NAME: formData.entitY_NAME?.trim(),
-                entitY_NAME_EN: formData.entitY_NAME_EN?.trim(),
-                entitY_LOCALTION: formData.entitY_LOCALTION?.trim() || null,
-                entitY_PHONE: formData.entitY_PHONE?.trim() || null,
-                entitY_WEBSITE: formData.entitY_WEBSITE?.trim() || null,
-                entitY_MAIL: formData.entitY_MAIL?.trim() || null,
-                acC_DETAILS_ID: formData.acC_DETAILS_ID,
-            };
+            if (this.selectedFile && entityImageConfig) {
+                const fileBase64 = await this.fileToBase64(this.selectedFile);
+                const masterId = this.mode === 'edit' && this.selectedEntityObject?.MasterId ? this.selectedEntityObject.MasterId : 0;
+                // Creating attachment DTO
+                attachmentDto = {
+                    fileBase64,
+                    fileName: this.selectedFile.name,
+                    masterId: masterId,
+                    attConfigID: entityImageConfig.id,
+                };
+            }
+            // Note: If no new file is selected, attachmentDto remains null,
+            // which means "don't change the existing attachment" for edit mode
 
-            this.entityService.updateEntity(updateData).subscribe({
-                next: (res) => {
-                    this.toastr.success(this.translate.instant('TOAST.ENTITY_UPDATED'));
-                    this.getEntities(this.currentPage, this.searchValue);
-                    this.closeModal();
-                },
-                error: (err) => {
-                    this.spinnerService.hide();
-                    this.toastr.error(this.translate.instant('TOAST.UPDATE_ERROR'));
-                },
-                complete: () => this.spinnerService.hide(),
-            });
+            if (this.mode === 'add') {
+                const createData: CreateEntityDto = {
+                    ENTITY_NAME: formData.ENTITY_NAME?.trim(),
+                    ENTITY_NAME_EN: formData.ENTITY_NAME_EN?.trim(),
+                    ENTITY_LOCALTION: formData.ENTITY_LOCALTION?.trim() || null,
+                    ENTITY_PHONE: formData.ENTITY_PHONE?.trim() || null,
+                    ENTITY_WEBSITE: formData.ENTITY_WEBSITE?.trim() || null,
+                    ENTITY_MAIL: formData.ENTITY_MAIL?.trim() || null,
+                    ACC_DETAILS_ID: formData.ACC_DETAILS_ID,
+                    DescriptionAr: formData.DescriptionAr?.trim() || null,
+                    DescriptionEn: formData.DescriptionEn?.trim() || null,
+                    IsShowInPortal: formData.IsShowInPortal || false,
+                    Attachment: attachmentDto || undefined,
+                };
+
+                this.entityService.createEntity(createData).subscribe({
+                    next: (res) => {
+                        this.toastr.success(this.translate.instant('TOAST.ENTITY_CREATED'));
+                        this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
+                        this.closeModal();
+                        this.spinnerService.hide();
+                    },
+                    error: (err) => {
+                        this.toastr.error(this.translate.instant('TOAST.CREATE_ERROR'));
+                        this.spinnerService.hide();
+                    },
+                });
+            } else if (this.mode === 'edit') {
+                const updateData: UpdateEntityDto = {
+                    ENTITY_ID: formData.ENTITY_ID,
+                    ENTITY_NAME: formData.ENTITY_NAME?.trim(),
+                    ENTITY_NAME_EN: formData.ENTITY_NAME_EN?.trim(),
+                    ENTITY_LOCALTION: formData.ENTITY_LOCALTION?.trim() || null,
+                    ENTITY_PHONE: formData.ENTITY_PHONE?.trim() || null,
+                    ENTITY_WEBSITE: formData.ENTITY_WEBSITE?.trim() || null,
+                    ENTITY_MAIL: formData.ENTITY_MAIL?.trim() || null,
+                    ACC_DETAILS_ID: formData.ACC_DETAILS_ID,
+                    DescriptionAr: formData.DescriptionAr?.trim() || null,
+                    DescriptionEn: formData.DescriptionEn?.trim() || null,
+                    IsShowInPortal: formData.IsShowInPortal || false,
+                };
+
+                this.entityService.updateEntity(updateData).subscribe({
+                    next: (res) => {
+                        this.toastr.success(this.translate.instant('TOAST.ENTITY_UPDATED'));
+
+                        // Handle attachment update separately
+                        if (attachmentDto && this.existingAttachment) {
+                            this.updateAttachmentSeparately(attachmentDto);
+                        } else if (attachmentDto) {
+                            // Create new attachment
+                            this.createAttachmentSeparately(attachmentDto);
+                        } else {
+                            // No attachment change, just refresh the image
+                            this.refreshImageAfterUpdate();
+                            this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
+                            this.closeModal();
+                            this.spinnerService.hide();
+                        }
+                    },
+                    error: (err) => {
+                        this.spinnerService.hide();
+                        this.toastr.error(this.translate.instant('TOAST.UPDATE_ERROR'));
+                    },
+                });
+            }
+        } catch (error) {
+            this.toastr.error(this.translate.instant('FILE.ERROR_PROCESSING_FILE'));
+            this.spinnerService.hide();
         }
     }
 
     // Helper method to get the first validation error
     getFirstValidationError(): string {
         // First check mandatory fields
-        const mandatoryFields = ['entitY_NAME', 'entitY_NAME_EN'];
+        const mandatoryFields = ['ENTITY_NAME', 'ENTITY_NAME_EN'];
         for (const fieldName of mandatoryFields) {
             const control = this.entityForm.get(fieldName);
             if (control && control.errors) {
@@ -623,81 +821,175 @@ export class EntityComponent implements OnInit {
 
     // Modal operations
     openAddModal(): void {
-        this.mode = 'add';
-        this.submitted = false;
-        // Ensure form is enabled for adding
-        this.entityForm.enable();
-        this.entityForm.reset({
-            acC_DETAILS_ID: null,
+        this.resetModalState('add').then(() => {
+            this.entityForm.enable();
+            this.showModal();
         });
     }
 
     openEditModal(entity: EntityDto): void {
-        this.mode = 'edit';
-        this.editingEntityId = entity.entitY_ID;
-        this.submitted = false;
-        // Ensure form is enabled for editing
-        this.entityForm.enable();
-        this.entityForm.patchValue({
-            entitY_ID: entity.entitY_ID,
-            entitY_NAME: entity.entitY_NAME,
-            entitY_NAME_EN: entity.entitY_NAME_EN,
-            entitY_LOCALTION: entity.entitY_LOCALTION,
-            entitY_PHONE: entity.entitY_PHONE,
-            entitY_WEBSITE: entity.entitY_WEBSITE,
-            entitY_MAIL: entity.entitY_MAIL,
-            acC_DETAILS_ID: entity.acC_DETAILS_ID,
+        this.entityService.getEntityById(entity.ENTITY_ID).subscribe({
+            next: async (fullEntity: any) => {
+                // Transform the API response to expected format
+                const transformedEntity = this.transformApiResponse(fullEntity);
+                // Set the selectedEntityObject with the full entity data including MasterId
+                this.selectedEntityObject = transformedEntity;
+                await this.resetModalState('edit', transformedEntity);
+                if (!transformedEntity.Attachment && entity.ENTITY_ID) {
+                    this.fetchAttachmentData(entity.ENTITY_ID);
+                }
+                this.populateForm(transformedEntity);
+                this.entityForm.enable();
+                this.showModal();
+            },
+            error: async (error: any) => {
+                this.toastr.error(this.translate.instant('TOAST.ERROR_LOADING_ENTITY_DETAILS'));
+                // Set the selectedEntityObject with the original entity data
+                this.selectedEntityObject = entity;
+                await this.resetModalState('edit', entity);
+                if (!entity.Attachment && entity.ENTITY_ID) {
+                    this.fetchAttachmentData(entity.ENTITY_ID);
+                }
+                this.populateForm(entity);
+                this.entityForm.enable();
+                this.showModal();
+            },
         });
     }
 
     openViewModal(entity: EntityDto): void {
-        this.mode = 'view';
-        this.submitted = false;
-        this.entityForm.patchValue({
-            entitY_ID: entity.entitY_ID,
-            entitY_NAME: entity.entitY_NAME,
-            entitY_NAME_EN: entity.entitY_NAME_EN,
-            entitY_LOCALTION: entity.entitY_LOCALTION,
-            entitY_PHONE: entity.entitY_PHONE,
-            entitY_WEBSITE: entity.entitY_WEBSITE,
-            entitY_MAIL: entity.entitY_MAIL,
-            acC_DETAILS_ID: entity.acC_DETAILS_ID,
+        this.entityService.getEntityById(entity.ENTITY_ID).subscribe({
+            next: async (fullEntity: any) => {
+                // Transform the API response to expected format
+                const transformedEntity = this.transformApiResponse(fullEntity);
+                await this.resetModalState('view', transformedEntity);
+                if (entity.ENTITY_ID) {
+                    this.fetchAttachmentData(entity.ENTITY_ID);
+                }
+                this.populateForm(transformedEntity);
+                this.entityForm.disable();
+                this.showModal();
+            },
+            error: async (error: any) => {
+                this.toastr.error(this.translate.instant('TOAST.ERROR_LOADING_ENTITY_DETAILS'));
+                await this.resetModalState('view', entity);
+                if (entity.ENTITY_ID) {
+                    this.fetchAttachmentData(entity.ENTITY_ID);
+                }
+                this.populateForm(entity);
+                this.entityForm.disable();
+                this.showModal();
+            },
         });
-        this.entityForm.disable();
+    }
+
+    private populateForm(entity: EntityDto): void {
+        this.entityForm.patchValue({
+            ENTITY_ID: entity.ENTITY_ID,
+            ENTITY_NAME: entity.ENTITY_NAME,
+            ENTITY_NAME_EN: entity.ENTITY_NAME_EN,
+            ENTITY_LOCALTION: entity.ENTITY_LOCALTION,
+            ENTITY_PHONE: entity.ENTITY_PHONE,
+            ENTITY_WEBSITE: entity.ENTITY_WEBSITE,
+            ENTITY_MAIL: entity.ENTITY_MAIL,
+            ACC_DETAILS_ID: entity.ACC_DETAILS_ID,
+            DescriptionAr: entity.DescriptionAr,
+            DescriptionEn: entity.DescriptionEn,
+            IsShowInPortal: entity.IsShowInPortal,
+        });
+    }
+
+    /**
+     * Transforms API response to match the expected EntityDto format
+     */
+    private transformApiResponse(apiResponse: any): EntityDto {
+        const transformed = {
+            ENTITY_ID: apiResponse.entitY_ID || apiResponse.ENTITY_ID,
+            ENTITY_NAME: apiResponse.entitY_NAME || apiResponse.ENTITY_NAME,
+            ENTITY_NAME_EN: apiResponse.entitY_NAME_EN || apiResponse.ENTITY_NAME_EN,
+            ENTITY_LOCALTION: apiResponse.entitY_LOCALTION || apiResponse.ENTITY_LOCALTION,
+            ENTITY_PHONE: apiResponse.entitY_PHONE || apiResponse.ENTITY_PHONE,
+            ENTITY_WEBSITE: apiResponse.entitY_WEBSITE || apiResponse.ENTITY_WEBSITE,
+            ENTITY_MAIL: apiResponse.entitY_MAIL || apiResponse.ENTITY_MAIL,
+            ACC_DETAILS_ID: apiResponse.acC_DETAILS_ID || apiResponse.ACC_DETAILS_ID,
+            DescriptionAr: apiResponse.descriptionAr || apiResponse.DescriptionAr,
+            DescriptionEn: apiResponse.descriptionEn || apiResponse.DescriptionEn,
+            IsShowInPortal: apiResponse.isShowInPortal || apiResponse.IsShowInPortal,
+            MasterId: apiResponse.masterId || apiResponse.MasterId,
+            Attachment: apiResponse.attachment || apiResponse.Attachment
+        };
+        
+        return transformed;
+    }
+
+    private showModal(): void {
+        const modal = document.getElementById('Entity');
+        if (modal) {
+            // Dispose existing instance if any
+            if (this.mainModalInstance) {
+                this.mainModalInstance.dispose();
+            }
+            
+            this.mainModalInstance = new (window as any).bootstrap.Modal(modal, {
+                backdrop: 'static',
+                keyboard: false
+            });
+            
+            // Add proper event listeners for cleanup
+            modal.addEventListener('hidden.bs.modal', () => {
+                this.onModalHidden();
+            });
+            
+            this.mainModalInstance.show();
+        }
     }
 
     closeModal(): void {
-        this.entityForm.reset();
-        this.entityForm.enable();
-        this.submitted = false;
-        const closeBtn = document.querySelector(
-            '#Entity .btn-close'
-        ) as HTMLElement;
-        closeBtn?.click();
+        this.resetModalState('add').then(() => {
+            this.entityForm.enable();
+            
+            // Properly close the modal using Bootstrap API
+            if (this.mainModalInstance) {
+                this.mainModalInstance.hide();
+            } else {
+                // Fallback if instance is not available
+                const modal = document.getElementById('Entity');
+                if (modal) {
+                    const bootstrapModal = (window as any).bootstrap.Modal.getInstance(modal);
+                    if (bootstrapModal) {
+                        bootstrapModal.hide();
+                    }
+                }
+            }
+        });
     }
 
     // Delete operations
     selectEntityToDelete(entity: EntityDto): void {
-        this.selectedEntityToDelete = entity.entitY_ID;
+        this.selectedEntityToDelete = entity.ENTITY_ID;
+        this.selectedEntityObject = entity;
     }
 
     deleteEntity(): void {
         if (this.selectedEntityToDelete) {
             this.spinnerService.show();
-            this.entityService.deleteEntity(this.selectedEntityToDelete).subscribe({
-                next: (response) => {
-                    this.selectedEntityToDelete = null;
-                    this.spinnerService.hide();
-                    this.toastr.success(this.translate.instant('TOAST.ENTITY_DELETED'));
-                    const closeBtn = document.querySelector(
-                        '.btn-delete.btn-close'
-                    ) as HTMLElement;
-                    closeBtn?.click();
-                    this.getEntities(this.currentPage, this.searchValue);
-                },
+                            this.entityService.deleteEntity(this.selectedEntityToDelete).subscribe({
+                    next: (response) => {
+                        this.selectedEntityToDelete = null;
+                        this.selectedEntityObject = null;
+                        this.spinnerService.hide();
+                        this.toastr.success(this.translate.instant('TOAST.ENTITY_DELETED'));
+                        
+                        // Properly close the delete modal
+                        if (this.deleteModalInstance) {
+                            this.deleteModalInstance.hide();
+                        }
+                        
+                        this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
+                    },
                 error: (error) => {
                     this.spinnerService.hide();
-                    this.toastr.error('Failed to delete entity');
+                    this.toastr.error(this.translate.instant('TOAST.ENTITY_DELETE_ERROR'));
                 },
             });
         }
@@ -706,29 +998,17 @@ export class EntityComponent implements OnInit {
     // Table event handlers
     onViewDetails(entity: EntityDto): void {
         this.openViewModal(entity);
-        const modalElement = document.getElementById('Entity');
-        if (modalElement) {
-            const modal = new bootstrap.Modal(modalElement);
-            modal.show();
-        };
+        // Modal will be shown by the openViewModal method
     }
 
     onEdit(entity: EntityDto): void {
         this.openEditModal(entity);
-        const modalElement = document.getElementById('Entity');
-        if (modalElement) {
-            const modal = new bootstrap.Modal(modalElement);
-            modal.show();
-        };
+        // Modal will be shown by the openEditModal method
     }
 
     onDelete(entity: EntityDto): void {
         this.selectEntityToDelete(entity);
-        const modalElement = document.getElementById('deleteEntityModal');
-        if (modalElement) {
-            const modal = new bootstrap.Modal(modalElement);
-            modal.show();
-        };
+        this.showDeleteModal();
     }
 
     // Helper methods
@@ -738,11 +1018,21 @@ export class EntityComponent implements OnInit {
 
     getEntityProperty(entity: any, propertyName: string): string {
         // Try different case variations of the property name
-        const variations = [
-            propertyName, // Original case
-            propertyName.toLowerCase(), // Lowercase
-            propertyName.charAt(0).toLowerCase() + propertyName.slice(1), // camelCase
+        const variations: string[] = [
+            propertyName, // Original case (ENTITY_NAME_EN)
+            propertyName.toLowerCase(), // lowercase (entity_name_en)
+            propertyName.charAt(0).toLowerCase() + propertyName.slice(1), // camelCase (entityNameEn)
         ];
+
+        // Handle the specific backend format
+        if (propertyName === 'ENTITY_ID') variations.push('entitY_ID');
+        if (propertyName === 'ENTITY_NAME') variations.push('entitY_NAME');
+        if (propertyName === 'ENTITY_NAME_EN') variations.push('entitY_NAME_EN');
+        if (propertyName === 'ENTITY_LOCALTION') variations.push('entitY_LOCALTION');
+        if (propertyName === 'ENTITY_PHONE') variations.push('entitY_PHONE');
+        if (propertyName === 'ENTITY_WEBSITE') variations.push('entitY_WEBSITE');
+        if (propertyName === 'ENTITY_MAIL') variations.push('entitY_MAIL');
+        if (propertyName === 'ACC_DETAILS_ID') variations.push('acC_DETAILS_ID');
 
         for (const variation of variations) {
             if (entity[variation] !== undefined && entity[variation] !== null) {
@@ -779,13 +1069,13 @@ export class EntityComponent implements OnInit {
                 width: 60,
                 colId: 'serialNumber'
             },
-            { headerName: this.translate.instant('ENTITY.ENGLISH_NAME'), field: 'entitY_NAME_EN', width: 200 },
-            { headerName: this.translate.instant('ENTITY.ARABIC_NAME'), field: 'entitY_NAME', width: 200 },
-            { headerName: this.translate.instant('ENTITY.LOCATION'), field: 'entitY_LOCALTION', width: 200 },
-            { headerName: this.translate.instant('ENTITY.PHONE'), field: 'entitY_PHONE', width: 200 },
-            { headerName: this.translate.instant('ENTITY.WEBSITE'), field: 'entitY_WEBSITE', width: 200 },
-            { headerName: this.translate.instant('ENTITY.EMAIL'), field: 'entitY_MAIL', width: 200 },
-            { headerName: this.translate.instant('ENTITY.ACCOUNT_DETAILS'), field: 'acC_DETAILS_ID', width: 200 }
+            { headerName: this.translate.instant('ENTITY.ENGLISH_NAME'), field: 'ENTITY_NAME_EN', width: 200 },
+            { headerName: this.translate.instant('ENTITY.ARABIC_NAME'), field: 'ENTITY_NAME', width: 200 },
+            { headerName: this.translate.instant('ENTITY.LOCATION'), field: 'ENTITY_LOCALTION', width: 200 },
+            { headerName: this.translate.instant('ENTITY.PHONE'), field: 'ENTITY_PHONE', width: 200 },
+            { headerName: this.translate.instant('ENTITY.WEBSITE'), field: 'ENTITY_WEBSITE', width: 200 },
+            { headerName: this.translate.instant('ENTITY.EMAIL'), field: 'ENTITY_MAIL', width: 200 },
+            { headerName: this.translate.instant('ENTITY.ACCOUNT_DETAILS'), field: 'ACC_DETAILS_ID', width: 200 }
         ];
     }
 
@@ -798,7 +1088,7 @@ export class EntityComponent implements OnInit {
             this.onEdit(event.row);
         }
 
-        if (event.action === 'onDeletdInfo') {
+        if (event.action === 'onDeleteInfo') {
             this.onDelete(event.row);
         }
     }
@@ -812,5 +1102,574 @@ export class EntityComponent implements OnInit {
     onTableSearch(text: string): void {
         this.searchText = text;
         this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
+    }
+
+    // Attachment methods
+    private loadAttachmentsConfig(): void {
+        this.attachmentService
+            .getAttachmentsConfigByType(AttachmentsConfigType.Entity)
+            .subscribe({
+                next: (result: AttachmentsConfigDto[]) => {
+                    this.attachmentConfigs = result || [];
+                },
+                error: (error) => {
+                    this.toastr.error(this.translate.instant('FILE.ERROR_LOADING_ATTACHMENT_CONFIG'));
+                    this.attachmentConfigs = [];
+                },
+            });
+    }
+
+    onFileSelected(event: any): void {
+        const file = event.target.files[0];
+        if (!file) return;
+        this.validateAndSetFile(file);
+    }
+
+    removeFile(): void {
+        this.selectedFile = null;
+        this.filePreview = null;
+        this.fileValidationErrors = [];
+        this.fileValidationSuccess = false;
+        this.uploadProgress = 0;
+        const fileInput = document.getElementById('entityImage') as HTMLInputElement;
+        if (fileInput) {
+            fileInput.value = '';
+        }
+    }
+
+    removeExistingImage(): void {
+        this.selectedAttachmentToDelete = this.existingAttachment;
+        this.showDeleteAttachmentModal();
+    }
+
+    confirmDeleteAttachment(): void {
+        if (!this.selectedAttachmentToDelete) return;
+
+        this.spinnerService.show();
+        this.attachmentService
+            .deleteAsync(this.selectedAttachmentToDelete.id)
+            .subscribe({
+                next: () => {
+                    this.toastr.success(this.translate.instant('FILE.ATTACHMENT_DELETED_SUCCESS'));
+                    this.existingAttachment = null;
+                    this.existingImageUrl = null;
+                    this.selectedAttachmentToDelete = null;
+                    
+                    // Properly close the delete attachment modal
+                    if (this.deleteAttachmentModalInstance) {
+                        this.deleteAttachmentModalInstance.hide();
+                    }
+                    
+                    this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
+                    this.spinnerService.hide();
+                },
+                error: (error) => {
+                    this.toastr.error(this.translate.instant('FILE.ERROR_DELETING_ATTACHMENT'));
+                    this.spinnerService.hide();
+                },
+            });
+    }
+
+    cancelDeleteAttachment(): void {
+        this.selectedAttachmentToDelete = null;
+    }
+
+    closeDeleteModal(): void {
+        if (this.deleteModalInstance) {
+            this.deleteModalInstance.hide();
+        }
+        this.selectedEntityToDelete = null;
+        this.selectedEntityObject = null;
+    }
+
+    closeDeleteAttachmentModal(): void {
+        if (this.deleteAttachmentModalInstance) {
+            this.deleteAttachmentModalInstance.hide();
+        }
+        this.selectedAttachmentToDelete = null;
+    }
+
+    onDragOver(event: DragEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+        this.isDragOver = true;
+    }
+
+    onDragLeave(event: DragEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+        this.isDragOver = false;
+    }
+
+    onDrop(event: DragEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+        this.isDragOver = false;
+
+        const files = event.dataTransfer?.files;
+        if (files && files.length > 0) {
+            const file = files[0];
+            this.validateAndSetFile(file);
+        }
+    }
+
+    confirmFileSelection(): void {
+        if (this.selectedFile) {
+            this.fileValidationSuccess = true;
+            this.toastr.success(this.translate.instant('FILE.FILE_VALID_READY'));
+        }
+    }
+
+    private validateAndSetFile(file: File): void {
+        this.fileValidationErrors = [];
+        this.fileValidationSuccess = false;
+
+        const allowedTypes = [
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+            'application/pdf',
+        ];
+        const maxSize = 2 * 1024 * 1024; // 2MB
+
+        if (!allowedTypes.includes(file.type)) {
+            this.fileValidationErrors.push(
+                'Invalid file type. Only PDF, JPG, and PNG files are allowed.'
+            );
+            return;
+        }
+
+        if (file.size > maxSize) {
+            this.fileValidationErrors.push('File size must be less than 2MB.');
+            return;
+        }
+
+        this.selectedFile = file;
+        this.fileValidationSuccess = true;
+
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e: any) => {
+                this.filePreview = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            this.filePreview = null;
+        }
+
+        if (this.mode === 'edit' && this.existingImageUrl) {
+            this.toastr.info(
+                this.translate.instant('FILE.NEW_IMAGE_SELECTED')
+            );
+        }
+    }
+
+    private fileToBase64(file: File): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const result = reader.result as string;
+                const base64 = result.split(',')[1];
+                resolve(base64);
+            };
+            reader.onerror = (error) => reject(error);
+        });
+    }
+
+    private getEntityImageConfig(): any {
+        return this.attachmentConfigs.find(
+            (config) =>
+                config.attachmentsConfigType === AttachmentsConfigType.Entity
+        );
+    }
+
+    private constructImageUrl(imgPath: string): string {
+        if (!imgPath) return '';
+
+        const cleanPath = imgPath.startsWith('/') ? imgPath.substring(1) : imgPath;
+
+        if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+            return imgPath;
+        }
+
+        let fullUrl: string;
+
+        if (cleanPath.startsWith('Uploads/')) {
+            const baseUrl = environment.apiBaseUrl.replace('/api', '');
+            fullUrl = `${baseUrl}/${cleanPath}`;
+        } else {
+            fullUrl = `${environment.apiBaseUrl}/${cleanPath}`;
+        }
+
+        const cacheBuster = `?t=${Date.now()}`;
+        const urlWithCacheBuster = `${fullUrl}${cacheBuster}`;
+
+        return urlWithCacheBuster;
+    }
+
+    onImageLoad(event: any): void {
+        // Image loaded successfully
+        const imgElement = event.target;
+        if (imgElement) {
+            imgElement.style.display = 'block';
+        }
+    }
+
+    onImageError(event: any): void {
+        const imgElement = event.target;
+        if (imgElement) {
+            imgElement.style.display = 'none';
+        }
+        this.existingImageUrl = null;
+        this.toastr.error(
+            this.translate.instant('FILE.IMAGE_LOAD_ERROR'),
+            this.translate.instant('FILE.IMAGE_LOAD_ERROR_TITLE')
+        );
+    }
+
+    openImageInNewTab(): void {
+        if (this.existingImageUrl) {
+            window.open(this.existingImageUrl, '_blank');
+        }
+    }
+
+    private async resetModalState(
+        mode: 'add' | 'edit' | 'view',
+        entity?: EntityDto
+    ): Promise<void> {
+        this.mode = mode;
+        this.editingEntityId = entity?.ENTITY_ID || null;
+        this.submitted = false;
+        this.selectedFile = null;
+        this.filePreview = null;
+        // Handle single attachment object
+        this.existingAttachment = entity?.Attachment || null;
+        this.existingImageUrl = null;
+        this.isDragOver = false;
+        this.uploadProgress = 0;
+        this.fileValidationErrors = [];
+        this.fileValidationSuccess = false;
+
+        if (mode === 'add') {
+            this.entityForm.reset({ IsShowInPortal: false });
+            this.selectedEntityObject = null;
+        }
+
+        if (this.existingAttachment?.imgPath) {
+            // Improved image URL construction with validation
+            const imageUrl = this.constructImageUrl(this.existingAttachment.imgPath);
+
+            // Validate the image URL before setting it
+            const isValid = await this.validateImageUrl(imageUrl);
+            if (isValid) {
+                this.existingImageUrl = imageUrl;
+            } else {
+                this.existingImageUrl = null;
+            }
+        }
+    }
+
+    private fetchAttachmentData(entityId: string): void {
+        if (!entityId) return;
+
+        // Use MasterId if available, otherwise fall back to entityId
+        const masterId = this.selectedEntityObject?.MasterId || parseInt(entityId);
+
+        // Try to fetch attachment data using the attachment service
+        this.attachmentService
+            .getListByMasterId(masterId, AttachmentsConfigType.Entity)
+            .subscribe({
+                next: async (attachments: AttachmentDto[]) => {
+                    if (attachments && attachments.length > 0) {
+                        this.existingAttachment = attachments[0];
+
+                        if (this.existingAttachment?.imgPath) {
+                            // Use force refresh to ensure we get the latest image
+                            this.forceRefreshImage();
+                        }
+                    } else {
+                        this.existingAttachment = null;
+                        this.existingImageUrl = null;
+                    }
+                },
+                error: (error) => {
+                    // Handle error silently or add error handling as needed
+                },
+            });
+    }
+
+    private updateAttachmentSeparately(attachmentDto: AttachmentBase64Dto): void {
+        if (!this.existingAttachment?.masterId) {
+            this.spinnerService.hide();
+            return;
+        }
+
+        const updateAttachmentDto: UpdateAttachmentBase64Dto = {
+            id: this.existingAttachment.id,
+            fileBase64: attachmentDto.fileBase64,
+            fileName: attachmentDto.fileName,
+            masterId: this.existingAttachment.masterId,
+            attConfigID: attachmentDto.attConfigID,
+        };
+
+        this.attachmentService.updateAsync(updateAttachmentDto).subscribe({
+            next: (response) => {
+                this.toastr.success(this.translate.instant('FILE.IMAGE_UPDATED_SUCCESS'));
+                this.refreshImageAfterUpdate();
+                this.closeModal();
+                this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
+                this.spinnerService.hide();
+            },
+            error: (error) => {
+                this.toastr.error(this.translate.instant('FILE.ERROR_UPDATING_IMAGE'));
+                this.spinnerService.hide();
+            },
+        });
+    }
+
+    private createAttachmentSeparately(attachmentDto: AttachmentBase64Dto): void {
+        // Ensure we have the correct masterId for edit mode
+        if (this.mode === 'edit' && this.selectedEntityObject?.MasterId) {
+            attachmentDto.masterId = this.selectedEntityObject.MasterId;
+        }
+        
+        this.attachmentService.saveAttachmentFileBase64(attachmentDto).subscribe({
+            next: (response) => {
+                this.toastr.success(this.translate.instant('FILE.IMAGE_UPLOADED_SUCCESS'));
+                this.refreshImageAfterUpdate();
+                this.closeModal();
+                this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
+                this.spinnerService.hide();
+            },
+            error: (error) => {
+                this.toastr.error(this.translate.instant('FILE.ERROR_UPLOADING_IMAGE'));
+                this.spinnerService.hide();
+            },
+        });
+    }
+
+    /**
+     * Manually refreshes the image display after updates
+     */
+    private refreshImageAfterUpdate(): void {
+        if (this.editingEntityId) {
+            // Clear current image
+            this.existingImageUrl = null;
+
+            // Use MasterId if available, otherwise fall back to editingEntityId
+            const masterId = this.selectedEntityObject?.MasterId || parseInt(this.editingEntityId);
+
+            // Fetch fresh attachment data
+            this.attachmentService
+                .getListByMasterId(masterId, AttachmentsConfigType.Entity)
+                .subscribe({
+                    next: (attachments: AttachmentDto[]) => {
+                        if (attachments && attachments.length > 0) {
+                            this.existingAttachment = attachments[0];
+                            if (this.existingAttachment?.imgPath) {
+                                // Force refresh with new timestamp
+                                this.forceRefreshImage();
+                            }
+                        }
+                    },
+                    error: (error) => {
+                        // Error refreshing image after update
+                    },
+                });
+        }
+    }
+
+    /**
+     * Forces a refresh of the image by clearing and rebuilding the URL
+     */
+    private forceRefreshImage(): void {
+        if (this.existingAttachment?.imgPath) {
+            // Clear the current URL first
+            const oldUrl = this.existingImageUrl;
+            this.existingImageUrl = null;
+
+            // Clear browser cache for the old URL
+            if (oldUrl) {
+                this.clearImageCache(oldUrl);
+            }
+
+            // Force a small delay to ensure the DOM updates
+            setTimeout(() => {
+                const imageUrl = this.constructImageUrl(this.existingAttachment!.imgPath!);
+                this.existingImageUrl = imageUrl;
+            }, 200);
+        }
+    }
+
+    /**
+     * Clears browser cache for images by creating a new Image object
+     */
+    private clearImageCache(imageUrl: string): void {
+        if ('caches' in window) {
+            // Clear cache for the specific image URL
+            caches.keys().then((cacheNames) => {
+                cacheNames.forEach((cacheName) => {
+                    caches.open(cacheName).then((cache) => {
+                        cache.delete(imageUrl);
+                    });
+                });
+            });
+        }
+    }
+
+    /**
+     * Validates if an image URL is accessible
+     */
+    private validateImageUrl(url: string): Promise<boolean> {
+        return new Promise((resolve) => {
+            if (!url) {
+                resolve(false);
+                return;
+            }
+
+            const img = new Image();
+            img.onload = () => {
+                resolve(true);
+            };
+            img.onerror = () => {
+                resolve(false);
+            };
+            img.src = url;
+        });
+    }
+
+    // Modal management helper methods
+    private showDeleteModal(): void {
+        const modal = document.getElementById('deleteEntityModal');
+        if (modal) {
+            // Dispose existing instance if any
+            if (this.deleteModalInstance) {
+                this.deleteModalInstance.dispose();
+            }
+            
+            this.deleteModalInstance = new (window as any).bootstrap.Modal(modal, {
+                backdrop: 'static',
+                keyboard: false
+            });
+            
+            // Add proper event listeners for cleanup
+            modal.addEventListener('hidden.bs.modal', () => {
+                this.onDeleteModalHidden();
+            });
+            
+            this.deleteModalInstance.show();
+        }
+    }
+
+    private showDeleteAttachmentModal(): void {
+        const modal = document.getElementById('deleteAttachmentModal');
+        if (modal) {
+            // Dispose existing instance if any
+            if (this.deleteAttachmentModalInstance) {
+                this.deleteAttachmentModalInstance.dispose();
+            }
+            
+            this.deleteAttachmentModalInstance = new (window as any).bootstrap.Modal(modal, {
+                backdrop: 'static',
+                keyboard: false
+            });
+            
+            // Add proper event listeners for cleanup
+            modal.addEventListener('hidden.bs.modal', () => {
+                this.onDeleteAttachmentModalHidden();
+            });
+            
+            this.deleteAttachmentModalInstance.show();
+        }
+    }
+
+    private onModalHidden(): void {
+        // Clean up main modal
+        if (this.mainModalInstance) {
+            this.mainModalInstance.dispose();
+            this.mainModalInstance = null;
+        }
+        
+        // Clean up any remaining backdrops
+        this.clearModalBackdrops();
+        
+        // Restore body scroll
+        this.restoreBodyScroll();
+    }
+
+    private onDeleteModalHidden(): void {
+        // Clean up delete modal
+        if (this.deleteModalInstance) {
+            this.deleteModalInstance.dispose();
+            this.deleteModalInstance = null;
+        }
+        
+        // Clean up any remaining backdrops
+        this.clearModalBackdrops();
+        
+        // Restore body scroll
+        this.restoreBodyScroll();
+    }
+
+    private onDeleteAttachmentModalHidden(): void {
+        // Clean up delete attachment modal
+        if (this.deleteAttachmentModalInstance) {
+            this.deleteAttachmentModalInstance.dispose();
+            this.deleteAttachmentModalInstance = null;
+        }
+        
+        // Clean up any remaining backdrops
+        this.clearModalBackdrops();
+        
+        // Restore body scroll
+        this.restoreBodyScroll();
+    }
+
+    private disposeAllModals(): void {
+        // Dispose main modal
+        if (this.mainModalInstance) {
+            this.mainModalInstance.dispose();
+            this.mainModalInstance = null;
+        }
+        
+        // Dispose delete modal
+        if (this.deleteModalInstance) {
+            this.deleteModalInstance.dispose();
+            this.deleteModalInstance = null;
+        }
+        
+        // Dispose delete attachment modal
+        if (this.deleteAttachmentModalInstance) {
+            this.deleteAttachmentModalInstance.dispose();
+            this.deleteAttachmentModalInstance = null;
+        }
+    }
+
+    private clearModalBackdrops(): void {
+        // Remove any remaining modal backdrops
+        const backdrops = document.querySelectorAll('.modal-backdrop');
+        backdrops.forEach((backdrop) => {
+            backdrop.remove();
+        });
+        
+        // Also remove any fade backdrops
+        const fadeBackdrops = document.querySelectorAll('.modal-backdrop.fade');
+        fadeBackdrops.forEach((backdrop) => {
+            backdrop.remove();
+        });
+    }
+
+    private restoreBodyScroll(): void {
+        // Remove modal-open class from body
+        document.body.classList.remove('modal-open');
+        
+        // Remove any inline styles that might lock scrolling
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('padding-right');
+        
+        // Ensure the html element is also not locked
+        document.documentElement.style.removeProperty('overflow');
+        document.documentElement.style.removeProperty('padding-right');
     }
 }

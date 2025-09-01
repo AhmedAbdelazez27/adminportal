@@ -7,7 +7,7 @@ export class FndLookUpValuesSelect2RequestDto {
 
 export class FndLookUpValuesSelect2RequestbyIdDto {
     totalCount?: number;
-    entityId?: string;
+  entityId?: string | null = null;
     skip = 0;
     take = 10;
     searchValue?: string | null;

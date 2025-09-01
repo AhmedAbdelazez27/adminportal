@@ -1,0 +1,243 @@
+<div class="">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="title">{{ 'POLLS.TITLE' | translate }}</h1>
+    <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#pollModal" (click)="openAddModal()">
+     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM18 12.75H12.75V18C12.75 18.41 12.41 18.75 12 18.75C11.59 18.75 11.25 18.41 11.25 18V12.75H6C5.59 12.75 5.25 12.41 5.25 12C5.25 11.59 5.59 11.25 6 11.25H11.25V6C11.25 5.59 11.59 5.25 12 5.25C12.41 5.25 12.75 5.59 12.75 6V11.25H18C18.41 11.25 18.75 11.59 18.75 12C18.75 12.41 18.41 12.75 18 12.75Z" fill="white"/>
+</svg> 
+ {{ 'POLLS.ADD_NEW' | translate }}
+    </button>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filter mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="filter-title mb-0">{{ 'Common.SearchTitle' | translate }}</h4>
+      <button class="btn btn-filter" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilterTab"
+        aria-expanded="false" aria-controls="collapseFilterTab">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z"
+            fill="" />
+          <path
+            d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z"
+            fill="" />
+          <path
+            d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z"
+            fill="" />
+          <path
+            d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z"
+            fill="" />
+          <path
+            d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z"
+            fill="" />
+          <path
+            d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z"
+            fill="" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="collapse" id="collapseFilterTab">
+      <div class="card card-body">
+        <form #filterForm="ngForm">
+          <div class="row mb-3">
+            <div class="col-xxl-4 col-xl-6 mb-3">
+              <label for="searchName" class="form-label">{{ 'POLLS.SEARCH_NAME' | translate }}</label>
+              <input type="text" class="form-control" id="searchName"
+                placeholder="{{ 'POLLS.SEARCH_PLACEHOLDER' | translate }}" [(ngModel)]="searchValue"
+                name="searchName">
+            </div>
+            <div class="col-xxl-4 col-xl-6 mb-3">
+              <label for="statusFilter" class="form-label">{{ 'POLLS.STATUS' | translate }}</label>
+              <ng-select id="statusFilter" [(ngModel)]="selectedStatusFilter" [items]="statusOptions"
+                [clearable]="false" [searchable]="false" placeholder="{{ 'POLLS.STATUS' | translate }}" name="statusFilter"
+                bindLabel="label" bindValue="value" class="ng-select-custom">
+                <ng-template ng-option-tmp let-item="item">
+                  <div class="d-flex align-items-center">
+                    <i [class]="item.icon + ' text-primary me-2'"></i>
+                    <span>{{ item.label }}</span>
+                  </div>
+                </ng-template>
+                <ng-template ng-label-tmp let-item="item">
+                  <div class="d-flex align-items-center">
+                    <i [class]="item.icon + ' text-primary me-2'"></i>
+                    <span>{{ item.label }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </form>
+
+        <div class="d-flex gap-2 justify-content-center">
+          <button class="btn btn-outline" (click)="clear()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
+                fill="#5B5B5B" />
+            </svg>
+            {{ 'Common.Clear' | translate }}
+          </button>
+          <button class="btn btn-gold" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+                fill="white" />
+            </svg>
+            {{ 'Common.Search' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generic Data Table -->
+  <app-generic-data-table [columnDefs]="columnDefs" [rowData]="polls" [totalCount]="totalCount" [pageSize]="pageSize"
+    [currentPage]="currentPage" [showActionColumn]="true" [rowActions]="rowActions"
+    (actionClick)="onActionClick($event)" (pageChange)="onPageChange($event)" (search)="onSearch($event)">
+  </app-generic-data-table>
+
+  <!-- Poll Modal -->
+  <div class="modal fade" id="pollModal" tabindex="-1" aria-labelledby="pollModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="pollModalLabel">
+            {{ mode === 'add' ? ('POLLS.ADD_NEW' | translate) : mode === 'edit' ? ('POLLS.EDIT' | translate) :
+            ('POLLS.VIEW' | translate) }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" [attr.aria-label]="'COMMON.CLOSE' | translate"></button>
+        </div>
+        <form [formGroup]="pollForm" (ngSubmit)="submit()">
+          <div class="modal-body">
+            <div class="row">
+              <!-- Arabic Title -->
+              <div class="col-xl-6 mb-3">
+                <label for="pollArabicTitle" class="form-label">{{ 'POLLS.POLL_TITLE_AR' | translate }}</label>
+                <input type="text" id="pollArabicTitle" class="form-control"
+                  [ngClass]="{'is-invalid': pollForm.get('titleAr')?.invalid && (pollForm.get('titleAr')?.touched || submitted)}"
+                  formControlName="titleAr" placeholder="{{ 'POLLS.ENTER_POLL_TITLE_AR' | translate }}"
+                  [readonly]="mode === 'view'" />
+                <div
+                  *ngIf="pollForm.get('titleAr')?.invalid && (pollForm.get('titleAr')?.touched || submitted)"
+                  class="invalid-feedback">
+                  {{ getFieldError('titleAr') }}
+                </div>
+              </div>
+
+              <!-- English Title -->
+              <div class="col-xl-6 mb-3">
+                <label for="pollEnglishTitle" class="form-label">{{ 'POLLS.POLL_TITLE_EN' | translate }}</label>
+                <input type="text" id="pollEnglishTitle" class="form-control"
+                  [ngClass]="{'is-invalid': pollForm.get('titleEn')?.invalid && (pollForm.get('titleEn')?.touched || submitted)}"
+                  formControlName="titleEn" placeholder="{{ 'POLLS.ENTER_POLL_TITLE_EN' | translate }}"
+                  [readonly]="mode === 'view'" />
+                <div
+                  *ngIf="pollForm.get('titleEn')?.invalid && (pollForm.get('titleEn')?.touched || submitted)"
+                  class="invalid-feedback">
+                  {{ getFieldError('titleEn') }}
+                </div>
+              </div>
+
+              <!-- Arabic Description -->
+              <div class="col-xl-6 mb-3">
+                <label for="pollArabicDescription" class="form-label">{{ 'POLLS.DESCRIPTION_AR' | translate }}</label>
+                <textarea id="pollArabicDescription" class="form-control" rows="3"
+                  [ngClass]="{'is-invalid': pollForm.get('descriptionAr')?.invalid && (pollForm.get('descriptionAr')?.touched || submitted)}"
+                  formControlName="descriptionAr" placeholder="{{ 'POLLS.ENTER_DESCRIPTION_AR' | translate }}"
+                  [readonly]="mode === 'view'"></textarea>
+                <div
+                  *ngIf="pollForm.get('descriptionAr')?.invalid && (pollForm.get('descriptionAr')?.touched || submitted)"
+                  class="invalid-feedback">
+                  {{ getFieldError('descriptionAr') }}
+                </div>
+              </div>
+
+              <!-- English Description -->
+              <div class="col-xl-6 mb-3">
+                <label for="pollEnglishDescription" class="form-label">{{ 'POLLS.DESCRIPTION_EN' | translate }}</label>
+                <textarea id="pollEnglishDescription" class="form-control" rows="3"
+                  [ngClass]="{'is-invalid': pollForm.get('descriptionEn')?.invalid && (pollForm.get('descriptionEn')?.touched || submitted)}"
+                  formControlName="descriptionEn" placeholder="{{ 'POLLS.ENTER_DESCRIPTION_EN' | translate }}"
+                  [readonly]="mode === 'view'"></textarea>
+                <div
+                  *ngIf="pollForm.get('descriptionEn')?.invalid && (pollForm.get('descriptionEn')?.touched || submitted)"
+                  class="invalid-feedback">
+                  {{ getFieldError('descriptionEn') }}
+                </div>
+              </div>
+
+              <!-- Link -->
+              <div class="col-xl-6 mb-3">
+                <label for="pollLink" class="form-label">{{ 'POLLS.LINK' | translate }}</label>
+                <input type="url" id="pollLink" class="form-control"
+                  [ngClass]="{'is-invalid': pollForm.get('link')?.invalid && (pollForm.get('link')?.touched || submitted)}"
+                  formControlName="link" placeholder="{{ 'POLLS.ENTER_LINK' | translate }}"
+                  [readonly]="mode === 'view'" />
+                <div
+                  *ngIf="pollForm.get('link')?.invalid && (pollForm.get('link')?.touched || submitted)"
+                  class="invalid-feedback">
+                  {{ getFieldError('link') }}
+                </div>
+              </div>
+
+              <!-- Status -->
+              <div class="col-xl-6 mb-3">
+                <label for="isActive" class="form-label">{{ 'POLLS.STATUS' | translate }}</label>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="isActive" formControlName="isActive"
+                    [disabled]="mode === 'view'">
+                  <label class="form-check-label" for="isActive">
+                    {{ 'POLLS.ACTIVE' | translate }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer" *ngIf="mode !== 'view'">
+            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'POLLS.CANCEL' | translate
+              }}</button>
+            <button type="submit" class="btn btn-gold" [disabled]="pollForm.invalid || submitted">
+              {{ mode === 'add' ? ('POLLS.CREATE' | translate) : ('POLLS.UPDATE' | translate) }}
+            </button>
+          </div>
+          <div class="modal-footer" *ngIf="mode === 'view'">
+            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'POLLS.CLOSE' | translate
+              }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deletePollModal" tabindex="-1" aria-labelledby="deletePollModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deletePollModalLabel">{{ 'COMMON.DELETE_CONFIRMATION' | translate }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" [attr.aria-label]="'COMMON.CLOSE' | translate"></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ 'POLLS.DELETE_CONFIRMATION' | translate }}</p>
+          <div *ngIf="selectedPollToDelete" class="delete-confirmation-details">
+            <strong>{{ 'POLLS.POLL_TITLE_AR' | translate }}:</strong> {{ selectedPollToDelete.titleAr }}<br>
+            <strong>{{ 'POLLS.POLL_TITLE_EN' | translate }}:</strong> {{ selectedPollToDelete.titleEn || ('COMMON.NOT_AVAILABLE' | translate) }}<br>
+            <strong>{{ 'POLLS.DESCRIPTION_AR' | translate }}:</strong> {{ selectedPollToDelete.descriptionAr || ('COMMON.NOT_AVAILABLE' | translate) }}<br>
+            <strong>{{ 'POLLS.DESCRIPTION_EN' | translate }}:</strong> {{ selectedPollToDelete.descriptionEn || ('COMMON.NOT_AVAILABLE' | translate) }}<br>
+            <strong>{{ 'POLLS.LINK' | translate }}:</strong> {{ selectedPollToDelete.link || ('COMMON.NOT_AVAILABLE' | translate) }}<br>
+            <strong>{{ 'POLLS.STATUS' | translate }}:</strong> {{ selectedPollToDelete.isActive ? ('POLLS.ACTIVE' | translate) : ('POLLS.INACTIVE' | translate) }}
+          </div>
+                      <p class="text-danger">{{ 'COMMON.ACTION_CANNOT_BE_UNDONE' | translate }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'POLLS.CANCEL' | translate
+            }}</button>
+          <button type="button" class="btn btn-danger" (click)="deletePoll()" data-bs-dismiss="modal">{{ 'COMMON.DELETE' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

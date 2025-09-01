@@ -316,7 +316,28 @@ export class ApiEndpoints {
   static readonly Home = {
     Base: '/Home',
     GetHomePageKpisData: '/GetHomePageKpisData',
-        GetHomeChartData: '/GetHomeChartData',
+    GetHomeChartData: '/GetHomeChartData',
+    GetHomeTotalRequestSummary: '/GetHomeTotalRequestSummary',
+  };
 
+
+  static readonly GlAccount = {
+    Base: '/GlAccount',
+    Create: '/Create',
+    GetAll: '/GetAll',
+    GetById: (code: string) => `/GetByCode/${code}`,
+    GetWithDetailsById: (code: string) => `/GetWithChildrenByCode/${code}`,
+    GettreeDataById: (code: string) => `/GettreeDataByCode/${code}`,
+    Update: '/Update',
+  };
+
+  static readonly GlAccountEntity = {
+    Base: '/GlAccountEntity',
+    Create: '/MapGlAccountEntity',
+    GetAll: '/GetAll',
+    GetById: (id: string) => `/Get/${id}`,
+    GetWithDetailsById: (id: string) => `/GetWithChildren/${id}`,
+    GettreeDataById: (id: number, entityId: string) => `/GettreeDataByCode/${id}/${entityId}`,
+     Update: '/Update',
   };
 }

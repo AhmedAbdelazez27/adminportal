@@ -1,20 +1,35 @@
-<div id="collapse3" class="collapse show" aria-labelledby="headingthree">
-  <div class="card-body">
-    <div class="row g-3">
-      <div class="col-12 col-md-3" *ngFor="let item of attachments">
-        <div class="card h-100 shadow-sm p-2 text-center">
-
-          <div class="mt-2">
-            <a [href]="item.imgPath" target="_blank">
-              <img [src]="item.imgPath"
-                   class="img-fluid rounded"
-                   style="height:120px; object-fit:cover; width:100%;">
-            </a>
-          </div>
-          <a [href]="item.imgPath" target="_blank" class="fw-bold d-block text-truncate">
-            {{ item.attachmentTitle }}
-          </a>
+<div class="attachment-gallery row g-3">
+  <div class="col-12 col-md-3" *ngFor="let item of attachments">
+    <div class="card attachment-card text-center p-2">
+      <div class="attachment-preview position-relative" (click)="openPreview(item)">
+        <div class="mt-2 text-truncate">
+          <span class="attachment-title">{{ item.attachmentTitle }}</span>
         </div>
+
+        <button class="download-btn" (click)="onDownload(item.imgPath, item.attachmentTitle!); $event.stopPropagation()">⬇️</button>
+
+        <ng-container *ngIf="item.imgPath; else noPreview">
+          <img [src]="item.imgPath" class="img-fluid rounded attachment-img">
+        </ng-container>
+        <ng-template #noPreview>
+          <div class="no-preview d-flex align-items-center justify-content-center">
+            <span>{{ 'Common.noPreview' | translate }}</span>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" [class.show]="previewImg" [style.display]="previewImg ? 'block' : 'none'" (click)="closePreview()">
+  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ previewTitle }}</h5>
+        <button type="button" class="btn-close" (click)="closePreview()"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img [src]="previewImg" class="img-fluid">
       </div>
     </div>
   </div>

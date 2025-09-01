@@ -21,3 +21,16 @@ export enum ServiceDataType {
   ServiceInquery = 2,
   FastingServiceInquery = 3,
 }
+
+export enum isDisabledType {
+  isDisabledTypeTrue = "Y",
+  isDisabledTypeFalse = "N",
+}
+export enum ServiceStatus {
+  Accept = 1,
+  Reject = 2,
+  RejectForReason = 3,
+  Wait = 4,
+  Received = 5,
+  ReturnForModifications = 7
+}

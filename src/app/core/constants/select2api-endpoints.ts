@@ -55,6 +55,9 @@ export class Select2APIEndpoint {
     GetServiceSelect2: '/Services/GetServiceSelect2',
     GetUsersSelect2: '/User/GetUsersSelect2List',
     GetServiceTypeSelect2: '/Lookup/ServiceType',
+    GetGlAccountSelect2: '/GlAccount/GetGlAccountSelect2List',
+    GlAccountEntitySelect2: '/GlAccountEntity/GetSelect2',
+    GetAccountStatusSelect2: '/GlAccountEntity/GetSelect2',
   };
 }
 
