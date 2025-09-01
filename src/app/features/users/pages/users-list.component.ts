@@ -716,54 +716,67 @@ export class UsersListComponent implements OnInit {
   }
 
   saveUserPermissions(): void {
-    const currentPermissions: string[] = this.userPermissions
-      .flatMap((module: any) => module.screenPermissions)
-      .flatMap((screen: any) =>
-        this.availablePermissionActions
-          .filter((action: string) =>
-            this.isPermissionAvailable(screen, action)
-          )
-          .filter((action: string) =>
-            this.hasPermission(screen.permissionValues, action)
-          )
-          .map((action: string) => `${screen.screenName}.${action}`)
-      );
+    console.log("this.userPermissions ", this.userPermissions);
+    const seen = new Set();
+    const currentPermissions: any[] = this.userPermissions
+      .flatMap(m => m?.screenPermissions ?? [])
+      .flatMap(s => s?.permissionValues ?? [])
+      .filter(p => p?.isAllowed === true)
+      .map(({ value, type }) => ({ value, type }))
+      // remove doublicated items 
+      .filter(item => {
+        const key = `${item.value}|${item.type}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    console.log("currentPermissions = ", currentPermissions);
+    console.log("this.originalPermissions = ", this.originalPermissions);
+    const result = this.diffPermissions(this.originalPermissions, currentPermissions);
 
-    const uniqueOriginal = Array.from(new Set(this.originalPermissions));
-    const uniqueCurrent = Array.from(new Set(currentPermissions));
 
-    const toCreate = uniqueCurrent.filter((p) => !uniqueOriginal.includes(p));
+    // const uniqueOriginal = Array.from(new Set(this.originalPermissions));
+    // const uniqueCurrent = Array.from(new Set(currentPermissions));
 
-    const toDelete = uniqueOriginal.filter((p) => !uniqueCurrent.includes(p));
+    // const toCreate = uniqueCurrent.filter((p) => !uniqueOriginal.includes(p));
+
+    // const toDelete = uniqueOriginal.filter((p) => !uniqueCurrent.includes(p));
 
     // const toCreate = currentPermissions.filter(p => !this.originalPermissions.includes(p));
 
     // const toDelete = this.originalPermissions.filter(p => !currentPermissions.includes(p));
 
-    const createPayload = {
-      userId: this.selectedUserIdForDepartments,
-      permissions: toCreate.map((p) => ({
-        type: p.split('.')[0],
-        value: p,
-      })),
-    };
 
-    const deletePayload = {
-      userId: this.selectedUserIdForDepartments,
-      permissions: toDelete.map((p) => ({
-        type: p.split('.')[0],
-        value: p,
-      })),
-    };
+    // const createPayload = {
+    //   userId: this.selectedUserIdForDepartments,
+    //   permissions: toCreate.map((p) => ({
+    //     type: p.split('.')[0],
+    //     value: p,
+    //   })),
+    // };
+
+    // const deletePayload = {
+    //   userId: this.selectedUserIdForDepartments,
+    //   permissions: toDelete.map((p) => ({
+    //     type: p.split('.')[0],
+    //     value: p,
+    //   })),
+    // };
 
     this.spinnerService.show();
 
     forkJoin([
-      toCreate.length
-        ? this.userService.createUserPermission(createPayload)
+      result.added.length
+        ? this.userService.createUserPermission({
+          userId: this.selectedUserIdForDepartments,
+            permissions: result.added
+        })
         : of(null),
-      toDelete.length
-        ? this.userService.deleteUserPermission(deletePayload)
+      result.removed.length
+        ? this.userService.deleteUserPermission({
+          userId: this.selectedUserIdForDepartments,
+          permissions: result.removed
+        })
         : of(null),
     ]).subscribe({
       next: () => {
@@ -810,6 +823,36 @@ export class UsersListComponent implements OnInit {
 
     this.filteredScreens = [...this.screenOptions]; // default all
   }
+
+
+  diffPermissions(originalList: any[], currentPermissions: any[]) {
+
+    const typeFromValue = (v: any) => {
+      const i = typeof v === "string" ? v.lastIndexOf(".") : -1;
+      return i === -1 ? null : v.slice(0, i);
+    };
+
+    const original = Array.isArray(originalList) ? originalList : [];
+    const current = Array.isArray(currentPermissions) ? currentPermissions : [];
+
+    const origSet = new Set(original);
+    const currMap = new Map(); // value -> type
+    for (const p of current) {
+      if (p && p.value) currMap.set(p.value, p.type ?? typeFromValue(p.value));
+    }
+
+    const added = [...currMap.entries()]
+      .filter(([value]) => !origSet.has(value))
+      .map(([value, type]) => ({ value, type }));
+
+    const removed = original
+      .filter((v) => !currMap.has(v))
+      .map((v) => ({ value: v, type: typeFromValue(v) }));
+
+    return { added, removed };
+  }
+  // end permissions 
+
 
   applySearch(): void {
     const selectedModules = this.filterForm.get('selectedModules')?.value || [];
