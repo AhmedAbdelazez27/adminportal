@@ -14,7 +14,9 @@ export class ApiEndpoints {
     verifyOtp: '/Otp/Verify',
     OtpSendViaEmail: '/Otp/SendViaEmail',
     ResetPassword: '/ResetPassword',
-    UpdateUserStatus: '/UpdateUserStatus'
+    UpdateUserStatus: '/UpdateUserStatus',
+    GetDashboardPermissionList: (id: string) => `/Permission/GetAllDashboardPermissions/${id}`,
+
 
   };
 

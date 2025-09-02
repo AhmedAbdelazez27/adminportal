@@ -105,6 +105,7 @@
     "VIEW": "عرض",
     "EDIT": "تعديل",
     "DELETE": "حذف",
+    "DASHBOARD_PERMISSIONS": "صلاحيات الشاشة الرئيسية",
     "CANCEL": "إلغاء",
     "CLOSE": "إغلاق",
     "CREATE": "إنشاء",
@@ -622,7 +623,8 @@
     "Cancel": "إلغاء",
     "Delete": "حذف",
     "Show": "عرض",
-    "Entries": "سجلات"
+    "Entries": "سجلات",
+    "DASHBOARD_PERMISSIONS": "صلاحيات الشاشة الرئيسية"
   },
 
 

@@ -93,4 +93,8 @@ export class UserService {
 
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Base}${ApiEndpoints.User.UpdateUserStatus}`, payload);
   }
+
+  getDashboardPermission(userId: string) {
+    return this.http.get(`${this.BASE_URL}${ApiEndpoints.User.GetDashboardPermissionList(userId)}`);
+  }
 }

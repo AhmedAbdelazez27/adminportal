@@ -717,7 +717,7 @@
             <thead>
               <tr>
                 <!-- <th>Screen Category</th> -->
-                <th>Screen Name</th>
+                <th>{{"AuthenticationResorceName.screens"|translate}}</th>
                 <th *ngFor="let p of availablePermissionActions">{{ p }}</th>
               </tr>
             </thead>
@@ -757,6 +757,93 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
           <button type="button" class="btn btn-gold" (click)="saveUserPermissions()">{{ 'Common.save' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Modal Dashboard permissions-->
+  <div class="modal fade" id="permissionsdashboard" tabindex="-1" aria-labelledby="UsersLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="UsersLabel">{{ 'Common.DASHBOARD_PERMISSIONS' | translate }}</h1>
+          <button type="button" class="btn-close btn-close-dashboard-permissions" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+       
+        <div class="modal-body">
+          <div>
+            <form [formGroup]="filterDasboardForm" class="row mb-3">
+              <!-- 1. Filter by Modules -->
+              <div class="mb-3 col-xl-5">
+                <!-- <label class="form-label">Filter by Module(s)</label> -->
+                <ng-select [items]="moduleDashboardOptions" bindLabel="label" bindValue="value" [multiple]="true"
+                           [closeOnSelect]="false" formControlName="selectedModules" class="ng-select-custom"
+                           [placeholder]="filterDasboardForm.get('selectedModules')?'Filter by Module(s)':''">
+                </ng-select>
+              </div>
+
+              <!-- 2. Filter by Screens -->
+              <div class="mb-3 col-xl-5">
+                <!-- <label class="form-label">Filter by Screen(s)</label> -->
+                <ng-select [items]="filteredDashboardScreens" bindLabel="label" bindValue="value"
+                           [multiple]="true" [closeOnSelect]="false" formControlName="selectedScreens"
+                           class="ng-select-custom" placeholder="{{ 'AuthenticationResorceName.filterByScreens' | translate }}">
+                </ng-select>
+              </div>
+              <div class="text-end mb-3 col-xl-2">
+                <button type="button" class="btn btn-gold" (click)="applySearch('filterDasboardForm','filteredDashboardPermissions','dashboardPermissions')">
+                  Apply Filter
+                </button>
+              </div>
+            </form>
+
+          </div>
+          <table class="table new-table mb-3">
+            <thead>
+              <tr>
+                <!-- <th>Screen Category</th> -->
+                <th>{{"AuthenticationResorceName.screens"|translate}}</th>
+                <th *ngFor="let p of availableDashboardPermissionActions">{{ p }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let module of filteredDashboardPermissions">
+                <ng-container *ngFor="let screen of module.screenPermissions">
+                  <tr>
+                    <!-- <td>{{ module.moduleName }}</td> -->
+                    <td>{{ screen.screenName }}</td>
+                    <!-- <td *ngFor="let p of permissionTypes">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch"
+                                [checked]="hasPermission(screen.permissionValues, p)"
+                                (change)="onTogglePermission( $event, screen.screenName, p )" />
+                        </div>
+                    </td> -->
+                    <td *ngFor="let p of availableDashboardPermissionActions">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch"
+                               *ngIf="isPermissionAvailable(screen, p); else disabledSwitch"
+                               [checked]="hasPermission(screen.permissionValues, p)"
+                               (change)="onTogglePermission( $event, screen.screenName, p,'dashboardPermissions' )" />
+                        <ng-template #disabledSwitch>
+                          <input class="form-check-input" type="checkbox" role="switch"
+                                 style="cursor: not-allowed !important;" [disabled]="true" />
+                        </ng-template>
+                      </div>
+                    </td>
+
+                  </tr>
+                </ng-container>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
+          <button type="button" class="btn btn-gold" (click)="saveUserPermissions('dashboardPermissions','originalDashboardPermissions','.btn-close-dashboard-permissions')">{{ 'Common.save' | translate }}</button>
         </div>
       </div>
     </div>

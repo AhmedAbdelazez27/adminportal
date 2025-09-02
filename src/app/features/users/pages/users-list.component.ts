@@ -68,6 +68,8 @@ export class UsersListComponent implements OnInit {
   userDepartmentForm: FormGroup;
   userEntityForm: FormGroup;
   selectedUserIdForDepartments: any;
+    
+  // // // // // 
   userPermissions: any[] = [];
   permissionTypes: string[] = [
     'View',
@@ -85,14 +87,26 @@ export class UsersListComponent implements OnInit {
     'Post',
     'UnPost',
   ];
+    availableDashboardPermissionActions: string[] = [
+    'Dashboard'
+  ];
   originalPermissions: string[] = [];
   filterForm: FormGroup;
-
   moduleOptions: { label: string; value: string }[] = [];
   screenOptions: { module: string; label: string; value: string }[] = [];
-
   filteredScreens: { label: string; value: string }[] = [];
   filteredPermissions: any[] = [];
+
+
+  dashboardPermissions: any[] = [];
+  originalDashboardPermissions: string[] = [];
+  filterDasboardForm: FormGroup;
+  moduleDashboardOptions: { label: string; value: string }[] = [];
+  screenDashboardOptions: { module: string; label: string; value: string }[] = [];
+  filteredDashboardScreens: { label: string; value: string }[] = [];
+  filteredDashboardPermissions: any[] = [];
+
+  // // // // // 
   searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
   countrySelect2: any[] = [];
   filterUserCriteria = new FilterUserDto();
@@ -171,6 +185,10 @@ export class UsersListComponent implements OnInit {
       selectedModules: [[]],
       selectedScreens: [[]],
     });
+    this.filterDasboardForm = this.fb.group({
+      selectedModules: [[]],
+      selectedScreens: [[]],
+    });
   }
   ngOnInit(): void {
     this.getUsers(1);
@@ -180,7 +198,7 @@ export class UsersListComponent implements OnInit {
     this.fetchcountrySelect2();
     this.fetchUsersStatusSelect2();
     this.fetchUsersTypesSelect2();
-
+    // user permissions subscribe
     this.filterForm
       .get('selectedModules')
       ?.valueChanges.subscribe((modules) => {
@@ -194,6 +212,24 @@ export class UsersListComponent implements OnInit {
         const updated = selected.filter((s: string) => allowed.includes(s));
         this.filterForm.get('selectedScreens')?.setValue(updated);
       });
+
+
+    // user permissions subscribe
+    this.filterDasboardForm
+      .get('selectedModules')
+      ?.valueChanges.subscribe((modules) => {
+        this.filteredDashboardScreens = this.screenDashboardOptions.filter((screen) =>
+          modules.includes(screen.module)
+        );
+
+        // optional: clear selectedScreens if not in filtered list
+        const selected = this.filterDasboardForm.get('selectedScreens')?.value || [];
+        const allowed = this.filteredDashboardScreens.map((s) => s.value);
+        const updated = selected.filter((s: string) => allowed.includes(s));
+        this.filterDasboardForm.get('selectedScreens')?.setValue(updated);
+      });
+
+
     this.filterUserCriteria.userStatus = UserStatus.New;
     this.filterUserCriteria.userType = UserType.Admin;
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
@@ -204,7 +240,7 @@ export class UsersListComponent implements OnInit {
       { label: this.translate.instant('Common.entities'), icon: 'icon-frame-entities', action: 'onEntitiesInfo' },
       { label: this.translate.instant('Common.permissions'), icon: 'icon-frame-user', action: 'onUserInfo' },
       { label: this.translate.instant('Common.edit'), icon: 'icon-frame-edit', action: 'onEditInfo' },
-      { label: this.translate.instant('Common.deletd'), icon: 'icon-frame-delete', action: 'onDeletdInfo' },
+      { label: this.translate.instant('Common.DASHBOARD_PERMISSIONS'), icon: 'icon-frame-user', action: 'onDeletdInfo' },
       { label: this.translate.instant('Common.role'), icon: 'icon-frame-role', action: 'onRoleInfo' },
       { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
     ];
@@ -673,7 +709,8 @@ export class UsersListComponent implements OnInit {
               .map((p: any) => p.value)
           );
         this.filteredPermissions = [...this.userPermissions];
-        this.populateModuleAndScreenOptions();
+        // this.populateModuleAndScreenOptions();
+        this.populateModuleAndScreenOptions('userPermissions','moduleOptions')
         const modalElement = document.getElementById('permissions');
         if (modalElement) {
           const modal = new bootstrap.Modal(modalElement);
@@ -685,16 +722,50 @@ export class UsersListComponent implements OnInit {
       },
     });
   }
+
+
+    getDashboardPermissions(userId: string): void {
+    this.selectedUserIdForDepartments = userId;
+
+    this.userService.getDashboardPermission(userId).subscribe({
+      next: (res: any) => {
+        this.dashboardPermissions = res || [];
+
+        this.originalDashboardPermissions = res
+          .flatMap((module: any) => module.screenPermissions)
+          .flatMap((screen: any) =>
+            screen.permissionValues
+              .filter((p: any) => p.isAllowed)
+              .map((p: any) => p.value)
+          );
+        this.filteredDashboardPermissions = [...this.dashboardPermissions];
+        // this.populateModuleAndScreenOptions();
+        this.populateModuleAndScreenOptions('dashboardPermissions','moduleDashboardOptions','screenDashboardOptions')
+        const modalElement = document.getElementById('permissionsdashboard');
+        if (modalElement) {
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
+        };
+      },
+      error: () => {
+        this.toastr.error('Failed to load permissions');
+      },
+    });
+  }
+
+
   hasPermission(perms: any[], type: string): boolean {
     return perms.some(
       (p) =>
         p.permissionName.toLowerCase() === type.toLowerCase() && p.isAllowed
     );
   }
-  onTogglePermission(event: any, screenName: string, permission: string): void {
+  onTogglePermission(event: any, screenName: string, permission: string,
+    permissionsType:string = 'userPermissions'
+  ): void {
     const isChecked = event.target.checked;
 
-    for (const module of this.userPermissions) {
+    for (const module of (this as any)[permissionsType]) {
       const screen = module.screenPermissions.find(
         (s: any) => s.screenName === screenName
       );
@@ -715,53 +786,27 @@ export class UsersListComponent implements OnInit {
     );
   }
 
-  saveUserPermissions(): void {
+  saveUserPermissions(userPermissions:string='userPermissions',
+    originalPermissions:string='originalPermissions',modal_id:string ='.btn-close-user-permissions'
+  ): void {
     console.log("this.userPermissions ", this.userPermissions);
     const seen = new Set();
-    const currentPermissions: any[] = this.userPermissions
-      .flatMap(m => m?.screenPermissions ?? [])
-      .flatMap(s => s?.permissionValues ?? [])
-      .filter(p => p?.isAllowed === true)
-      .map(({ value, type }) => ({ value, type }))
+    const currentPermissions: any[] = (this as any)[userPermissions]
+      .flatMap((m:any) => m?.screenPermissions ?? [])
+      .flatMap((s:any) => s?.permissionValues ?? [])
+      .filter((p:any) => p?.isAllowed === true)
+      .map((ittem:any) => ({ value:ittem.value, type :ittem.type}))
       // remove doublicated items 
-      .filter(item => {
+      .filter((item:any) => {
         const key = `${item.value}|${item.type}`;
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
       });
     console.log("currentPermissions = ", currentPermissions);
-    console.log("this.originalPermissions = ", this.originalPermissions);
-    const result = this.diffPermissions(this.originalPermissions, currentPermissions);
+    console.log("this.originalPermissions = ", (this as any)[originalPermissions]);
+    const result = this.diffPermissions((this as any)[originalPermissions], currentPermissions);
 
-
-    // const uniqueOriginal = Array.from(new Set(this.originalPermissions));
-    // const uniqueCurrent = Array.from(new Set(currentPermissions));
-
-    // const toCreate = uniqueCurrent.filter((p) => !uniqueOriginal.includes(p));
-
-    // const toDelete = uniqueOriginal.filter((p) => !uniqueCurrent.includes(p));
-
-    // const toCreate = currentPermissions.filter(p => !this.originalPermissions.includes(p));
-
-    // const toDelete = this.originalPermissions.filter(p => !currentPermissions.includes(p));
-
-
-    // const createPayload = {
-    //   userId: this.selectedUserIdForDepartments,
-    //   permissions: toCreate.map((p) => ({
-    //     type: p.split('.')[0],
-    //     value: p,
-    //   })),
-    // };
-
-    // const deletePayload = {
-    //   userId: this.selectedUserIdForDepartments,
-    //   permissions: toDelete.map((p) => ({
-    //     type: p.split('.')[0],
-    //     value: p,
-    //   })),
-    // };
 
     this.spinnerService.show();
 
@@ -769,7 +814,7 @@ export class UsersListComponent implements OnInit {
       result.added.length
         ? this.userService.createUserPermission({
           userId: this.selectedUserIdForDepartments,
-            permissions: result.added
+          permissions: result.added
         })
         : of(null),
       result.removed.length
@@ -785,7 +830,7 @@ export class UsersListComponent implements OnInit {
         );
         this.spinnerService.hide();
         const closeBtn = document.querySelector(
-          '.btn-close-user-permissions'
+          modal_id
         ) as HTMLElement;
         closeBtn?.click();
       },
@@ -801,14 +846,16 @@ export class UsersListComponent implements OnInit {
     });
   }
 
-  populateModuleAndScreenOptions(): void {
+  populateModuleAndScreenOptions(typePermission: string = 'userPermissions',moduleOptions : string ='moduleOptions',
+    filteredScreens : string ='filteredScreens',screenOptions:string ='screenOptions'
+  ): void {
     const allModulesSet = new Set<string>();
 
-    this.userPermissions.forEach((module) => {
+    (this as any)[typePermission].forEach((module:any) => {
       allModulesSet.add(module.moduleName);
 
       module.screenPermissions.forEach((screen: any) => {
-        this.screenOptions.push({
+        (this as any)[screenOptions].push({
           module: module.moduleName,
           label: screen.screenName,
           value: screen.screenName,
@@ -816,12 +863,12 @@ export class UsersListComponent implements OnInit {
       });
     });
 
-    this.moduleOptions = Array.from(allModulesSet).map((name) => ({
+    (this as any)[moduleOptions] = Array.from(allModulesSet).map((name) => ({
       label: name,
       value: name,
     }));
 
-    this.filteredScreens = [...this.screenOptions]; // default all
+    (this as any)[filteredScreens] = [...(this as any)[screenOptions]]; // default all
   }
 
 
@@ -850,25 +897,29 @@ export class UsersListComponent implements OnInit {
       .map((v) => ({ value: v, type: typeFromValue(v) }));
 
     return { added, removed };
-  }
-  // end permissions 
+  } 
 
 
-  applySearch(): void {
-    const selectedModules = this.filterForm.get('selectedModules')?.value || [];
-    const selectedScreens = this.filterForm.get('selectedScreens')?.value || [];
+  applySearch(formName:string = 'filterForm',filteredPermissions:string ='filteredPermissions',
+    permission:string = 'userPermissions'
+  ): void {
+    const selectedModules = (this as any)[formName].get('selectedModules')?.value || [];
+    const selectedScreens = (this as any)[formName].get('selectedScreens')?.value || [];
 
 
-    this.filteredPermissions = this.userPermissions
-      .filter(m => selectedModules.length === 0 || selectedModules.includes(m.moduleName))
-      .map(m => ({
+    (this as any)[filteredPermissions] = (this as any)[permission]
+      .filter((m:any) => selectedModules.length === 0 || selectedModules.includes(m.moduleName))
+      .map((m:any) => ({
         ...m,
         screenPermissions: m.screenPermissions.filter((s: any) =>
           selectedScreens.length === 0 || selectedScreens.includes(s.screenName)
         )
       }))
-      .filter(m => m.screenPermissions.length > 0);
+      .filter((m:any) => m.screenPermissions.length > 0);
   }
+
+  // end of permissions
+
 
   // updates 
   getEntitysInfo() {
@@ -1020,7 +1071,7 @@ export class UsersListComponent implements OnInit {
     }
 
     if (event.action === 'onDeletdInfo') {
-      this.selectUserToDelete(event.row);
+      this.getDashboardPermissions(event.row?.id);
     }
 
     if (event.action === 'onRoleInfo') {
