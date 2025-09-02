@@ -26,7 +26,7 @@ export class paymentvoucherDto {
   paymenT_NUMBER: string | null = null;
   beneficiarY_NAME: string | null = null;
   misC_PAYMENT_DATE: Date | null = null;
-  amount: number | null = null;
+  amount: string | null = null;
   posted: string | null = null;
   postedAr: string | null = null;
   postedEn: string | null = null;
@@ -49,7 +49,7 @@ export class paymentvoucherdetailsDto {
   checK_NUMBER: string | null = null;
   maturitY_DATE: Date | null = null;
   beneficiarY_NAME: string | null = null;
-  amount: number | null = null;
+  amount: string | null = null;
   amounTstr: string | null = null;
   maturitY_DATEstr: string | null = null;
   notes: string | null = null;
@@ -59,7 +59,7 @@ export class paymentvoucherlinesDto {
   misC_PAYMENT_DETAIL_ID: string | null = null;
   entitY_ID: string | null = null;
   misC_PAYMENT_ID: string | null = null;
-  misC_PAYMENT_AMOUNT: number | null = null;
+  misC_PAYMENT_AMOUNT: string | null = null;
   notes: string | null = null;
   casE_ID: string | null = null;
   taX_NO: number | null = null;

@@ -1,228 +1,228 @@
-  <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h1 class="title">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h1>
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="title">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h1>
+  </div>
+
+  <div class="filter mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="filter-title mb-0">{{ 'Common.SearchTitle' | translate }}</h4>
+      <button class="btn btn-filter" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilterTab" aria-expanded="false" aria-controls="collapseFilterTab">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z" fill="" />
+          <path d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z" fill="" />
+          <path d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z" fill="" />
+          <path d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z" fill="" />
+          <path d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z" fill="" />
+          <path d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z" fill="" />
+        </svg>
+      </button>
     </div>
 
-    <div class="filter mb-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <h4 class="filter-title mb-0">{{ 'Common.SearchTitle' | translate }}</h4>
-        <button class="btn btn-filter" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilterTab" aria-expanded="false" aria-controls="collapseFilterTab">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z" fill="" />
-            <path d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z" fill="" />
-            <path d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z" fill="" />
-            <path d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z" fill="" />
-            <path d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z" fill="" />
-            <path d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z" fill="" />
-          </svg>
-        </button>
-      </div>
-
-      <div class="collapse" id="collapseFilterTab">
-        <div class="card card-body">
-          <form #filterForm="ngForm">
-            <div class="row mb-3">
-              <div class="col-xl-4 mb-3">
-                <label class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.EntityId' | translate }}</label>
-                <ng-select class="ng-select-custom"
-                           name="entitySelect2"
-                           [(ngModel)]="selectedentitySelect2Obj"
-                           [items]="entitySelect2"
-                           bindLabel="text"
-                           bindValue="id"
-                           [typeahead]="searchInput$"
-                           [loading]="loadingentity"
-                           [virtualScroll]="true"
-                           (scrollToEnd)="loadMoreentity()"
-                           (change)="onentitySelect2Change($event)"
-                           (search)="onentitySearch($event)"
-                           placeholder="{{ 'Common.Select' | translate }}">
-                </ng-select>
-              </div>
-              <div class="col-xl-4 mb-3">
-                <label for="receiptNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate}}</label>
-                <input type="text" name="receiptNumber" class="form-control" [(ngModel)]="searchParams.receiptNumber" placeholder="Search">
-              </div>
-
-              <div class="col-xl-4 mb-3">
-                <label for="checkNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.ChequeNo' | translate }}</label>
-                <input type="text" name="checkNumber" class="form-control" [(ngModel)]="searchParams.checkNumber" placeholder="Search">
-              </div>
-
-              <div class="col-xl-4 mb-3">
-                <label for="benificaryName" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.BeneficiaryName' | translate }}</label>
-                <input type="text" name="benificaryName" class="form-control" [(ngModel)]="searchParams.benificaryName" placeholder="Search">
-              </div>
-
-              <div class="col-xl-4 mb-3">
-                <label class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Status' | translate }}</label>
-                <ng-select class="ng-select-custom"
-                           name="statusSelect2"
-                           [items]="statusSelect2"
-                           bindLabel="text"
-                           bindValue="id"
-                           [(ngModel)]="selectedstatusSelect2Obj"
-                           [typeahead]="searchInput$"
-                           [loading]="loadingstatus"
-                           [virtualScroll]="true"
-                           (scrollToEnd)="loadMorestatus()"
-                           (change)="onstatusSelect2Change($event)"
-                           (search)="onstatusSearch($event)"
-                           placeholder="{{ 'Common.Select' | translate }}">
-                </ng-select>
-              </div>
-
-              <div class="col-xl-4 mb-3">
-                <label class="form-label">{{ 'ArMiscReceiptHeaderResourceName.ProjectName' | translate }}</label>
-                <ng-select class="ng-select-custom"
-                           name="projectNameSelect2"
-                           [items]="projectNameSelect2"
-                           bindLabel="text"
-                           bindValue="id"
-                           [(ngModel)]="selectedprojectNameSelect2Obj"
-                           [typeahead]="searchInput$"
-                           [loading]="loadingprojectName"
-                           [virtualScroll]="true"
-                           (scrollToEnd)="loadMoreprojectName()"
-                           (change)="onprojectNameSelect2Change($event)"
-                           (search)="onprojectNameSearch($event)"
-                           placeholder="{{ 'Common.Select' | translate }}">
-                </ng-select>
-              </div>
-
-              <div class="col-xl-4 mb-3">
-                <label class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Sponsor' | translate }}</label>
-                <ng-select class="ng-select-custom"
-                           name="benNameSelect2"
-                           [items]="benNameSelect2"
-                           bindLabel="text"
-                           bindValue="id"
-                           [(ngModel)]="selectedbenNameSelect2Obj"
-                           [typeahead]="searchInput$"
-                           [loading]="loadingbenName"
-                           [virtualScroll]="true"
-                           (scrollToEnd)="loadMorebenName()"
-                           (change)="onbenNameSelect2Change($event)"
-                           (search)="onbenNameSearch($event)"
-                           placeholder="{{ 'Common.Select' | translate }}">
-                </ng-select>
-              </div>
-
-              <div class="col-xl-4 mb-3">
-                <label for="amount" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Amount' | translate }}</label>
-                <input type="text" name="amount" class="form-control" [(ngModel)]="searchParams.amount" placeholder="Search">
-              </div>
+    <div class="collapse" id="collapseFilterTab">
+      <div class="card card-body">
+        <form #filterForm="ngForm">
+          <div class="row mb-3">
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.EntityId' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="entitySelect2"
+                         [(ngModel)]="selectedentitySelect2Obj"
+                         [items]="entitySelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="searchInput$"
+                         [loading]="loadingentity"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreentity()"
+                         (change)="onentitySelect2Change($event)"
+                         (search)="onentitySearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
             </div>
-          </form>
+            <div class="col-xl-4 mb-3">
+              <label for="receiptNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate}}</label>
+              <input type="text" name="receiptNumber" class="form-control" [(ngModel)]="searchParams.receiptNumber" placeholder="Search">
+            </div>
 
-          <div class="d-flex gap-2 justify-content-center">
-            <button class="btn btn-outline" (click)="clear()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#5B5B5B" />
-              </svg>
-              {{ 'Common.Clear' | translate }}
-            </button>
-            <button class="btn btn-gold" (click)="onSearch()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
-              </svg>
-              {{ 'Common.Search' | translate }}
-            </button>
-            <button class="btn btn-success" (click)="printExcel()">
-             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <path d="M7.75 2V7.8H2C2 4.19 4.15 2.02 7.75 2Z" fill="white"/>
-  <path d="M22 7.8H16.25V2C19.85 2.02 22 4.19 22 7.8Z" fill="white"/>
-  <path d="M22 16.2998C21.96 19.8498 19.82 21.9798 16.25 21.9998V16.2998H22Z" fill="white"/>
-  <path d="M7.75 16.2998V21.9998C4.18 21.9798 2.04 19.8498 2 16.2998H7.75Z" fill="white"/>
-  <path d="M7.75 9.2998H2V14.7998H7.75V9.2998Z" fill="white"/>
-  <path d="M22 9.2998H16.25V14.7998H22V9.2998Z" fill="white"/>
-  <path d="M14.75 9.2998H9.25V14.7998H14.75V9.2998Z" fill="white"/>
-  <path d="M14.75 2H9.25V7.8H14.75V2Z" fill="white"/>
-  <path d="M14.75 16.2998H9.25V21.9998H14.75V16.2998Z" fill="white"/>
-</svg>
-              {{ 'Common.PrintExcel' | translate }}
-            </button>
+            <div class="col-xl-4 mb-3">
+              <label for="checkNumber" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.ChequeNo' | translate }}</label>
+              <input type="text" name="checkNumber" class="form-control" [(ngModel)]="searchParams.checkNumber" placeholder="Search">
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label for="benificaryName" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.BeneficiaryName' | translate }}</label>
+              <input type="text" name="benificaryName" class="form-control" [(ngModel)]="searchParams.benificaryName" placeholder="Search">
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Status' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="statusSelect2"
+                         [items]="statusSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [(ngModel)]="selectedstatusSelect2Obj"
+                         [typeahead]="searchInput$"
+                         [loading]="loadingstatus"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMorestatus()"
+                         (change)="onstatusSelect2Change($event)"
+                         (search)="onstatusSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'ArMiscReceiptHeaderResourceName.ProjectName' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="projectNameSelect2"
+                         [items]="projectNameSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [(ngModel)]="selectedprojectNameSelect2Obj"
+                         [typeahead]="searchInput$"
+                         [loading]="loadingprojectName"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreprojectName()"
+                         (change)="onprojectNameSelect2Change($event)"
+                         (search)="onprojectNameSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Sponsor' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="benNameSelect2"
+                         [items]="benNameSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [(ngModel)]="selectedbenNameSelect2Obj"
+                         [typeahead]="searchInput$"
+                         [loading]="loadingbenName"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMorebenName()"
+                         (change)="onbenNameSelect2Change($event)"
+                         (search)="onbenNameSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label for="amount" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Amount' | translate }}</label>
+              <input type="text" name="amount" class="form-control" [(ngModel)]="searchParams.amount" placeholder="Search">
+            </div>
           </div>
+        </form>
+
+        <div class="d-flex gap-2 justify-content-center">
+          <button class="btn btn-outline" (click)="clear()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#5B5B5B" />
+            </svg>
+            {{ 'Common.Clear' | translate }}
+          </button>
+          <button class="btn btn-gold" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
+            </svg>
+            {{ 'Common.Search' | translate }}
+          </button>
+          <button class="btn btn-success" (click)="printExcel()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M7.75 2V7.8H2C2 4.19 4.15 2.02 7.75 2Z" fill="white" />
+              <path d="M22 7.8H16.25V2C19.85 2.02 22 4.19 22 7.8Z" fill="white" />
+              <path d="M22 16.2998C21.96 19.8498 19.82 21.9798 16.25 21.9998V16.2998H22Z" fill="white" />
+              <path d="M7.75 16.2998V21.9998C4.18 21.9798 2.04 19.8498 2 16.2998H7.75Z" fill="white" />
+              <path d="M7.75 9.2998H2V14.7998H7.75V9.2998Z" fill="white" />
+              <path d="M22 9.2998H16.25V14.7998H22V9.2998Z" fill="white" />
+              <path d="M14.75 9.2998H9.25V14.7998H14.75V9.2998Z" fill="white" />
+              <path d="M14.75 2H9.25V7.8H14.75V2Z" fill="white" />
+              <path d="M14.75 16.2998H9.25V21.9998H14.75V16.2998Z" fill="white" />
+            </svg>
+            {{ 'Common.PrintExcel' | translate }}
+          </button>
         </div>
       </div>
-     
     </div>
-     <app-generic-data-table [columnDefs]="columnDefs"
-                              [rowData]="loadgridData"
-                              [totalCount]="pagination.totalCount"
-                              [pageSize]="pagination.take"
-                              [currentPage]="pagination.currentPage - 1"
-                              [columnHeaderMap]="columnHeaderMap"
-                              [rowActions]="rowActions"
-                              (actionClick)="onTableAction($event)"
-                              (pageChange)="onPageChange($event)"
-                              [showActionColumn]="true"
-                              (search)="onTableSearch($event)">
-      </app-generic-data-table>
-    
-      
-    <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="editLabel">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
 
-          <div class="modal-body">
-            <div class="border-bottom mb-4">
-              <h4 class="gold bold">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h4>
+  </div>
+  <app-generic-data-table [columnDefs]="columnDefs"
+                          [rowData]="loadgridData"
+                          [totalCount]="pagination.totalCount"
+                          [pageSize]="pagination.take"
+                          [currentPage]="pagination.currentPage - 1"
+                          [columnHeaderMap]="columnHeaderMap"
+                          [rowActions]="rowActions"
+                          (actionClick)="onTableAction($event)"
+                          (pageChange)="onPageChange($event)"
+                          [showActionColumn]="true"
+                          (search)="onTableSearch($event)">
+  </app-generic-data-table>
 
-              <div class="row">
-                <div class="col-xxl-4 col-xl-6">
-                  <label for="inputreceipT_NUMBER" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate }}</label>
-                  <p id="receipT_NUMBER">{{ loadformData.receipT_NUMBER }}</p>
-                </div>
 
-                <div class="col-xxl-4 col-xl-6">
-                  <label for="inputtransactioN_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.TRANSACTION_TYPE_DESC' | translate }}</label>
-                  <p id="transactioN_TYPE_DESC">{{ loadformData.transactioN_TYPE_DESC }}</p>
-                </div>
+  <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editLabel">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
 
-                <div class="col-xxl-4 col-xl-6">
-                  <label for="inputmisC_RECEIPT_DATEstr" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE' | translate }}</label>
-                  <p id="misC_RECEIPT_DATEstr">{{ loadformData.misC_RECEIPT_DATEstr }}</p>
-                </div>
+        <div class="modal-body">
+          <div class="border-bottom mb-4">
+            <h4 class="gold bold">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h4>
 
-                <div class="col-xxl-4 col-xl-6">
-                  <label for="inputreceipT_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.RECEIPT_TYPE_DESC' | translate }}</label>
-                  <p id="receipT_TYPE_DESC">{{ loadformData.receipT_TYPE_DESC }}</p>
-                </div>
-
-                <div class="col-xxl-4 col-xl-6">
-                  <label for="inputcollectioN_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.COLLECTION_TYPE_DESC' | translate }}</label>
-                  <p id="collectioN_TYPE_DESC">{{ loadformData.collectioN_TYPE_DESC }}</p>
-                </div>
-
-                <div class="col-xxl-4 col-xl-6">
-                  <label for="inputbeneficiarY_NAME" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.BENEFICIARY_NAME' | translate }}</label>
-                  <p id="beneficiarY_NAME">{{ loadformData.beneficiarY_NAME }}</p>
-                </div>
-
-                <div class="col-xxl-4 col-xl-6">
-                  <label for="inputamounTstr" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.HEADER_AMOUNT' | translate }}</label>
-                  <p id="amounTstr">{{ loadformData.amounTstr }}</p>
-                </div>
-
-                <div class="col-xxl-4 col-xl-6">
-                  <label for="inputbanK_ACCOUNT_NAME" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.BANK_ACCOUNT_NAME' | translate }}</label>
-                  <p id="banK_ACCOUNT_NAME">{{ loadformData.banK_ACCOUNT_NAME }}</p>
-                </div>
-
-                <div class="col-xxl-4 col-xl-6">
-                  <label for="inputnotes" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.HEADER_NOTES' | translate }}</label>
-                  <p id="notes">{{ loadformData.notes }}</p>
-                </div>
+            <div class="row">
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputreceipT_NUMBER" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.DocumentNumber' | translate }}</label>
+                <p id="receipT_NUMBER">{{ loadformData.receipT_NUMBER }}</p>
               </div>
 
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputtransactioN_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.TRANSACTION_TYPE_DESC' | translate }}</label>
+                <p id="transactioN_TYPE_DESC">{{ loadformData.transactioN_TYPE_DESC }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputmisC_RECEIPT_DATEstr" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE' | translate }}</label>
+                <p id="misC_RECEIPT_DATEstr">{{ loadformData.misC_RECEIPT_DATEstr }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputreceipT_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.RECEIPT_TYPE_DESC' | translate }}</label>
+                <p id="receipT_TYPE_DESC">{{ loadformData.receipT_TYPE_DESC }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputcollectioN_TYPE_DESC" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.COLLECTION_TYPE_DESC' | translate }}</label>
+                <p id="collectioN_TYPE_DESC">{{ loadformData.collectioN_TYPE_DESC }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputbeneficiarY_NAME" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.BENEFICIARY_NAME' | translate }}</label>
+                <p id="beneficiarY_NAME">{{ loadformData.beneficiarY_NAME }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputamounTstr" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.HEADER_AMOUNT' | translate }}</label>
+                <p id="amounTstr">{{ loadformData.amounTstr }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputbanK_ACCOUNT_NAME" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.BANK_ACCOUNT_NAME' | translate }}</label>
+                <p id="banK_ACCOUNT_NAME">{{ loadformData.banK_ACCOUNT_NAME }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="inputnotes" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.HEADER_NOTES' | translate }}</label>
+                <p id="notes">{{ loadformData.notes }}</p>
+              </div>
             </div>
 
-              <ul class="nav nav-tabs mb-3" id="voucherTabs" role="tablist">
+          </div>
+
+          <ul class="nav nav-tabs mb-3" id="voucherTabs" role="tablist">
             <li class="nav-item" role="presentation">
               <button class="nav-link active gold bold" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-tab-pane" type="button" role="tab">
                 {{ 'ArMiscReceiptHeaderResourceName.LiscReceiptLinesTitle' | translate }}
@@ -237,38 +237,49 @@
 
           <div class="tab-content" id="voucherTabsContent">
             <div class="tab-pane fade show active" id="details-tab-pane" role="tabpanel">
-              <app-generic-data-table [columnDefs]="columnDefsLineData"
-                                      [rowData]="loadformLineData"
-                                      [totalCount]="paginationLineData.totalCount"
-                                      [pageSize]="paginationLineData.take"
-                                      [currentPage]="paginationLineData.currentPage - 1"
-                                      (pageChange)="onPageChangeLineData($event)"
-                                      [showActionColumn]="false"
-                                      (search)="onTableSearchLineData($event)">
-              </app-generic-data-table>
+              <div *ngIf="loadformLineData && loadformLineData.length > 0">
+                <app-generic-data-table [columnDefs]="columnDefsLineData"
+                                        [rowData]="loadformLineData"
+                                        [totalCount]="paginationLineData.totalCount"
+                                        [pageSize]="paginationLineData.take"
+                                        [currentPage]="paginationLineData.currentPage - 1"
+                                        (pageChange)="onPageChangeLineData($event)"
+                                        [showActionColumn]="false"
+                                        (search)="onTableSearchLineData($event)">
+                </app-generic-data-table>
+              </div>
+
+              <div *ngIf="!loadformLineData || loadformLineData.length === 0" class="alert alert-info">
+                {{ 'Common.NoData' | translate }}
+              </div>
             </div>
 
             <div class="tab-pane fade" id="check-tab-pane" role="tabpanel">
-              <app-generic-data-table [columnDefs]="columnDefsDetailData"
-                                      [rowData]="loadformDetailsData"
-                                      [totalCount]="paginationDetailData.totalCount"
-                                      [pageSize]="paginationDetailData.take"
-                                      [currentPage]="paginationDetailData.currentPage - 1"
-                                      (pageChange)="onPageChangeDetailData($event)"
-                                      [showActionColumn]="false"
-                                      (search)="onTableSearchDetailData($event)"
-                                      (languageChanged)="buildColumnDefs()">
-              </app-generic-data-table>
+              <div *ngIf="loadformDetailsData && loadformDetailsData.length > 0">
+                <app-generic-data-table [columnDefs]="columnDefsDetailData"
+                                        [rowData]="loadformDetailsData"
+                                        [totalCount]="paginationDetailData.totalCount"
+                                        [pageSize]="paginationDetailData.take"
+                                        [currentPage]="paginationDetailData.currentPage - 1"
+                                        (pageChange)="onPageChangeDetailData($event)"
+                                        [showActionColumn]="false"
+                                        (search)="onTableSearchDetailData($event)"
+                                        (languageChanged)="buildColumnDefs()">
+                </app-generic-data-table>
+              </div>
+              <div *ngIf="!loadformDetailsData || loadformDetailsData.length === 0" class="alert alert-info">
+                {{ 'Common.NoData' | translate }}
+              </div>
             </div>
           </div>
-          </div>
+        </div>
 
-        
-       
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
-          </div>
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
         </div>
       </div>
     </div>
   </div>
+</div>

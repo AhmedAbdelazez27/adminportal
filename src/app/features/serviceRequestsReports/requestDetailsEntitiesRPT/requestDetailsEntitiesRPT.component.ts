@@ -267,7 +267,7 @@ export class requestDetailsEntitiesRPTComponent {
         { headerName: translations['ServiceRequestsReportsResourceName.entity'], field: 'entity', width: 200 },
         { headerName: translations['ServiceRequestsReportsResourceName.requestName'], field: 'requestName', width: 200 },
         { headerName: translations['ServiceRequestsReportsResourceName.requestStatus'], field: 'requestStatus', width: 200 },
-        { headerName: translations['ServiceRequestsReportsResourceName.targetedAmount'], field: 'targetedAmountstr', width: 200 },
+        { headerName: translations['ServiceRequestsReportsResourceName.targetedAmount'], field: 'targetedAmount', width: 200 },
         { headerName: translations['ServiceRequestsReportsResourceName.startDate'], field: 'startDatestr', width: 200 },
         { headerName: translations['ServiceRequestsReportsResourceName.endDate'], field: 'endDatestr', width: 200 },
         { headerName: translations['ServiceRequestsReportsResourceName.permissionNo'], field: 'permissionNo', width: 200 },

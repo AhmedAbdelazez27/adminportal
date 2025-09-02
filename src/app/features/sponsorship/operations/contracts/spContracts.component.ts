@@ -257,7 +257,7 @@ export class spContractsComponent {
 
   oncontractIdSelect2Change(selectedcontractId: any): void {
     if (selectedcontractId) {
-      this.searchParams.contractDate = selectedcontractId.id;
+      this.searchParams.contractId = selectedcontractId.id;
       this.searchParams.contractIdstr = selectedcontractId.text;
     } else {
       this.searchParams.contractId = null;
@@ -445,6 +445,13 @@ export class spContractsComponent {
   }
 
 
+  formatDate(date: Date | string | null): string {
+    if (!date) return '';
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return d.toLocaleDateString();
+  }
+
+
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
     if (!this.searchParams.entityId) {
       this.translate
@@ -471,6 +478,10 @@ export class spContractsComponent {
       .pipe(takeUntil(this.destroy$)).subscribe({
       next: (response: any) => {
           this.loadgridData = response.data || [];
+          this.loadgridData.forEach((c) => {
+            c.contracT_DATEstr = this.formatDate(c.contracT_DATE);
+          });
+
           this.pagination.totalCount = response.data[0]?.rowsCount || 0;
           this.spinnerService.hide();
       },
@@ -497,6 +508,13 @@ export class spContractsComponent {
         this.loadformData = Array.isArray(result.headerdata)
           ? result.headerdata[0] ?? ({} as spContractsDto)
           : result.headerdata;
+        this.loadformDetailsData.forEach((c) => {
+          c.conT_END_DATEEstr = this.formatDate(c.conT_END_DATE);
+        });
+        this.loadformDetailsData.forEach((c) => {
+          c.startdatEstr = this.formatDate(c.startdate);
+        });
+        this.loadformData.contracT_DATEstr = this.formatDate(this.loadformData.contracT_DATE);
 
         this.contractCasespagination.totalCount = result?.detaildata.length || 0;
 
@@ -547,8 +565,8 @@ export class spContractsComponent {
       { headerName: this.translate.instant('SpContractsResourceName.birthdate'), field: 'birthdatestr', width: 200 },
       { headerName: this.translate.instant('SpContractsResourceName.gendeR_DESC'), field: 'gendeR_DESC', width: 200 },
       { headerName: this.translate.instant('SpContractsResourceName.nationalitY_DESC'), field: 'nationalitY_DESC', width: 200 },
-      { headerName: this.translate.instant('SpContractsResourceName.startdate'), field: 'startdatestr', width: 200 },
-      { headerName: this.translate.instant('SpContractsResourceName.conT_END_DATE'), field: 'conT_END_DATEstr', width: 200 },
+      { headerName: this.translate.instant('SpContractsResourceName.startdate'), field: 'startdatEstr', width: 200 },
+      { headerName: this.translate.instant('SpContractsResourceName.conT_END_DATE'), field: 'conT_END_DATEEstr', width: 200 },
       { headerName: this.translate.instant('SpContractsResourceName.CaseAmountTotal'), field: 'CaseAmountTotal', width: 200 },
       { headerName: this.translate.instant('SpContractsResourceName.banK_DESC'), field: 'banK_DESC', width: 200 },
       { headerName: this.translate.instant('SpContractsResourceName.ownername'), field: 'ownername', width: 200 },

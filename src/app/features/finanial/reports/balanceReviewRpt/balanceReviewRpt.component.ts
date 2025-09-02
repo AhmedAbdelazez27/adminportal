@@ -304,9 +304,9 @@ export class BalanceReviewRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReview_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.level'), value: this.searchParams.level },
                     { label: this.translate.instant('FinancialReportResourceName.user_ID'), value: this.searchParams.user_ID },
@@ -373,9 +373,9 @@ export class BalanceReviewRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReview_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.level'), value: this.searchParams.level },
                     { label: this.translate.instant('FinancialReportResourceName.user_ID'), value: this.searchParams.user_ID },
@@ -448,9 +448,9 @@ export class BalanceReviewRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReview_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.level'), value: this.searchParams.level },
                     { label: this.translate.instant('FinancialReportResourceName.user_ID'), value: this.searchParams.user_ID },
@@ -517,9 +517,9 @@ export class BalanceReviewRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReview_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.level'), value: this.searchParams.level },
                     { label: this.translate.instant('FinancialReportResourceName.user_ID'), value: this.searchParams.user_ID },
@@ -587,9 +587,9 @@ export class BalanceReviewRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReview_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.level'), value: this.searchParams.level },
                     { label: this.translate.instant('FinancialReportResourceName.user_ID'), value: this.searchParams.user_ID },
@@ -657,9 +657,9 @@ export class BalanceReviewRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReview_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.level'), value: this.searchParams.level },
                     { label: this.translate.instant('FinancialReportResourceName.user_ID'), value: this.searchParams.user_ID },
@@ -728,9 +728,9 @@ export class BalanceReviewRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReview_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.level'), value: this.searchParams.level },
                     { label: this.translate.instant('FinancialReportResourceName.user_ID'), value: this.searchParams.user_ID },
@@ -808,9 +808,9 @@ export class BalanceReviewRptComponent {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReviewRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  reportTitle: this.translate.instant('FinancialReportResourceName.balanceReview_Title'),
+                  fileName: `${this.translate.instant('FinancialReportResourceName.balanceReview_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     { label: this.translate.instant('FinancialReportResourceName.level'), value: this.searchParams.level },
                     { label: this.translate.instant('FinancialReportResourceName.user_ID'), value: this.searchParams.user_ID },

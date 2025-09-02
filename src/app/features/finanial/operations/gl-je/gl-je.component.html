@@ -237,32 +237,37 @@
             </div>
 
             <h4 class="gold bold">{{ 'glJEResourceName.title_details' | translate }}</h4>
-            <app-generic-data-table [columnDefs]="columnDefslineData"
-                                    [rowData]="loadformdetailsData"
-                                    [totalCount]="paginationlineData.totalCount"
-                                    [pageSize]="paginationlineData.take"
-                                    [currentPage]="paginationlineData.currentPage - 1"
-                                    [columnHeaderMap]="columnHeaderMap"
-                                    (pageChange)="onPageChangelineData($event)"
-                                    [showActionColumn]="false"
-                                    (search)="onTableSearchlineData($event)"
-                                    (languageChanged)="buildColumnDefs()">
-            </app-generic-data-table>
+            <div *ngIf="loadformdetailsData && loadformdetailsData.length > 0">
+              <app-generic-data-table [columnDefs]="columnDefslineData"
+                                      [rowData]="loadformdetailsData"
+                                      [totalCount]="paginationlineData.totalCount"
+                                      [pageSize]="paginationlineData.take"
+                                      [currentPage]="paginationlineData.currentPage - 1"
+                                      [columnHeaderMap]="columnHeaderMap"
+                                      (pageChange)="onPageChangelineData($event)"
+                                      [showActionColumn]="false"
+                                      (search)="onTableSearchlineData($event)"
+                                      (languageChanged)="buildColumnDefs()">
+              </app-generic-data-table>
+            </div>
+            <div *ngIf="!loadformdetailsData || loadformdetailsData.length === 0" class="alert alert-info">
+              {{ 'Common.NoData' | translate }}
+            </div>
 
             <div class="row mt-4">
               <div class="col-xxl-4 col-xl-6">
                 <div class="bg-gray mb-4">
-                <label class="bold black">{{ 'glJEResourceName.Total Credit' | translate }}</label>
-                <p id="totalCredit">{{loadformData.totalCredit}}</p>
+                  <label class="bold black">{{ 'glJEResourceName.totalCredit' | translate }}</label>
+                  <p id="totalCredit">{{loadformData.totalCredit}}</p>
                 </div>
-                
+
               </div>
               <div class="col-xxl-4 col-xl-6">
                 <div class="bg-gray mb-4">
-                   <label class="bold black">{{ 'glJEResourceName.Total Debit' | translate }}</label>
-                <p id="totalDept">{{loadformData.totalDept}}</p>
+                  <label class="bold black">{{ 'glJEResourceName.totalDebit' | translate }}</label>
+                  <p id="totalDept">{{loadformData.totalDept}}</p>
                 </div>
-               
+
               </div>
             </div>
           </div>

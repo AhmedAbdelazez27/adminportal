@@ -60,7 +60,7 @@
 
               <div class="col-xl-4 mb-3">
                 <label for="contractDate" class="form-label">{{ 'SpContractsResourceName.contractDate' | translate}}</label>
-                <input type="date" name="contractDate" class="form-control" [(ngModel)]="searchParams.contractDatestr" placeholder="Search">
+                <input type="date" name="contractDate" class="form-control" [(ngModel)]="searchParams.contractDate" placeholder="Search">
               </div>
 
               <div class="col-xl-4 mb-3">
@@ -215,7 +215,7 @@
                 </div>
 
                 <div class="col-xxl-4 col-xl-6">
-                  <label for="inputbeneficenT_NO" class="black bold">{{ 'SpContractsResourceName.beneficenT_NO' | translate }}</label>
+                  <label for="inputbeneficenT_NO" class="black bold">{{ 'SpContractsResourceName.beneficentNo' | translate }}</label>
                   <p id="beneficenT_NO">{{ loadformData.beneficenT_NO }}</p>
                 </div>
 
@@ -238,19 +238,26 @@
           </div>
 
           <h4 class="gold bold">{{ 'SpContractsResourceName.Title_SpContractCase' | translate }}</h4>
-          <app-generic-data-table [columnDefs]="contractCasescolumnDefs"
-                                  [rowData]="loadformDetailsData"
-                                  [totalCount]="contractCasespagination.totalCount"
-                                  [pageSize]="contractCasespagination.take"
-                                  [currentPage]="contractCasespagination.currentPage - 1"
-                                  [columnHeaderMap]="columnHeaderMap"
-                                  [rowActions]="rowActions"
-                                  (pageChange)="oncontractCasesPageChange($event)"
-                                  [showActionColumn]="false"
-                                  (search)="oncontractCasesTableSearch($event)"
-                                  (languageChanged)="buildColumnDefs()">
-          </app-generic-data-table>
-        
+          <div *ngIf="loadformDetailsData && loadformDetailsData.length > 0">
+            <app-generic-data-table [columnDefs]="contractCasescolumnDefs"
+                                    [rowData]="loadformDetailsData"
+                                    [totalCount]="contractCasespagination.totalCount"
+                                    [pageSize]="contractCasespagination.take"
+                                    [currentPage]="contractCasespagination.currentPage - 1"
+                                    [columnHeaderMap]="columnHeaderMap"
+                                    [rowActions]="rowActions"
+                                    (pageChange)="oncontractCasesPageChange($event)"
+                                    [showActionColumn]="false"
+                                    (search)="oncontractCasesTableSearch($event)"
+                                    (languageChanged)="buildColumnDefs()">
+            </app-generic-data-table>
+          </div>
+
+          <div *ngIf="!loadformDetailsData || loadformDetailsData.length === 0" class="alert alert-info">
+            {{ 'Common.NoData' | translate }}
+          </div>
+         
+
           <div class="modal-footer">
             <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
           </div>

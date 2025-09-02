@@ -116,7 +116,7 @@ export class GlAccountEntityComponent implements OnInit, OnDestroy {
   currentLang = 'en';
   glAccountparentTextPath:any;
   glAccountEntityparentTextPath:any;
-  pendingItems: Array<{ entityId: any; entityIdText?: string | null; accountCode: string; accountCodeText?: string | null; parentCode: string; parentCodeText?: string | null }> = [];
+  pendingItems: Array<{ entityId: any; entityIdText?: string | null; accountCode: string; accountCodeText?: string | null; parentCode: string; parentCodeText?: string | null; glAccountEntityId?: any }> = [];
 
   constructor(
     private glAccountEntityService: GlAccountEntityService,
@@ -317,7 +317,7 @@ onentityIdSelect2ChangeNew(selected: any): void {
        .subscribe({
          next: (result) => {
            // ✅ map to jsTree format
-           this.glAccountEntityjstreeData = this.mapToJsTreeData(result || []);
+           this.glAccountEntityjstreeData = this.mapToJsTreeDataByNumericId(result || []);
            this.glAccountEntityshowTree = true;
            this.glAccountEntitycreateJSTreeForm(this.glAccountEntityjstreeData);
            this.spinnerService.hide();
@@ -519,19 +519,17 @@ onentityIdSelect2ChangeNew(selected: any): void {
   onSubmit(): void {
     debugger;
     this.submitted = true;
-    if (this.glAccountForm.invalid) {
-      this.glAccountForm.markAllAsTouched();
-      this.toastr.error(this.translate.instant('TOAST.VALIDATION_ERROR'));
-      return;
-    }
     const formData = this.glAccountForm.value;
-    formData.glAccountEntityId = formData.parentCode;
+    if (!formData.glAccountEntityId && formData.parentCode) {
+      const lastId = String(formData.parentCode).split(',').pop()?.split('/').pop();
+      formData.glAccountEntityId = lastId ?? null;
+    }
     const payload = (this.pendingItems && this.pendingItems.length > 0)
       ? this.pendingItems.map(item => ({
           entityId: item.entityId,
           accountCode: item.accountCode,
           parentCode: item.parentCode,
-          glAccountEntityId: item.parentCode
+          glAccountEntityId: item.glAccountEntityId ?? (String(item.parentCode).split(',').pop()?.split('/').pop())
         }))
       : [{ ...formData }];
     this.spinnerService.show();
@@ -611,10 +609,10 @@ getFormDatabyId(id: string, mode: 'edit' | 'view'): void {
      .subscribe({
        next: (result) => {
          // ✅ map to jsTree format
-         this.glAccountjstreeData = this.mapToJsTreeData(result.glAccounttreeData);
+         this.glAccountjstreeData = this.mapToJsTreeDataByAccountCode(result.glAccounttreeData);
          this.glAccountshowTree = true;
          this.glAccountcreateJSTreeForm(this.glAccountjstreeData);
-         this.glAccountEntityjstreeData = this.mapToJsTreeData(result.glAccountEntitytreeData);
+         this.glAccountEntityjstreeData = this.mapToJsTreeDataByNumericId(result.glAccountEntitytreeData);
          this.glAccountEntityshowTree = true;
          this.glAccountEntitycreateJSTreeForm(this.glAccountEntityjstreeData);
          setTimeout(() => {
@@ -658,12 +656,27 @@ getFormDatabyId(id: string, mode: 'edit' | 'view'): void {
     return names.join(' / ');
   }
 
-  // ✅ Mapping function for jsTree - exactly like glAccount.component.ts
-  private mapToJsTreeData(data: any[]): any[] {
+  // ✅ Mapping function for jsTree - Account tree uses accountCode as id
+  private mapToJsTreeDataByAccountCode(data: any[]): any[] {
     return data.map(item => ({
-      id: item.accountCode,   // unique id
+      id: item.accountCode,
       text: `${item.accountCode} / ${item.arabicDescription}`,
-      children: item.children ? this.mapToJsTreeData(item.children) : [] // recursive children
+      // Preserve original fields for later access
+      accountCode: item.accountCode,
+      numericId: item.id,
+      children: item.children ? this.mapToJsTreeDataByAccountCode(item.children) : []
+    }));
+  }
+
+  // ✅ Mapping function for jsTree - GL Account Entity tree uses numeric id
+  private mapToJsTreeDataByNumericId(data: any[]): any[] {
+    return data.map(item => ({
+      id: String(item.id),
+      text: `${item.accountCode} / ${item.arabicDescription}`,
+      // Preserve original fields for later access
+      accountCode: item.accountCode,
+      numericId: item.id,
+      children: item.children ? this.mapToJsTreeDataByNumericId(item.children) : []
     }));
   }
 
@@ -704,7 +717,7 @@ getFormDatabyId(id: string, mode: 'edit' | 'view'): void {
       },
       { headerName: this.translate.instant('glAccountEntityResourceName.entityId'), field: 'entity.entitY_NAME', width: 200 },
       { headerName: this.translate.instant('glAccountEntityResourceName.accountCode'), field: 'accountCode', width: 200 },
-      { headerName: this.translate.instant('glAccountEntityResourceName.parentCode'), field: 'parentCode', width: 200 },
+      { headerName: this.translate.instant('glAccountEntityResourceName.parentCode'), field: 'mappedAccountCode', width: 200 },
   
     ];
   }
@@ -751,10 +764,10 @@ openAddNew(): void {
          console.log('glAccountEntity data:', result.glAccountEntityreturnData);
          
          // ✅ map to jsTree format
-         this.glAccountjstreeData = this.mapToJsTreeData(result.glAccountreturnData);
+         this.glAccountjstreeData = this.mapToJsTreeDataByAccountCode(result.glAccountreturnData);
          this.glAccountshowTree = true;
          this.glAccountcreateJSTreeForm(this.glAccountjstreeData);
-         this.glAccountEntityjstreeData = this.mapToJsTreeData(result.glAccountEntityreturnData);
+         this.glAccountEntityjstreeData = this.mapToJsTreeDataByNumericId(result.glAccountEntityreturnData);
          this.glAccountEntityshowTree = true;
          this.glAccountEntitycreateJSTreeForm(this.glAccountEntityjstreeData);
          
@@ -786,7 +799,8 @@ openAddNew(): void {
       accountCode: value.accountCode,
       accountCodeText,
       parentCode: value.parentCode,
-      parentCodeText
+      parentCodeText,
+      glAccountEntityId: value.glAccountEntityId
     });
     // Clear selected paths for next add while keeping entityId
     this.glAccountForm.patchValue({
@@ -826,7 +840,9 @@ openAddNew(): void {
            file:    { icon: 'fa fa-file text-secondary fa-lg' }    // ash/gray file
         },
         checkbox: {
-          keep_selected_style: false
+          keep_selected_style: false,
+          cascade: 'none',
+          three_state: false
         },
         search: {
           case_sensitive: false,
@@ -836,17 +852,18 @@ openAddNew(): void {
       treeElement.on(
         'changed.jstree',
         (e: JQuery.Event, data: { node: any; instance: any }) => {
-          if (data && data.node) {
-            const pathWithText = data.instance.get_path(data.node, ' / ');
-
-            const pathWithIds = data.instance.get_path(data.node, '/', true);
-
-            this.glAccountForm.patchValue({
-              accountCode: pathWithIds
-            });
-
-            this.glAccountparentTextPath = pathWithText;
+          const selectedNodes: any[] = data?.instance?.get_selected(true) || [];
+          if (!selectedNodes.length) {
+            this.glAccountForm.patchValue({ accountCode: null });
+            this.glAccountparentTextPath = '';
+            return;
           }
+
+          const pathsWithIds = selectedNodes.map((n: any) => data.instance.get_path(n, '/', true));
+          const pathsWithText = selectedNodes.map((n: any) => data.instance.get_path(n, ' / '));
+
+          this.glAccountForm.patchValue({ accountCode: pathsWithIds.join(',') });
+          this.glAccountparentTextPath = pathsWithText.join(' , ');
         }
       );
     }, 0);
@@ -873,7 +890,9 @@ openAddNew(): void {
            file:    { icon: 'fa fa-file text-secondary fa-lg' }    // ash/gray file
         },
         checkbox: {
-          keep_selected_style: false
+          keep_selected_style: false,
+          cascade: 'none',
+          three_state: false
         },
         search: {
           case_sensitive: false,
@@ -883,17 +902,24 @@ openAddNew(): void {
       treeElement.on(
         'changed.jstree',
         (e: JQuery.Event, data: { node: any; instance: any }) => {
-          if (data && data.node) {
-            const pathWithText = data.instance.get_path(data.node, ' / ');
-
-            const pathWithIds = data.instance.get_path(data.node, '/', true);
-
-            this.glAccountForm.patchValue({
-              parentCode: pathWithIds
-            });
-
-            this.glAccountEntityparentTextPath = pathWithText;
+          const selectedNodes: any[] = data?.instance?.get_selected(true) || [];
+          if (!selectedNodes.length) {
+            this.glAccountForm.patchValue({ parentCode: null });
+            this.glAccountEntityparentTextPath = '';
+            // Clear numeric id when nothing is selected
+            this.glAccountForm.patchValue({ glAccountEntityId: null });
+            return;
           }
+
+          const pathsWithIds = selectedNodes.map((n: any) => data.instance.get_path(n, '/', true));
+          const pathsWithText = selectedNodes.map((n: any) => data.instance.get_path(n, ' / '));
+
+          this.glAccountForm.patchValue({ parentCode: pathsWithIds.join(',') });
+          this.glAccountEntityparentTextPath = pathsWithText.join(' , ');
+          // Also store the last selected node's numeric id as glAccountEntityId
+          const lastSelected = selectedNodes[selectedNodes.length - 1];
+          const selectedNodeId = lastSelected?.id ? String(lastSelected.id).split('/').pop() : null;
+          this.glAccountForm.patchValue({ glAccountEntityId: selectedNodeId });
         }
       );
     }, 0);

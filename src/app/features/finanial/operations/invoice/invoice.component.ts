@@ -415,7 +415,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
                   fields: [
                     { label: this.translate.instant('InvoiceHdResourceName.EntityId'), value: this.searchParams.entityIdstr },
                     { label: this.translate.instant('InvoiceHdResourceName.invoiceNo'), value: this.searchParams.invoiceNo },
-                    { label: this.translate.instant('InvoiceHdResourceName.invoiceDate'), value: this.searchParams.invoiceDatestr },
+                    { label: this.translate.instant('InvoiceHdResourceName.invoiceDate'), value: this.searchParams.invoiceDate },
                     { label: this.translate.instant('InvoiceHdResourceName.vendorNo'), value: this.searchParams.vendorNo },
                     { label: this.translate.instant('InvoiceHdResourceName.vendorName'), value: this.searchParams.vendorNamestr },
                     { label: this.translate.instant('InvoiceHdResourceName.type'), value: this.searchParams.typestr },

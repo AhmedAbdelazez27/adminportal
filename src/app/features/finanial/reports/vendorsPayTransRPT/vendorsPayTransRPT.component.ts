@@ -400,10 +400,8 @@ export class vendorsPayTransRPTComponent {
       { headerName: this.translate.instant('FinancialReportResourceName.vendorName'), field: 'vendoR_NAME', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.workTel'), field: 'worK_TEL', width: 100 },
       { headerName: this.translate.instant('FinancialReportResourceName.trxType'), field: 'trX_TYPE', width: 100 },
-      { headerName: this.translate.instant('FinancialReportResourceName.DebitAmount'), field: 'debiT_AMOUNT' },
-      { headerName: this.translate.instant('FinancialReportResourceName.creditAmount'), field: 'crediT_AMOUNT' },
-      { headerName: this.translate.instant('FinancialReportResourceName.DebitAmount'), field: 'debiT_AMOUNTstr' },
-      { headerName: this.translate.instant('FinancialReportResourceName.creditAmount'), field: 'crediT_AMOUNTstr' },
+      { headerName: this.translate.instant('FinancialReportResourceName.DebitAmount'), field: 'debiT_AMOUNT', width: 100 },
+      { headerName: this.translate.instant('FinancialReportResourceName.creditAmount'), field: 'crediT_AMOUNT', width: 100 },
     ];
     this.columnHeaderMap = {
       'vendoR_NUMBER': this.translate.instant('FinancialReportResourceName.vendorNumber'),

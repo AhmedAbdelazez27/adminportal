@@ -210,33 +210,43 @@
 
           <div class="tab-content" id="voucherTabsContent">
             <div class="tab-pane fade show active" id="details-tab-pane" role="tabpanel">
-              <app-generic-data-table [columnDefs]="columnDefsLineData"
-                                      [rowData]="loadformLineData"
-                                      [totalCount]="paginationLineData.totalCount"
-                                      [pageSize]="paginationLineData.take"
-                                      [currentPage]="paginationLineData.currentPage - 1"
-                                      (pageChange)="onPageChangeLineData($event)"
-                                      [showActionColumn]="false"
-                                      (search)="onTableSearchLineData($event)">
-              </app-generic-data-table>
+              <div *ngIf="loadformLineData && loadformLineData.length > 0">
+                <app-generic-data-table [columnDefs]="columnDefsLineData"
+                                        [rowData]="loadformLineData"
+                                        [totalCount]="paginationLineData.totalCount"
+                                        [pageSize]="paginationLineData.take"
+                                        [currentPage]="paginationLineData.currentPage - 1"
+                                        (pageChange)="onPageChangeLineData($event)"
+                                        [showActionColumn]="false"
+                                        (search)="onTableSearchLineData($event)">
+                </app-generic-data-table>
+              </div>
+              <div *ngIf="!loadformLineData || loadformLineData.length === 0" class="alert alert-info">
+                {{ 'Common.NoData' | translate }}
+              </div>
             </div>
 
             <!-- Check Details Tab -->
             <div class="tab-pane fade" id="check-tab-pane" role="tabpanel">
-              <app-generic-data-table [columnDefs]="columnDefsDetailData"
-                                      [rowData]="loadformDetailData"
-                                      [totalCount]="paginationDetailData.totalCount"
-                                      [pageSize]="paginationDetailData.take"
-                                      [currentPage]="paginationDetailData.currentPage - 1"
-                                      (pageChange)="onPageChangeDetailData($event)"
-                                      [showActionColumn]="false"
-                                      (search)="onTableSearchDetailData($event)">
-              </app-generic-data-table>
+              <div *ngIf="loadformDetailData && loadformDetailData.length > 0">
+                <app-generic-data-table [columnDefs]="columnDefsDetailData"
+                                        [rowData]="loadformDetailData"
+                                        [totalCount]="paginationDetailData.totalCount"
+                                        [pageSize]="paginationDetailData.take"
+                                        [currentPage]="paginationDetailData.currentPage - 1"
+                                        (pageChange)="onPageChangeDetailData($event)"
+                                        [showActionColumn]="false"
+                                        (search)="onTableSearchDetailData($event)">
+                </app-generic-data-table>
+              </div>             
+              <div *ngIf="!loadformDetailData || loadformDetailData.length === 0" class="alert alert-info">
+                {{ 'Common.NoData' | translate }}
+              </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
         </div>
       </div>
     </div>

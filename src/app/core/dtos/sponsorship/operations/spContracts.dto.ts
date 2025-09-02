@@ -34,7 +34,7 @@ export class spContractsDto {
   caseAmountTotalstr: string | null = null;
   contracT_NUMBER: string | null = null;
   contracT_DATE: Date | null = null;
-  contracT_DATEstr: Date | null = null;
+  contracT_DATEstr: string | null = null;
   beneficenT_NO: string | null = null;
   beneficentname: string | null = null;
   contracT_STATUS_DESC: string | null = null;
@@ -51,7 +51,7 @@ export class spContractsCasesDto {
   sponceR_CATEGORY_DESC: string | null = null;
   casE_CONTRACT_STATUS: string | null = null;
   casE_CONTRACT_STATUS_DESC: string | null = null;
-  startdate: string | null = null;
+  startdate: Date | null = null;
   conT_END_DATE: Date | null = null;
   caseamount: string | null = null;
   accounT_NO: string | null = null;

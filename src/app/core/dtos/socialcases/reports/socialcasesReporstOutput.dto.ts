@@ -1,6 +1,6 @@
 export class ordersListRptOutputDto {
   referencenumber?: string | null = null;
-  aiD_REQUEST_DATE?: Date | null = null;
+  aiD_REQUEST_DATE: Date | null = null;
   requesT_TYPE_DESC?: string | null = null;
   namE_AR?: string | null = null;
   casE_ID_NUMBER?: string | null = null;

@@ -112,7 +112,6 @@ export class GlAccountComponent implements OnInit, OnDestroy {
     this.rowActions = [
       { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
       { label: this.translate.instant('Common.edit'), icon: 'icon-frame-edit', action: 'onEditInfo' },
-      { label: this.translate.instant('Common.deletd'), icon: 'icon-frame-delete', action: 'onDeletdInfo' },
     ];
 
 
@@ -168,7 +167,7 @@ export class GlAccountComponent implements OnInit, OnDestroy {
   onaccountCodeSelect2Change(selectedvendor: any): void {
     if (selectedvendor) {
       this.searchParams.accountCode = selectedvendor.id;
-      this.searchParams.accountCode = selectedvendor.text;
+      this.searchParams.accountCode = selectedvendor.id;
     } else {
       this.searchParams.accountCode = null;
       this.searchParams.accountCode = null;
@@ -538,8 +537,10 @@ createJSTreeForm(data: any): void {
            file:    { icon: 'fa fa-file text-secondary fa-lg' }    // ash/gray file
         },
       checkbox: {
-        keep_selected_style: false
-      },
+          keep_selected_style: false,
+          cascade: 'none',
+          three_state: false
+        },
       search: {
         case_sensitive: false,
         show_only_matches: true
@@ -549,16 +550,18 @@ createJSTreeForm(data: any): void {
     treeElement.on(
       'changed.jstree',
       (e: JQuery.Event, data: { node: any; instance: any }) => {
-        if (data && data.node) {
-          const pathWithText = data.instance.get_path(data.node, ' / ');
-          const pathWithIds = data.instance.get_path(data.node, '/', true);
-
-          this.glAccountForm.patchValue({
-            parentCode: pathWithIds
-          });
-
-          this.parentTextPath = pathWithText;
+        const selectedNodes: any[] = data?.instance?.get_selected(true) || [];
+        if (!selectedNodes.length) {
+          this.glAccountForm.patchValue({ parentCode: null });
+          this.parentTextPath = '';
+          return;
         }
+
+        const pathsWithIds = selectedNodes.map((n: any) => data.instance.get_path(n, '/', true));
+        const pathsWithText = selectedNodes.map((n: any) => data.instance.get_path(n, ' / '));
+
+        this.glAccountForm.patchValue({ parentCode: pathsWithIds.join(',') });
+        this.parentTextPath = pathsWithText.join(' , ');
       }
     );
   }, 0);

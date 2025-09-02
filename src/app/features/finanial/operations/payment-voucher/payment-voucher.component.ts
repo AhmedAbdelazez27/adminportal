@@ -186,7 +186,7 @@ export class PaymentVoucherComponent implements OnInit {
 
   onbeneficiaryNameSelect2Change(selectedbeneficiaryName: any): void {
     if (selectedbeneficiaryName) {
-      this.searchParams.benifetaryName = selectedbeneficiaryName.id;
+      this.searchParams.benifetaryName = selectedbeneficiaryName.text;
       this.searchParams.benifetaryNamestr = selectedbeneficiaryName.text;
     } else {
       this.searchParams.benifetaryName = null;
@@ -303,6 +303,11 @@ export class PaymentVoucherComponent implements OnInit {
     }
   }
 
+  formatDate(date: Date | string | null): string {
+    if (!date) return '';
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return d.toLocaleDateString();
+  }
 
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
     if (!this.searchParams.entityId) {
@@ -356,6 +361,13 @@ export class PaymentVoucherComponent implements OnInit {
           ? result.mischeaderdata[0] ?? ({} as paymentvoucherDto)
           : result.mischeaderdata;
 
+        this.loadformDetailData.forEach((c) => {
+          c.maturitY_DATEstr = this.formatDate(c.maturitY_DATE);
+        });
+
+        this.loadformData.misC_PAYMENT_DATEstr = this.formatDate(this.loadformData.misC_PAYMENT_DATE);
+     
+
         this.paginationDetailData.totalCount = result.miscdetaildata.length || 0;
         this.paginationLineData.totalCount = result.misclinedata.length || 0;
 
@@ -401,8 +413,8 @@ export class PaymentVoucherComponent implements OnInit {
       { headerName: this.translate.instant('PaymentVoucherResourceName.accountNameAr'), field: 'accountNameAr', width: 200 },
       { headerName: this.translate.instant('PaymentVoucherResourceName.tR_TAX'), field: 'tR_TAX', width: 200 },
       { headerName: this.translate.instant('PaymentVoucherResourceName.taX_PERCENT'), field: 'taX_PERCENT', width: 200 },
-      { headerName: this.translate.instant('PaymentVoucherResourceName.totaPercent'), field: 'totaPercentstr', width: 200 },
-      { headerName: this.translate.instant('PaymentVoucherResourceName.totalAmount'), field: 'totalAmountstr', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.totaPercent'), field: 'totaPercent', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.totalAmount'), field: 'totalAmount', width: 200 },
     ];
 
     this.columnDefsDetailData = [
@@ -414,10 +426,10 @@ export class PaymentVoucherComponent implements OnInit {
         colId: 'serialNumber'
       },
       { headerName: this.translate.instant('PaymentVoucherResourceName.checK_NUMBER'), field: 'checK_NUMBER', width: 200 },
-      { headerName: this.translate.instant('PaymentVoucherResourceName.maturitY_DATE'), field: 'maturitY_DATE', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.maturitY_DATE'), field: 'maturitY_DATEstr', width: 200 },
       { headerName: this.translate.instant('PaymentVoucherResourceName.beneficiarY_NAME'), field: 'beneficiarY_NAME', width: 200 },
       { headerName: this.translate.instant('PaymentVoucherResourceName.notes'), field: 'notes', width: 200 },
-      { headerName: this.translate.instant('PaymentVoucherResourceName.amount'), field: 'amounTstr', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.amount'), field: 'amount', width: 200 },
     ];
   }
 

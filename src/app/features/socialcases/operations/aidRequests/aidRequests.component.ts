@@ -622,6 +622,7 @@ export class aidRequestsComponent {
             this.spinnerService.hide();
           },
           error: (err) => {
+            this.toastr.info(this.translate.instant(err.error.reason)); 
             this.spinnerService.hide();
           }
         });
@@ -722,7 +723,7 @@ export class aidRequestsComponent {
       this.getFormDatabyId(caseCode, entityId, caseid);
     }
     if (event.action === 'onViewStudyDetailsInfo') {
-      this.getStudyDetailsFormDatabyId(source, studyId, entityId);
+      this.getStudyDetailsFormDatabyId(source, entityId, studyId);
     }
   }
 

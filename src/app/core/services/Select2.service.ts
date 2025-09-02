@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { FndLookUpValuesSelect2RequestDto, FndLookUpValuesSelect2RequestbyIdDto, SelectdropdownResult } from '../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { FndLookUpValuesSelect2RequestDto, FndLookUpValuesSelect2RequestbyIdDto, SelectdropdownResult, SelectdropdownResultResults } from '../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2APIEndpoint } from '../constants/select2api-endpoints';
 import { loadVendorNameDto } from '../dtos/FinancialDtos/OperationDtos/vendor.models';
 import { loadBeneficentNameDto } from '../dtos/sponsorship/operations/beneficent.dto';
@@ -205,6 +205,11 @@ export class Select2Service {
   getGenderSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetGenderSelect2List}`;
     return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
+
+  getGenderSelect2Array(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResultResults[]> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetGenderSelect2List}`;
+    return this.http.post<SelectdropdownResultResults[]>(apiUrl, params);
   }
 
   getAidRequestSourceSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {

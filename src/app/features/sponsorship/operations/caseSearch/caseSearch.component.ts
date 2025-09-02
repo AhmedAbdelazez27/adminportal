@@ -422,11 +422,12 @@ export class caseSearchComponent {
     this.searchSelect2RequestDto.skip = this.gendersearchParams.skip;
     this.searchSelect2RequestDto.take = this.gendersearchParams.take;
 
-    this.Select2Service.getGenderSelect2(this.searchSelect2RequestDto)
+    this.Select2Service.getGenderSelect2Array(this.searchSelect2RequestDto)
       .pipe(takeUntil(this.destroy$)).subscribe({
-        next: (response: SelectdropdownResult) => {
-          const newItems = response?.results || [];
+        next: (response: SelectdropdownResultResults[]) => {
+          const newItems = response || [];
           this.genderSelect2 = [...this.genderSelect2, ...newItems];
+
           this.loadinggender = false;
         },
         error: () => this.loadinggender = false
@@ -435,7 +436,7 @@ export class caseSearchComponent {
 
   ongenderSelect2Change(selectedVendor: any): void {
     if (selectedVendor) {
-      this.searchParams.gender = selectedVendor.id;
+      this.searchParams.gender = selectedVendor.id?.toString() ?? null;
       this.searchParams.genderstr = selectedVendor.text;
 
     } else {
@@ -616,7 +617,6 @@ export class caseSearchComponent {
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.loadgridData = response || [];
-          console.log("casesearchData", response);
           this.pagination.totalCount = response[0]?.rowsCount || 0;
           this.spinnerService.hide();
         },
@@ -946,9 +946,9 @@ export class caseSearchComponent {
 
   printExcel(): void {
     if (!this.searchParams.entityId) {
-      this.translate.get(['caseSearchResourceName.EntityId', 'Common.Required'])
+      this.translate.get(['CaseSearchResourceName.EntityId', 'Common.Required'])
         .subscribe(translations => {
-          this.toastr.warning(`${translations['caseSearchResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
+          this.toastr.warning(`${translations['CaseSearchResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
         });
       return;
     }
@@ -968,20 +968,22 @@ export class caseSearchComponent {
                 const data = response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('caseSearchResourceName.Title'),
-                  reportTitle: this.translate.instant('caseSearchResourceName.Title'),
-                  fileName: `${this.translate.instant('caseSearchResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant('CaseSearchResourceName.Title'),
+                  reportTitle: this.translate.instant('CaseSearchResourceName.Title'),
+                  fileName: `${this.translate.instant('CaseSearchResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
-                    { label: this.translate.instant('caseSearchResourceName.EntityId'), value: this.searchParams.entityIdstr },
+                    { label: this.translate.instant('CaseSearchResourceName.EntityId'), value: this.searchParams.entityIdstr },
                   ],
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },
-                    { label: this.translate.instant('caseSearchResourceName.caseSearchNumber'), key: 'caseSearch_NO' },
-                    { label: this.translate.instant('caseSearchResourceName.caseSearchName'), key: 'caseSearchname' },
-                    { label: this.translate.instant('caseSearchResourceName.caseSearchAddress'), key: 'address' },
-                    { label: this.translate.instant('caseSearchResourceName.mobile'), key: 'caseSearchmobile' },
-                    { label: this.translate.instant('caseSearchResourceName.homeTel'), key: 'mobilE2' },
-                    { label: this.translate.instant('caseSearchResourceName.workTel'), key: 'mobilE3' },
+                    { label: this.translate.instant('CaseSearchResourceName.casE_ID'), key: 'casE_ID' },
+                    { label: this.translate.instant('CaseSearchResourceName.entitY_ID'), key: 'entitY_ID' },
+                    { label: this.translate.instant('CaseSearchResourceName.casename'), key: 'casename' },
+                    { label: this.translate.instant('CaseSearchResourceName.casE_STATUS_DESC'), key: 'casE_STATUS_DESC' },
+                    { label: this.translate.instant('CaseSearchResourceName.caseamount'), key: 'caseamount' },
+                    { label: this.translate.instant('CaseSearchResourceName.startdate'), key: 'startdatestr' },
+                    { label: this.translate.instant('CaseSearchResourceName.beneficentname'), key: 'beneficentname' },
+                    { label: this.translate.instant('CaseSearchResourceName.sponceR_CATEGORY_DESC'), key: 'sponceR_CATEGORY_DESC' },
                   ],
 
                   data: data.map((item: any, index: number) => ({

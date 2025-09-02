@@ -266,7 +266,19 @@ export class VendorComponent implements OnInit {
     this.pagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;
     this.searchParams.skip = skip;
-    const cleanedFilters = this.cleanFilterObject(this.searchParams);
+    const params: filterVendorHeaderDto = {
+      entityId: this.searchParams.entityId,
+      VendorName: this.searchParams.VendorName,
+      status: this.searchParams.status,
+      OrderbyValue: this.searchParams.OrderbyValue,
+      take: event.pageSize,
+      skip: skip,
+      entityIdstr: null,
+      benificaryNamestr: null,
+      VendorNameStr: null,
+      statusStr: null,
+    };
+    const cleanedFilters = this.cleanFilterObject(params);
     this.vendorService.getAll(cleanedFilters)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {

@@ -111,7 +111,7 @@
                          placeholder="{{ 'Common.Select' | translate }}">
               </ng-select>
             </div>
-
+     
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'CaseSearchResourceName.nationalitY_DESC' | translate }}</label>
               <ng-select class="ng-select-custom"
@@ -451,19 +451,25 @@
             </div>
           </div>
           <h4 class="gold bold">{{ 'CaseSearchResourceName.DetailTabTitle' | translate }}</h4>
-          <app-generic-data-table [columnDefs]="columnDefsCaseHistory"
-                                  [rowData]="loadCaseHistoryDetailformData"
-                                  [totalCount]="paginationcasehistorydetails.totalCount"
-                                  [pageSize]="paginationcasehistorydetails.take"
-                                  [currentPage]="paginationcasehistorydetails.currentPage - 1"
-                                  [columnHeaderMap]="columnHeaderMap"
-                                  [rowActions]="rowActions"
-                                  (actionClick)="onTableAction($event)"
-                                  (pageChange)="onPageChangeCaseHistory($event)"
-                                  [showActionColumn]="true"
-                                  (search)="onTableSearchCaseHistory($event)"
-                                  (languageChanged)="buildColumnDefs()">
-          </app-generic-data-table>
+          <div *ngIf="loadCaseHistoryDetailformData && loadCaseHistoryDetailformData.length > 0">
+            <app-generic-data-table [columnDefs]="columnDefsCaseHistory"
+                                    [rowData]="loadCaseHistoryDetailformData"
+                                    [totalCount]="paginationcasehistorydetails.totalCount"
+                                    [pageSize]="paginationcasehistorydetails.take"
+                                    [currentPage]="paginationcasehistorydetails.currentPage - 1"
+                                    [columnHeaderMap]="columnHeaderMap"
+                                    [rowActions]="rowActions"
+                                    (actionClick)="onTableAction($event)"
+                                    (pageChange)="onPageChangeCaseHistory($event)"
+                                    [showActionColumn]="true"
+                                    (search)="onTableSearchCaseHistory($event)"
+                                    (languageChanged)="buildColumnDefs()">
+            </app-generic-data-table>
+          </div>
+          <div *ngIf="!loadCaseHistoryDetailformData || loadCaseHistoryDetailformData.length === 0" class="alert alert-info">
+            {{ 'Common.NoData' | translate }}
+          </div>
+     
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
@@ -495,19 +501,25 @@
             </div>
           </div>
           <h4 class="gold bold">{{ 'CaseSearchResourceName.DetailTabTitle' | translate }}</h4>
-          <app-generic-data-table [columnDefs]="columnDefsCasePayment"
-                                  [rowData]="loadCasePaymentHdrDetailformData"
-                                  [totalCount]="paginationCasePaymentHdr.totalCount"
-                                  [pageSize]="paginationCasePaymentHdr.take"
-                                  [currentPage]="paginationCasePaymentHdr.currentPage - 1"
-                                  [columnHeaderMap]="columnHeaderMap"
-                                  [rowActions]="rowActions"
-                                  (actionClick)="onTableAction($event)"
-                                  (pageChange)="onPageChangePaymentHdr($event)"
-                                  [showActionColumn]="true"
-                                  (search)="onTableSearchPaymentHdr($event)"
-                                  (languageChanged)="buildColumnDefs()">
-          </app-generic-data-table>
+          <div *ngIf="loadCasePaymentHdrDetailformData && loadCasePaymentHdrDetailformData.length > 0">
+            <app-generic-data-table [columnDefs]="columnDefsCasePayment"
+                                    [rowData]="loadCasePaymentHdrDetailformData"
+                                    [totalCount]="paginationCasePaymentHdr.totalCount"
+                                    [pageSize]="paginationCasePaymentHdr.take"
+                                    [currentPage]="paginationCasePaymentHdr.currentPage - 1"
+                                    [columnHeaderMap]="columnHeaderMap"
+                                    [rowActions]="rowActions"
+                                    (actionClick)="onTableAction($event)"
+                                    (pageChange)="onPageChangePaymentHdr($event)"
+                                    [showActionColumn]="true"
+                                    (search)="onTableSearchPaymentHdr($event)"
+                                    (languageChanged)="buildColumnDefs()">
+            </app-generic-data-table>
+          </div>
+          <div *ngIf="!loadCasePaymentHdrDetailformData || loadCasePaymentHdrDetailformData.length === 0" class="alert alert-info">
+            {{ 'Common.NoData' | translate }}
+          </div>
+
           <div class="row">
             <div class="col-xxl-4 col-xl-6">
               <label class="bold black">{{ 'CaseSearchResourceName.total1' | translate }}</label>
@@ -576,19 +588,24 @@
             </div>
           </div>
           <h4 class="gold bold">{{ 'CaseSearchResourceName.DetailTabTitle' | translate }}</h4>
-          <app-generic-data-table [columnDefs]="columnDefsContract"
-                                  [rowData]="loadContractCasesDetailformData"
-                                  [totalCount]="paginationContractDetails.totalCount"
-                                  [pageSize]="paginationContractDetails.take"
-                                  [currentPage]="paginationContractDetails.currentPage - 1"
-                                  [columnHeaderMap]="columnHeaderMap"
-                                  [rowActions]="rowActions"
-                                  (actionClick)="onTableAction($event)"
-                                  (pageChange)="onPageChangeContract($event)"
-                                  [showActionColumn]="true"
-                                  (search)="onTableSearchContract($event)"
-                                  (languageChanged)="buildColumnDefs()">
-          </app-generic-data-table>
+          <div *ngIf="loadContractCasesDetailformData && loadContractCasesDetailformData.length > 0">
+            <app-generic-data-table [columnDefs]="columnDefsContract"
+                                    [rowData]="loadContractCasesDetailformData"
+                                    [totalCount]="paginationContractDetails.totalCount"
+                                    [pageSize]="paginationContractDetails.take"
+                                    [currentPage]="paginationContractDetails.currentPage - 1"
+                                    [columnHeaderMap]="columnHeaderMap"
+                                    [rowActions]="rowActions"
+                                    (actionClick)="onTableAction($event)"
+                                    (pageChange)="onPageChangeContract($event)"
+                                    [showActionColumn]="true"
+                                    (search)="onTableSearchContract($event)"
+                                    (languageChanged)="buildColumnDefs()">
+            </app-generic-data-table>
+          </div>
+          <div *ngIf="!loadContractCasesDetailformData || loadContractCasesDetailformData.length === 0" class="alert alert-info">
+            {{ 'Common.NoData' | translate }}
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>

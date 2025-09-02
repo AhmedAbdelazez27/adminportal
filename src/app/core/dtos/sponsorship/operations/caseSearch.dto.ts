@@ -11,6 +11,7 @@ export class filtercaseSearchDto {
   idNumber: string | null = null;
   sponcerCat: string | null = null;
   gender: string | null = null;
+  genderdummy: Number | null = null;
   officeId: string | null = null;
 
   orderByValue: string = 'CASE_NO asc';

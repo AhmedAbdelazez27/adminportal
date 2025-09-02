@@ -275,6 +275,12 @@ export class orderListBranchRptComponent {
     }
   }
 
+  formatDate(date: Date | string | null): string {
+    if (!date) return '';
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return d.toLocaleDateString();
+  }
+
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
     if (!this.searchParams.entityId) {
       this.translate
@@ -297,7 +303,11 @@ export class orderListBranchRptComponent {
     this.socialCasesReportsService.getordersListRptData(this.searchParams)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
+          console.log("response", response);
           this.getAllDataForReports = response?.data || [];
+          this.getAllDataForReports.forEach((c) => {
+            c.aiD_REQUEST_DATEstr = this.formatDate(c.aiD_REQUEST_DATE);
+          });
           this.pagination.totalCount = response?.totalCount || 0;
           this.spinnerService.hide();
         },
@@ -365,13 +375,13 @@ export class orderListBranchRptComponent {
           colId: 'serialNumber'
         },
         { headerName: translations['SocialCaseReportsResourceName.referencenumber'], field: 'referencenumber', width: 200 },
-        { headerName: translations['SocialCaseReportsResourceName.aiD_REQUEST_DATE'], field: 'aiD_REQUEST_DATE', width: 200 },
+        { headerName: translations['SocialCaseReportsResourceName.aiD_REQUEST_DATE'], field: 'aiD_REQUEST_DATEstr', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.requesT_TYPE_DESC'], field: 'requesT_TYPE_DESC', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.namE_AR'], field: 'namE_AR', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.casE_ID_NUMBER'], field: 'casE_ID_NUMBER', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.familY_PERS_NO'], field: 'familY_PERS_NO', width: 200 },
-        { headerName: translations['SocialCaseReportsResourceName.toT_INCOME'], field: 'toT_INCOMEstr', width: 200 },
-        { headerName: translations['SocialCaseReportsResourceName.toT_DUTIES'], field: 'toT_DUTIESstr', width: 200 },
+        { headerName: translations['SocialCaseReportsResourceName.toT_INCOME'], field: 'toT_INCOME', width: 200 },
+        { headerName: translations['SocialCaseReportsResourceName.toT_DUTIES'], field: 'toT_DUTIES', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.statuS_DESC'], field: 'statuscodE_DESC', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.brancH_DESC'], field: 'brancH_DESC', width: 200 },
       ];

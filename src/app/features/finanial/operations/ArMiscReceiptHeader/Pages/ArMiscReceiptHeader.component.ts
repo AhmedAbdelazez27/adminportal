@@ -278,7 +278,7 @@ export class ArMiscReceiptHeaderComponent {
 
   onbenNameSelect2Change(selectbenName: any): void {
     if (selectbenName) {
-      this.searchParams.benName = selectbenName.id;
+      this.searchParams.benName = selectbenName.text;
       this.searchParams.benNamestr = selectbenName.text;
     } else {
       this.searchParams.benName = null;
