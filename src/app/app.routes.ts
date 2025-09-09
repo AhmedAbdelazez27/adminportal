@@ -84,8 +84,8 @@ export const routes: Routes = [
               import(
                 './features/UserSetting/setting-regions-component/setting-regions-component.routes'
               ).then((m) => m.settingRegionsRoutes),
-            canActivate: [authGuard],
-            data: { permission: 'Settings.View' },
+            // canActivate: [authGuard],
+            // data: { permission: 'Settings.View' },
           },
           {
             path: 'contact-information',
@@ -100,8 +100,8 @@ export const routes: Routes = [
             path: 'polls',
             loadChildren: () =>
               import('./features/UserSetting/polls-component/polls-component.routes').then((m) => m.pollsComponentRoutes),
-            canActivate: [authGuard],
-            data: { permission: 'Settings.View' },
+            // canActivate: [authGuard],
+            // data: { permission: 'Settings.View' },
           },
         ],
       },
@@ -241,8 +241,8 @@ export const routes: Routes = [
           import('./features/serviceSetting2/serviceSetting2.routes').then(
             (m) => m.serviceSetting2Routes
           ),
-        canActivate: [authGuard],
-        data: { permission: 'ServiceSetting.View' },
+        // canActivate: [authGuard],
+        // data: { permission: 'ServiceSetting.View' },
       },
 
       {

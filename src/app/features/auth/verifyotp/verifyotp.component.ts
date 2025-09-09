@@ -1,7 +1,7 @@
 import { Component, ElementRef, QueryList, ViewChildren, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -9,7 +9,7 @@ import { SpinnerService } from '../../../core/services/spinner.service';
 
 @Component({
   selector: 'app-verifyotp',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule,TranslateModule],
   templateUrl: './verifyotp.component.html',
   styleUrl: './verifyotp.component.scss'
 })

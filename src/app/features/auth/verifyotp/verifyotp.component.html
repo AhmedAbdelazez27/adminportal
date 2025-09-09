@@ -7,8 +7,8 @@
           <img src="./../../../../assets/images/logo.png" />
           <img src="./../../../../assets/images/logo.png" />
         </div>
-        <h4 class="bold gold title-32">OTP</h4>
-        <p class="mb-4">One Time Password will be sent to your email</p>
+        <h4 class="bold gold title-32">{{ 'OTP.HEADING' | translate }}</h4>
+        <p class="mb-4">{{ 'OTP.SENT_HINT' | translate }}</p>
         <form [formGroup]="otpForm" (ngSubmit)="submitOtp()">
           <div class="mb-4">
             <div class="row d-flex justify-content-center">
@@ -31,15 +31,16 @@
             </div>
           </div>
 
-          <p class="mb-4 text-center">OTP will expire in <span class="bold gold">{{ timer | number: '2.0' }}s</span></p>
+          <p class="mb-4 text-center">{{ 'OTP.EXPIRES_IN' | translate }} <span class="bold gold">{{ timer | number:
+              '2.0' }}{{ 'OTP.SECONDS_SHORT' | translate }}</span></p>
 
           <button type="submit" class="btn btn-gold w-100">
-            Verify OTP
+            {{ 'OTP.VERIFY' | translate }}
           </button>
 
           <p class="mt-4 text-center">
-            Didn't receive OTP? . . . . <a (click)="resendOtp()" class="bold gold" style="cursor: pointer;">Resend
-              OTP</a>
+            {{ 'OTP.DIDNT_RECEIVE' | translate }} <a (click)="resendOtp()" class="bold gold" style="cursor: pointer;">{{
+              'OTP.RESEND' | translate }}</a>
           </p>
         </form>
       </div>

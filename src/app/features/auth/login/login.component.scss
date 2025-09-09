@@ -1,0 +1,19 @@
+.main-container { position: relative; }
+
+.btn-lang {
+  position: absolute;
+  inset-block-start: 16px; 
+  inset-inline-end: 16px; 
+  padding: 6px 12px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1;
+  min-height: 36px;
+}
+
+@media (max-width: 576px) {
+  .btn-lang { inset-block-start: 12px; inset-inline-end: 12px; padding: 4px 10px; }
+}

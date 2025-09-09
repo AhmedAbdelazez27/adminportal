@@ -3,7 +3,7 @@
    </div>
 
   <!-- Tab Navigation -->
-  <ul class="nav nav-tabs mb-3" id="settingsTabs" role="tablist">
+  <ul class="nav nav-tabs mb-3" id="settingsTabs" role="tablist"[style.display]="showTab ? 'flex' : 'none'">
     <li class="nav-item" role="presentation">
       <button class="nav-link" [class.active]="activeTab === 'regions'" (click)="setActiveTab('regions')" type="button"
         role="tab">
@@ -22,7 +22,7 @@
            {{ 'settingsservices.avaliblenumber' | translate }}
       </button>
     </li>
-    <li class="nav-item" role="presentation">
+    <!-- <li class="nav-item" role="presentation">
       <button class="nav-link" [class.active]="activeTab === 'contact-information'" (click)="setActiveTab('contact-information')" type="button"
         role="tab">
        {{ 'settingsservices.contactus' | translate }}
@@ -51,7 +51,7 @@
         (click)="setActiveTab('hero-section-setting')" type="button" role="tab">
         {{ 'settingsservices.heroSectionSetting' | translate }}
       </button>
-    </li>
+    </li> -->
   </ul>
 
   <!-- Tab Content -->

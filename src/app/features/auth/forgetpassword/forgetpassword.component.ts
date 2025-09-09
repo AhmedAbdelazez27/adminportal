@@ -4,12 +4,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-forgetpassword',
-  imports: [CommonModule,FormsModule,ReactiveFormsModule],
+  imports: [CommonModule,FormsModule,ReactiveFormsModule,TranslateModule],
   templateUrl: './forgetpassword.component.html',
   styleUrl: './forgetpassword.component.scss'
 })

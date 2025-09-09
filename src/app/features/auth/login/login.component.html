@@ -20,31 +20,54 @@
     <div class="col-xl-3"></div>
     <div class="col-xl-6 ">
       <div class="main-container mt-5 login-box" style="padding:64px 50px;">
+        <button type="button" class="btn-lang" (click)="toggleLang()"
+          [attr.aria-label]="currentLang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'">
+          {{ currentLang === 'ar' ? 'English' : 'عربي' }}
+        </button>
         <div class="d-flex justify-content-center align-items-center gap-2 mb-5">
           <img src="./../../../../assets/images/logo.png" />
           <img src="./../../../../assets/images/logo.png" />
         </div>
         <form [formGroup]="form" (ngSubmit)="submit()">
           <div class="mb-4">
-            <label for="userName" class="form-label">User Name</label>
-            <input type="text" class="form-control" id="userName" placeholder="Enter User Name"
-              formControlName="userName"
+            <label for="userName" class="form-label">{{ 'LOGIN.USERNAME_LABEL' | translate }}</label>
+            <input type="text" class="form-control" id="userName" formControlName="userName"
+              [placeholder]="'LOGIN.USERNAME_PLACEHOLDER' | translate"
               [ngClass]="{ 'is-invalid': form.get('userName')?.invalid && (form.get('userName')?.touched || submitted) }" />
+            <div class="invalid-feedback"
+              *ngIf="form.get('userName')?.invalid && (form.get('userName')?.touched || submitted)">
+              {{ 'LOGIN.USERNAME_REQUIRED' | translate }}
+            </div>
           </div>
 
           <div class="mb-4">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Enter password"
-              formControlName="password"
+            <label for="password" class="form-label">{{ 'LOGIN.PASSWORD_LABEL' | translate }}</label>
+            <input type="password" class="form-control" id="password" formControlName="password"
+              [placeholder]="'LOGIN.PASSWORD_PLACEHOLDER' | translate"
               [ngClass]="{ 'is-invalid': form.get('password')?.invalid && (form.get('password')?.touched || submitted) }" />
+            <div class="invalid-feedback"
+              *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || submitted)">
+              {{ 'LOGIN.PASSWORD_REQUIRED' | translate }}
+            </div>
           </div>
 
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <a class="gold text-decoration-none" style="cursor: pointer;" (click)="routeToForgetPassword()">Forgot Password?</a>
+            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkDefault">
+                                <label class="form-check-label" for="checkDefault">
+                                    {{ 'AUTH.LOGIN.REMEMBER_ME' | translate }}
+                                </label>
+                            </div>
+            <a class="gold text-decoration-none" style="cursor: pointer;" (click)="routeToForgetPassword()">
+              {{ 'LOGIN.FORGOT_LINK' | translate }}
+            </a>
           </div>
 
-          <button class="btn btn-gold w-100" type="submit">Login</button>
+          <button class="btn btn-gold w-100" type="submit">
+            {{ 'LOGIN.SUBMIT' | translate }}
+          </button>
         </form>
+
 
       </div>
     </div>

@@ -5,12 +5,13 @@ import { AuthService } from '../../../core/services/auth.service';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, NgxSpinnerModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, NgxSpinnerModule, CommonModule, FormsModule, TranslateModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -18,11 +19,16 @@ export class LoginComponent {
 
   form !: FormGroup;
   submitted: boolean = false;
-
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router, private spinnerService: SpinnerService, private toastr: ToastrService, private translate: TranslateService) {
+  currentLang: string = 'ar';
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router, private spinnerService: SpinnerService, private toastr: ToastrService, private translate: TranslateService, private translation: TranslationService) {
     this.form = this.fb.group({
       userName: ['', Validators.required],
       password: ['', Validators.required],
+    });
+
+    this.currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'ar';
+    this.translate.onLangChange.subscribe(e => {
+      this.currentLang = e.lang;
     });
 
   }
@@ -37,7 +43,7 @@ export class LoginComponent {
 
         this.auth.saveToken(res?.token);
         const decodedData = this.auth.decodeToken();
-        
+
         if (decodedData && decodedData.Permissions) {
           const permissions = decodedData.Permissions;
           localStorage.setItem('permissions', JSON.stringify(permissions));
@@ -59,7 +65,10 @@ export class LoginComponent {
     });
   }
 
-  routeToForgetPassword(){
+  routeToForgetPassword() {
     this.router.navigate(['/forgot-password']);
+  }
+  toggleLang() {
+    this.translation.toggleLanguage();
   }
 }

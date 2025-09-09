@@ -36,7 +36,7 @@ export class SettingRegionsComponentComponent implements OnInit, OnDestroy {
 
   private queryParamsSubscription?: Subscription;
   private validTabs = ['regions', 'locations', 'other', 'contact-information', 'attachments-config', 'initiatives', 'polls', 'hero-section-setting'];
-
+  showTab : boolean = false ;
   constructor(
     private route: ActivatedRoute,
     private router: Router
@@ -51,6 +51,12 @@ export class SettingRegionsComponentComponent implements OnInit, OnDestroy {
       } else {
         // If no valid tab specified, default to 'regions'
         this.activeTab = 'regions';
+      }
+
+      if (tab == 'other' ||tab == 'locations'  || tab == 'regions'  ) {
+        this.showTab = true;
+      }else{
+        this.showTab = false;
       }
     });
   }
