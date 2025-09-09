@@ -9,10 +9,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { UserService } from '../../../core/services/user.service';
 import { confirmPasswordValidator } from '../../customValidators/confirmPasswordValidator';
+import { ExportToolbarComponent } from '../../../../shared/export-toolbar/export-toolbar.component';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterModule, CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [RouterModule, CommonModule, FormsModule, ReactiveFormsModule, TranslateModule , ExportToolbarComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
   providers: [ToastrService]

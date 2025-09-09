@@ -300,4 +300,9 @@ export class Select2Service {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GlAccountEntitySelect2}`
     return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
+
+  getPlaintReasonsSelect2(params: FndLookUpValuesSelect2RequestDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetPlaintReasonsSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
 }

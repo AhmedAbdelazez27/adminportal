@@ -8,7 +8,7 @@ import { catchError, debounceTime, takeUntil, tap } from 'rxjs/operators';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../shared/generic-data-table/generic-data-table.component';
-import { FiltermainApplyServiceDto, FiltermainApplyServiceByIdDto, mainApplyServiceDto, AppUserDto, AttachmentDto, RequestAdvertisementTargetDto, RequestAdvertisementAdLocationDto, RequestAdvertisementAdMethodDto, RequestPlaintEvidenceDto, RequestPlaintJustificationDto, RequestPlaintReasonDto, WorkFlowCommentDto, UpdateStatusDto, WorkFlowStepDto } from '../../../core/dtos/mainApplyService/mainApplyService.dto';
+import { FiltermainApplyServiceDto, FiltermainApplyServiceByIdDto, mainApplyServiceDto, AppUserDto, AttachmentDto, RequestAdvertisementTargetDto, RequestAdvertisementAdLocationDto, RequestAdvertisementAdMethodDto, RequestPlaintEvidenceDto, RequestPlaintJustificationDto, RequestPlaintReasonDto, WorkFlowCommentDto, UpdateStatusDto, WorkFlowStepDto, CharityEventPermitDto, DonationCollectionChannelDto, PartnerDto } from '../../../core/dtos/mainApplyService/mainApplyService.dto';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { Select2Service } from '../../../core/services/Select2.service';
 import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
@@ -18,6 +18,7 @@ import { ServiceDataType, ServiceStatus } from '../../../core/enum/user-type.enu
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import L from 'leaflet';
+import { AttachmentService } from '../../../core/services/attachments/attachment.service';
 
 declare var bootstrap: any;
 
@@ -77,6 +78,7 @@ export class ServiceConfirmationComponent {
   loadgridData: mainApplyServiceDto[] = [];
   loadformData: mainApplyServiceDto = {} as mainApplyServiceDto;
   loaduserformData: AppUserDto = {} as AppUserDto;
+  loadCharityEventPermitformData: CharityEventPermitDto = {} as CharityEventPermitDto;
   loaduserattachmentsListformData: AttachmentDto[] = [];
   loaduserattachmentsListServiceformData: AttachmentDto[] = [];
   loadRequestAdvertisementTargetListformData: RequestAdvertisementTargetDto[] = [];
@@ -86,6 +88,7 @@ export class ServiceConfirmationComponent {
   loadRequestPlaintevidenceListformData: RequestPlaintEvidenceDto[] = [];
   loadRequestPlaintJustificationListformData: RequestPlaintJustificationDto[] = [];
   loadWorkFlowCommentListformData: WorkFlowCommentDto[] = [];
+
   workFlowQuery: any;
   refuseReasonMsg: any;
   workFlowSteps: WorkFlowStepDto[] = [];
@@ -151,7 +154,13 @@ export class ServiceConfirmationComponent {
   isCommentDragOver = false;
   commentValidationSubmitted = false;
 
+  showPartnerAttachmentModal = false;
+  selectedPartner: PartnerDto | null = null;
+  selectedPartnerAttachments: AttachmentDto[] = [];
   private subscriptions: Subscription[] = [];
+  showAttachmentModal = false;
+
+
   constructor(
     private mainApplyService: MainApplyService,
     private toastr: ToastrService,
@@ -161,6 +170,7 @@ export class ServiceConfirmationComponent {
     private Select2Service: Select2Service,
     private fb: FormBuilder,
     private router: Router,
+    private attachmentService: AttachmentService,
     private route: ActivatedRoute
   ) {
     this.rejectResonsForm = this.fb.group({
@@ -378,6 +388,9 @@ export class ServiceConfirmationComponent {
           this.originalworkFlowId = this.loadformData?.workFlowSteps?.[0]?.id;
           this.originalNotes = this.loadformData.notesForApproving ?? '';
 
+          if (Array.isArray(this.loadformData)) {
+            this.loadCharityEventPermitformData = this.loadformData[0].charityEventPermit ?? ({} as CharityEventPermitDto);
+          }
           this.loaduserattachmentsListServiceformData = this.loadformData.attachments ?? [];
           this.loadRequestAdvertisementTargetListformData = this.loadformData.requestAdvertisementTargets ?? [];
           this.loadRequestAdvertisementAdMethodListformData = this.loadformData.requestAdvertisementAdMethods ?? [];
@@ -884,9 +897,9 @@ export class ServiceConfirmationComponent {
           userId: localStorage.getItem('userId'),
           reason: reason,
           notesForApproving: '',
-          tentConstructDate: this.addReason.fastingTentService?.tentConstructDate,
-          startDate: this.addReason.fastingTentService?.startDate,
-          endDate: this.addReason.fastingTentService?.endDate
+          tentConstructDate: this.addReason.fastingTentService?.tentConstructDate ?? null,
+          startDate: this.addReason.fastingTentService?.startDate ?? null,
+          endDate: this.addReason.fastingTentService?.endDate ?? null
         };
 
         this.mainApplyService.update(param).subscribe({
@@ -1714,5 +1727,97 @@ export class ServiceConfirmationComponent {
       this.map = null;
     }
     this.mapLoadError = false;
+  }
+
+  //For ServiceId = "2"
+  channelName(ch: DonationCollectionChannelDto): string {
+    const isAr = (this.translate.currentLang || '').toLowerCase().startsWith('ar');
+    return (isAr ? (ch.nameAr || ch.nameEn) : (ch.nameEn || ch.nameAr)) || '-';
+  }
+
+  viewPartnerAttachments(partner: PartnerDto) {
+    if (partner.attachments?.length) {
+      this.selectedPartner = partner;
+      this.selectedPartnerAttachments = partner.attachments;
+      this.showPartnerAttachmentModal = true;
+    } else {
+      this.fetchPartnerAttachments(partner);
+    }
+  }
+
+
+  fetchPartnerAttachments(partner: PartnerDto) {
+    if (!partner?.id) {
+      this.toastr.warning(this.translate.instant('COMMON.INVALID_PARTNER_ID'));
+      return;
+    }
+    this.selectedPartner = partner;
+    this.isLoadingPartnerAttachments = true;
+    this.selectedPartnerAttachments = [];
+    this.showPartnerAttachmentModal = true;
+
+    const parameters = { skip: 0, take: 100, masterIds: [partner.id], masterType: 1004 };
+    const sub = this.attachmentService.getList(parameters).subscribe({
+      next: (res: any) => {
+        const items = res.data || res.items || [];
+        this.selectedPartnerAttachments = items.map((x: any) => ({
+          id: x.id,
+          masterId: x.masterId,
+          imgPath: x.imgPath,
+          masterType: x.masterType,
+          attachmentTitle: x.attachmentTitle,
+          lastModified: x.lastModified,
+          attConfigID: x.attConfigID
+        }));
+        this.isLoadingPartnerAttachments = false;
+        if (this.selectedPartnerAttachments.length === 0) {
+          this.toastr.info(this.translate.instant('COMMON.NO_ATTACHMENTS_FOUND'));
+        }
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_ATTACHMENTS'));
+        this.isLoadingPartnerAttachments = false;
+      }
+    });
+    this.subscriptions.push(sub);
+  }
+
+  closePartnerAttachmentModal() {
+    this.showPartnerAttachmentModal = false;
+    this.selectedPartner = null;
+    this.selectedPartnerAttachments = [];
+    this.isLoadingPartnerAttachments = false;
+  }
+
+  onTableCellClick(event: any, id: any) {
+    if (id) this.fetchAndViewCommentAttachments(id);
+  }
+  onCommentsTableAction(_: { action: string; row: any }) { /* hook جاهز */ }
+
+  fetchAndViewCommentAttachments(commentId: number) {
+    this.isLoadingAttachments = true;
+    this.selectedCommentAttachments = [];
+    this.showAttachmentModal = true;
+
+    const parameters = { skip: 0, take: 100, masterIds: [commentId], masterType: 1003 };
+    const sub = this.attachmentService.getList(parameters).subscribe({
+      next: (res: any) => {
+        this.selectedCommentAttachments = res.data || res.items || [];
+        this.isLoadingAttachments = false;
+        if (this.selectedCommentAttachments.length === 0) {
+          this.toastr.info(this.translate.instant('COMMON.NO_ATTACHMENTS_FOUND'));
+        }
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_ATTACHMENTS'));
+        this.isLoadingAttachments = false;
+      }
+    });
+    this.subscriptions.push(sub);
+  }
+  closeAttachmentModal() {
+    this.showAttachmentModal = false;
+    this.selectedCommentAttachments = [];
+    this.isLoadingAttachments = false;
   }
 }

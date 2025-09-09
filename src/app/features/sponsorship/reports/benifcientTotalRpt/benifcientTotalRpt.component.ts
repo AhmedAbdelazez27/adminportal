@@ -232,7 +232,6 @@ export class benifcientTotalRptComponent {
     this.searchParams.skip = skip;
     this.searchParams.take = event.pageSize;
     this.spinnerService.show();
-
     this.sponsorshipReportService.getbenifcientTotalRptData(this.searchParams)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
@@ -285,7 +284,7 @@ export class benifcientTotalRptComponent {
   public buildColumnDefs(): void {
     this.columnDefs = [
       { headerName: '#', valueGetter: 'node.rowIndex + 1', width: 40, colId: '#' },
-      { headerName: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), field: 'nationalityDesc', width: 150 },
+      { headerName: this.translate.instant('SponsorshipReportResourceName.nationalityDesc'), field: 'nationalitY_DESC', width: 150 },
       { headerName: this.translate.instant('SponsorshipReportResourceName.newCase'), field: 'neW_CASE', width: 200 },
       { headerName: this.translate.instant('SponsorshipReportResourceName.neworofficepost'), field: 'neworofficepost', width: 100 },
       { headerName: this.translate.instant('SponsorshipReportResourceName.posted'), field: 'posted', width: 100 },

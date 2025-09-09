@@ -241,14 +241,19 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
     // console.log("this.selectedChart1 = ", this.selectedChart1);
 
     if (typeChange == 'changeEntit') {
-      this.spinnerService.show();
-      // this.onTypeChange(this.selectedChart1, "categories2", "seriesData2");
-      // this.onTypeChange(this.selectedChart2, "categories3", "seriesData3");
+      let hasTriggeredRequests = false;
       if (this.selectedChart1) {
+        hasTriggeredRequests = true;
+        this.spinnerService.show();
         this.onTypeChange(this.selectedChart1, "categories2", "seriesData2");
       }
       if (this.selectedChart2) {
+        hasTriggeredRequests = true;
+        this.spinnerService.show();
         this.onTypeChange(this.selectedChart2, "categories3", "seriesData3");
+      }
+      if (!hasTriggeredRequests) {
+        this.spinnerService.forceHide();
       }
       return;
     } else {

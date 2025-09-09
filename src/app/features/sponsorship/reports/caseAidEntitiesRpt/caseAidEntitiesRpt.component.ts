@@ -115,13 +115,19 @@ export class caseAidEntitiesRptComponent {
   }
 
   onentitySelect2Change(selectedentity: any): void {
-    if (selectedentity) {
-      this.searchParams.entityId = selectedentity.id;
-      this.searchParams.entityName = selectedentity.text;
-    } else {
+    if (selectedentity == null) {
       this.searchParams.entityId = null;
       this.searchParams.entityName = null;
+      return;
     }
+
+    // When bindValue="id", change emits the selected id. Resolve the label for reporting.
+    const selectedObj = typeof selectedentity === 'object'
+      ? selectedentity
+      : this.entitySelect2.find(x => x.id === selectedentity);
+
+    this.searchParams.entityId = selectedObj?.id ?? null;
+    this.searchParams.entityName = selectedObj?.text ?? null;
   }
 
 
@@ -157,13 +163,19 @@ export class caseAidEntitiesRptComponent {
   }
 
   oncaseAidSelect2Change(selectedcaseAid: any): void {
-    if (selectedcaseAid) {
-      this.searchParams.caseId = selectedcaseAid.id;
-      this.searchParams.caseName = selectedcaseAid.text;
-    } else {
+    if (selectedcaseAid == null) {
       this.searchParams.caseId = null;
       this.searchParams.caseName = null;
+      return;
     }
+
+    // With bindValue="id", change emits the id. Resolve object to get text.
+    const selectedObj = typeof selectedcaseAid === 'object'
+      ? selectedcaseAid
+      : this.caseAidSelect2.find(x => x.id === selectedcaseAid);
+
+    this.searchParams.caseId = selectedObj?.id ?? null;
+    this.searchParams.caseName = selectedObj?.text ?? null;
   }
 
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {

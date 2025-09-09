@@ -1,6 +1,6 @@
 <div class="view-distribution-site-permit-container">
   <section>
-    <div class="container-fluid">
+    <div class="container services">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="title mb-0">{{ 'mainApplyServiceResourceName.title' | translate }}</h4>
         <button type="button" class="btn btn-gray" (click)="goBack()">
@@ -8,6 +8,48 @@
           {{ 'Common.BACK' | translate }}
         </button>
       </div>
+
+      <div class="service-info-card mb-4 ">
+        <div class="w-100">
+          <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
+            <h4 class="title ">{{ 'CHARITY_EVENT_PERMIT.VIEW_TITLE' | translate }}</h4>
+          </div>
+          <div class="row">
+            <h6 class="fw-bold">{{ loadformData.service?.serviceName }}</h6>
+            <div class="row">
+              <div class="col-xl-6">
+                <p class="mb-1">
+                  <strong>{{ 'mainApplyServiceResourceName.applyNo' | translate  }}:</strong>
+                  {{loadformData.applyNo}}
+                </p>
+              </div>
+              <div class="col-xl-6">
+                <p class="mb-1">
+                  <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
+                  {{formatDate(loadformData.applyDate)}}
+                </p>
+              </div>
+              <div class="col-xl-6">
+                <p class="mb-1">
+                  <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
+                  {{loadformData.userName}}
+                </p>
+              </div>
+              <div class="col-xl-6">
+                <p class="mb-0" *ngIf="loadformData.permitNumber">
+                  <strong>{{ 'mainApplyServiceResourceName.permitNumber' | translate }}: </strong>
+                  {{loadformData.permitNumber}}
+                </p>
+              </div>
+              <div class="col-xl-6">
+                <span class="badge bg-primary">{{loadformData.lastStatus}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
       <div *ngIf="isLoading" class="text-center py-5">
         <div class="spinner-border" role="status">
@@ -261,6 +303,7 @@
                     </div>
                   </div>
                 </div>
+
 
                 <div class="step-content mb-4">
                   <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.BASIC_INFORMATION' | translate }}</h5>
@@ -622,159 +665,374 @@
 
             <div *ngIf="loadformData.serviceId == 2">
               <div class="main-container mb-4">
-                <div class="service-info-card  p-3 bg-light rounded mb-4">
-                  <h6 class="fw-bold">{{ loadformData.service?.serviceName }}</h6>
-                  <div class="row">
-                    <div class="col-xl-6">
-                      <p class="mb-1">
-                        <strong>{{ 'mainApplyServiceResourceName.applyNo' | translate  }}:</strong>
-                        {{loadformData.applyNo}}
-                      </p>
-                    </div>
-                    <div class="col-xl-6">
-                      <p class="mb-1">
-                        <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
-                        {{formatDate(loadformData.applyDate)}}
-                      </p>
-                    </div>
-                    <div class="col-xl-6">
-                      <p class="mb-1">
-                        <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
-                        {{loadformData.userName}}
-                      </p>
-                    </div>
-                    <div class="col-xl-6">
-                      <p class="mb-0" *ngIf="loadformData.permitNumber">
-                        <strong>{{ 'mainApplyServiceResourceName.permitNumber' | translate }}: </strong>
-                        {{loadformData.permitNumber}}
-                      </p>
-                    </div>
-                    <div class="col-xl-6">
-                      <span class="badge bg-primary">{{loadformData.lastStatus}}</span>
-                    </div>
-                  </div>
-                </div>
-
                 <div class="step-content mb-4">
-                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.BASIC_INFORMATION' | translate }}</h5>
-
-                  <div class="row" *ngIf="loadformData.fastingTentService">
+                  <h5 class="mb-3 gold">{{ 'CHARITY_EVENT_PERMIT.BASIC' | translate }}</h5>
+                  <div class="row" *ngIf="loadformData.charityEventPermit">
                     <div class="col-md-6 mb-3">
-                      <label for="locationType" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationtype' | translate }}</label>
-                      <p id="locationType">{{ loadformData.fastingTentService.locationType }}</p>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="supervisorName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorName' | translate }}</label>
-                      <p id="supervisorName">{{ loadformData.fastingTentService.supervisorName }}</p>
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.REQUEST_DATE' | translate }}</label>
+                      <div class="form-control-plaintext">{{ formatDate(loadformData.charityEventPermit.requestDate) }}</div>
                     </div>
 
                     <div class="col-md-6 mb-3">
-                      <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.jopTitle' | translate }}</label>
-                      <p class="mb-0">{{loadformData.fastingTentService.jopTitle}}</p>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                      <label for="supervisorMobile" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.SupervisorMobile' | translate }}</label>
-                      <p id="supervisorMobile">{{ loadformData.fastingTentService.supervisorMobile }}</p>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                      <div class="col-xxl-4 col-xl-6">
-                        <label for="notes" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.notes' | translate }}</label>
-                        <p id="notes">{{ loadformData.fastingTentService.notes }}</p>
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.ADVERTISEMENT_TYPE' | translate }}</label>
+                      <div class="form-control-plaintext">
+                        {{ loadformData.charityEventPermit.advertisementTypeName || loadformData.charityEventPermit.advertisementType || '-' }}
                       </div>
                     </div>
-                  </div>
-                </div>
 
-
-                <div class="step-content mb-4">
-                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.LOCATION.DETAILS' | translate }}</h5>
-
-                  <div *ngIf="loadformData.fastingTentService">
-                    <div class="row mb-4">
-                      <div class="col-md-6 mb-3">
-                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.ownerName' | translate }}</label>
-                        <p id="regionName">{{ loadformData.fastingTentService.ownerName }}</p>
-                      </div>
-
-                      <div class="col-md-6 mb-3">
-                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.locationName' | translate }}</label>
-                        <p id="regionName">{{ loadformData.fastingTentService.locationName }}</p>
-                      </div>
-
-                      <div class="col-md-6 mb-3">
-                        <label for="regionName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.regionname' | translate }}</label>
-                        <p id="regionName">{{ loadformData.fastingTentService.regionName }}</p>
-                      </div>
-
-                      <div class="col-md-6 mb-3">
-                        <label for="streetName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.streetname' | translate }}</label>
-                        <p id="streetName">{{ loadformData.fastingTentService.streetName }}</p>
-                      </div>
-
-                      <div class="col-md-6 mb-3">
-                        <label for="groundNo" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.groundNo' | translate }}</label>
-                        <p id="groundNo">{{ loadformData.fastingTentService.groundNo }}</p>
-                      </div>
-
-                      <div class="col-md-12 mb-3">
-                        <label for="address" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.address1' | translate }}</label>
-                        <p id="address">{{ loadformData.fastingTentService.address }}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div *ngIf="!loadformData.fastingTentService" class="alert alert-info">
-                    {{ 'mainApplyServiceResourceName.LOCATION.NO_INFO' | translate }}
-                  </div>
-                </div>
-
-                <div class="step-content mb-4">
-                  <h5 class="mb-4 gold">{{ 'mainApplyServiceResourceName.DATE_DETAILS' | translate }}</h5>
-
-                  <div class="row" *ngIf="loadformData.fastingTentService">
-                    <div class="col-md-4 mb-3">
-                      <label for="tentConstructDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.tentConstructDate' | translate }}</label>
-                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.tentConstructDate ?? null)}}</p>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                      <label for="startDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimasd' | translate }}</label>
-                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.startDate ?? null)}}</p>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                      <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.kimaed' | translate }}</label>
-                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.endDate ?? null)}}</p>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                      <label for="consultantName" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantName' | translate }}</label>
-                      <p class="mb-0">{{formatDate(loadformData.fastingTentService.consultantName ?? null)}}</p>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                      <label for="consultantNumber" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.consultantNumber' | translate }}</label>
-                      <p class="mb-0">{{loadformData.fastingTentService.consultantNumber ?? null}}</p>
-                    </div>
-                  </div>
-
-                  <div class="row">
                     <div class="col-12 mb-3">
-                      <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox"
-                               [checked]="loadformData.fastingTentService?.isConsultantApprovedFromPolice" disabled
-                               id="consultantApprovedView">
-                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantApprovedFromPolice' | translate }}</label>
+                      <label class="form-label fw-bold">{{ 'COMMON.STATUS' | translate }}</label>
+                      <div class="form-control-plaintext">
+                        {{ loadformData.lastStatus }}
                       </div>
                     </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-3 gold">{{ 'CHARITY_EVENT_PERMIT.EVENT_DETAILS' | translate }}</h5>
+                  <div class="row" *ngIf="loadformData.charityEventPermit">
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.EVENT_NAME' | translate }}</label>
+                      <div class="form-control-plaintext">{{ loadformData.charityEventPermit.eventName || '-' }}</div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.EVENT_LOCATION' | translate }}</label>
+                      <div class="form-control-plaintext">{{ loadformData.charityEventPermit.eventLocation || '-' }}</div>
+                    </div>
+
                     <div class="col-12 mb-3">
-                      <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox"
-                               [checked]="loadformData.fastingTentService?.isConsultantFromAjman" disabled
-                               id="consultantFromAjmanView">
-                        <label for="endDate" class="form-label fw-bold">{{ 'mainApplyServiceResourceName.IsConsultantFromAjman' | translate }}</label>
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.NOTES' | translate }}</label>
+                      <div class="form-control-plaintext">{{ loadformData.charityEventPermit.notes || '-' }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-3 gold">{{ 'CHARITY_EVENT_PERMIT.DATES' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.charityEventPermit">
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.START_DATE' | translate }}</label>
+                      <div class="form-control-plaintext">{{ formatDate(loadformData.charityEventPermit.startDate) }}</div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.END_DATE' | translate }}</label>
+                      <div class="form-control-plaintext">{{ formatDate(loadformData.charityEventPermit.endDate) }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-content mb-4">
+                  <h5 class="mb-3 gold">{{ 'CHARITY_EVENT_PERMIT.CONTACTS' | translate }}</h5>
+
+                  <div class="row" *ngIf="loadformData.charityEventPermit">
+                    <div class="col-xl-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.SUPERVISOR_NAME' | translate }}</label>
+                      <div class="form-control-plaintext">{{ loadformData.charityEventPermit.supervisorName || '-' }}</div>
+                    </div>
+                    <div class="col-xl-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.JOB_TITLE' | translate }}</label>
+                      <div class="form-control-plaintext">{{ loadformData.charityEventPermit.jopTitle || '-' }}</div>
+                    </div>
+                    <div class="col-xl-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.EMAIL' | translate }}</label>
+                      <div class="form-control-plaintext">{{ loadformData.charityEventPermit.email || '-' }}</div>
+                    </div>
+
+                    <div class="col-xl-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.TELEPHONE1' | translate }}</label>
+                      <div class="form-control-plaintext">{{ loadformData.charityEventPermit.telephone1 || '-' }}</div>
+                    </div>
+                    <div class="col-xl-6 mb-3">
+                      <label class="form-label fw-bold">{{ 'CHARITY_EVENT_PERMIT.TELEPHONE2' | translate }}</label>
+                      <div class="form-control-plaintext">{{ loadformData.charityEventPermit.telephone2 || '-' }}</div>
+                    </div>
+
+                    <div class="col-12 mb-2" *ngIf="loadformData.charityEventPermit.donationCollectionChannels?.length">
+                      <label class="form-label fw-bold">{{'CHARITY_EVENT_PERMIT.DONATION_CHANNELS' | translate }} </label>
+                      <ul class="list-group">
+                        <li class="list-group-item" *ngFor="let ch of loadformData.charityEventPermit.donationCollectionChannels">
+                          {{ channelName(ch) }}
+                          <span *ngIf="ch.isActive" class="badge bg-success ms-2"> {{'COMMON.ACTIVE' | translate}} </span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion" id="charitySectionsAccordion">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="adsHeader">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#adsSection"
+                            aria-expanded="false" aria-controls="adsSection">
+                      {{ 'CHARITY_EVENT_PERMIT.ADVERTISEMENTS' | translate }}
+                    </button>
+                  </h2>
+                  <div id="adsSection" class="accordion-collapse collapse" aria-labelledby="adsHeader"
+                       data-bs-parent="#charitySectionsAccordion">
+                    <div class="accordion-body">
+                      <div class="step-content">
+                        <div *ngIf="loadformData.charityEventPermit?.requestAdvertisements?.length; else noAds">
+                          <div class="accordion" id="adsAccordion">
+                            <div class="accordion-item"
+                                 *ngFor="let ad of loadformData.charityEventPermit!.requestAdvertisements; let i = index">
+                              <h2 class="accordion-header" [id]="'ad-h-'+i">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        [attr.data-bs-target]="'#ad-c-'+i" aria-expanded="false">
+                                  {{ 'REQUEST_EVENT_PERMIT.AD' | translate }} #{{ i + 1 }} — {{ ad.adTitle }}
+                                </button>
+                              </h2>
+                              <div [id]="'ad-c-'+i" class="accordion-collapse collapse" [attr.aria-labelledby]="'ad-h-'+i"
+                                   data-bs-parent="#adsAccordion">
+                                <div class="accordion-body">
+                                  <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                      <strong>{{ 'CHARITY_EVENT_PERMIT.AD_START' | translate }}:</strong> {{ formatDate(ad.startDate ?? null)}}
+                                    </div>
+
+                                    <div class="col-md-6 mb-2">
+                                      <strong>{{ 'CHARITY_EVENT_PERMIT.AD_END' | translate }}:</strong> {{formatDate(ad.endDate ?? null)}}
+                                    </div>
+
+                                    <div class="col-md-6 mb-2">
+                                      <strong>{{ 'CHARITY_EVENT_PERMIT.AD_MOBILE' | translate }}:</strong> {{ ad.mobile}}
+                                    </div>
+
+                                    <div class="col-md-6 mb-2">
+                                      <strong>{{ 'CHARITY_EVENT_PERMIT.AD_EMAIL' | translate }}:</strong> {{ad.eMail}}
+                                    </div>
+
+                                    <div class="col-md-6 mb-2">
+                                      <strong>{{ 'CHARITY_EVENT_PERMIT.AD_SUPERVISOR' | translate }}:</strong> {{ad.supervisorName}}
+                                    </div>
+
+                                    <div class="col-md-6 mb-2">
+                                      <strong>{{ 'CHARITY_EVENT_PERMIT.AD_TARGETED_AMOUNT' | translate }}:</strong>{{ad.targetedAmount}}
+                                    </div>
+
+                                    <div class="col-md-6 mb-2">
+                                      <strong>{{ 'CHARITY_EVENT_PERMIT.AD_FLAGS' | translate }}:</strong>
+                                      <span class="badge bg-primary me-2" *ngIf="ad.newAd">{{'CHARITY_EVENT_PERMIT.NEW_AD' | translate}}</span>
+                                      <span class="badge bg-warning text-dark" *ngIf="ad.reNewAd">{{'CHARITY_EVENT_PERMIT.RENEW_AD' | translate}}</span>
+                                    </div>
+
+                                    <div class="col-12 mt-3" *ngIf="ad.requestAdvertisementTargets?.length">
+                                      <h6 class="fw-bold">{{ 'CHARITY_EVENT_Permit.AD_TARGETS' | translate }}</h6>
+                                      <ul class="mb-0">
+                                        <li *ngFor="let t of ad.requestAdvertisementTargets">
+                                          {{ 'CHARITY_EVENT_PERMIT.TARGET_TYPE' | translate }}: {{t.lkpTargetTypeId}} <span *ngIf="t.othertxt">— {{ t.othertxt }}</span>
+                                        </li>
+                                      </ul>
+                                    </div>
+
+                                    <div class="col-12 mt-3" *ngIf="ad.requestAdvertisementAdLocations?.length">
+                                      <h6 class="fw-bold">{{ 'CHARITY_EVENT_PERMIT.AD_LOCATIONS' | translate }}</h6>
+                                      <ul class="mb-0">
+                                        <li *ngFor="let loc of ad.requestAdvertisementAdLocations">{{loc.location}}</li>
+                                      </ul>
+                                    </div>
+
+                                    <div class="col-12 mt-3" *ngIf="ad.requestAdvertisementAdMethods?.length">
+                                      <h6 class="fw-bold">{{ 'CHARITY_EVENT_PERMIT.AD_METHODS' | translate }}</h6>
+                                      <ul class="mb-0">
+                                        <li *ngFor="let m of ad.requestAdvertisementAdMethods">
+                                          {{ 'CHARITY_EVENT_PERMIT.METHOD' | translate }}: {{ m.lkpAdMethodId }}
+                                          <span *ngIf="m.othertxt">— {{ m.othertxt }}</span>
+                                        </li>
+                                      </ul>
+                                    </div>
+
+                                    <div class="col-12 mt-3" *ngIf="ad.attachment?.length">
+                                      <h6 class="fw-bold">{{ 'COMMON.ATTACHMENTS' | translate }}</h6>
+                                      <div class="d-flex flex-wrap gap-2">
+                                        <button *ngFor="let a of ad.attachment" class="btn btn-sm btn-next-style"
+                                                (click)="viewAttachment(a)">
+                                          <i class="fas fa-eye me-1"></i>{{a.attachmentTitle || ('CHARITY_EVENT_PERMIT.ATTACHMENT' | translate)}}
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <ng-template #noAds>
+                          <div class="alert alert-info">{{ 'CHARITY_EVENT_PERMIT.NO_ADS' | translate }}</div>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="partnersHeader">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#partnersSection" aria-expanded="false" aria-controls="partnersSection">
+                      {{ 'CHARITY_EVENT_PERMIT.PARTNERS' | translate }}
+                    </button>
+                  </h2>
+                  <div id="partnersSection" class="accordion-collapse collapse" aria-labelledby="partnersHeader"
+                       data-bs-parent="#charitySectionsAccordion">
+                    <div class="accordion-body">
+                      <div class="step-content">
+                        <div *ngIf="loadformData.partners?.length; else noPartners">
+                          <div class="table-responsive">
+                            <table class="table table-bordered">
+                              <thead class="table-light">
+                                <tr>
+                                  <th>{{ 'COMMON.NAME' | translate }}</th>
+                                  <th>{{ 'COMMON.TYPE' | translate }}</th>
+                                  <th>{{ 'COMMON.LICENSE_NUMBER' | translate }}</th>
+                                  <th>{{ 'COMMON.LICENSE_ISSUER' | translate }}</th>
+                                  <th>{{ 'COMMON.LICENSE_EXPIRY' | translate }}</th>
+                                  <th>{{ 'COMMON.CONTACT_DETAILS' | translate }}</th>
+                                  <th>{{ 'COMMON.ATTACHMENTS' | translate }}</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let partner of loadformData.partners">
+                                  <td>{{ partner.name || '-' }}</td>
+                                  <td>{{ partner.typeName || partner.type || '-' }}</td>
+                                  <td>{{ partner.licenseNumber || '-' }}</td>
+                                  <td>{{ partner.licenseIssuer || '-' }}</td>
+                                  <td>{{ formatDate(partner.licenseExpiryDate ?? null) }}</td>
+                                  <td>{{ partner.contactDetails || '-' }}</td>
+                                  <td class="text-center">
+                                    <button *ngIf="partner.attachments?.length" class="btn btn-next-style"
+                                            (click)="viewPartnerAttachments(partner)">
+                                      <i class="fas fa-eye me-1"></i>{{ 'COMMON.VIEW' | translate }} ({{ partner.attachments?.length }})
+                                    </button>
+                                    <button *ngIf="!partner.attachments?.length" class="btn btn-next-style"
+                                            (click)="viewPartnerAttachments(partner)">
+                                      <i class="fas fa-eye me-1"></i>{{ 'COMMON.VIEW' | translate }}
+                                    </button>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <ng-template #noPartners>
+                          <div class="alert alert-info">{{ 'CHARITY_EVENT_PERMIT.NO_PARTNERS' | translate }}</div>
+                        </ng-template>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="main-container p-0 mb-4">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                              data-bs-target="#collapseuserattachments" aria-expanded="false" aria-controls="collapseuserattachments">
+                        {{ 'mainApplyServiceResourceName.att' | translate }}
+                      </button>
+                    </h2>
+                    <div id="collapseuserattachments" class="accordion-collapse collapse"
+                         data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                        <div class="step-content mb-4">
+                          <div *ngIf="loaduserattachmentsListServiceformData && loaduserattachmentsListServiceformData.length > 0">
+                            <div class="row">
+                              <div class="col-xl-4 col-lg-6 mb-4"
+                                   *ngFor="let attachment of loaduserattachmentsListServiceformData">
+                                <div class="attachment-box">
+                                  <h6 class="card-title">
+                                    {{attachment.attachmentTitle || ('mainApplyServiceResourceName.ATTACHMENTS.ATTACHMENT' | translate) }}
+                                  </h6>
+                                  <p class="mb-4">
+                                    {{ 'Common.UPLOADED_ON' | translate }}:
+                                    {{formatDate(attachment.lastModified  ?? null)}}
+                                  </p>
+                                  <div class="d-flex justify-content-between mt-auto">
+                                    <button class="btn btn-next-style me-2"
+                                            (click)="viewAttachment(attachment)">
+                                      <i class="fas fa-eye me-1"></i>
+                                      {{ 'Common.VIEW' | translate }}
+                                    </button>
+                                    <button class="btn btn-download-style"
+                                            (click)="downloadAttachment(attachment)">
+                                      <i class="fas fa-download me-1"></i>
+                                      {{ 'Common.DOWNLOAD' | translate }}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div *ngIf="!loaduserattachmentsListServiceformData || loaduserattachmentsListServiceformData.length === 0"
+                               class="alert alert-info">
+                            {{ 'Common.NoData' | translate }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="wfHeader">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#wfComments" aria-expanded="false" aria-controls="wfComments">
+                      {{ 'COMMON.WORKFLOW_COMMENTS' | translate }}
+                    </button>
+                  </h2>
+                  <div id="wfComments" class="accordion-collapse collapse" data-bs-parent="#charitySectionsAccordion"
+                       aria-labelledby="wfHeader">
+                    <div class="accordion-body">
+                      <div class="step-content">
+
+                        <div class="d-flex justify-content-end align-items-center mb-4">
+                          <button *ngIf="targetWorkFlowStep" type="button" class="btn btn-gold" data-bs-toggle="modal"
+                                  data-bs-target="#commentModal">
+                            <i class="fas fa-plus me-2"></i>
+                            {{ 'COMMON.ADD_COMMENT' | translate }}
+                          </button>
+                        </div>
+
+                        <div class="comments-container">
+                          <div class="comment-item" *ngFor="let comment of allWorkFlowComments">
+                            <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
+                              <div>
+                                <h5 class="mb-0">{{ comment.employeeDepartmentName || 'N/A' }}</h5>
+                                <small class="text-muted">
+                                  {{ comment.lastModified | date:'dd/MM/yyyy' }}
+                                </small>
+                              </div>
+                            </div>
+                            <div class="comment-area">
+                              {{ comment.comment }}
+                            </div>
+                            <div>
+                              <button class="btn btn-view-attachment mt-2" data-comment-id="${comment.id}"
+                                      data-row-index="${p.node.rowIndex}" (click)="onTableCellClick($event,comment?.id)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                                     fill="none">
+                                  <g clip-path="url(#clip0_560_1674)">
+                                    <path d="M19.3923 7.84858C18.0998 5.74358 15.1598 2.21191 9.9998 2.21191C4.8398 2.21191 1.8998 5.74358 0.607299 7.84858C0.207739 8.49484 -0.00390625 9.23962 -0.00390625 9.99941C-0.00390625 10.7592 0.207739 11.504 0.607299 12.1502C1.8998 14.2552 4.8398 17.7869 9.9998 17.7869C15.1598 17.7869 18.0998 14.2552 19.3923 12.1502C19.7919 11.504 20.0035 10.7592 20.0035 9.99941C20.0035 9.23962 19.7919 8.49484 19.3923 7.84858V7.84858ZM17.9715 11.2777C16.8615 13.0827 14.349 16.1202 9.9998 16.1202C5.65063 16.1202 3.13813 13.0827 2.02813 11.2777C1.79074 10.8936 1.66501 10.451 1.66501 9.99941C1.66501 9.54785 1.79074 9.10521 2.02813 8.72108C3.13813 6.91608 5.65063 3.87858 9.9998 3.87858C14.349 3.87858 16.8615 6.91275 17.9715 8.72108C18.2089 9.10521 18.3346 9.54785 18.3346 9.99941C18.3346 10.451 18.2089 10.8936 17.9715 11.2777V11.2777Z"
+                                          fill="#374957" />
+                                    <path d="M10.0007 5.83301C9.17656 5.83301 8.37098 6.07738 7.68578 6.53522C7.00057 6.99306 6.46652 7.6438 6.15115 8.40516C5.83579 9.16652 5.75328 10.0043 5.91405 10.8126C6.07482 11.6208 6.47166 12.3632 7.05437 12.946C7.63709 13.5287 8.37952 13.9255 9.18778 14.0863C9.99603 14.2471 10.8338 14.1645 11.5952 13.8492C12.3565 13.5338 13.0073 12.9998 13.4651 12.3146C13.9229 11.6293 14.1673 10.8238 14.1673 9.99967C14.166 8.89501 13.7266 7.83597 12.9455 7.05486C12.1644 6.27374 11.1053 5.83433 10.0007 5.83301V5.83301ZM10.0007 12.4997C9.5062 12.4997 9.02285 12.3531 8.61173 12.0783C8.2006 11.8036 7.88017 11.4132 7.69095 10.9564C7.50173 10.4996 7.45223 9.9969 7.54869 9.51195C7.64515 9.027 7.88325 8.58154 8.23289 8.23191C8.58252 7.88228 9.02797 7.64417 9.51293 7.54771C9.99788 7.45125 10.5005 7.50076 10.9574 7.68998C11.4142 7.87919 11.8046 8.19963 12.0793 8.61075C12.354 9.02187 12.5007 9.50522 12.5007 9.99967C12.5007 10.6627 12.2373 11.2986 11.7684 11.7674C11.2996 12.2363 10.6637 12.4997 10.0007 12.4997Z"
+                                          fill="#374957" />
+                                  </g>
+                                  <defs>
+                                    <clipPath id="clip0_560_1674">
+                                      <rect width="20" height="20" fill="white" />
+                                    </clipPath>
+                                  </defs>
+                                </svg>
+                                {{ 'COMMON.VIEW' | translate}}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1589,220 +1847,37 @@
           </div>
         </div>
 
-          <div class="accordion" id="accordionExample">
-            <div *ngIf="loadformData.serviceId == 5">
-              <div class="main-container p-0 mb-4">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapserequestAdvertisementTarget" aria-expanded="true" aria-controls="collapserequestAdvertisementTarget">
-                      {{ 'mainApplyServiceResourceName.requestAdvertisementTarget' | translate }}
-                    </button>
-                  </h2>
-                  <div id="collapserequestAdvertisementTarget" class="accordion-collapse collapse show"
-                       data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <div class="step-content mb-4">
+        <div class="accordion" id="accordionExample">
+          <div *ngIf="loadformData.serviceId == 5">
+            <div class="main-container p-0 mb-4">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                          data-bs-target="#collapserequestAdvertisementTarget" aria-expanded="true" aria-controls="collapserequestAdvertisementTarget">
+                    {{ 'mainApplyServiceResourceName.requestAdvertisementTarget' | translate }}
+                  </button>
+                </h2>
+                <div id="collapserequestAdvertisementTarget" class="accordion-collapse collapse show"
+                     data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="step-content mb-4">
 
-                        <div *ngIf="loadRequestAdvertisementTargetListformData && loadRequestAdvertisementTargetListformData.length > 0">
-                          <app-generic-data-table class="mt-3"
-                                                  [columnDefs]="requestAdvertisementTargetcolumnDefs"
-                                                  [rowData]="loadRequestAdvertisementTargetListformData"
-                                                  [totalCount]="paginationrequestAdvertisementTarget.totalCount"
-                                                  [pageSize]="paginationrequestAdvertisementTarget.take"
-                                                  [currentPage]="paginationrequestAdvertisementTarget.currentPage - 1"
-                                                  [columnHeaderMap]="columnHeaderMap"
-                                                  (pageChange)="onPageChangerequestAdvertisementTarget($event)"
-                                                  [showActionColumn]="false"
-                                                  (search)="onTableSearchrequestAdvertisementTarget($event)">
-                          </app-generic-data-table>
-                        </div>
-
-                        <div *ngIf="!loadRequestAdvertisementTargetListformData || loadRequestAdvertisementTargetListformData.length === 0" class="alert alert-info">
-                          {{ 'Common.NoData' | translate }}
-                        </div>
+                      <div *ngIf="loadRequestAdvertisementTargetListformData && loadRequestAdvertisementTargetListformData.length > 0">
+                        <app-generic-data-table class="mt-3"
+                                                [columnDefs]="requestAdvertisementTargetcolumnDefs"
+                                                [rowData]="loadRequestAdvertisementTargetListformData"
+                                                [totalCount]="paginationrequestAdvertisementTarget.totalCount"
+                                                [pageSize]="paginationrequestAdvertisementTarget.take"
+                                                [currentPage]="paginationrequestAdvertisementTarget.currentPage - 1"
+                                                [columnHeaderMap]="columnHeaderMap"
+                                                (pageChange)="onPageChangerequestAdvertisementTarget($event)"
+                                                [showActionColumn]="false"
+                                                (search)="onTableSearchrequestAdvertisementTarget($event)">
+                        </app-generic-data-table>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <div class="main-container p-0 mb-4">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapserequestAdvertisementAdMethod" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod">
-                      {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod' | translate }}
-                    </button>
-                  </h2>
-                  <div id="collapserequestAdvertisementAdMethod" class="accordion-collapse collapse show"
-                       data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <div class="step-content mb-4">
-
-                        <div *ngIf="loadRequestAdvertisementAdMethodListformData && loadRequestAdvertisementAdMethodListformData.length > 0">
-                          <app-generic-data-table class="mt-3"
-                                                  [columnDefs]="requestAdvertisementAdMethodcolumnDefs"
-                                                  [rowData]="loadRequestAdvertisementAdMethodListformData"
-                                                  [totalCount]="paginationrequestAdvertisementAdMethod.totalCount"
-                                                  [pageSize]="paginationrequestAdvertisementAdMethod.take"
-                                                  [currentPage]="paginationrequestAdvertisementAdMethod.currentPage - 1"
-                                                  [columnHeaderMap]="columnHeaderMap"
-                                                  (pageChange)="onPageChangerequestAdvertisementAdMethod($event)"
-                                                  [showActionColumn]="false"
-                                                  (search)="onTableSearchrequestAdvertisementAdMethod($event)">
-                          </app-generic-data-table>
-                        </div>
-
-                        <div *ngIf="!loadRequestAdvertisementAdMethodListformData || loadRequestAdvertisementAdMethodListformData.length === 0" class="alert alert-info">
-                          {{ 'Common.NoData' | translate }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="main-container p-0 mb-4">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapserequestAdvertisementAdMethod" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod">
-                      {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod' | translate }}
-                    </button>
-                  </h2>
-                  <div id="collapserequestAdvertisementAdMethod" class="accordion-collapse collapse show"
-                       data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <div class="step-content mb-4">
-
-                        <div *ngIf="loadRequestAdvertisementAdMethodListformData && loadRequestAdvertisementAdMethodListformData.length > 0">
-                          <app-generic-data-table class="mt-3"
-                                                  [columnDefs]="requestAdvertisementAdMethodcolumnDefs"
-                                                  [rowData]="loadRequestAdvertisementAdMethodListformData"
-                                                  [totalCount]="paginationrequestAdvertisementAdMethod.totalCount"
-                                                  [pageSize]="paginationrequestAdvertisementAdMethod.take"
-                                                  [currentPage]="paginationrequestAdvertisementAdMethod.currentPage - 1"
-                                                  [columnHeaderMap]="columnHeaderMap"
-                                                  (pageChange)="onPageChangerequestAdvertisementAdMethod($event)"
-                                                  [showActionColumn]="false"
-                                                  (search)="onTableSearchrequestAdvertisementAdMethod($event)">
-                          </app-generic-data-table>
-                        </div>
-
-                        <div *ngIf="!loadRequestAdvertisementAdMethodListformData || loadRequestAdvertisementAdMethodListformData.length === 0" class="alert alert-info">
-                          {{ 'Common.NoData' | translate }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div *ngIf="loadformData.serviceId == 7">
-              <div class="main-container p-0 mb-4">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapserequestAdvertisementTarget1" aria-expanded="true" aria-controls="collapserequestAdvertisementTarget1">
-                      {{ 'mainApplyServiceResourceName.requestAdvertisementTarget1' | translate }}
-                    </button>
-                  </h2>
-                  <div id="collapserequestAdvertisementTarget1" class="accordion-collapse collapse show"
-                       data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <div class="step-content mb-4">
-
-                        <div *ngIf="loadRequestPlaintReasonListformData && loadRequestPlaintReasonListformData.length > 0">
-                          <app-generic-data-table class="mt-3"
-                                                  [columnDefs]="requestPlaintReasoncolumnDefs"
-                                                  [rowData]="loadRequestPlaintReasonListformData"
-                                                  [totalCount]="paginationrequestPlaintReason.totalCount"
-                                                  [pageSize]="paginationrequestPlaintReason.take"
-                                                  [currentPage]="paginationrequestPlaintReason.currentPage - 1"
-                                                  [columnHeaderMap]="columnHeaderMap"
-                                                  (pageChange)="onPageChangerequestPlaintReason($event)"
-                                                  [showActionColumn]="false"
-                                                  (search)="onTableSearchrequestPlaintReason($event)">
-                          </app-generic-data-table>
-                        </div>
-
-                        <div *ngIf="!loadRequestPlaintReasonListformData || loadRequestPlaintReasonListformData.length === 0" class="alert alert-info">
-                          {{ 'Common.NoData' | translate }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="main-container p-0 mb-4">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapserequestAdvertisementAdMethod1" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod1">
-                      {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod1' | translate }}
-                    </button>
-                  </h2>
-                  <div id="collapserequestAdvertisementAdMethod1" class="accordion-collapse collapse show"
-                       data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <div class="step-content mb-4">
-
-                        <div *ngIf="loadRequestPlaintevidenceListformData && loadRequestPlaintevidenceListformData.length > 0">
-                          <app-generic-data-table class="mt-3"
-                                                  [columnDefs]="requestPlaintevidencecolumnDefs"
-                                                  [rowData]="loadRequestPlaintevidenceListformData"
-                                                  [totalCount]="paginationrequestPlaintevidence.totalCount"
-                                                  [pageSize]="paginationrequestPlaintevidence.take"
-                                                  [currentPage]="paginationrequestPlaintevidence.currentPage - 1"
-                                                  [columnHeaderMap]="columnHeaderMap"
-                                                  (pageChange)="onPageChangerequestPlaintevidence($event)"
-                                                  [showActionColumn]="false"
-                                                  (search)="onTableSearchrequestPlaintevidence($event)">
-                          </app-generic-data-table>
-                        </div>
-
-                        <div *ngIf="!loadRequestPlaintevidenceListformData || loadRequestPlaintevidenceListformData.length === 0" class="alert alert-info">
-                          {{ 'Common.NoData' | translate }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="main-container p-0 mb-4">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapserequestAdvertisementAdMethod1" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod1">
-                      {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod1' | translate }}
-                    </button>
-                  </h2>
-                  <div id="collapserequestAdvertisementAdMethod1" class="accordion-collapse collapse show"
-                       data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <div class="step-content mb-4">
-
-                        <div *ngIf="loadRequestPlaintJustificationListformData && loadRequestPlaintJustificationListformData.length > 0">
-                          <app-generic-data-table class="mt-3"
-                                                  [columnDefs]="requestPlaintJustificationcolumnDefs"
-                                                  [rowData]="loadRequestPlaintJustificationListformData"
-                                                  [totalCount]="paginationrequestPlaintJustification.totalCount"
-                                                  [pageSize]="paginationrequestPlaintJustification.take"
-                                                  [currentPage]="paginationrequestPlaintJustification.currentPage - 1"
-                                                  [columnHeaderMap]="columnHeaderMap"
-                                                  (pageChange)="onPageChangerequestPlaintJustification($event)"
-                                                  [showActionColumn]="false"
-                                                  (search)="onTableSearchrequestPlaintJustification($event)">
-                          </app-generic-data-table>
-                        </div>
-
-                        <div *ngIf="!loadRequestPlaintJustificationListformData || loadRequestPlaintJustificationListformData.length === 0" class="alert alert-info">
-                          {{ 'Common.NoData' | translate }}
-                        </div>
+                      <div *ngIf="!loadRequestAdvertisementTargetListformData || loadRequestAdvertisementTargetListformData.length === 0" class="alert alert-info">
+                        {{ 'Common.NoData' | translate }}
                       </div>
                     </div>
                   </div>
@@ -1814,36 +1889,30 @@
               <div class="accordion-item">
                 <h2 class="accordion-header">
                   <button class="accordion-button " type="button" data-bs-toggle="collapse"
-                          data-bs-target="#collapseworkFlowComment" aria-expanded="false" aria-controls="collapseworkFlowComment">
-                    {{ 'mainApplyServiceResourceName.Comments' | translate }}
+                          data-bs-target="#collapserequestAdvertisementAdMethod" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod">
+                    {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod' | translate }}
                   </button>
                 </h2>
-                <div id="collapseworkFlowComment" class="accordion-collapse collapse"
+                <div id="collapserequestAdvertisementAdMethod" class="accordion-collapse collapse show"
                      data-bs-parent="#accordionExample">
                   <div class="accordion-body">
                     <div class="step-content mb-4">
-                      <div id="addDiv" class="col-12 d-flex justify-content-end mb-4 mt-2"
-                           *ngIf="!workFlowQuery?.length || workFlowQuery[0]?.serviceStatus == 4 || workFlowQuery[0]?.serviceStatus == 5">
-                        <button type="button" class="btn btn-gold" (click)="openCommenttxt()">
-                          {{ 'mainApplyServiceResourceName.addcomm' | translate }}
-                        </button>
-                      </div>
-                      <br />
-                      <div *ngIf="loadWorkFlowCommentListformData && loadWorkFlowCommentListformData.length > 0">
+
+                      <div *ngIf="loadRequestAdvertisementAdMethodListformData && loadRequestAdvertisementAdMethodListformData.length > 0">
                         <app-generic-data-table class="mt-3"
-                                                [columnDefs]="workFlowCommentcolumnDefs"
-                                                [rowData]="loadWorkFlowCommentListformData"
-                                                [totalCount]="paginationworkFlowComment.totalCount"
-                                                [pageSize]="paginationworkFlowComment.take"
-                                                [currentPage]="paginationworkFlowComment.currentPage - 1"
+                                                [columnDefs]="requestAdvertisementAdMethodcolumnDefs"
+                                                [rowData]="loadRequestAdvertisementAdMethodListformData"
+                                                [totalCount]="paginationrequestAdvertisementAdMethod.totalCount"
+                                                [pageSize]="paginationrequestAdvertisementAdMethod.take"
+                                                [currentPage]="paginationrequestAdvertisementAdMethod.currentPage - 1"
                                                 [columnHeaderMap]="columnHeaderMap"
-                                                (pageChange)="onPageChangeworkFlowComment($event)"
+                                                (pageChange)="onPageChangerequestAdvertisementAdMethod($event)"
                                                 [showActionColumn]="false"
-                                                (search)="onTableSearchworkFlowComment($event)">
+                                                (search)="onTableSearchrequestAdvertisementAdMethod($event)">
                         </app-generic-data-table>
                       </div>
 
-                      <div *ngIf="!loadWorkFlowCommentListformData || loadWorkFlowCommentListformData.length === 0" class="alert alert-info">
+                      <div *ngIf="!loadRequestAdvertisementAdMethodListformData || loadRequestAdvertisementAdMethodListformData.length === 0" class="alert alert-info">
                         {{ 'Common.NoData' | translate }}
                       </div>
                     </div>
@@ -1855,46 +1924,31 @@
             <div class="main-container p-0 mb-4">
               <div class="accordion-item">
                 <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                          data-bs-target="#collapseuserattachments" aria-expanded="false" aria-controls="collapseuserattachments">
-                    {{ 'mainApplyServiceResourceName.att' | translate }}
+                  <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                          data-bs-target="#collapserequestAdvertisementAdMethod" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod">
+                    {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod' | translate }}
                   </button>
                 </h2>
-                <div id="collapseuserattachments" class="accordion-collapse collapse"
+                <div id="collapserequestAdvertisementAdMethod" class="accordion-collapse collapse show"
                      data-bs-parent="#accordionExample">
                   <div class="accordion-body">
                     <div class="step-content mb-4">
-                      <div *ngIf="loaduserattachmentsListServiceformData && loaduserattachmentsListServiceformData.length > 0">
-                        <div class="row">
-                          <div class="col-xl-4 col-lg-6 mb-4"
-                               *ngFor="let attachment of loaduserattachmentsListServiceformData">
-                            <div class="attachment-box">
-                              <h6 class="card-title">
-                                {{attachment.attachmentTitle || ('mainApplyServiceResourceName.ATTACHMENTS.ATTACHMENT' | translate) }}
-                              </h6>
-                              <p class="mb-4">
-                                {{ 'Common.UPLOADED_ON' | translate }}:
-                                {{formatDateTime(attachment.lastModified)}}
-                              </p>
-                              <div class="d-flex justify-content-between mt-auto">
-                                <button class="btn btn-next-style me-2"
-                                        (click)="viewAttachment(attachment)">
-                                  <i class="fas fa-eye me-1"></i>
-                                  {{ 'Common.VIEW' | translate }}
-                                </button>
-                                <button class="btn btn-download-style"
-                                        (click)="downloadAttachment(attachment)">
-                                  <i class="fas fa-download me-1"></i>
-                                  {{ 'Common.DOWNLOAD' | translate }}
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+
+                      <div *ngIf="loadRequestAdvertisementAdMethodListformData && loadRequestAdvertisementAdMethodListformData.length > 0">
+                        <app-generic-data-table class="mt-3"
+                                                [columnDefs]="requestAdvertisementAdMethodcolumnDefs"
+                                                [rowData]="loadRequestAdvertisementAdMethodListformData"
+                                                [totalCount]="paginationrequestAdvertisementAdMethod.totalCount"
+                                                [pageSize]="paginationrequestAdvertisementAdMethod.take"
+                                                [currentPage]="paginationrequestAdvertisementAdMethod.currentPage - 1"
+                                                [columnHeaderMap]="columnHeaderMap"
+                                                (pageChange)="onPageChangerequestAdvertisementAdMethod($event)"
+                                                [showActionColumn]="false"
+                                                (search)="onTableSearchrequestAdvertisementAdMethod($event)">
+                        </app-generic-data-table>
                       </div>
 
-                      <div *ngIf="!loaduserattachmentsListServiceformData || loaduserattachmentsListServiceformData.length === 0"
-                           class="alert alert-info">
+                      <div *ngIf="!loadRequestAdvertisementAdMethodListformData || loadRequestAdvertisementAdMethodListformData.length === 0" class="alert alert-info">
                         {{ 'Common.NoData' | translate }}
                       </div>
                     </div>
@@ -1903,6 +1957,210 @@
               </div>
             </div>
           </div>
+
+          <div *ngIf="loadformData.serviceId == 7">
+            <div class="main-container p-0 mb-4">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                          data-bs-target="#collapserequestAdvertisementTarget1" aria-expanded="true" aria-controls="collapserequestAdvertisementTarget1">
+                    {{ 'mainApplyServiceResourceName.requestAdvertisementTarget1' | translate }}
+                  </button>
+                </h2>
+                <div id="collapserequestAdvertisementTarget1" class="accordion-collapse collapse show"
+                     data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="step-content mb-4">
+
+                      <div *ngIf="loadRequestPlaintReasonListformData && loadRequestPlaintReasonListformData.length > 0">
+                        <app-generic-data-table class="mt-3"
+                                                [columnDefs]="requestPlaintReasoncolumnDefs"
+                                                [rowData]="loadRequestPlaintReasonListformData"
+                                                [totalCount]="paginationrequestPlaintReason.totalCount"
+                                                [pageSize]="paginationrequestPlaintReason.take"
+                                                [currentPage]="paginationrequestPlaintReason.currentPage - 1"
+                                                [columnHeaderMap]="columnHeaderMap"
+                                                (pageChange)="onPageChangerequestPlaintReason($event)"
+                                                [showActionColumn]="false"
+                                                (search)="onTableSearchrequestPlaintReason($event)">
+                        </app-generic-data-table>
+                      </div>
+
+                      <div *ngIf="!loadRequestPlaintReasonListformData || loadRequestPlaintReasonListformData.length === 0" class="alert alert-info">
+                        {{ 'Common.NoData' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="main-container p-0 mb-4">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                          data-bs-target="#collapserequestAdvertisementAdMethod1" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod1">
+                    {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod1' | translate }}
+                  </button>
+                </h2>
+                <div id="collapserequestAdvertisementAdMethod1" class="accordion-collapse collapse show"
+                     data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="step-content mb-4">
+
+                      <div *ngIf="loadRequestPlaintevidenceListformData && loadRequestPlaintevidenceListformData.length > 0">
+                        <app-generic-data-table class="mt-3"
+                                                [columnDefs]="requestPlaintevidencecolumnDefs"
+                                                [rowData]="loadRequestPlaintevidenceListformData"
+                                                [totalCount]="paginationrequestPlaintevidence.totalCount"
+                                                [pageSize]="paginationrequestPlaintevidence.take"
+                                                [currentPage]="paginationrequestPlaintevidence.currentPage - 1"
+                                                [columnHeaderMap]="columnHeaderMap"
+                                                (pageChange)="onPageChangerequestPlaintevidence($event)"
+                                                [showActionColumn]="false"
+                                                (search)="onTableSearchrequestPlaintevidence($event)">
+                        </app-generic-data-table>
+                      </div>
+
+                      <div *ngIf="!loadRequestPlaintevidenceListformData || loadRequestPlaintevidenceListformData.length === 0" class="alert alert-info">
+                        {{ 'Common.NoData' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="main-container p-0 mb-4">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                          data-bs-target="#collapserequestAdvertisementAdMethod1" aria-expanded="true" aria-controls="collapserequestAdvertisementAdMethod1">
+                    {{ 'mainApplyServiceResourceName.requestAdvertisementAdMethod1' | translate }}
+                  </button>
+                </h2>
+                <div id="collapserequestAdvertisementAdMethod1" class="accordion-collapse collapse show"
+                     data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="step-content mb-4">
+
+                      <div *ngIf="loadRequestPlaintJustificationListformData && loadRequestPlaintJustificationListformData.length > 0">
+                        <app-generic-data-table class="mt-3"
+                                                [columnDefs]="requestPlaintJustificationcolumnDefs"
+                                                [rowData]="loadRequestPlaintJustificationListformData"
+                                                [totalCount]="paginationrequestPlaintJustification.totalCount"
+                                                [pageSize]="paginationrequestPlaintJustification.take"
+                                                [currentPage]="paginationrequestPlaintJustification.currentPage - 1"
+                                                [columnHeaderMap]="columnHeaderMap"
+                                                (pageChange)="onPageChangerequestPlaintJustification($event)"
+                                                [showActionColumn]="false"
+                                                (search)="onTableSearchrequestPlaintJustification($event)">
+                        </app-generic-data-table>
+                      </div>
+
+                      <div *ngIf="!loadRequestPlaintJustificationListformData || loadRequestPlaintJustificationListformData.length === 0" class="alert alert-info">
+                        {{ 'Common.NoData' | translate }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="main-container p-0 mb-4">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseworkFlowComment" aria-expanded="false" aria-controls="collapseworkFlowComment">
+                  {{ 'mainApplyServiceResourceName.Comments' | translate }}
+                </button>
+              </h2>
+              <div id="collapseworkFlowComment" class="accordion-collapse collapse"
+                   data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <div class="step-content mb-4">
+                    <div id="addDiv" class="col-12 d-flex justify-content-end mb-4 mt-2"
+                         *ngIf="!workFlowQuery?.length || workFlowQuery[0]?.serviceStatus == 4 || workFlowQuery[0]?.serviceStatus == 5">
+                      <button type="button" class="btn btn-gold" (click)="openCommenttxt()">
+                        {{ 'mainApplyServiceResourceName.addcomm' | translate }}
+                      </button>
+                    </div>
+                    <br />
+                    <div *ngIf="loadWorkFlowCommentListformData && loadWorkFlowCommentListformData.length > 0">
+                      <app-generic-data-table class="mt-3"
+                                              [columnDefs]="workFlowCommentcolumnDefs"
+                                              [rowData]="loadWorkFlowCommentListformData"
+                                              [totalCount]="paginationworkFlowComment.totalCount"
+                                              [pageSize]="paginationworkFlowComment.take"
+                                              [currentPage]="paginationworkFlowComment.currentPage - 1"
+                                              [columnHeaderMap]="columnHeaderMap"
+                                              (pageChange)="onPageChangeworkFlowComment($event)"
+                                              [showActionColumn]="false"
+                                              (search)="onTableSearchworkFlowComment($event)">
+                      </app-generic-data-table>
+                    </div>
+
+                    <div *ngIf="!loadWorkFlowCommentListformData || loadWorkFlowCommentListformData.length === 0" class="alert alert-info">
+                      {{ 'Common.NoData' | translate }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="main-container p-0 mb-4">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseuserattachments" aria-expanded="false" aria-controls="collapseuserattachments">
+                  {{ 'mainApplyServiceResourceName.att' | translate }}
+                </button>
+              </h2>
+              <div id="collapseuserattachments" class="accordion-collapse collapse"
+                   data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <div class="step-content mb-4">
+                    <div *ngIf="loaduserattachmentsListServiceformData && loaduserattachmentsListServiceformData.length > 0">
+                      <div class="row">
+                        <div class="col-xl-4 col-lg-6 mb-4"
+                             *ngFor="let attachment of loaduserattachmentsListServiceformData">
+                          <div class="attachment-box">
+                            <h6 class="card-title">
+                              {{attachment.attachmentTitle || ('mainApplyServiceResourceName.ATTACHMENTS.ATTACHMENT' | translate) }}
+                            </h6>
+                            <p class="mb-4">
+                              {{ 'Common.UPLOADED_ON' | translate }}:
+                              {{formatDate(attachment.lastModified)}}
+                            </p>
+                            <div class="d-flex justify-content-between mt-auto">
+                              <button class="btn btn-next-style me-2"
+                                      (click)="viewAttachment(attachment)">
+                                <i class="fas fa-eye me-1"></i>
+                                {{ 'Common.VIEW' | translate }}
+                              </button>
+                              <button class="btn btn-download-style"
+                                      (click)="downloadAttachment(attachment)">
+                                <i class="fas fa-download me-1"></i>
+                                {{ 'Common.DOWNLOAD' | translate }}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div *ngIf="!loaduserattachmentsListServiceformData || loaduserattachmentsListServiceformData.length === 0"
+                         class="alert alert-info">
+                      {{ 'Common.NoData' | translate }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div *ngIf="!isLoading && !loadformData" class="alert alert-danger text-center">

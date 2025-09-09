@@ -34,3 +34,36 @@ export enum ServiceStatus {
   Received = 5,
   ReturnForModifications = 7
 }
+
+export enum GlAccountSelectionType {
+  Entity = 1,
+  Country = 2,
+  Branch = 3,
+  Department = 4,
+  Account = 5,
+}
+
+export enum ServicesType {
+  TentPermission = 1,
+  CharityEventPermit = 2,
+  RequestForStaffAppointment = 3,
+  ReligiousInstitutionRequest = 4,
+  RequestAnEventAnnouncement = 5,
+  DonationCampaignPermitRequest = 6,
+  GrievanceRequest = 7,
+  DistributionSitePermitApplication = 1001,
+  RequestComplaint = 1002
+}
+
+
+export enum serviceIdEnum {
+  serviceId1 = "1",
+  serviceId2 = "2",
+  serviceId3 = "3",
+  serviceId4 = "4",
+  serviceId5 = "5", // Advertisement
+  serviceId6 = "6",
+  serviceId7 = "7",
+  serviceId1001 = "1001",
+  serviceId1002 = "1002",
+}

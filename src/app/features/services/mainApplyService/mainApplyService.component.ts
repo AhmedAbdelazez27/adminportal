@@ -8,13 +8,13 @@ import { catchError, debounceTime, takeUntil, tap } from 'rxjs/operators';
 import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../shared/generic-data-table/generic-data-table.component';
-import { FiltermainApplyServiceDto, FiltermainApplyServiceByIdDto, mainApplyServiceDto, AppUserDto, AttachmentDto, RequestAdvertisementTargetDto, RequestAdvertisementAdLocationDto, RequestAdvertisementAdMethodDto, RequestPlaintEvidenceDto, RequestPlaintJustificationDto, RequestPlaintReasonDto, WorkFlowCommentDto, UpdateStatusDto } from '../../../core/dtos/mainApplyService/mainApplyService.dto';
+import { FiltermainApplyServiceDto, FiltermainApplyServiceByIdDto, mainApplyServiceDto, AppUserDto, AttachmentDto, RequestAdvertisementTargetDto, RequestAdvertisementAdLocationDto, RequestAdvertisementAdMethodDto, RequestPlaintEvidenceDto, RequestPlaintJustificationDto, RequestPlaintReasonDto, WorkFlowCommentDto, UpdateStatusDto, DonationCollectionChannelDto } from '../../../core/dtos/mainApplyService/mainApplyService.dto';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { Select2Service } from '../../../core/services/Select2.service';
 import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
 import { Pagination, FndLookUpValuesSelect2RequestDto, SelectdropdownResultResults, Select2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { MainApplyService } from '../../../core/services/mainApplyService/mainApplyService.service';
-import { ServiceDataType } from '../../../core/enum/user-type.enum';
+import { ServiceDataType, serviceIdEnum } from '../../../core/enum/user-type.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 
 declare var bootstrap: any;
@@ -142,9 +142,10 @@ export class MainApplyServiceComponent {
     this.lang = this.translate.currentLang;
     this.rowActions = [
       { label: this.translate.instant('Common.applicantData'), icon: 'fas fa-address-card', action: 'onViewApplicantData' },
-      { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceConfirmationData' },
-      { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceInqueryData' },
-      { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewFastingServiceInqueryData' },
+      //{ label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceConfirmationData' },
+      //{ label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceInqueryData' },
+      { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-edit', action: 'oneditServiceData' },
+      { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceData' },
   ];
 
     this.serviceSearchInput$
@@ -523,8 +524,7 @@ export class MainApplyServiceComponent {
     }
   }
 
-
-  getFormDatabyId(id: string): void {
+  getuserFormDatabyId(id: string): void {
     const params: FiltermainApplyServiceByIdDto = {
       id: id
     };
@@ -550,6 +550,52 @@ export class MainApplyServiceComponent {
           const modal = new bootstrap.Modal(modalElement);
           modal.show();
         };
+        this.spinnerService.hide();
+      },
+      error: (err) => {
+        this.spinnerService.hide();;
+      }
+    });
+  }
+
+  getFormDatabyId(id: string, serviceId: string): void {
+    const params: FiltermainApplyServiceByIdDto = {
+      id: id
+    };
+    this.spinnerService.show();
+    forkJoin({
+      mischeaderdata: this.mainApplyService.getDetailById(params) as Observable<mainApplyServiceDto | mainApplyServiceDto[]>,
+    }).pipe(takeUntil(this.destroy$)).subscribe({
+      next: (result) => {
+
+        this.loadformData = Array.isArray(result.mischeaderdata)
+          ? result.mischeaderdata[0] ?? ({} as mainApplyServiceDto)
+          : result.mischeaderdata;
+
+        this.spinnerService.hide();
+        if (serviceId == serviceIdEnum.serviceId7) {
+          this.router.navigate(['/request-plaint'], {
+            state: { loadformData: this.loadformData }
+          });
+        }
+        if (serviceId == serviceIdEnum.serviceId1002) {
+          this.router.navigate([`/view-services-requests/complaint-request/${params.id}`], {
+            state: { loadformData: this.loadformData }
+          });
+        }
+        if (serviceId == serviceIdEnum.serviceId2) {
+          sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+          window.open(`/mainServices/services/charity-event-permit/${params.id}`, '_blank');
+        }
+        if (serviceId == serviceIdEnum.serviceId6) {
+          sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+          window.open(`/mainServices/services/request-event-permit/${params.id}`, '_blank');
+        }
+        if (serviceId == serviceIdEnum.serviceId5) {
+          sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+          window.open(`/mainServices/services/advertisement/${params.id}`, '_blank');
+        }
+
         this.spinnerService.hide();
       },
       error: (err) => {
@@ -1013,26 +1059,160 @@ export class MainApplyServiceComponent {
     ];
   }
 
+  //onTableAction(event: { action: string, row: any }) {
+  //  if (event.action === 'onViewApplicantData') {
+  //    this.getuserFormDatabyId(event.row.userId);
+  //  }
+
+  //  if (event.action === 'onViewServiceData') {
+  //    var pagination = this.paginationrequestAdvertisementTarget.take || this.paginationrequestAdvertisementAdMethod.take || this.paginationrequestAdvertisementAdLocation.take || this.paginationrequestPlaintReason.take || this.paginationrequestPlaintevidence.take || this.paginationrequestPlaintJustification.take;
+  //    this.getServiceConfirmationFormDatabyId({ pageNumber: 1, pageSize: pagination }, event.row.id);
+  //  }
+
+  //  if (event.action === 'onViewServiceConfirmationData') {
+  //    window.open(`/mainServices/services/serviceconfirmation/${event.row.id}`, '_blank');
+  //  }
+
+  //  if (event.action === 'onViewServiceInqueryData') {
+  //    window.open(`/mainServices/services/serviceinquery/${event.row.id}`, '_blank');
+  //  }
+
+  //  if (event.action === 'onViewFastingServiceInqueryData') {
+  //    window.open(`/mainServices/services/fastingserviceinquery/${event.row.id}`, '_blank');
+  //  }
+  //}
+
+
   onTableAction(event: { action: string, row: any }) {
-    if (event.action === 'onViewApplicantData') {
-      this.getFormDatabyId(event.row.userId);
+
+      if (event.action === 'onViewApplicantData') {
+        this.getuserFormDatabyId(event.row.userId);
+      }
+
+      if (event.action === 'onViewServiceConfirmationData') {
+        window.open(`/mainServices/services/serviceconfirmation/${event.row.id}`, '_blank');
+      }
+
+      if (event.action === 'onViewServiceInqueryData') {
+        window.open(`/mainServices/services/serviceinquery/${event.row.id}`, '_blank');
+      }
+
+      if (event.action === 'onViewFastingServiceInqueryData') {
+        window.open(`/mainServices/services/fastingserviceinquery/${event.row.id}`, '_blank');
+      }
+
+    if (event.action === 'oneditServiceData') {
+      if (event.row.serviceId === 1) {
+        sessionStorage.setItem("screenmode", 'edit');
+        window.open(`/mainServices/services/view-fasting-tent-request/${event.row.id}`, '_blank');
+      }
+      else if (event.row.serviceId === 1001) {
+        sessionStorage.setItem("screenmode", 'edit');
+        window.open(`/mainServices/services/view-distribution-site-permit/${event.row.id}`, '_blank');
+      }
+      else if (event.row.serviceId == serviceIdEnum.serviceId2) {
+        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+        sessionStorage.setItem("screenmode",'edit');
+        window.open(`/mainServices/services/charity-event-permit/${event.row.id}`, '_blank');
+      }
+
+
+      else if (event.row.serviceId == serviceIdEnum.serviceId6) {
+        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+        sessionStorage.setItem("screenmode", 'edit');
+        window.open(`/mainServices/services/request-event-permit/${event.row.id}`, '_blank');
+      }
+      else if (event.row.serviceId == serviceIdEnum.serviceId7) {
+        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+        sessionStorage.setItem("screenmode", 'edit');
+        window.open(`/mainServices/services/plaint-request/${event.row.id}`, '_blank');
+      }
+      else if (event.row.serviceId == serviceIdEnum.serviceId1002) {
+        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+        sessionStorage.setItem("screenmode", 'edit');
+        window.open(`/mainServices/services/complaint-request/${event.row.id}`, '_blank');
+      }
+      else if (event.row.serviceId == serviceIdEnum.serviceId5) {
+        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+        sessionStorage.setItem("screenmode", 'edit');
+        window.open(`/mainServices/services/advertisement/${event.row.id}`, '_blank');
+      }
+      else {
+        this.translate
+          .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
+          .subscribe(translations => {
+            this.toastr.error(
+              `${translations['mainApplyServiceResourceName.NoPermission']}`,
+            );
+          });
+        return;
+      }
     }
 
-    if (event.action === 'onViewServiceData') {
-      var pagination = this.paginationrequestAdvertisementTarget.take || this.paginationrequestAdvertisementAdMethod.take || this.paginationrequestAdvertisementAdLocation.take || this.paginationrequestPlaintReason.take || this.paginationrequestPlaintevidence.take || this.paginationrequestPlaintJustification.take;
-      this.getServiceConfirmationFormDatabyId({ pageNumber: 1, pageSize: pagination }, event.row.id);
+
+    if (event.action === 'onViewServiceData')
+    {
+      if (event.row.serviceId === 1) {
+        sessionStorage.setItem("screenmode", 'view');
+        window.open(`/mainServices/services/view-fasting-tent-request/${event.row.id}`, '_blank');
+      }
+      else if (event.row.serviceId === 1001) {
+        sessionStorage.setItem("screenmode", 'view');
+        window.open(`/mainServices/services/view-distribution-site-permit/${event.row.id}`, '_blank');
+      }
+      else if (event.row.serviceId == serviceIdEnum.serviceId2) {
+        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+        sessionStorage.setItem("screenmode", 'view');
+        window.open(`/mainServices/services/charity-event-permit/${event.row.id}`, '_blank');
+      }
+
+
+      else if (event.row.serviceId == serviceIdEnum.serviceId6) {
+        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+        sessionStorage.setItem("screenmode", 'view');
+        window.open(`/mainServices/services/request-event-permit/${event.row.id}`, '_blank');
+      }
+      else if (event.row.serviceId == serviceIdEnum.serviceId7) {
+        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+        sessionStorage.setItem("screenmode", 'view');
+        window.open(`/mainServices/services/plaint-request/${event.row.id}`, '_blank');
+      }
+      else if (event.row.serviceId == serviceIdEnum.serviceId1002) {
+        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+        sessionStorage.setItem("screenmode", 'view');
+        window.open(`/mainServices/services/complaint-request/${event.row.id}`, '_blank');
+      }
+      else if (event.row.serviceId == serviceIdEnum.serviceId5) {
+        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+        sessionStorage.setItem("screenmode", 'view');
+        window.open(`/mainServices/services/advertisement/${event.row.id}`, '_blank');
+      }
+      else {
+        this.translate
+          .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
+          .subscribe(translations => {
+            this.toastr.error(
+              `${translations['mainApplyServiceResourceName.NoPermission']}`,
+            );
+          });
+        return;
+      }
     }
 
-    if (event.action === 'onViewServiceConfirmationData') {
-      window.open(`/mainServices/services/serviceconfirmation/${event.row.id}`, '_blank');
-    }
-
-    if (event.action === 'onViewServiceInqueryData') {
-      window.open(`/mainServices/services/serviceinquery/${event.row.id}`, '_blank');
-    }
-
-    if (event.action === 'onViewFastingServiceInqueryData') {
-      window.open(`/mainServices/services/fastingserviceinquery/${event.row.id}`, '_blank');
+    if (event.action === 'onRequestComplaint') {
+      if (event.row.serviceId == serviceIdEnum.serviceId1002) {
+        this.getFormDatabyId(event.row.id, event.row.serviceId);
+      }
+      else {
+        this.translate
+          .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
+          .subscribe(translations => {
+            this.toastr.error(
+              `${translations['mainApplyServiceResourceName.NoPermission']}`,
+            );
+          });
+        return;
+      }
     }
   }
 
@@ -1227,9 +1407,9 @@ export class MainApplyServiceComponent {
           userId: localStorage.getItem('userId'),
           reason: reason,
           notesForApproving: '',
-          tentConstructDate: this.addReason.fastingTentService?.tentConstructDate,
-          startDate: this.addReason.fastingTentService?.startDate,
-          endDate: this.addReason.fastingTentService?.endDate
+          tentConstructDate: this.addReason.fastingTentService?.tentConstructDate ?? null,
+          startDate: this.addReason.fastingTentService?.startDate ?? null,
+          endDate: this.addReason.fastingTentService?.endDate ?? null
         };
 
         this.mainApplyService.update(param).subscribe({
@@ -1363,3 +1543,9 @@ export class MainApplyServiceComponent {
       });
   }
 }
+
+
+
+
+
+

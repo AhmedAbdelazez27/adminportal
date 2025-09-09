@@ -6,14 +6,11 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
-  AbstractControl,
-  ValidationErrors,
 } from '@angular/forms';
 import { ContactInformationService } from '../../../core/services/UserSetting/contact-information.service';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { environment } from '../../../../environments/environment';
 import {
   ContactInformationDto,
   UpdateContactInformationDto,
@@ -37,10 +34,13 @@ import { ColDef } from 'ag-grid-community';
   styleUrl: './contact-information.component.scss',
 })
 export class ContactInformationComponent implements OnInit, OnDestroy {
-  contactInformations: ContactInformationDto[] = [];
+  // Data
+  allContactInformations: ContactInformationDto[] = []; // store full dataset
+  contactInformations: ContactInformationDto[] = [];    // filtered dataset for grid
   totalCount: number = 0;
   currentPage: number = 1;
   itemsPerPage: number = 10;
+  // Form
   contactInformationForm: FormGroup;
   submitted: boolean = false;
   mode: 'edit' | 'view' = 'view';
@@ -48,14 +48,11 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
   selectedContactInformationToDelete: ContactInformationDto | null = null;
   isLoading: boolean = false;
 
-  // Filter criteria object
-  // filterCriteria = new FilterContactInformationDto(); // Removed filter functionality
-
-  // Modal instances
+  // Modals
   private contactInformationModal: any = null;
   private deleteModal: any = null;
 
-  // Generic table properties
+  // Table
   columnDefs: ColDef[] = [];
   rowActions: Array<{ label: string; icon?: string; action: string }> = [];
   columnHeaderMap: { [key: string]: string } = {};
@@ -70,6 +67,7 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
     this.contactInformationForm = this.fb.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
+      mobileNumber: ['', [Validators.required]],
       title: [''],
       message: [''],
     });
@@ -86,7 +84,6 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
   }
 
   initializeModals(): void {
-    // Initialize Bootstrap modals
     this.contactInformationModal = new (window as any).bootstrap.Modal(
       document.getElementById('ContactInformation')
     );
@@ -94,22 +91,14 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
       document.getElementById('DeleteContactInformation')
     );
 
-    // Add event listeners
     document
       .getElementById('ContactInformation')
       ?.addEventListener('hidden.bs.modal', () => this.onModalHidden());
-    document
-      .getElementById('ContactInformation')
-      ?.addEventListener('shown.bs.modal', () => this.onModalShown());
   }
 
   cleanupModals(): void {
-    if (this.contactInformationModal) {
-      this.contactInformationModal.dispose();
-    }
-    if (this.deleteModal) {
-      this.deleteModal.dispose();
-    }
+    if (this.contactInformationModal) this.contactInformationModal.dispose();
+    if (this.deleteModal) this.deleteModal.dispose();
   }
 
   onModalHidden(): void {
@@ -119,18 +108,7 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
     this.submitted = false;
   }
 
-  onModalShown(): void {
-    // Focus on first input when modal is shown
-    setTimeout(() => {
-      const firstInput = document.querySelector(
-        '#ContactInformation input'
-      ) as HTMLInputElement;
-      if (firstInput) {
-        firstInput.focus();
-      }
-    }, 100);
-  }
-
+  // ------------------- FORM HELPERS -------------------
   getFieldError(fieldName: string): string {
     const field = this.contactInformationForm.get(fieldName);
     if (field && field.errors && this.submitted) {
@@ -145,25 +123,7 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
   }
 
   onFieldBlur(fieldName: string): void {
-    const field = this.contactInformationForm.get(fieldName);
-    if (field) {
-      field.markAsTouched();
-    }
-  }
-
-  hasFormErrors(): boolean {
-    return Object.keys(this.contactInformationForm.errors || {}).length > 0;
-  }
-
-  getTotalErrors(): number {
-    let totalErrors = 0;
-    Object.keys(this.contactInformationForm.controls).forEach((key) => {
-      const control = this.contactInformationForm.get(key);
-      if (control && control.errors) {
-        totalErrors += Object.keys(control.errors).length;
-      }
-    });
-    return totalErrors;
+    this.contactInformationForm.get(fieldName)?.markAsTouched();
   }
 
   isFieldInvalid(fieldName: string): boolean {
@@ -177,7 +137,7 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
   }
 
   areMandatoryFieldsValid(): boolean {
-    const mandatoryFields = ['name', 'email'];
+    const mandatoryFields = ['name', 'email', 'mobileNumber'];
     return mandatoryFields.every((field) => {
       const control = this.contactInformationForm.get(field);
       return control && control.valid;
@@ -191,6 +151,7 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
     const params: GetAllContactInformationParameters = {
       name: null, // Removed filter functionality
       email: null, // Removed filter functionality
+      mobileNumber: null, // Removed filter functionality
       title: null, // Removed filter functionality
       skip: (page - 1) * this.itemsPerPage,
       take: this.itemsPerPage,
@@ -199,13 +160,14 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
 
     this.contactInformationService.getAllContactInformation(params).subscribe({
       next: (response: PagedResultDto<ContactInformationDto>) => {
-        this.contactInformations = response.data;
+        this.allContactInformations = response.data;   // keep all
+        this.contactInformations = [...this.allContactInformations]; // bind copy
         this.totalCount = response.totalCount;
         this.currentPage = page;
         this.spinnerService.hide();
         this.isLoading = false;
       },
-      error: (error) => {
+      error: () => {
         this.toastr.error(
           this.translate.instant('COMMON.ERROR_OCCURRED'),
           this.translate.instant('COMMON.ERROR')
@@ -216,21 +178,33 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSearch(): void {
-    this.getContactInformations(1);
+  refreshContactInformationData(): void {
+    this.getContactInformations(this.currentPage);
   }
 
-  clear(): void {
-    // Removed filter functionality
-    this.getContactInformations(1);
+  // ------------------- SEARCH (FRONTEND) -------------------
+onTableSearch(searchText: string): void {
+  if (!searchText) {
+    this.contactInformations = [...this.allContactInformations];
+    return;
   }
 
+  const terms = searchText.toLowerCase().split(' ').filter(t => t.trim() !== '');
+
+  this.contactInformations = this.allContactInformations.filter(item =>
+    terms.every(term =>
+      (item.name?.toLowerCase().includes(term) ||
+       item.email?.toLowerCase().includes(term) ||
+       item.title?.toLowerCase().includes(term) ||
+       item.message?.toLowerCase().includes(term))
+    )
+  );
+}
+
+  // ------------------- CRUD -------------------
   submit(): void {
     this.submitted = true;
-
-    if (this.contactInformationForm.invalid) {
-      return;
-    }
+    if (this.contactInformationForm.invalid) return;
 
     this.spinnerService.show();
 
@@ -239,12 +213,13 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
         id: this.editingContactInformationId,
         name: this.contactInformationForm.value.name,
         email: this.contactInformationForm.value.email,
+        mobileNumber: this.contactInformationForm.value.mobileNumber,
         title: this.contactInformationForm.value.title || null,
         message: this.contactInformationForm.value.message || null,
       };
 
       this.contactInformationService.updateContactInformation(updateDto).subscribe({
-        next: (response) => {
+        next: () => {
           this.toastr.success(
             this.translate.instant('CONTACT_INFORMATION.UPDATE_SUCCESS'),
             this.translate.instant('COMMON.SUCCESS')
@@ -253,7 +228,7 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
           this.getContactInformations(this.currentPage);
           this.spinnerService.hide();
         },
-        error: (error) => {
+        error: () => {
           this.toastr.error(
             this.translate.instant('COMMON.ERROR_OCCURRED'),
             this.translate.instant('COMMON.ERROR')
@@ -283,6 +258,7 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
     this.contactInformationForm.patchValue({
       name: contactInformation.name,
       email: contactInformation.email,
+      mobileNumber: contactInformation.mobileNumber,
       title: contactInformation.title || '',
       message: contactInformation.message || '',
     });
@@ -313,7 +289,7 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
           this.getContactInformations(this.currentPage);
           this.spinnerService.hide();
         },
-        error: (error) => {
+        error: () => {
           this.toastr.error(
             this.translate.instant('COMMON.ERROR_OCCURRED'),
             this.translate.instant('COMMON.ERROR')
@@ -328,51 +304,38 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
     this.selectedContactInformationToDelete = null;
   }
 
+  // ------------------- TABLE -------------------
   formatDate(date: Date | string | null): string {
     if (!date) return '';
-    
-    let dateObj: Date;
-    if (typeof date === 'string') {
-      dateObj = new Date(date);
-      if (isNaN(dateObj.getTime())) return '';
-    } else {
-      dateObj = date;
-    }
-    
-    return dateObj.toLocaleDateString();
-  }
-
-  refreshContactInformationData(): void {
-    this.getContactInformations(this.currentPage);
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return isNaN(dateObj.getTime()) ? '' : dateObj.toLocaleDateString();
   }
 
   initializeTableConfiguration(): void {
-    // Column definitions for the generic table
     this.columnDefs = [
-      {
+     {
         headerName: '#',
         field: 'index',
         width: 80,
-        cellRenderer: (params: any) => {
-          return (
-            (this.currentPage - 1) * this.itemsPerPage +
-            params.node.rowIndex +
-            1
-          );
-        },
         sortable: false,
         filter: false,
+        cellRenderer: (params: any) => {
+          return (this.currentPage - 1) * this.itemsPerPage + params.node.rowIndex + 1;
+        },
       },
       {
         headerName: this.translate.instant('CONTACT_INFORMATION.NAME'),
         field: 'name',
-        sortable: true,
-        filter: true,
         flex: 1,
       },
       {
         headerName: this.translate.instant('CONTACT_INFORMATION.EMAIL'),
         field: 'email',
+        flex: 1,
+      },
+      {
+        headerName: this.translate.instant('CONTACT_INFORMATION.MOBILE_NUMBER'),
+        field: 'mobileNumber',
         sortable: true,
         filter: true,
         flex: 1,
@@ -380,45 +343,30 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
       {
         headerName: this.translate.instant('CONTACT_INFORMATION.FIELD_TITLE'),
         field: 'title',
-        sortable: true,
-        filter: true,
         flex: 1,
       },
       {
         headerName: this.translate.instant('CONTACT_INFORMATION.MESSAGE'),
         field: 'message',
-        sortable: true,
-        filter: true,
         flex: 1,
       },
       {
         headerName: this.translate.instant('CONTACT_INFORMATION.CREATED_DATE'),
         field: 'creationDate',
-        sortable: true,
-        filter: true,
         flex: 1,
         valueFormatter: (params: any) => this.formatDate(params.value),
       },
     ];
 
-    // Row actions for the generic table
     this.rowActions = [
-      {
-        label: this.translate.instant('COMMON.VIEW'),
-        icon: 'icon-frame-view',
-        action: 'view',
-      },
-      {
-        label: this.translate.instant('COMMON.DELETE'),
-        icon: 'icon-frame-delete',
-        action: 'delete',
-      },
+      { label: this.translate.instant('COMMON.VIEW'), icon: 'icon-frame-view', action: 'view' },
+      { label: this.translate.instant('COMMON.DELETE'), icon: 'icon-frame-delete', action: 'delete' },
     ];
 
-    // Column header mapping for translations
     this.columnHeaderMap = {
       name: this.translate.instant('CONTACT_INFORMATION.NAME'),
       email: this.translate.instant('CONTACT_INFORMATION.EMAIL'),
+      mobileNumber: this.translate.instant('CONTACT_INFORMATION.MOBILE_NUMBER'),
       title: this.translate.instant('CONTACT_INFORMATION.FIELD_TITLE'),
       message: this.translate.instant('CONTACT_INFORMATION.MESSAGE'),
       creationDate: this.translate.instant('CONTACT_INFORMATION.CREATED_DATE'),
@@ -428,23 +376,16 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
   onTableAction(event: { action: string; row: any }): void {
     const contactInformation = event.row as ContactInformationDto;
     switch (event.action) {
-      case 'view':
-        this.openViewModal(contactInformation);
-        break;
-      case 'delete':
-        this.selectContactInformationToDelete(contactInformation);
-        break;
+      case 'view': this.openViewModal(contactInformation); break;
+      case 'delete': this.selectContactInformationToDelete(contactInformation); break;
     }
   }
 
-  onPageChange(event: { pageNumber: number; pageSize: number }): void {
-    this.itemsPerPage = event.pageSize;
-    this.getContactInformations(event.pageNumber + 1);
-  }
-
-  onTableSearch(searchText: string): void {
-    // Implement search functionality if needed
-  }
+onPageChange(event: { pageNumber: number; pageSize: number }): void {
+  this.currentPage = event.pageNumber;
+  this.itemsPerPage = event.pageSize;
+  this.getContactInformations(this.currentPage);
+}
 
   private resetForm(): void {
     this.contactInformationForm.reset();

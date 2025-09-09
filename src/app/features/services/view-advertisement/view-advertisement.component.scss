@@ -1,0 +1,25 @@
+// System brown color variables
+$brown-primary: #8D734D;
+$brown-dark: #7A6340;
+$brown-light: #A68B6B;
+
+// Brown badge styling
+.badge-brown {
+  background-color: $brown-primary !important;
+  color: white !important;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: $brown-dark !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(141, 115, 77, 0.3);
+  }
+}

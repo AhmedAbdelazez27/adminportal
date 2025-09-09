@@ -1029,75 +1029,55 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
     );
   }
 
-  selectInitiativeToDelete(initiative: InitiativeDto): void {
-    console.log('🗑️ selectInitiativeToDelete called');
-    console.log('📋 Initiative to delete:', initiative);
-    
-    try {
-      this.selectedInitiativeToDelete = initiative;
-      console.log('✅ Set selectedInitiativeToDelete');
-      
-      // Test with simple confirm first to check if the method is being reached
-      console.log('⚠️ TESTING: About to show confirmation');
-      
-      const confirmed = confirm(`TESTING: Delete initiative "${initiative.nameEn || initiative.nameAr}"?`);
-      if (confirmed) {
-        console.log('✅ User confirmed deletion');
-        this.deleteInitiative();
-        return;
-      } else {
-        console.log('❌ User cancelled deletion');
-        return;
-      }
-      
-      // Original modal code (commented out for testing)
-      /*
-      const deleteModal = document.getElementById('deleteInitiativeModal');
-      console.log('🔍 Modal element found:', !!deleteModal);
-      
-      if (deleteModal) {
-        console.log('🎭 Creating Bootstrap modal...');
-        const modal = new (window as any).bootstrap.Modal(deleteModal);
-        console.log('🎭 Modal created:', modal);
-        
-        console.log('🚀 Showing modal...');
-        modal.show();
-        console.log('✅ Modal show() called');
-      } else {
-        console.error('❌ Modal element not found!');
-      }
-      */
-    } catch (error) {
-      console.error('💥 Error in selectInitiativeToDelete:', error);
-    }
+selectInitiativeToDelete(initiative: InitiativeDto): void {
+  console.log('🗑️ selectInitiativeToDelete called');
+  console.log('📋 Initiative to delete:', initiative);
+
+  try {
+    this.selectedInitiativeToDelete = initiative;
+    console.log('✅ Set selectedInitiativeToDelete');
+
+    // Directly call delete without confirm or modal
+    this.deleteInitiative();
+
+  } catch (error) {
+    console.error('💥 Error in selectInitiativeToDelete:', error);
+  }
+}
+
+deleteInitiative(): void {
+  console.log('🗑️ deleteInitiative called');
+  
+  if (!this.selectedInitiativeToDelete) {
+    console.error('❌ No initiative selected for deletion');
+    return;
   }
 
-  deleteInitiative(): void {
-    console.log('🗑️ deleteInitiative called');
-    
-    if (!this.selectedInitiativeToDelete) {
-      console.error('❌ No initiative selected for deletion');
-      return;
-    }
+  console.log('🚀 Starting deletion for initiative:', this.selectedInitiativeToDelete.id);
+  this.spinnerService.show();
 
-    console.log('🚀 Starting deletion for initiative:', this.selectedInitiativeToDelete.id);
-    this.spinnerService.show();
-    
-    this.initiativeService.deleteAsync(this.selectedInitiativeToDelete.id).subscribe({
-      next: () => {
-        console.log('✅ Delete successful');
-        this.toastr.success(this.translate.instant('INITIATIVE.MESSAGES.INITIATIVE_DELETED') || 'Initiative deleted successfully');
-        this.selectedInitiativeToDelete = null;
-        this.loadInitiatives();
-        this.spinnerService.hide();
-      },
-      error: (error) => {
-        console.error('❌ Delete failed:', error);
-        this.toastr.error(this.translate.instant('INITIATIVE.MESSAGES.ERROR_DELETING_INITIATIVE') || 'Error deleting initiative');
-        this.spinnerService.hide();
-      },
-    });
-  }
+  this.initiativeService.deleteAsync(this.selectedInitiativeToDelete.id).subscribe({
+    next: () => {
+      console.log('✅ Delete successful');
+      this.toastr.success(
+        this.translate.instant('INITIATIVE.MESSAGES.INITIATIVE_DELETED') || 
+        'Initiative deleted successfully'
+      );
+      this.selectedInitiativeToDelete = null;
+      this.loadInitiatives();
+      this.spinnerService.hide();
+    },
+    error: (error) => {
+      console.error('❌ Delete failed:', error);
+      this.toastr.error(
+        this.translate.instant('INITIATIVE.MESSAGES.ERROR_DELETING_INITIATIVE') || 
+        'Error deleting initiative'
+      );
+      this.spinnerService.hide();
+    },
+  });
+}
+
 
   // Validation helpers
   isFieldInvalid(fieldName: string): boolean {

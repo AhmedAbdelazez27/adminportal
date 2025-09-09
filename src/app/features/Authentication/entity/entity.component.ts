@@ -119,6 +119,7 @@ export class EntityComponent implements OnInit, OnDestroy {
         searchValue: '',
         entityId: undefined,
         isShowInPortal: false,
+        isDonation: undefined,
         skip: 0,
         take: 10
     };
@@ -180,6 +181,7 @@ export class EntityComponent implements OnInit, OnDestroy {
             DescriptionAr: ['', [Validators.maxLength(4000)]],
             DescriptionEn: ['', [Validators.maxLength(4000)]],
             IsShowInPortal: [false],
+            IsDonation: [false],
         });
     }
 
@@ -443,6 +445,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                 DescriptionAr: item.descriptionAr || (item as any).DescriptionAr,
                 DescriptionEn: item.descriptionEn || (item as any).DescriptionEn,
                 IsShowInPortal: item.isShowInPortal !== undefined ? item.isShowInPortal : (item as any).IsShowInPortal,
+                IsDonation: item.isDonation !== undefined ? item.isDonation : (item as any).IsDonation,
                 MasterId: item.masterId || (item as any).MasterId,
                 // Handle single attachment object
                 Attachment: item.attachment || (item as any).attachment
@@ -505,6 +508,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                             ENTITY_MAIL: 'info@testcompany.com',
                             ACC_DETAILS_ID: 'ACC001',
                             IsShowInPortal: true,
+                            IsDonation: false,
                             MasterId: 1,
                         },
                         {
@@ -517,6 +521,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                             ENTITY_MAIL: 'contact@testfoundation.com',
                             ACC_DETAILS_ID: 'ACC002',
                             IsShowInPortal: false,
+                            IsDonation: true,
                             MasterId: 2,
                         },
                     ];
@@ -660,6 +665,7 @@ export class EntityComponent implements OnInit, OnDestroy {
     clear(): void {
         this.searchValue = '';
         this.searchParams.searchValue = '';
+        this.searchParams.isDonation = undefined;
         this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
     }
 
@@ -739,6 +745,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                     DescriptionAr: formData.DescriptionAr?.trim() || null,
                     DescriptionEn: formData.DescriptionEn?.trim() || null,
                     IsShowInPortal: formData.IsShowInPortal || false,
+                    IsDonation: formData.IsDonation || false,
                     Attachment: attachmentDto || undefined,
                 };
 
@@ -767,6 +774,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                     DescriptionAr: formData.DescriptionAr?.trim() || null,
                     DescriptionEn: formData.DescriptionEn?.trim() || null,
                     IsShowInPortal: formData.IsShowInPortal || false,
+                    IsDonation: formData.IsDonation || false,
                 };
 
                 this.entityService.updateEntity(updateData).subscribe({
@@ -896,6 +904,7 @@ export class EntityComponent implements OnInit, OnDestroy {
             DescriptionAr: entity.DescriptionAr,
             DescriptionEn: entity.DescriptionEn,
             IsShowInPortal: entity.IsShowInPortal,
+            IsDonation: entity.IsDonation,
         });
     }
 
@@ -915,6 +924,7 @@ export class EntityComponent implements OnInit, OnDestroy {
             DescriptionAr: apiResponse.descriptionAr || apiResponse.DescriptionAr,
             DescriptionEn: apiResponse.descriptionEn || apiResponse.DescriptionEn,
             IsShowInPortal: apiResponse.isShowInPortal || apiResponse.IsShowInPortal,
+            IsDonation: apiResponse.isDonation || apiResponse.IsDonation,
             MasterId: apiResponse.masterId || apiResponse.MasterId,
             Attachment: apiResponse.attachment || apiResponse.Attachment
         };
@@ -1352,7 +1362,7 @@ export class EntityComponent implements OnInit, OnDestroy {
         this.fileValidationSuccess = false;
 
         if (mode === 'add') {
-            this.entityForm.reset({ IsShowInPortal: false });
+            this.entityForm.reset({ IsShowInPortal: false, IsDonation: false });
             this.selectedEntityObject = null;
         }
 

@@ -135,12 +135,14 @@ export class ApiEndpoints {
 
   static readonly FinancialReports = {
     Base: '/FinancialReports',
+    UpdateGlAccountSelectionBase: '/GlAccountSelection',
     CachReceiptRptEndPoint: '/GetCachReceiptRpt',
     GetGeneralLJournalRptEndPoint: '/GetGeneralLJournalRpt',
     GetReceiptRptEndPoint: '/GetReceiptRpt',
     GetVendorsPayRptEndPoint: '/GetVendorsPayRpt',
     GetGeneralProLosRptEndPoint: '/GetGeneralProLosRpt',
     GetTotalBenDonationsRptEndPoint: '/GetTotalBenDonationsRpt',
+    UpdateGlAccountSelectionEndPoint: '/PrepareGlAccountRpt',
     GetGetGlTrialBalancesRptEndPoint: '/GetGlTrialBalancesRpt',
     GetGeneralBalanceSheetRptEndPoint: '/GetGeneralBalanceSheetRpt',
   };
@@ -195,6 +197,7 @@ export class ApiEndpoints {
     Delete: (id: number) => `/Delete/${id}`,
     Select2: '/Select2',
     CheckAvailable: '/CheckAvailable',
+    GetInteractiveMap: '/GetInteractiveMap',
   };
   static readonly SponsorshipReports = {
     Base: '/GuaranteesReports',
@@ -341,5 +344,77 @@ export class ApiEndpoints {
     GetWithDetailsById: (id: string) => `/GetWithChildren/${id}`,
     GettreeDataById: (id: number, entityId: string) => `/GettreeDataByCode/${id}/${entityId}`,
      Update: '/Update',
+  };
+
+  static readonly RequestPlaint = {
+    Base: '/RequestPlaint',
+    Create: '/Create',
+    GetByMainApplyServiceId: (mainApplyServiceId: number) =>
+      `/GetByMainApplyServiceId/${mainApplyServiceId}`,
+  };
+
+  static readonly MainApplyRequestService = {
+    Base: '/MainApplyRequestService',
+    GetSelect2: '/GetSelect2',
+  };
+
+  static readonly Lookup = {
+    PlaintReasons: '/Lookup/PlaintReasons',
+    ComplaintType: '/Lookup/ComplaintType',
+    TentLocationType: '/Lookup/TentLocationType',
+    DistributionLocationType: '/Lookup/DistributionLocationType',
+  };
+
+  static readonly RequestComplaint = {
+    Base: '/RequestComplaint',
+    Create: '/Create',
+    GetByMainApplyServiceId: (mainApplyServiceId: number) =>
+      `/GetByMainApplyServiceId/${mainApplyServiceId}`,
+  };
+
+  static readonly FastingTentRequest = {
+    Base: '/FastingTentRequest',
+    Create: '',
+    GetByMainApplyServiceId: (mainApplyServiceId: number) =>
+      `/GetByMainApplyServiceId/${mainApplyServiceId}`,
+    GetAll: '/GetAll',
+    Update: '/Update',
+    Delete: (id: number) => `/Delete/${id}`,
+  };
+
+  static readonly DistributionSiteRequest = {
+    Base: '/DistributionSiteRequest',
+    Create: '',
+    GetByMainApplyServiceId: (mainApplyServiceId: number) =>
+      `/GetByMainApplyServiceId/${mainApplyServiceId}`,
+    GetAll: '/GetAll',
+    Update: '/Update',
+    Delete: (id: number) => `/Delete/${id}`,
+  };
+  static readonly RequestEventPermits = {
+    Base: '/RequestEventPermits',
+    Create: '/Create'
+  };
+  static readonly CharityEventPermit = {
+    Base: '/CharityEventPermit',
+    Create: '/Create'
+  };
+
+  static readonly Notifications = {
+    Base: '/Notifications',
+    GetAll: '/Notifications/GetAll',
+    GetById: (id: string) => `/Notifications/Get/${id}`,
+    Create: '/Notifications/Create',
+    MarkAsSeen: (id: string) => `/Notifications/MarkAsSeen/${id}`,
+    GetUnseenCount: (userId: string) => `/Notifications/GetUnseenCount/${userId}`,
+    SendToDepartment: '/Notifications/SendToDepartment'
+  };
+
+  static readonly FCMToken = {
+    Update: '/User/UpdateFCMToken'
+  };
+
+  static readonly Advertisement = {
+    Create: '/Advertisement/Create'
   };
 }

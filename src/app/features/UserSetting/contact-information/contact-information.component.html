@@ -3,12 +3,18 @@
         <h1 class="title">{{ 'CONTACT_INFORMATION.TITLE' | translate }}</h1>
     </div>
 
-    <!-- Generic Data Table -->
-    <app-generic-data-table [columnDefs]="columnDefs" [rowData]="contactInformations" [totalCount]="totalCount"
-        [pageSize]="itemsPerPage" [currentPage]="currentPage - 1" [showActionColumn]="true" [rowActions]="rowActions"
-        [columnHeaderMap]="columnHeaderMap" (actionClick)="onTableAction($event)" (pageChange)="onPageChange($event)"
-        (search)="onTableSearch($event)">
-    </app-generic-data-table>
+   <app-generic-data-table 
+   [columnDefs]="columnDefs" 
+   [rowData]="contactInformations"
+   [totalCount]="totalCount"
+   [currentPage]="currentPage - 1"
+   [pageSize]="itemsPerPage"
+   [showActionColumn]="true" [rowActions]="rowActions"
+   [columnHeaderMap]="columnHeaderMap"
+   (actionClick)="onTableAction($event)"
+   (pageChange)="onPageChange($event)"
+   (search)="onTableSearch($event)">
+   </app-generic-data-table>
 
     <!-- Contact Information Modal -->
     <div class="modal fade" id="ContactInformation" tabindex="-1" aria-labelledby="ContactInformationLabel"
@@ -52,13 +58,28 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-6 mb-3">
+                                <label for="mobileNumber" class="form-label">
+                                    {{ 'CONTACT_INFORMATION.MOBILE_NUMBER' | translate }} <span class="text-danger">*</span>
+                                </label>
+                                <input type="tel" class="form-control" id="mobileNumber" formControlName="mobileNumber"
+                                    [class.is-invalid]="isFieldInvalid('mobileNumber')" 
+                                    [class.is-valid]="isFieldValid('mobileNumber')"
+                                    (blur)="onFieldBlur('mobileNumber')"
+                                    [readonly]="mode === 'view'">
+                                <div class="invalid-feedback" *ngIf="isFieldInvalid('mobileNumber')">
+                                    {{ getFieldError('mobileNumber') }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <label for="title" class="form-label">
                                     {{ 'CONTACT_INFORMATION.FIELD_TITLE' | translate }}
                                 </label>
                                 <input type="text" class="form-control" id="title" formControlName="title"
                                     [readonly]="mode === 'view'">
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label for="message" class="form-label">
                                     {{ 'CONTACT_INFORMATION.MESSAGE' | translate }}
@@ -97,6 +118,7 @@
                     <div *ngIf="selectedContactInformationToDelete" class="delete-confirmation-details">
                         <strong>{{ 'CONTACT_INFORMATION.NAME' | translate }}:</strong> {{ selectedContactInformationToDelete.name }}<br>
                         <strong>{{ 'CONTACT_INFORMATION.EMAIL' | translate }}:</strong> {{ selectedContactInformationToDelete.email }}<br>
+                        <strong>{{ 'CONTACT_INFORMATION.MOBILE_NUMBER' | translate }}:</strong> {{ selectedContactInformationToDelete.mobileNumber }}<br>
                         <strong>{{ 'CONTACT_INFORMATION.FIELD_TITLE' | translate }}:</strong> {{ selectedContactInformationToDelete.title || ('COMMON.NOT_AVAILABLE' | translate) }}
                     </div>
                 </div>

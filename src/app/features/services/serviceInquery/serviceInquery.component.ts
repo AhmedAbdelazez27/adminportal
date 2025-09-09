@@ -886,9 +886,9 @@ export class ServiceInqueryComponent {
           userId: localStorage.getItem('userId'),
           reason: reason,
           notesForApproving: '',
-          tentConstructDate: this.addReason.fastingTentService?.tentConstructDate,
-          startDate: this.addReason.fastingTentService?.startDate,
-          endDate: this.addReason.fastingTentService?.endDate
+          tentConstructDate: this.addReason.fastingTentService?.tentConstructDate ?? null,
+          startDate: this.addReason.fastingTentService?.startDate ?? null,
+          endDate: this.addReason.fastingTentService?.endDate ?? null
         };
 
         this.mainApplyService.update(param).subscribe({

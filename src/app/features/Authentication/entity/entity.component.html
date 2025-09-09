@@ -36,6 +36,14 @@
             <input type="text" class="form-control" id="searchName" placeholder="{{ 'AuthenticationResorceName.searchPlaceholder' | translate }}"
                    [(ngModel)]="searchValue">
           </div>
+          <div class="col-xl-4 mb-3">
+            <label for="isDonationFilter" class="form-label">{{ 'ENTITY.IS_DONATION' | translate }}</label>
+            <select class="form-select" id="isDonationFilter" [(ngModel)]="searchParams.isDonation">
+              <option value="undefined">{{ 'COMMON.ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.YES' | translate }}</option>
+              <option value="false">{{ 'COMMON.NO' | translate }}</option>
+            </select>
+          </div>
         </div>
 
         <div class="d-flex gap-2 justify-content-center">
@@ -228,6 +236,17 @@
                 <input class="form-check-input" type="checkbox" id="IsShowInPortal" formControlName="IsShowInPortal">
                 <label class="form-check-label" for="IsShowInPortal">
                   {{ 'ENTITY.SHOW_IN_PORTAL_DESC' | translate }}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="IsDonation" class="form-label">
+                {{ 'ENTITY.IS_DONATION' | translate }}
+              </label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="IsDonation" formControlName="IsDonation">
+                <label class="form-check-label" for="IsDonation">
+                  {{ 'ENTITY.IS_DONATION_DESC' | translate }}
                 </label>
               </div>
             </div>
@@ -445,7 +464,8 @@
           <strong>{{ 'ENTITY.WEBSITE' | translate }}:</strong> {{ selectedEntityObject.ENTITY_WEBSITE || 'N/A' }}<br>
           <strong>{{ 'ENTITY.EMAIL' | translate }}:</strong> {{ selectedEntityObject.ENTITY_MAIL || 'N/A' }}<br>
           <strong>{{ 'ENTITY.ACCOUNT_DETAILS' | translate }}:</strong> {{ getAccountDetailsName(selectedEntityObject.ACC_DETAILS_ID || '') }}<br>
-          <strong>{{ 'ENTITY.STATUS' | translate }}:</strong> {{ selectedEntityObject.IsShowInPortal ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
+          <strong>{{ 'ENTITY.STATUS' | translate }}:</strong> {{ selectedEntityObject.IsShowInPortal ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}<br>
+          <strong>{{ 'ENTITY.IS_DONATION' | translate }}:</strong> {{ selectedEntityObject.IsDonation ? ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}
         </div>
         <p class="text-danger mt-3">{{ 'COMMON.ACTION_CANNOT_BE_UNDONE' | translate }}</p>
       </div>

@@ -66,4 +66,80 @@ export class AuthService {
     return this.http.post(`${environment.apiBaseUrl}${ApiEndpoints.User.Base}${ApiEndpoints.User.ResetPassword}`, payload);
   }
 
+  getUserId(): string | null {
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      return storedUserId;
+    }
+
+    const decodedData = this.decodeToken();
+    if (decodedData) {
+      return this.extractUserIdFromToken(decodedData);
+    }
+
+    return null;
+  }
+
+  getCurrentUser(): { id: string; name?: string } | null {
+    const userId = this.getUserId();
+    if (!userId) {
+      return null;
+    }
+
+    const decodedData = this.decodeToken();
+    let name = '';
+
+    if (decodedData) {
+      const possibleNameClaims = [
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name',
+        'name',
+        'username',
+        'user_name',
+        'given_name',
+        'family_name'
+      ];
+
+      for (const claim of possibleNameClaims) {
+        if (decodedData[claim]) {
+          name = decodedData[claim].toString();
+          break;
+        }
+      }
+    }
+
+    return {
+      id: userId,
+      name: name || 'User'
+    };
+  }
+
+
+    private extractUserIdFromToken(decodedData: any): string | null {
+    const possibleUserIdClaims = [
+      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier',
+      'nameidentifier',
+      'sub',
+      'user_id',
+      'userId',
+      'id',
+      'uid',
+      'userid'
+    ];
+
+    for (const claim of possibleUserIdClaims) {
+      if (decodedData[claim]) {
+        return decodedData[claim].toString();
+      }
+    }
+
+    for (const [key, value] of Object.entries(decodedData)) {
+      if (typeof value === 'string' && value.length > 0 && value.length < 50) {
+        if (/^[a-zA-Z0-9_-]+$/.test(value)) {
+          return value;
+        }
+      }
+    }
+
+    return null;
+  }
 }

@@ -11,6 +11,7 @@ export class FiltermainApplyServiceDto {
   serviceStatus?: string | null = null;
   applyDate?: string | null = null;
   applyNo?: string | null = null;
+  excludeAdverisment?: boolean = false;
 
   userIdstr?: string | null = null;
   serviceIdstr?: string | null = null;
@@ -170,7 +171,7 @@ export class AppUserDto {
   fax?: string | null = null;
   boxNo?: string | null = null;
   entityId?: string | null = null;
-  applyDate?: Date | null = null;
+  applyDate: Date | null = null;
   applyDatestr?: string | null = null;
   userStatus?: number | null = null;
   userStatusName?: string | null = null;
@@ -188,9 +189,11 @@ export class WorkFlowStepDto {
   serviceStatusName?: string | null = null;
   refuseReason?: string | null = null;
   stepOrder?: number | null = null;
-  lastModified?: Date | null = null;
+  lastModified?: Date| null = null;
   lastModifiedstr?: string | null = null;
   departmentName?: string | null = null;
+  serviceDepartmentActions?: number | null = null;
+  serviceDepartmentActionName?: string | null = null;
   workFlowComments?: WorkFlowCommentDto[] = [];
 }
 
@@ -211,22 +214,21 @@ export class WorkFlowCommentDto {
 
 
 export class PartnerDto {
-  id?: number | null = null;
-  name?: string | null = null;
-  type?: number | null = null;
-  typeName?: string | null = null;
-  licenseIssuer?: string | null = null;
-  licenseExpiryDate?: Date | null = null;
-  licenseExpiryDatestr?: string | null = null;
-  licenseNumber?: string | null = null;
-  contactDetails?: string | null = null;
-  createdBy?: string | null = null;
-  creationDate?: Date | null = null;
-  creationDatestr?: string | null = null;
-  modifiedBy?: string | null = null;
-  modificationDate?: Date | null = null;
-  modificationDatestr?: string | null = null;
-  mainApplyServiceId?: number | null = null;
+  id: number | null = null;
+  name: string | null = null;
+  type: number | null = null;
+  typeName: string | null = null;
+  licenseIssuer: string | null = null;
+  licenseExpiryDate: Date | null = null;
+  licenseNumber: string | null = null;
+  contactDetails: string | null = null;
+  createdBy: string | null = null;
+  creationDate: Date | null = null;
+
+  modifiedBy: string | null = null;
+  modificationDate: Date | null = null;
+  mainApplyServiceId: number | null = null;
+  attachments: AttachmentDto[] = [];
 }
 
 
@@ -281,11 +283,11 @@ export class FastingTentServiceDto {
   streetName?: string | null = null;
   groundNo?: string | null = null;
   address?: string | null = null;
-  startDate?: Date | null = null;
+  startDate: Date | null = null;
   startDatestr?: string | null = null;
-  tentConstructDate?: Date | null = null;
+  tentConstructDate: Date | null = null;
   tentConstructDatestr?: string | null = null;
-  endDate?: Date | null = null;
+  endDate: Date | null = null;
   endDatestr?: string | null = null;
   notes?: string | null = null;
   locationId?: number | null = null;
@@ -298,7 +300,7 @@ export class FastingTentServiceDto {
   consultantNumber?: string | null = null;
   consultantName?: string | null = null;
   tentIsSetUp?: boolean | true = true;
-  tentDate?: Date | null = null;
+  tentDate: Date | null = null;
   tentDatestr?: string | null = null;
   distributionSiteCoordinators?: string | null = null;
   distributionSitePhotoPath?: string | null = null;
@@ -338,7 +340,7 @@ export class RegionDto {
 export class RequestEventPermitDto {
   id?: number | null = null;
   mainApplyServiceId?: number | null = null;
-  requestDate?: Date | null = null;
+  requestDate: Date| null = null;
   requestDatestr?: string | null = null;
   requestNo?: number | null = null;
   lkpRequestTypeId?: number | null = null;
@@ -346,20 +348,20 @@ export class RequestEventPermitDto {
   requestSide?: string | null = null;
   supervisingSide?: string | null = null;
   eventName?: string | null = null;
-  startDate?: Date | null = null;
+  startDate: Date| null = null;
   startDatestr?: string | null = null;
-  endDate?: Date | null = null;
+  endDate: Date | null = null;
   endDatestr?: string | null = null;
   lkpPermitTypeId?: number | null = null;
   lkpPermitTypeName?: string | null = null;
   eventLocation?: string | null = null;
-  amStartTime?: Date | null = null;
+  amStartTime: Date | null = null;
   amStartTimestr?: string | null = null;
-  amEndTime?: Date | null = null;
+  amEndTime: Date | null = null;
   amEndTimestr?: string | null = null;
-  pmStartTime?: Date | null = null;
+  pmStartTime: Date | null = null;
   pmStartTimestr?: string | null = null;
-  pmEndTime?: Date | null = null;
+  pmEndTime: Date | null = null;
   pmEndTimestr?: string | null = null;
   admin?: string | null = null;
   delegateName?: string | null = null;
@@ -388,14 +390,14 @@ export class RequestAdvertisementDto {
   id?: number | null = null;
   mainApplyServiceId?: number | null = null;
   requestNo?: number | null = null;
-  requestDate?: Date | null = null;
+  requestDate: Date | null = null;
   requestDatestr?: string | null = null;
   provider?: string | null = null;
   adTitle?: string | null = null;
   adLang?: string | null = null;
-  startDate?: Date | null = null;
+  startDate: Date | null = null;
   startDatestr?: string | null = null;
-  endDate?: Date | null = null;
+  endDate: Date | null = null;
   endDatestr?: string | null = null;
   mobile?: string | null = null;
   supervisorName?: string | null = null;
@@ -419,23 +421,25 @@ export class RequestPlaintDto {
   requestMainApplyServiceId?: number | null = null;
   requestMainApplyServiceIdName?: string | null = null;
   requestNo?: number | null = null;
-  requestDate?: Date | null = null;
+  requestDate: Date | null = null;
   requestDatestr?: string | null = null;
   notes?: string | null = null;
+  details: string | null = null
   mainApplyService?: mainApplyServiceDto | null = null;
+  attachmentsConfigs: AttachmentsConfigDto[] = [];
 }
 
 export class CharityEventPermitDto {
   id?: number | null = null;
   mainApplyServiceId?: number | null = null;
   requestNo?: number | null = null;
-  requestDate?: Date | null = null;
+  requestDate: Date | null = null;
   requestDatestr?: string | null = null;
   eventName?: string | null = null;
   eventLocation?: string | null = null;
-  startDate?: Date | null = null;
+  startDate: Date | null = null;
   startDatestr?: string | null = null;
-  endDate?: Date | null = null;
+  endDate: Date | null = null;
   endDatestr?: string | null = null;
   supervisorName?: string | null = null;
   jopTitle?: string | null = null;
@@ -461,7 +465,7 @@ export class RequestComplaintDto {
   details?: string | null = null;
   email?: string | null = null;
   notes?: string | null = null;
-  requestDate?: Date | null = null;
+  requestDate: Date| null = null;
   requestDatestr?: string | null = null;
   mainApplyService?: mainApplyServiceDto | null = null;
   user?: AppUserDto | null = null;
@@ -477,9 +481,9 @@ export class CharityEffictServicesDto {
   activelang?: string | null = null;
   gender?: string | null = null;
   notes?: string | null = null;
-  effictiveDate?: Date | null = null;
-  effictiveStartTime?: Date | null = null;
-  effictiveEndTime?: Date | null = null;
+  effictiveDate: Date| null = null;
+  effictiveStartTime: Date| null = null;
+  effictiveEndTime: Date| null = null;
   effictiveDatestr?: string | null = null;
   effictiveStartTimestr?: string | null = null;
   effictiveEndTimestr?: string | null = null;
@@ -499,7 +503,7 @@ export class EmploymentRequestServicesDto {
   address?: string | null = null;
   addresOutSidev?: string | null = null;
   notes?: string | null = null;
-  birthDate?: Date | null = null;
+  birthDate: Date| null = null;
   birthDatestr?: string | null = null;
 }
 
@@ -510,7 +514,7 @@ export class RenewReligionFoundationServicesDto {
   institutionName?: number | null = null;
   licenseNumber?: string | null = null;
   notes?: string | null = null;
-  licenseEndDate?: Date | null = null;
+  licenseEndDate: Date| null = null;
   licenseEndDatestr?: string | null = null;
 }
 
@@ -522,10 +526,10 @@ export class UpdateStatusDto {
   userId?: string | null = null;
   notesForApproving?: string | null = null;
   serviceStatus?: number | null = null;
-  startDate?: Date | null = null;
+  startDate: Date| null = null;
   startDatestr?: string | null = null;
-  tentConstructDate?: Date | null = null;
+  tentConstructDate: Date| null = null;
   tentConstructDatestr?: string | null = null;
-  endDate?: Date | null = null;
+  endDate: Date| null = null;
   endDatestr?: string | null = null;
 }

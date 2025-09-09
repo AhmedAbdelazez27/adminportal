@@ -4,6 +4,13 @@ import { MainApplyServiceComponent } from './mainApplyService/mainApplyService.c
 import { ServiceConfirmationComponent } from './serviceConfirmation/serviceConfirmation.component';
 import { ServiceInqueryComponent } from './serviceInquery/serviceInquery.component';
 import { FastingServiceInqueryComponent } from './fastingServiceInquery/fastingServiceInquery.component';
+import { ViewFastingTentRequestComponent } from './view-fasting-tent-request/view-fasting-tent-request.component';
+import { ViewDistributionSitePermitComponent } from './view-distribution-site-permit/view-distribution-site-permit.component';
+import { ViewCharityEventPermitComponent } from './view-charity-event-permit/view-charity-event-permit.component';
+import { ViewComplaintrequestComponent } from './view-complaintrequest/view-complaintrequest.component';
+import { ViewRequesteventpermitComponent } from './view-requesteventpermit/view-requesteventpermit.component';
+import { ViewRequestplaintComponent } from './view-requestplaint/view-requestplaint.component';
+import { ViewAdvertisementComponent } from './view-advertisement/view-advertisement.component';
 
 export const servicesRoutes: Routes = [
   {
@@ -26,6 +33,48 @@ export const servicesRoutes: Routes = [
 
   {
     path: 'services/fastingserviceinquery/:id', component: FastingServiceInqueryComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
+  },
+
+  {
+    path: 'services/view-fasting-tent-request/:id', component: ViewFastingTentRequestComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
+  },
+
+  {
+    path: 'services/view-distribution-site-permit/:id', component: ViewDistributionSitePermitComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
+  },
+
+  {
+    path: 'services/charity-event-permit/:id', component: ViewCharityEventPermitComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
+  },
+
+  {
+    path: 'services/request-event-permit/:id', component: ViewRequesteventpermitComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
+  },
+
+  {
+    path: 'services/plaint-request/:id', component: ViewRequestplaintComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
+  },
+
+  {
+    path: 'services/complaint-request/:id', component: ViewComplaintrequestComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
+  },
+
+  {
+    path: 'services/advertisement/:id', component: ViewAdvertisementComponent,
     canActivate: [authGuard],
     data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
   },

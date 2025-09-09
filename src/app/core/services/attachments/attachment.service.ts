@@ -158,4 +158,26 @@ export class AttachmentService {
       `${this.CONFIG_BASE_URL}${ApiEndpoints.AttachmentsConfig.GetById(id)}`
     );
   }
+
+
+  getAttachmentsConfigByServiceType(
+    configType: AttachmentsConfigType,
+    active?: boolean | null,
+    mandatory?: boolean | null
+  ): Observable<AttachmentsConfigDto[]> {
+    const parameters: GetAllAttachmentsConfigParamters = {
+      skip: 0,
+      take: 100,
+      attachmentConfigType: configType,
+      active: active,
+      mendatory: mandatory,
+    };
+    return this.http
+      .post<AttachmentsConfigPagedResponse>(
+        `${this.CONFIG_BASE_URL}${ApiEndpoints.AttachmentsConfig.GetAll}`,
+        parameters
+      )
+      .pipe(map((result) => result.data || []));
+  }
+
 }

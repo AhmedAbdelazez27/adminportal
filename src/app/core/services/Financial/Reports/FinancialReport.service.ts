@@ -5,7 +5,7 @@ import * as XLSX from 'xlsx';
 import { environment } from '../../../../../environments/environment';
 import { ApiEndpoints } from '../../../constants/api-endpoints';
 import { PagedResult } from '../../../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { catchReceiptRptInputDto, generalLJournalRptInputDto, receiptRPTInputDto, vendorsPayTransRPTInputDto, getTotlaBenDonationsRPTInputDto, balanceReviewRptInputDto } from '../../../dtos/FinancialDtos/Reports/FinancialReportsInput.dto';
+import { catchReceiptRptInputDto, generalLJournalRptInputDto, receiptRPTInputDto, vendorsPayTransRPTInputDto, getTotlaBenDonationsRPTInputDto, balanceReviewRptInputDto, prepareGlAccountRptRequestDto } from '../../../dtos/FinancialDtos/Reports/FinancialReportsInput.dto';
 import { catchReceiptRptOutputDto, generalLJournalRptOutputDto, receiptRPTOutputDto, vendorsPayTransRPTOutputDto, getTotlaBenDonationsRPTOutputDto, balanceReviewRptOutputDto } from '../../../dtos/FinancialDtos/Reports/FinancialReportsOutput.dto';
 
 @Injectable({
@@ -14,6 +14,7 @@ import { catchReceiptRptOutputDto, generalLJournalRptOutputDto, receiptRPTOutput
 export class FinancialReportService {
 
   private readonly BASE_URL = `${environment.apiBaseUrl}${ApiEndpoints.FinancialReports.Base}`;
+  private readonly UpdateBASE_URL = `${environment.apiBaseUrl}${ApiEndpoints.FinancialReports.UpdateGlAccountSelectionBase}`;
   constructor(private http: HttpClient) { }
 
   getcatchReceiptRptData(params: catchReceiptRptInputDto): Observable<PagedResult<catchReceiptRptOutputDto[]>> {
@@ -41,8 +42,8 @@ export class FinancialReportService {
     return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
   }
 
-  getupdateGlAccountSelection(params: getTotlaBenDonationsRPTInputDto): Observable<PagedResult<getTotlaBenDonationsRPTOutputDto[]>> {
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.FinancialReports.GetTotalBenDonationsRptEndPoint}`;
+  getupdateGlAccountSelection(params: prepareGlAccountRptRequestDto): Observable<PagedResult<getTotlaBenDonationsRPTOutputDto[]>> {
+    const apiUrl = `${this.UpdateBASE_URL}${ApiEndpoints.FinancialReports.UpdateGlAccountSelectionEndPoint}`;
     return this.http.post<PagedResult<getTotlaBenDonationsRPTOutputDto[]>>(apiUrl, params);
   }
 

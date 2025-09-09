@@ -86,16 +86,16 @@
                     <!-- Shortcuts grid -->
                     <div class="row" *ngIf="!isLoadingShortcuts">
                         <!-- Existing shortcuts -->
-                        <div class="col-xl-3 col-lg-4 mb-3" *ngFor="let shortcut of shortcuts; trackBy: trackByShortcut">
+                        <div class="col-xl-2 col-lg-4 mb-3" *ngFor="let shortcut of shortcuts; trackBy: trackByShortcut">
                             <div class="widjet" (click)="navigateToShortcut(shortcut)" style="cursor: pointer;">
                                 <div class="widjet-icon">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 25 24" fill="none">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 25 24" fill="none">
                                 <path d="M15.8333 13.15H13.6633C11.8833 13.15 10.4333 11.71 10.4333 9.92V7.75C10.4333 7.34 10.1033 7 9.68325 7H6.51325C4.20325 7 2.33325 8.5 2.33325 11.18V17.82C2.33325 20.5 4.20325 22 6.51325 22H12.4033C14.7133 22 16.5833 20.5 16.5833 17.82V13.9C16.5833 13.48 16.2433 13.15 15.8333 13.15Z" fill="black" />
                                 <path d="M18.1533 2H16.1833H15.0933H12.2633C10.0033 2 8.17326 3.44 8.09326 6.01C8.15326 6.01 8.20326 6 8.26326 6H11.0933H12.1833H14.1533C16.4633 6 18.3333 7.5 18.3333 10.18V12.15V14.86V16.83C18.3333 16.89 18.3233 16.94 18.3233 16.99C20.5533 16.92 22.3333 15.44 22.3333 12.83V10.86V8.15V6.18C22.3333 3.5 20.4633 2 18.1533 2Z" fill="black" />
                                 <path d="M12.3131 7.15024C12.0031 6.84024 11.4731 7.05024 11.4731 7.48024V10.1002C11.4731 11.2002 12.4031 12.1002 13.5431 12.1002C14.2531 12.1102 15.2431 12.1102 16.0931 12.1102C16.5231 12.1102 16.7431 11.6102 16.4431 11.3102C15.3531 10.2202 13.4131 8.27024 12.3131 7.15024Z" fill="black" />
                             </svg>
                                 </div>
-                                {{ shortcut.displayName || shortcut.pageName }}
+                                {{ shortcut.displayName || shortcut.pageName }} 
                                 <button class="btn-remove-widjet" (click)="deleteShortcut(shortcut); $event.stopPropagation()" [disabled]="isDeletingShortcut">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 25 24" fill="none">
                                         <path d="M16.523 2H8.14301C4.50301 2 2.33301 4.17 2.33301 7.81V16.18C2.33301 19.83 4.50301 22 8.14301 22H16.513C20.153 22 22.323 19.83 22.323 16.19V7.81C22.333 4.17 20.163 2 16.523 2ZM15.693 14.3C15.983 14.59 15.983 15.07 15.693 15.36C15.543 15.51 15.353 15.58 15.163 15.58C14.973 15.58 14.783 15.51 14.633 15.36L12.333 13.06L10.033 15.36C9.88301 15.51 9.69301 15.58 9.50301 15.58C9.31301 15.58 9.12301 15.51 8.97301 15.36C8.68301 15.07 8.68301 14.59 8.97301 14.3L11.273 12L8.97301 9.7C8.68301 9.41 8.68301 8.93 8.97301 8.64C9.26301 8.35 9.74301 8.35 10.033 8.64L12.333 10.94L14.633 8.64C14.923 8.35 15.403 8.35 15.693 8.64C15.983 8.93 15.983 9.41 15.693 9.7L13.393 12L15.693 14.3Z" fill="#CA4832" />
@@ -105,14 +105,15 @@
                         </div>
 
                         <!-- Add Shortcut button -->
-                        <div class="col-xl-3 col-lg-4 mb-3">
+                        <div class="col-xl-2 col-lg-4 mb-3">
                             <button type="button" class="add-shortcut" (click)="openAddShortcutModal()">
                                 <div class="shortcut-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 25 24" fill="none">
                                         <path d="M16.5233 2H8.14331C4.50331 2 2.33331 4.17 2.33331 7.81V16.18C2.33331 19.83 4.50331 22 8.14331 22H16.5133C20.1533 22 22.3233 19.83 22.3233 16.19V7.81C22.3333 4.17 20.1633 2 16.5233 2ZM16.3333 12.75H13.0833V16C13.0833 16.41 12.7433 16.75 12.3333 16.75C11.9233 16.75 11.5833 16.41 11.5833 16V12.75H8.33331C7.92331 12.75 7.58331 12.41 7.58331 12C7.58331 11.59 7.92331 11.25 8.33331 11.25H11.5833V8C11.5833 7.59 11.9233 7.25 12.3333 7.25C12.7433 7.25 13.0833 7.59 13.0833 8V11.25H16.3333C16.7433 11.25 17.0833 11.59 17.0833 12C17.0833 12.41 16.7433 12.75 16.3333 12.75Z" fill="#8D734D" />
                                     </svg>
                                 </div>
-                                {{ 'HOME.ADD_SHORTCUT' | translate }}
+                       
+                       {{ 'HOME.ADD_SHORTCUT' | translate }}
                             </button>
                         </div>
                     </div>
@@ -126,7 +127,7 @@
                         <div class="spinner-border text-gold" role="status">
                             <span class="visually-hidden">{{ 'HOME.LOADING' | translate }}</span>
                         </div>
-                        <p class="mt-2">{{ 'HOME.LOADING_REQUEST_SUMMARY' | translate }}</p>
+                        <!-- <p class="mt-2">{{ 'HOME.LOADING_REQUEST_SUMMARY' | translate }}</p> -->
                     </div>
 
                     <!-- Request summary content -->
@@ -134,7 +135,7 @@
                         <div class="d-xl-flex justify-content-between align-items-center mb-4">
                             <div>
                                 <h4 class="bold gold title-24 mb-0">{{ 'HOME.REQUESTS' | translate }}</h4>
-                                <h4 class="bold black title-46 mb-0">{{ currentYear }}</h4>
+                                <h4 class="bold black title-30 mb-0">{{ currentYear }}</h4>
                             </div>
 
                             <div class="text-center">
@@ -153,12 +154,12 @@
                         <!-- Request status breakdown -->
                         <div class="row" *ngIf="requestSummaryList.length > 0">
                             <div class="col-12">
-                                <h5 class="bold black title-18 mb-3">{{ 'HOME.REQUEST_STATUS_BREAKDOWN' | translate }}</h5>
+                                <!-- <h5 class="bold black title-18 mb-3">{{ 'HOME.REQUEST_STATUS_BREAKDOWN' | translate }}</h5> -->
                                 <div class="row">
-                                    <div class="col-md-4 mb-3" *ngFor="let item of requestSummaryList; trackBy: trackByRequestSummary">
-                                        <div class="card border-0 shadow-sm h-100 request-summary-card">
+                                    <div class="col-md-2 mb-3" *ngFor="let item of requestSummaryList; trackBy: trackByRequestSummary">
+                                        <div class="card border-0 shadow-sm  request-summary-card">
                                             <div class="card-body text-center">
-                                                <h6 class="bold black title-20 mb-2 status-title">{{ item.status }}</h6>
+                                                <h6 class="bold black title-18 mb-2 status-title">{{ item.status }}</h6>
                                                 <h4 class="bold gold title-32 mb-1 request-count">{{ item.totalRequest | number }}</h4>
                                                 <p class="font-14 light-gray mb-0 request-percent">{{ item.percent | number:'1.0-2' }}%</p>
                                             </div>

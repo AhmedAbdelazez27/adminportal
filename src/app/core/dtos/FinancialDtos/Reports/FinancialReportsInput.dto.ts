@@ -1,3 +1,4 @@
+import { GlAccountSelectionType } from "../../../enum/user-type.enum";
 
 export class catchReceiptRptInputDto {
   entityId?: string | null = null;
@@ -48,7 +49,25 @@ export class balanceReviewRptInputDto {
   searchValue?: string | null = null;
 }
 
+export class prepareGlAccountRptRequestDto {
+  entities: updateGlAccountSelectionDto[] = [];
+  fromPeriodId?: number | null = null;
+  toPeriodId?: number | null = null;
+}
 
+export class updateGlAccountSelectionDto {
+  accountSelectionType?: GlAccountSelectionType;
+  yesNo?: string | null = null;
+  fromValue?: string | null = null;
+  toValue?: string | null = null;
+}
+export class updateGlAccountSelectiondummyDto {
+  entityyesNo?: string | null = null;
+  countryyesNo?: string | null = null;
+  branchyesNo?: string | null = null;
+  accountyesNo?: string | null = null;
+  departmentyesNo?: string | null = null;
+}
 export class receiptRPTInputDto {
   entityId?: string | null = null;
   fromDate?: string | null = null;

@@ -24,16 +24,350 @@
       <div class="card card-body">
         <form #filterForm="ngForm">
           <div class="row mb-3">
-            <div class="col-xl-4 mb-3">
-              <label class="form-label">{{ 'FinancialReportResourceName.levelId' | translate }}</label>
-              <ng-select class="ng-select-custom"
-                         name="levelSelect2"
-                         [items]="levelSelect2"
-                         bindLabel="text"
-                         bindValue="id"
-                         (change)="onlevelSelect2Change($event)"
-                         placeholder="{{ 'Common.Select' | translate }}">
-              </ng-select>
+            <div class="row align-items-center mb-3">
+              <div class="col-xl-2">
+                <label class="form-label fw-bold">{{ 'FinancialReportResourceName.entityId' | translate }}</label>
+              </div>
+              <div class="col-xl-4">
+                <ng-select class="ng-select-custom"
+                           name="fromentitySelect2"
+                           [(ngModel)]="selectedfromentitySelect2Obj"
+                           [items]="fromentitySelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="fromentitySearchInput$"
+                           [loading]="loadingfromentity"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMorefromentity()"
+                           (change)="onfromentitySelect2Change($event)"
+                           (search)="onfromentitySearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+              <div class="col-xl-4">
+                <ng-select class="ng-select-custom"
+                           name="toentitySelect2"
+                           [(ngModel)]="selectedtoentitySelect2Obj"
+                           [items]="toentitySelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="toentitySearchInput$"
+                           [loading]="loadingtoentity"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMoretoentity()"
+                           (change)="ontoentitySelect2Change($event)"
+                           (search)="ontoentitySearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-2">
+                <button class="btn"
+                        [ngClass]="{ 'btn-success': model.entityyesNo === true,'btn-danger': model.entityyesNo === false,'btn-secondary': model.entityyesNo === null }">
+                  <input class="form-check-input me-2"
+                         type="checkbox"
+                         role="switch"
+                         id="entitySwitch"
+                         [checked]="model.entityyesNo === true"
+                         (change)="onCheckboxChange($event, 'entityyesNo')" />
+                  <svg *ngIf="model.entityyesNo === true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                    <path d="M13.485 1.929a.5.5 0 0 1 .07.707l-7.5 8a.5.5 0 0 1-.708.001L2.646 7.646a.5.5 0 1 1 .708-.708l2.646 2.647 7.071-7.071a.5.5 0 0 1 .707-.07z" />
+                  </svg>
+                  <svg *ngIf="model.entityyesNo === false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                  </svg>
+                  {{model.entityyesNo === true ? ('FinancialReportResourceName.yes' | translate): model.entityyesNo === false ? ('FinancialReportResourceName.no' | translate): ('FinancialReportResourceName.yesno' | translate)}}
+                </button>
+              </div>
+            </div>
+
+
+            <div class="row align-items-center mb-3">
+              <div class="col-xl-2">
+                <label class="form-label fw-bold">{{ 'FinancialReportResourceName.country' | translate }}</label>
+              </div>
+
+              <div class="col-xl-4">
+                <ng-select class="ng-select-custom"
+                           name="fromcountrySelect2"
+                           [(ngModel)]="selectedfromcountrySelect2Obj"
+                           [items]="fromcountrySelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="fromcountrySearchInput$"
+                           [loading]="loadingfromcountry"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMorefromcountry()"
+                           (change)="onfromcountrySelect2Change($event)"
+                           (search)="onfromcountrySearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-4">
+                <ng-select class="ng-select-custom"
+                           name="tocountrySelect2"
+                           [(ngModel)]="selectedtocountrySelect2Obj"
+                           [items]="tocountrySelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="tocountrySearchInput$"
+                           [loading]="loadingtocountry"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMoretocountry()"
+                           (change)="ontocountrySelect2Change($event)"
+                           (search)="ontocountrySearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-2">
+                <button class="btn"
+                        [ngClass]="{ 'btn-success': model.countryyesNo === true,'btn-danger': model.countryyesNo === false,'btn-secondary': model.countryyesNo === null }">
+                  <input class="form-check-input me-2"
+                         type="checkbox"
+                         role="switch"
+                         id="entitySwitch"
+                         [checked]="model.countryyesNo === true"
+                         (change)="onCheckboxChange($event, 'countryyesNo')" />
+                  <svg *ngIf="model.countryyesNo === true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                    <path d="M13.485 1.929a.5.5 0 0 1 .07.707l-7.5 8a.5.5 0 0 1-.708.001L2.646 7.646a.5.5 0 1 1 .708-.708l2.646 2.647 7.071-7.071a.5.5 0 0 1 .707-.07z" />
+                  </svg>
+                  <svg *ngIf="model.countryyesNo === false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                  </svg>
+                  {{model.countryyesNo === true ? ('FinancialReportResourceName.yes' | translate): model.countryyesNo === false ? ('FinancialReportResourceName.no' | translate): ('FinancialReportResourceName.yesno' | translate)}}
+                </button>
+              </div>
+            </div>
+
+            <div class="row align-items-center mb-3">
+              <div class="col-xl-2">
+                <label class="form-label fw-bold">{{ 'FinancialReportResourceName.branch' | translate }}</label>
+              </div>
+
+              <div class="col-xl-4">
+                <ng-select class="ng-select-custom"
+                           name="frombranchSelect2"
+                           [(ngModel)]="selectedfrombranchSelect2Obj"
+                           [items]="frombranchSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="frombranchSearchInput$"
+                           [loading]="loadingfrombranch"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMorefrombranch()"
+                           (change)="onfrombranchSelect2Change($event)"
+                           (search)="onfrombranchSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-4">
+                <ng-select class="ng-select-custom"
+                           name="tobranchSelect2"
+                           [(ngModel)]="selectedtobranchSelect2Obj"
+                           [items]="tobranchSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="tobranchSearchInput$"
+                           [loading]="loadingtobranch"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMoretobranch()"
+                           (change)="ontobranchSelect2Change($event)"
+                           (search)="ontobranchSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-2">
+                <button class="btn"
+                        [ngClass]="{ 'btn-success': model.branchyesNo === true,'btn-danger': model.branchyesNo === false,'btn-secondary': model.branchyesNo === null }">
+                  <input class="form-check-input me-2"
+                         type="checkbox"
+                         role="switch"
+                         id="entitySwitch"
+                         [checked]="model.branchyesNo === true"
+                         (change)="onCheckboxChange($event, 'branchyesNo')" />
+                  <svg *ngIf="model.branchyesNo === true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                    <path d="M13.485 1.929a.5.5 0 0 1 .07.707l-7.5 8a.5.5 0 0 1-.708.001L2.646 7.646a.5.5 0 1 1 .708-.708l2.646 2.647 7.071-7.071a.5.5 0 0 1 .707-.07z" />
+                  </svg>
+                  <svg *ngIf="model.branchyesNo === false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                  </svg>
+                  {{model.branchyesNo === true ? ('FinancialReportResourceName.yes' | translate): model.branchyesNo === false ? ('FinancialReportResourceName.no' | translate): ('FinancialReportResourceName.yesno' | translate)}}
+                </button>
+              </div>
+            </div>
+
+
+            <div class="row align-items-center mb-3">
+              <div class="col-xl-2">
+                <label class="form-label fw-bold">{{ 'FinancialReportResourceName.department' | translate }}</label>
+              </div>
+
+              <div class="col-xl-4">
+                <ng-select class="ng-select-custom"
+                           name="fromdeptSelect2"
+                           [(ngModel)]="selectedfromdeptSelect2Obj"
+                           [items]="fromdeptSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="fromdeptSearchInput$"
+                           [loading]="loadingfromdept"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMorefromdept()"
+                           (change)="onfromdeptSelect2Change($event)"
+                           (search)="onfromdeptSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-4">
+                <ng-select class="ng-select-custom"
+                           name="todeptSelect2"
+                           [(ngModel)]="selectedtodeptSelect2Obj"
+                           [items]="todeptSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="todeptSearchInput$"
+                           [loading]="loadingtodept"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMoretodept()"
+                           (change)="ontodeptSelect2Change($event)"
+                           (search)="ontodeptSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-2">
+                <button class="btn"
+                        [ngClass]="{ 'btn-success': model.departmentyesNo === true,'btn-danger': model.departmentyesNo === false,'btn-secondary': model.departmentyesNo === null }">
+                  <input class="form-check-input me-2"
+                         type="checkbox"
+                         role="switch"
+                         id="entitySwitch"
+                         [checked]="model.departmentyesNo === true"
+                         (change)="onCheckboxChange($event, 'departmentyesNo')" />
+                  <svg *ngIf="model.departmentyesNo === true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                    <path d="M13.485 1.929a.5.5 0 0 1 .07.707l-7.5 8a.5.5 0 0 1-.708.001L2.646 7.646a.5.5 0 1 1 .708-.708l2.646 2.647 7.071-7.071a.5.5 0 0 1 .707-.07z" />
+                  </svg>
+                  <svg *ngIf="model.departmentyesNo === false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                  </svg>
+                  {{model.departmentyesNo === true ? ('FinancialReportResourceName.yes' | translate): model.departmentyesNo === false ? ('FinancialReportResourceName.no' | translate): ('FinancialReportResourceName.yesno' | translate)}}
+                </button>
+              </div>
+            </div>
+
+
+            <div class="row align-items-center mb-3">
+              <div class="col-xl-2">
+                <label class="form-label fw-bold">{{ 'FinancialReportResourceName.accNo' | translate }}</label>
+              </div>
+
+              <div class="col-xl-4">
+                <ng-select class="ng-select-custom"
+                           name="fromAccSelect2"
+                           [(ngModel)]="selectedfromAccSelect2Obj"
+                           [items]="fromAccSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="fromAccSearchInput$"
+                           [loading]="loadingfromAcc"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMorefromAcc()"
+                           (change)="onfromAccSelect2Change($event)"
+                           (search)="onfromAccSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-4">
+                <ng-select class="ng-select-custom"
+                           name="toAccSelect2"
+                           [(ngModel)]="selectedtoAccSelect2Obj"
+                           [items]="toAccSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="toAccSearchInput$"
+                           [loading]="loadingtoAcc"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMoretoAcc()"
+                           (change)="ontoAccSelect2Change($event)"
+                           (search)="ontoAccSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-2">
+                <button class="btn"
+                        [ngClass]="{ 'btn-success': model.accountyesNo === true,'btn-danger': model.accountyesNo === false,'btn-secondary': model.accountyesNo === null }">
+                  <input class="form-check-input me-2"
+                         type="checkbox"
+                         role="switch"
+                         id="entitySwitch"
+                         [checked]="model.accountyesNo === true"
+                         (change)="onCheckboxChange($event, 'accountyesNo')" />
+                  <svg *ngIf="model.accountyesNo === true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                    <path d="M13.485 1.929a.5.5 0 0 1 .07.707l-7.5 8a.5.5 0 0 1-.708.001L2.646 7.646a.5.5 0 1 1 .708-.708l2.646 2.647 7.071-7.071a.5.5 0 0 1 .707-.07z" />
+                  </svg>
+                  <svg *ngIf="model.accountyesNo === false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                  </svg>
+                  {{model.accountyesNo === true ? ('FinancialReportResourceName.yes' | translate): model.accountyesNo === false ? ('FinancialReportResourceName.no' | translate): ('FinancialReportResourceName.yesno' | translate)}}
+                </button>
+              </div>
+            </div>
+
+            <div class="row align-items-center mb-3">
+              <div class="col-xl-4 mb-3">
+                <label class="form-label fw-bold">{{ 'FinancialReportResourceName.fromPeriodId' | translate }}</label>
+                <ng-select class="ng-select-custom"
+                           name="fromPeriodIdSelect2"
+                           [(ngModel)]="selectedfromPeriodIdSelect2Obj"
+                           [items]="fromPeriodIdSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="fromPeriodIdSearchInput$"
+                           [loading]="loadingfromPeriodId"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMorefromPeriodId()"
+                           (change)="onfromPeriodIdSelect2Change($event)"
+                           (search)="onfromPeriodIdSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-4 mb-3">
+                <label class="form-label fw-bold">{{ 'FinancialReportResourceName.toPeriodId' | translate }}</label>
+                <ng-select class="ng-select-custom"
+                           name="toPeriodIdSelect2"
+                           [(ngModel)]="selectedtoPeriodIdSelect2Obj"
+                           [items]="toPeriodIdSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           [typeahead]="toPeriodIdSearchInput$"
+                           [loading]="loadingtoPeriodId"
+                           [virtualScroll]="true"
+                           (scrollToEnd)="loadMoretoPeriodId()"
+                           (change)="ontoPeriodIdSelect2Change($event)"
+                           (search)="ontoPeriodIdSearch($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-4 mb-3">
+                <label class="form-label fw-bold">{{ 'FinancialReportResourceName.levelId' | translate }}</label>
+                <ng-select class="ng-select-custom"
+                           name="levelSelect2"
+                           [items]="levelSelect2"
+                           bindLabel="text"
+                           bindValue="id"
+                           (change)="onlevelSelect2Change($event)"
+                           placeholder="{{ 'Common.Select' | translate }}">
+                </ng-select>
+              </div>
             </div>
           </div>
         </form>
@@ -45,14 +379,14 @@
             </svg>
             {{ 'Common.Clear' | translate }}
           </button>
-          <button class="btn btn-gold" (click)="onSearch()">
+          <button class="btn btn-gold" (click)="prepareData()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z" fill="white" />
             </svg>
-            {{ 'Common.Search' | translate }}
+            {{ 'FinancialReportResourceName.prepareDate' | translate }}
           </button>
 
-          <button class="btn btn-danger" (click)="getgltrialbalancesRPTDataprintPDF()">
+          <button class="btn btn-success" (click)="getgltrialbalancesRPTDataprintPDF()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M7 5C7 3.34 8.34 2 10 2H14C15.66 2 17 3.34 17 5C17 5.55 16.55 6 16 6H8C7.45 6 7 5.55 7 5Z" fill="white" />
               <path d="M17.75 15C17.75 15.41 17.41 15.75 17 15.75H16V19C16 20.66 14.66 22 13 22H11C9.34 22 8 20.66 8 19V15.75H7C6.59 15.75 6.25 15.41 6.25 15C6.25 14.59 6.59 14.25 7 14.25H17C17.41 14.25 17.75 14.59 17.75 15Z" fill="white" />
@@ -61,7 +395,7 @@
             {{ 'FinancialReportResourceName.trial' | translate }}
           </button>
 
-          <button class="btn btn-danger" (click)="getGeneralBalanceSheetRptDataprintPDF()">
+          <button class="btn btn-success" (click)="getGeneralBalanceSheetRptDataprintPDF()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M7 5C7 3.34 8.34 2 10 2H14C15.66 2 17 3.34 17 5C17 5.55 16.55 6 16 6H8C7.45 6 7 5.55 7 5Z" fill="white" />
               <path d="M17.75 15C17.75 15.41 17.41 15.75 17 15.75H16V19C16 20.66 14.66 22 13 22H11C9.34 22 8 20.66 8 19V15.75H7C6.59 15.75 6.25 15.41 6.25 15C6.25 14.59 6.59 14.25 7 14.25H17C17.41 14.25 17.75 14.59 17.75 15Z" fill="white" />
@@ -70,7 +404,7 @@
             {{ 'FinancialReportResourceName.balance' | translate }}
           </button>
 
-          <button class="btn btn-danger" (click)="getGeneralProLosRPTDataprintPDF()">
+          <button class="btn btn-success" (click)="getGeneralProLosRPTDataprintPDF()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M7 5C7 3.34 8.34 2 10 2H14C15.66 2 17 3.34 17 5C17 5.55 16.55 6 16 6H8C7.45 6 7 5.55 7 5Z" fill="white" />
               <path d="M17.75 15C17.75 15.41 17.41 15.75 17 15.75H16V19C16 20.66 14.66 22 13 22H11C9.34 22 8 20.66 8 19V15.75H7C6.59 15.75 6.25 15.41 6.25 15C6.25 14.59 6.59 14.25 7 14.25H17C17.41 14.25 17.75 14.59 17.75 15Z" fill="white" />

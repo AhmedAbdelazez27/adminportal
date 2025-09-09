@@ -58,6 +58,15 @@ export class Select2APIEndpoint {
     GetGlAccountSelect2: '/GlAccount/GetGlAccountSelect2List',
     GlAccountEntitySelect2: '/GlAccountEntity/GetSelect2',
     GetAccountStatusSelect2: '/GlAccountEntity/GetSelect2',
+    GetAdvertisementTypeSelect2List: '/Lookup/AdvertisementType',
+    GetAdvertisementTargetTypeSelect2List: '/Lookup/AdvertisementTargetType',
+    GetAdvertisementMethodTypeSelect2List: '/Lookup/AdvertisementMethod',
+    GetDonationCollectionChannel: '/DonationCollectionChannel/Select2',
+    GetPartner: '/Partner',
+    GetPermitRequestTypeSelect2: '/Lookup/PermitRequestType',
+    GetPermitTypeSelect2: '/Lookup/PermitType',
+    GetPlaintReasonsSelect2List: '/Lookup/PlaintReasons',
+
   };
 }
 

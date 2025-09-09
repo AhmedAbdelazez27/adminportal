@@ -28,7 +28,7 @@
               <label class="form-label">{{ 'SponsorshipReportResourceName.entityId' | translate }}</label>
               <ng-select class="ng-select-custom"
                          name="entitySelect2"
-                         [(ngModel)]="selectedentitySelect2Obj"
+                         [(ngModel)]="searchParams.entityId"
                          [items]="entitySelect2"
                          bindLabel="text"
                          bindValue="id"
@@ -46,7 +46,7 @@
               <label class="form-label">{{ 'SponsorshipReportResourceName.status' | translate }}</label>
               <ng-select class="ng-select-custom"
                          name="caseAidSelect2"
-                         [(ngModel)]="selectedcaseAidSelect2Obj"
+                         [(ngModel)]="searchParams.caseId"
                          [items]="caseAidSelect2"
                          bindLabel="text"
                          bindValue="id"
