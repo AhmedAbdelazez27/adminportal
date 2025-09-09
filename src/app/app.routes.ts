@@ -11,11 +11,12 @@ import { ResetpasswordComponent } from './features/auth/resetpassword/resetpassw
 import { StatisticsOfBeneficiaryFamiliesComponents } from './features/socialcases/charts/statistics-Benf-Families/statistics-Benf-Families.component';
 import { MainApplyServiceComponent } from './features/services/mainApplyService/mainApplyService.component';
 import { GlAccountComponent } from './features/finanial/operations/glAccount/glAccount.component';
+import { loginGuard } from './core/guards/auth/login.guard';
 
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
+  { path: 'login', canActivate:[loginGuard],component: LoginComponent },
   { path: 'forgot-password', component: ForgetpasswordComponent },
   { path: 'verify-otp', component: VerifyotpComponent },
   { path: 'reset-password', component: ResetpasswordComponent },
