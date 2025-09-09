@@ -12,15 +12,21 @@
         <form [formGroup]="otpForm" (ngSubmit)="submitOtp()">
           <div class="mb-4">
             <div class="row d-flex justify-content-center">
-              
+
               <div class="col-2" *ngFor="let key of objectKeys; let i = index">
-                <input
+                <!-- <input
                   type="text"
                   class="form-control text-center"
                   [formControlName]="key"
                   maxlength="1"
                   [attr.id]="'otp' + i"
-                />
+                /> -->
+                <input #otpInput type="text" class="form-control text-center" [formControlName]="key" maxlength="1"
+                  [attr.id]="'otp' + i" (input)="onInput($event, i)" (keydown)="onKeyDown($event, i)"
+                  (paste)="onPaste($event, i)" (focus)="otpInput.select()" inputmode="numeric" pattern="[0-9]*"
+                  autocomplete="one-time-code" dir="ltr" />
+
+
               </div>
             </div>
           </div>
@@ -31,8 +37,9 @@
             Verify OTP
           </button>
 
-          <p class="mt-4 text-center" >
-            Didn't receive OTP? . . . . <a (click)="resendOtp()" class="bold gold" style="cursor: pointer;">Resend OTP</a>
+          <p class="mt-4 text-center">
+            Didn't receive OTP? . . . . <a (click)="resendOtp()" class="bold gold" style="cursor: pointer;">Resend
+              OTP</a>
           </p>
         </form>
       </div>

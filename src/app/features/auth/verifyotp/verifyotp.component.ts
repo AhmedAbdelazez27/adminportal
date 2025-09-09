@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, QueryList, ViewChildren, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,13 +13,19 @@ import { SpinnerService } from '../../../core/services/spinner.service';
   templateUrl: './verifyotp.component.html',
   styleUrl: './verifyotp.component.scss'
 })
-export class VerifyotpComponent {
+export class VerifyotpComponent implements OnInit, AfterViewInit, OnDestroy {
   otpForm: FormGroup;
   submitted = false;
-  objectKeys: any[] = [];
+
+  objectKeys: string[] = ['otp1', 'otp2', 'otp3', 'otp4', 'otp5'];
+
   timer: number = 120;
-  forgetpasswordData :any;
-  tokenVerify:string='';
+  private timerId: any;
+
+  forgetpasswordData: any;
+  tokenVerify: string = '';
+
+  @ViewChildren('otpInput') inputs!: QueryList<ElementRef<HTMLInputElement>>;
 
   constructor(
     private fb: FormBuilder,
@@ -37,26 +43,124 @@ export class VerifyotpComponent {
       otp5: ['', Validators.required]
     });
 
-    if (localStorage.getItem("forgetpasswordData")) {
-      const data = localStorage.getItem("forgetpasswordData") || "{}" ;
+    if (localStorage.getItem('forgetpasswordData')) {
+      const data = localStorage.getItem('forgetpasswordData') || '{}';
       this.forgetpasswordData = JSON.parse(data);
       this.tokenVerify = this.forgetpasswordData?.sharedSecret;
-
     }
   }
 
   ngOnInit(): void {
-
-    this.objectKeys = Object.keys(this.otpForm.controls);
-
     this.startTimer();
   }
 
-  startTimer() {
-    setInterval(() => {
-      if (this.timer > 0) {
-        this.timer--;
+  ngAfterViewInit(): void {
+    setTimeout(() => this.focusIndex(0), 0);
+  }
+
+  ngOnDestroy(): void {
+    if (this.timerId) clearInterval(this.timerId);
+  }
+
+  // ====== Auto-Tab Helpers ======
+  private normalizeDigits(value: string): string {
+    const eastern = '٠١٢٣٤٥٦٧٨٩';
+    return value
+      .split('')
+      .map(ch => {
+        const idx = eastern.indexOf(ch);
+        return idx > -1 ? String(idx) : ch;
+      })
+      .join('')
+      .replace(/\D/g, '');
+  }
+
+  private focusIndex(i: number) {
+    const el = this.inputs?.get(i)?.nativeElement;
+    if (el) {
+      setTimeout(() => {
+        el.focus();
+        el.select();
+      });
+    }
+  }
+
+  onInput(e: Event, i: number) {
+    const input = e.target as HTMLInputElement;
+    let v = this.normalizeDigits(input.value);
+
+    if (!v) {
+      this.otpForm.get(this.objectKeys[i])?.setValue('');
+      return;
+    }
+
+    if (v.length > 1) {
+      const remaining = this.objectKeys.length - i;
+      const digits = v.slice(0, remaining).split('');
+      digits.forEach((d, offset) => {
+        this.otpForm.get(this.objectKeys[i + offset])?.setValue(d, { emitEvent: false });
+      });
+      const nextIndex = Math.min(i + digits.length, this.objectKeys.length - 1);
+      this.focusIndex(nextIndex);
+      return;
+    }
+
+    this.otpForm.get(this.objectKeys[i])?.setValue(v, { emitEvent: false });
+    if (i < this.objectKeys.length - 1) this.focusIndex(i + 1);
+  }
+
+  onKeyDown(e: KeyboardEvent, i: number) {
+    const ctrl = this.otpForm.get(this.objectKeys[i]);
+    const val = (ctrl?.value ?? '') as string;
+
+    const allowed = [
+      'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End',
+      'Backspace', 'Delete'
+    ];
+    if (allowed.includes(e.key) || (e.ctrlKey || e.metaKey)) {
+      // Backspace 
+      if (e.key === 'Backspace' && !val && i > 0) {
+        e.preventDefault();
+        this.otpForm.get(this.objectKeys[i - 1])?.setValue('', { emitEvent: false });
+        this.focusIndex(i - 1);
+      } else if (e.key === 'ArrowLeft' && i > 0) {
+        e.preventDefault();
+        this.focusIndex(i - 1);
+      } else if (e.key === 'ArrowRight' && i < this.objectKeys.length - 1) {
+        e.preventDefault();
+        this.focusIndex(i + 1);
       }
+      return;
+    }
+
+
+    if (e.key.length === 1 && !/[0-9٠-٩]/.test(e.key)) {
+      e.preventDefault();
+    }
+  }
+
+  onPaste(e: ClipboardEvent, i: number) {
+    e.preventDefault();
+    const text = e.clipboardData?.getData('text') ?? '';
+    const digits = this.normalizeDigits(text)
+      .slice(0, this.objectKeys.length - i)
+      .split('');
+
+    if (!digits.length) return;
+
+    digits.forEach((d, offset) => {
+      this.otpForm.get(this.objectKeys[i + offset])?.setValue(d, { emitEvent: false });
+    });
+
+    const nextIndex = Math.min(i + digits.length, this.objectKeys.length - 1);
+    this.focusIndex(nextIndex);
+  }
+  // ====== /Auto-Tab Helpers ======
+
+  startTimer() {
+    if (this.timerId) clearInterval(this.timerId);
+    this.timerId = setInterval(() => {
+      if (this.timer > 0) this.timer--;
     }, 1000);
   }
 
@@ -64,13 +168,10 @@ export class VerifyotpComponent {
     this.submitted = true;
     if (this.otpForm.invalid) return;
 
-    const otpCode = Object.values(this.otpForm.value).join('');
-    const sharedSecret = localStorage.getItem('sharedSecret') || '';
+    const otpCode = this.objectKeys.map(k => this.otpForm.get(k)?.value ?? '').join('');
 
     this.authService.verifyOtp({ sharedSecret: this.tokenVerify, otpCode }).subscribe({
       next: (res) => {
-        console.log(typeof res);
-
         if (res) {
           this.toastr.success(
             this.translate.instant('OTP.VERIFY_SUCCESS'),
@@ -84,7 +185,7 @@ export class VerifyotpComponent {
           );
         }
       },
-      error: (error: any) => {
+      error: () => {
         this.toastr.error(
           this.translate.instant('OTP.VERIFY_FAILED'),
           this.translate.instant('TOAST.TITLE.ERROR')
@@ -99,22 +200,19 @@ export class VerifyotpComponent {
       return;
     }
     this.spinnerService.show();
-    this.authService.otpSendViaEmail({email:this.forgetpasswordData?.email}).subscribe({
-      next: (res)=>{
-        console.log(res);
+    this.authService.otpSendViaEmail({ email: this.forgetpasswordData?.email }).subscribe({
+      next: (res) => {
         this.tokenVerify = res;
         this.spinnerService.hide();
-        this.timer = 120
+        this.timer = 120;
+        this.startTimer();
       },
-      error: (err)=>{
-        console.log(err);
+      error: () => {
         this.spinnerService.hide();
-        
       },
-      complete: ()=>{
+      complete: () => {
         this.spinnerService.hide();
-
       }
-    })
+    });
   }
 }

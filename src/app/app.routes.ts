@@ -27,8 +27,12 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: HomeComponent },
-     
+      {
+        path: 'home', component: HomeComponent,
+        canActivate: [authGuard],
+        data: { permission: 'Main' },
+      },
+
       {
         path: 'authentication',
         children: [
@@ -57,16 +61,16 @@ export const routes: Routes = [
               import(
                 './features/Authentication/department/department.routes'
               ).then((m) => m.departmentRoutes),
-             canActivate: [authGuard],
+            canActivate: [authGuard],
             data: { permission: 'Departments.View' },
           },
-           {
+          {
             path: 'entity',
             loadChildren: () =>
               import('./features/Authentication/entity/entity.routes').then(
                 (m) => m.entityRoutes
               ),
-           canActivate: [authGuard],
+            canActivate: [authGuard],
             data: { permission: 'Entity.View' },
           },
         ],
@@ -80,7 +84,7 @@ export const routes: Routes = [
               import(
                 './features/UserSetting/setting-regions-component/setting-regions-component.routes'
               ).then((m) => m.settingRegionsRoutes),
-            //canActivate: [authGuard],
+            canActivate: [authGuard],
             data: { permission: 'Settings.View' },
           },
           {
@@ -89,14 +93,14 @@ export const routes: Routes = [
               import(
                 './features/UserSetting/contact-information/contact-information.routes'
               ).then((m) => m.contactInformationRoutes),
-            //canActivate: [authGuard],
-            data: { permission: 'Settings.View' },
+            canActivate: [authGuard],
+            data: { pagePermission: 'ContactInformation' },
           },
           {
             path: 'polls',
             loadChildren: () =>
               import('./features/UserSetting/polls-component/polls-component.routes').then((m) => m.pollsComponentRoutes),
-            //canActivate: [authGuard],
+            canActivate: [authGuard],
             data: { permission: 'Settings.View' },
           },
         ],
@@ -110,8 +114,8 @@ export const routes: Routes = [
               import('./features/finanial/operations/operations.routes').then(
                 (m) => m.operationsRoutes
               ),
-            // canActivate: [authGuard],
-            // data: { permission: 'Financial.View' }
+            canActivate: [authGuard],
+            data: { permission: 'Financial.View' }
           },
           {
             path: 'reports',
@@ -119,18 +123,18 @@ export const routes: Routes = [
               import('./features/finanial/reports/reports.routes').then(
                 (m) => m.reportsRoutes
               ),
-            // canActivate: [authGuard],
-            // data: { permission: 'Financial.View' }
-          },{
+            canActivate: [authGuard],
+            data: { permission: 'Financial.View' }
+          }, {
             path: 'charts',
             loadChildren: () =>
               import('./features/finanial/charts/charts.routes').then(
                 (m) => m.chartsRoutes
               ),
-            // canActivate: [authGuard],
-            // data: { permission: 'Financial.View' }
+            canActivate: [authGuard],
+            data: { permission: 'Financial.View' }
           },
-          
+
         ],
       },
 
@@ -152,7 +156,7 @@ export const routes: Routes = [
                 (m) => m.ReportsRoutes
               ),
 
-          },{
+          }, {
             path: 'charts',
             loadChildren: () =>
               import('./features/sponsorship/charts/charts-sponsorship.routes').then(
@@ -237,7 +241,7 @@ export const routes: Routes = [
           import('./features/serviceSetting2/serviceSetting2.routes').then(
             (m) => m.serviceSetting2Routes
           ),
-       // canActivate: [authGuard],
+        canActivate: [authGuard],
         data: { permission: 'ServiceSetting.View' },
       },
 

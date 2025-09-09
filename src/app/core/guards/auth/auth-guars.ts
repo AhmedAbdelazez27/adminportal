@@ -25,6 +25,9 @@ export const authGuard: CanActivateFn = (route) => {
       router.navigate(['/no-permission']);
       return false;
     }
+  } else if (requiredPermission == 'Main') {
+    return true;
+
   } else if (requiredPermission) {
 
     if (permissions.includes(requiredPermission)) {
@@ -33,7 +36,7 @@ export const authGuard: CanActivateFn = (route) => {
       router.navigate(['/no-permission']);
       return false;
     }
-  } else{
+  } else {
     return false;
   }
 };
