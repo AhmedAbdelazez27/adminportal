@@ -138,6 +138,16 @@
               <label for="applicationDate" class="form-label">{{ 'ProjectsResourceName.applicationDate' | translate }}</label>
               <input type="date" name="applicationDate" class="form-control" [(ngModel)]="searchParams.applicationDate" placeholder="Search">
             </div>
+
+            <div class="col-xl-4 mb-3">
+              <label for="fromDate" class="form-label">{{ 'FinancialReportResourceName.fromDate' | translate}}</label>
+              <input type="date" name="fromDate" class="form-control" [(ngModel)]="searchParams.fromDate" placeholder="Search">
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label for="toDate" class="form-label">{{ 'FinancialReportResourceName.toDate' | translate}}</label>
+              <input type="date" name="toDate" class="form-control" [(ngModel)]="searchParams.toDate" placeholder="Search">
+            </div>
           </div>
         </form>
 
@@ -188,158 +198,156 @@
       </app-generic-data-table>
       
     <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl">
+      <div class="modal-dialog modal-xl custom-modal-width">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="editLabel">{{ 'ProjectsResourceName.Title' | translate }}</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
-        <div class="modal-body">
-          <div class="border-bottom mb-4">
-            <h4 class="gold bold">{{ 'ProjectsResourceName.Title' | translate }}</h4>
+          <div class="modal-body">
+            <div class="border-bottom mb-4">
+              <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>
 
-            <div class="row">
-              <div class="col-xxl-4 col-xl-6">
-                <label for="projecT_NUMBER" class="black bold">{{ 'ProjectsResourceName.projecT_NUMBER' | translate }}</label>
-                <p id="projecT_NUMBER">{{ loadformData.projecT_NUMBER }}</p>
+              <div class="row">
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="projecT_NUMBER" class="black bold">{{ 'ProjectsResourceName.projecT_NUMBER' | translate }}</label>
+                  <p id="projecT_NUMBER">{{ loadformData.projecT_NUMBER }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputapplicatioN_DATE" class="black bold">{{ 'ProjectsResourceName.applicatioN_DATE' | translate }}</label>
+                  <p id="applicatioN_DATE">{{ loadformData.applicatioN_DATEstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputstatuS_DESC" class="black bold">{{ 'ProjectsResourceName.statuS_DESC' | translate }}</label>
+                  <p id="statuS_DESC">{{ loadformData.statuS_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputprojecT_NAME" class="black bold">{{ 'ProjectsResourceName.projecT_NAME' | translate }}</label>
+                  <p id="projecT_NAME">{{ loadformData.projecT_NAME }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputprojecT_TYPE_DESC" class="black bold">{{ 'ProjectsResourceName.projecT_TYPE_DESC' | translate }}</label>
+                  <p id="projecT_TYPE_DESC">{{ loadformData.projecT_TYPE_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputsC_PROJECTS_CATEGORIES_DESC" class="black bold">{{ 'ProjectsResourceName.sC_PROJECTS_CATEGORIES_DESC' | translate }}</label>
+                  <p id="sC_PROJECTS_CATEGORIES_DESC">{{ loadformData.sC_PROJECTS_CATEGORIES_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputbeneficentname" class="black bold">{{ 'ProjectsResourceName.beneficentname' | translate }}</label>
+                  <p id="beneficentname">{{ loadformData.beneficentname }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcost" class="black bold">{{ 'ProjectsResourceName.cost' | translate }}</label>
+                  <p id="cost">{{ loadformData.cost }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcurrancY_NAME" class="black bold">{{ 'ProjectsResourceName.currancY_NAME' | translate }}</label>
+                  <p id="currancY_NAME">{{ loadformData.currancY_NAME }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcurrancY_RATE" class="black bold">{{ 'ProjectsResourceName.currancY_RATE' | translate }}</label>
+                  <p id="currancY_RATE">{{ loadformData.currancY_RATE }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputenD_DATE" class="black bold">{{ 'ProjectsResourceName.enD_DATE' | translate }}</label>
+                  <p id="enD_DATE">{{ loadformData.enD_DATEstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputstarT_DATE" class="black bold">{{ 'ProjectsResourceName.starT_DATE' | translate }}</label>
+                  <p id="starT_DATE">{{ loadformData.starT_DATEstr }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputmanG_PERCENT" class="black bold">{{ 'ProjectsResourceName.manG_PERCENT' | translate }}</label>
+                  <p id="manG_PERCENT">{{ loadformData.manG_PERCENT }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcompletioN_PERCENT" class="black bold">{{ 'ProjectsResourceName.completioN_PERCENT' | translate }}</label>
+                  <p id="completioN_PERCENT">{{ loadformData.completioN_PERCENT }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputarabiC_COUNTRY_NAME" class="black bold">{{ 'ProjectsResourceName.arabiC_COUNTRY_NAME' | translate }}</label>
+                  <p id="arabiC_COUNTRY_NAME">{{ loadformData.arabiC_COUNTRY_NAME }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputprojecT_SITE" class="black bold">{{ 'ProjectsResourceName.projecT_SITE' | translate }}</label>
+                  <p id="projecT_SITE">{{ loadformData.projecT_SITE }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputprojecT_DESC" class="black bold">{{ 'ProjectsResourceName.projecT_DESC' | translate }}</label>
+                  <p id="projecT_DESC">{{ loadformData.projecT_DESC }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputcompletioN_PERCENT" class="black bold">{{ 'ProjectsResourceName.completioN_PERCENT' | translate }}</label>
+                  <p id="completioN_PERCENT">{{ loadformData.completioN_PERCENT }}</p>
+                </div>
+
+                <div class="col-xxl-4 col-xl-6">
+                  <label for="inputimplementatioN_DESC" class="black bold">{{ 'ProjectsResourceName.implementatioN_DESC' | translate }}</label>
+                  <p id="implementatioN_DESC">{{ loadformData.implementatioN_DESC }}</p>
+                </div>
+              </div>
+            </div>
+
+            <ul class="nav nav-tabs mb-3" id="voucherTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active gold bold" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-tab-pane" type="button" role="tab">
+                  {{ 'ProjectsResourceName.Tab1_Title' | translate }}
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link gold bold" id="check-tab" data-bs-toggle="tab" data-bs-target="#check-tab-pane" type="button" role="tab">
+                  {{ 'ProjectsResourceName.Tab2_Title' | translate }}
+                </button>
+              </li>
+            </ul>
+
+            <div class="tab-content" id="voucherTabsContent">
+              <div class="tab-pane fade show active" id="details-tab-pane" role="tabpanel">
+                <app-generic-data-table [columnDefs]="columnDefsLineData"
+                                        [rowData]="loadformLineData"
+                                        [totalCount]="paginationLineData.totalCount"
+                                        [pageSize]="paginationLineData.take"
+                                        [currentPage]="paginationLineData.currentPage - 1"
+                                        [columnHeaderMap]="columnHeaderMap"
+                                        (pageChange)="onPageChangeLineData($event)"
+                                        [showActionColumn]="false"
+                                        (search)="onTableSearchLineData($event)">
+                </app-generic-data-table>
               </div>
 
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputapplicatioN_DATE" class="black bold">{{ 'ProjectsResourceName.applicatioN_DATE' | translate }}</label>
-                <p id="applicatioN_DATE">{{ loadformData.applicatioN_DATEstr }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputstatuS_DESC" class="black bold">{{ 'ProjectsResourceName.statuS_DESC' | translate }}</label>
-                <p id="statuS_DESC">{{ loadformData.statuS_DESC }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputprojecT_NAME" class="black bold">{{ 'ProjectsResourceName.projecT_NAME' | translate }}</label>
-                <p id="projecT_NAME">{{ loadformData.projecT_NAME }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputprojecT_TYPE_DESC" class="black bold">{{ 'ProjectsResourceName.projecT_TYPE_DESC' | translate }}</label>
-                <p id="projecT_TYPE_DESC">{{ loadformData.projecT_TYPE_DESC }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputsC_PROJECTS_CATEGORIES_DESC" class="black bold">{{ 'ProjectsResourceName.sC_PROJECTS_CATEGORIES_DESC' | translate }}</label>
-                <p id="sC_PROJECTS_CATEGORIES_DESC">{{ loadformData.sC_PROJECTS_CATEGORIES_DESC }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputbeneficentname" class="black bold">{{ 'ProjectsResourceName.beneficentname' | translate }}</label>
-                <p id="beneficentname">{{ loadformData.beneficentname }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputcost" class="black bold">{{ 'ProjectsResourceName.cost' | translate }}</label>
-                <p id="cost">{{ loadformData.coststr }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputcurrancY_NAME" class="black bold">{{ 'ProjectsResourceName.currancY_NAME' | translate }}</label>
-                <p id="currancY_NAME">{{ loadformData.currancY_NAME }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputcurrancY_RATE" class="black bold">{{ 'ProjectsResourceName.currancY_RATE' | translate }}</label>
-                <p id="currancY_RATE">{{ loadformData.currancY_RATEstr }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputenD_DATE" class="black bold">{{ 'ProjectsResourceName.enD_DATE' | translate }}</label>
-                <p id="enD_DATE">{{ loadformData.enD_DATEstr }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputstarT_DATE" class="black bold">{{ 'ProjectsResourceName.starT_DATE' | translate }}</label>
-                <p id="starT_DATE">{{ loadformData.starT_DATEstr }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputmanG_PERCENT" class="black bold">{{ 'ProjectsResourceName.manG_PERCENT' | translate }}</label>
-                <p id="manG_PERCENT">{{ loadformData.manG_PERCENTstr }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputcompletioN_PERCENT" class="black bold">{{ 'ProjectsResourceName.completioN_PERCENT' | translate }}</label>
-                <p id="completioN_PERCENT">{{ loadformData.completioN_PERCENTstr }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputarabiC_COUNTRY_NAME" class="black bold">{{ 'ProjectsResourceName.arabiC_COUNTRY_NAME' | translate }}</label>
-                <p id="arabiC_COUNTRY_NAME">{{ loadformData.arabiC_COUNTRY_NAME }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputprojecT_SITE" class="black bold">{{ 'ProjectsResourceName.projecT_SITE' | translate }}</label>
-                <p id="projecT_SITE">{{ loadformData.projecT_SITE }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputprojecT_DESC" class="black bold">{{ 'ProjectsResourceName.projecT_DESC' | translate }}</label>
-                <p id="projecT_DESC">{{ loadformData.projecT_DESC }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputcompletioN_PERCENT" class="black bold">{{ 'ProjectsResourceName.completioN_PERCENT' | translate }}</label>
-                <p id="completioN_PERCENT">{{ loadformData.completioN_PERCENTstr }}</p>
-              </div>
-
-              <div class="col-xxl-4 col-xl-6">
-                <label for="inputimplementatioN_DESC" class="black bold">{{ 'ProjectsResourceName.implementatioN_DESC' | translate }}</label>
-                <p id="implementatioN_DESC">{{ loadformData.implementatioN_DESC }}</p>
+              <div class="tab-pane fade" id="check-tab-pane" role="tabpanel">
+                <app-generic-data-table [columnDefs]="columnDefsDetailsData"
+                                        [rowData]="loadformDetailsData"
+                                        [totalCount]="paginationDetailsData.totalCount"
+                                        [pageSize]="paginationDetailsData.take"
+                                        [currentPage]="paginationDetailsData.currentPage - 1"
+                                        [columnHeaderMap]="columnHeaderMap"
+                                        (pageChange)="onPageChangeDetailsData($event)"
+                                        [showActionColumn]="false"
+                                        (search)="onTableSearchDetailsData($event)">
+                </app-generic-data-table>
               </div>
             </div>
           </div>
-        </div>
-
-
-        <ul class="nav nav-tabs mb-3" id="voucherTabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active gold bold" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-tab-pane" type="button" role="tab">
-              {{ 'ProjectsResourceName.Tab1_Title' | translate }}
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link gold bold" id="check-tab" data-bs-toggle="tab" data-bs-target="#check-tab-pane" type="button" role="tab">
-              {{ 'ProjectsResourceName.Tab2_Title' | translate }}
-            </button>
-          </li>
-        </ul>
-
-        <div class="tab-content" id="voucherTabsContent">
-          <div class="tab-pane fade show active" id="details-tab-pane" role="tabpanel">
-            <app-generic-data-table [columnDefs]="columnDefsLineData"
-                                    [rowData]="loadformLineData"
-                                    [totalCount]="paginationLineData.totalCount"
-                                    [pageSize]="paginationLineData.take"
-                                    [currentPage]="paginationLineData.currentPage - 1"
-                                    [columnHeaderMap]="columnHeaderMap"
-                                    (pageChange)="onPageChangeLineData($event)"
-                                    [showActionColumn]="false"
-                                    (search)="onTableSearchLineData($event)">
-            </app-generic-data-table>
-          </div>
-
-          <div class="tab-pane fade" id="check-tab-pane" role="tabpanel">
-            <app-generic-data-table [columnDefs]="columnDefsDetailsData"
-                                    [rowData]="loadformDetailsData"
-                                    [totalCount]="paginationDetailsData.totalCount"
-                                    [pageSize]="paginationDetailsData.take"
-                                    [currentPage]="paginationDetailsData.currentPage - 1"
-                                    [columnHeaderMap]="columnHeaderMap"
-                                    (pageChange)="onPageChangeDetailsData($event)"
-                                    [showActionColumn]="false"
-                                    (search)="onTableSearchDetailsData($event)">
-            </app-generic-data-table>
-          </div>
-        </div>
-
         <div class="modal-footer">
           <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
         </div>

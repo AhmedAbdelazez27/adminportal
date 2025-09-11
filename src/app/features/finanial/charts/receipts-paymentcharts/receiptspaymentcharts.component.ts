@@ -11,6 +11,7 @@ import { ChartsService } from '../../../../core/services/Financial/charts/charts
 import { Select2Service } from '../../../../core/services/Select2.service';
 import { EntityService } from '../../../../core/services/entit.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
+import { ChartUtilsService } from '../../../../../shared/services/chart-utils.service';
 
 @Component({
   selector: 'app-receiptspaymentcharts',
@@ -41,6 +42,7 @@ export class ReceiptsPaymentChartsComponent implements OnInit {
 
   categories3: string[] = [];
   seriesData3: any[] = [];
+  currentLang: string = "en";
 
   constructor(
     private _Select2Service: Select2Service,
@@ -49,8 +51,13 @@ export class ReceiptsPaymentChartsComponent implements OnInit {
     private toastr: ToastrService,
     private translate: TranslateService,
     private entityService: EntityService,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private chartUtils: ChartUtilsService
+  ) {
+    this.translate.onLangChange.subscribe(lang => {
+      this.currentLang = lang.lang;
+    });
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -68,7 +75,7 @@ export class ReceiptsPaymentChartsComponent implements OnInit {
       next: (res) => {
         this.yearsList = res.years.results;
         this.chartTypes = res.chartTypes;
-        this.entities = [{ id: "", text: 'No Select' }, ...res.entities?.results];
+        this.entities = [{ id: "", text: this.translate.instant('Common.Select') }, ...res.entities?.results];
         this.selectedEntity = "";
 
         const maxIdItem = res.years.results.reduce((maxItem: any, currentItem: any) => {
@@ -186,38 +193,20 @@ export class ReceiptsPaymentChartsComponent implements OnInit {
   }
 
   parseChartData(res: any, categoriesName: string, seriesDataName: string) {
-    if (!res || !res.data || res.data.length === 0) {
-      this.setDefaultValues(categoriesName, seriesDataName);
-    } else {
+    const result = this.chartUtils.parseChartData(res, this.currentLang, {
+      useIndividualSeries: false, // Use traditional series approach for this component
+      valueFields: ['value1', 'value2', 'value3', 'value4']
+    });
 
-      this[categoriesName] = res.data.map((item: any) => item.nameEn);
-
-
-      const seriesAData = res.data.map((item: any) => item.value1);
-      const seriesBData = res.data.map((item: any) => item.value2);
-
-
-      this[seriesDataName] = [
-        { name: 'Series A', data: seriesAData, color: '#72C5C2' },
-        { name: 'Series B', data: seriesBData, color: '#114D7D' }
-      ];
-    }
+    this[categoriesName] = result.categories;
+    this[seriesDataName] = result.seriesData;
   }
 
 
   setDefaultValues(categoriesName: string, seriesDataName: string) {
-    this[categoriesName] = ['Category 1', 'Category 2', 'Category 3'];
-    this[seriesDataName] = [
-      { name: 'Series A', data: this.generateRandomValues(3), color: '#72C5C2' },
-      { name: 'Series B', data: this.generateRandomValues(3), color: '#114D7D' }
-    ];
+    const result = this.chartUtils.parseChartData(null, this.currentLang);
+    this[categoriesName] = result.categories;
+    this[seriesDataName] = result.seriesData;
   }
 
-  generateRandomValues(count: number): number[] {
-    const randomValues: number[] = [];
-    for (let i = 0; i < count; i++) {
-      randomValues.push(Math.floor(Math.random() * 1001));
-    }
-    return randomValues;
-  }
 }

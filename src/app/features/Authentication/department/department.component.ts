@@ -65,13 +65,19 @@ export class DepartmentComponent implements OnInit {
   selectedDepartment: DepartmentDto | null = null;
   isLoadingUsers: boolean = false;
 
+  // Status options for ng-select
+  statusOptions: any[] = [
+    { id: undefined, text: 'All' },
+    { id: true, text: 'Active' },
+    { id: false, text: 'Inactive' }
+  ];
+
   // Table configuration
   headers: string[] = [
     '#',
     'Arabic Name',
     'English Name',
     'Status',
-    'Last Modified',
     'Actions',
   ];
   headerKeys: string[] = [
@@ -79,7 +85,6 @@ export class DepartmentComponent implements OnInit {
     'aname',
     'ename',
     'isActive',
-    'last_Modify',
     'actions',
   ];
   showAction: boolean = true;
@@ -129,7 +134,6 @@ export class DepartmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDepartments(1);
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
 
         this.buildColumnDefs();
@@ -158,6 +162,7 @@ export class DepartmentComponent implements OnInit {
     this.searchParams.skip = skip;
     this.searchParams.take = event.pageSize;
     this.searchParams.isActive = this.isActiveFilter;
+    this.searchParams.searchValue = this.searchValue;
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
     cleanedFilters.searchValue = cleanedFilters.searchValue != null ? cleanedFilters.searchValue : '';
 
@@ -248,7 +253,7 @@ export class DepartmentComponent implements OnInit {
       return;
     }
 
-    this.getDepartments(page, this.searchValue);
+    this.getLoadDataGrid({ pageNumber: page, pageSize: this.pagination.take });
   }
 
   changePerPage(event: any): void {
@@ -256,18 +261,20 @@ export class DepartmentComponent implements OnInit {
     if (!isNaN(perPage) && perPage > 0) {
       this.itemsPerPage = perPage;
       this.currentPage = 1; // Reset to first page
-      this.getDepartments(1, this.searchValue);
+      this.getLoadDataGrid({ pageNumber: 1, pageSize: perPage });
     }
   }
 
   onSearch(): void {
-    this.getDepartments(1, this.searchValue);
+    this.searchParams.searchValue = this.searchValue;
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
   clear(): void {
     this.searchValue = '';
     this.isActiveFilter = undefined;
-    this.getDepartments(1, '');
+    this.searchParams.searchValue = '';
+    this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
   }
 
   // Form submission
@@ -295,7 +302,7 @@ export class DepartmentComponent implements OnInit {
           this.toastr.success(
             this.translate.instant('TOAST.DEPARTMENT_CREATED')
           );
-          this.getDepartments(this.currentPage, this.searchValue);
+          this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
           this.closeModal();
         },
         error: (err) => {
@@ -317,7 +324,7 @@ export class DepartmentComponent implements OnInit {
           this.toastr.success(
             this.translate.instant('TOAST.DEPARTMENT_UPDATED')
           );
-          this.getDepartments(this.currentPage, this.searchValue);
+          this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
           this.closeModal();
         },
         error: (err) => {
@@ -397,7 +404,7 @@ export class DepartmentComponent implements OnInit {
               '.btn-delete.btn-close'
             ) as HTMLElement;
             closeBtn?.click();
-            this.getDepartments(this.currentPage, this.searchValue);
+            this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
           },
           error: (error) => {
             this.spinnerService.hide();
@@ -528,7 +535,6 @@ export class DepartmentComponent implements OnInit {
             }">${isActive ? 'Active' : 'Inactive'}</span>`;
         },
       },
-      { headerName: this.translate.instant('AuthenticationResorceName.lastModification'), field: 'last_Modify', width: 200 },
     ];
   }
 

@@ -181,6 +181,39 @@
             </div>
 
                       <div id="mainInfo">
+                        <!-- Permit Information Section -->
+                        <div class="main-container mb-4" *ngIf="requestAdvertisement?.parentMainApplyService">
+                          <div class="step-content mb-4">
+                            <h5 class="mb-3 gold">{{ 'ADVERTISEMENT.PERMIT_INFORMATION' | translate }}</h5>
+                            
+                            <div class="row">
+                              <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.applyNo' | translate }}</label>
+                                <p class="mb-0">{{ requestAdvertisement?.parentMainApplyService?.applyNo || '-' }}</p>
+                              </div>
+
+                              <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.applyDate' | translate }}</label>
+                                <p class="mb-0">{{ formatDate(requestAdvertisement?.parentMainApplyService?.applyDate) || '-' }}</p>
+                              </div>
+
+                              <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.lastStatus' | translate }}</label>
+                                <p class="mb-0">
+                                  <span class="badge badge-brown">
+                                    {{ getLocalizedStatus(requestAdvertisement?.parentMainApplyService?.lastStatus, requestAdvertisement?.parentMainApplyService?.lastStatusEN) }}
+                                  </span>
+                                </p>
+                              </div>
+
+                              <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">{{ 'mainApplyServiceResourceName.serviceName' | translate }}</label>
+                                <p class="mb-0">{{ getLocalizedServiceName(requestAdvertisement?.parentMainApplyService?.service?.serviceName, requestAdvertisement?.parentMainApplyService?.service?.serviceNameEn) || '-' }}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                         <div class="main-container mb-4">
                           <div class="step-content mb-4">
                             <h5 class="mb-3 gold">{{ 'SHARED.TABS.BASIC_INFORMATION' | translate }}</h5>

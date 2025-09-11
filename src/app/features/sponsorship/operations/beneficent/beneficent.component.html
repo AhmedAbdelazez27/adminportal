@@ -34,10 +34,7 @@
           <div class="row mb-3">
             <div class="col-xl-4 mb-3">
               <label for="entityId" class="form-label">
-                {{
- 'beneficentResourceName.EntityId' |
-                                    translate
-                }}
+                {{ 'beneficentResourceName.EntityId' |  translate }}
               </label>
               <ng-select class="ng-select-custom" [items]="entitySelect2" bindLabel="text"
                          bindValue="id" [(ngModel)]="selectedentitySelect2Obj" name="entitySelect2"
@@ -48,9 +45,7 @@
             </div>
             <div class="col-xl-4 mb-3">
               <label for="beneficentName" class="form-label">
-                {{
-                                    'beneficentResourceName.beneficentName' | translate
-                }}
+                {{ 'beneficentResourceName.beneficentName' | translate }}
               </label>
               <ng-select class="ng-select-custom" [items]="beneficentNameSelect2" bindLabel="text"
                          bindValue="id" [(ngModel)]="selectedbeneficentNameSelect2Obj" name="beneficentNameSelect2"
@@ -63,9 +58,7 @@
             </div>
             <div class="col-xl-4 mb-3">
               <label for="beneficentNumber" class="form-label">
-                {{
-                                    'beneficentResourceName.beneficentNumber' | translate
-                }}
+                {{ 'beneficentResourceName.beneficentNumber' | translate }}
               </label>
               <input type="text" name="beneficentNumber" class="form-control"
                      [(ngModel)]="searchParams.beneficentNumber" placeholder="Search">
@@ -73,10 +66,7 @@
 
             <div class="col-xl-4 mb-3">
               <label for="phoneNumber" class="form-label">
-                {{
- 'beneficentResourceName.phoneNumber' |
-                                    translate
-                }}
+                {{ 'beneficentResourceName.phoneNumber' | translate }}
               </label>
               <input type="text" name="phoneNumber" class="form-control"
                      [(ngModel)]="searchParams.phoneNumber" placeholder="Search">
@@ -130,7 +120,7 @@
     
 
   <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl custom-modal-width">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="editLabel">
@@ -141,14 +131,12 @@
 
         <div class="modal-body">
           <div class="border-bottom mb-4">
-            <h4 class="gold bold">Information</h4>
+            <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>
 
             <div class="row">
               <div class="col-xxl-4 col-xl-6">
                 <label class="bold black">
-                  {{
- 'beneficentResourceName.beneficentNumber' | translate
-                  }}
+                  {{ 'beneficentResourceName.beneficentNumber' | translate }}
                 </label>
                 <p id="beneficenT_NO">{{loadformData.beneficenT_NO}}</p>
               </div>
@@ -158,9 +146,7 @@
               </div>
               <div class="col-xxl-4 col-xl-6">
                 <label class="bold black">
-                  {{
- 'beneficentResourceName.beneficentName' | translate
-                  }}
+                  {{ 'beneficentResourceName.beneficentName' | translate }}
                 </label>
                 <p id="beneficentname">{{loadformData.beneficentname}}</p>
               </div>
@@ -198,9 +184,7 @@
               </div>
               <div class="col-xxl-4 col-xl-6">
                 <label class="bold black">
-                  {{
- 'beneficentResourceName.startDate' | translate
-                  }}
+                  {{ 'beneficentResourceName.startDate' | translate }}
                 </label>
                 <p id="startinG_DATE">{{loadformData.startinG_DATE}}</p>
               </div>
@@ -226,46 +210,12 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-            {{
-                            'Common.Close' | translate
-            }}
+            {{ 'Common.Close' | translate }}
           </button>
         </div>
       </div>
     </div>
   </div>
-
-
-
-
-  <!-- Modal -->
-  <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="deleteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="deleteLabel">Delete</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"
-                 fill="none">
-              <path d="M87.7914 21.7916C81.0831 21.1249 74.3748 20.6249 67.6248 20.2499V20.2083L66.7081 14.7916C66.0831 10.9583 65.1664 5.20825 55.4164 5.20825H44.4998C34.7914 5.20825 33.8748 10.7083 33.2081 14.7499L32.3331 20.0833C28.4581 20.3333 24.5831 20.5833 20.7081 20.9583L12.2081 21.7916C10.4581 21.9583 9.20809 23.4999 9.37476 25.2083C9.54143 26.9166 11.0414 28.1666 12.7914 27.9999L21.2914 27.1666C43.1248 24.9999 65.1248 25.8333 87.2081 28.0416C87.3331 28.0416 87.4164 28.0416 87.5414 28.0416C89.1248 28.0416 90.4998 26.8333 90.6664 25.2083C90.7914 23.4999 89.5414 21.9583 87.7914 21.7916Z"
-                    fill="#CA4832" />
-              <path d="M80.1248 33.9167C79.1248 32.8751 77.7498 32.2917 76.3331 32.2917H23.6664C22.2498 32.2917 20.8331 32.8751 19.8748 33.9167C18.9164 34.9584 18.3748 36.3751 18.4581 37.8334L21.0414 80.5834C21.4998 86.9167 22.0831 94.8334 36.6248 94.8334H63.3748C77.9164 94.8334 78.4998 86.9584 78.9581 80.5834L81.5414 37.8751C81.6248 36.3751 81.0831 34.9584 80.1248 33.9167ZM56.9164 73.9584H43.0414C41.3331 73.9584 39.9164 72.5417 39.9164 70.8334C39.9164 69.1251 41.3331 67.7084 43.0414 67.7084H56.9164C58.6248 67.7084 60.0414 69.1251 60.0414 70.8334C60.0414 72.5417 58.6248 73.9584 56.9164 73.9584ZM60.4164 57.2917H39.5831C37.8748 57.2917 36.4581 55.8751 36.4581 54.1667C36.4581 52.4584 37.8748 51.0417 39.5831 51.0417H60.4164C62.1248 51.0417 63.5414 52.4584 63.5414 54.1667C63.5414 55.8751 62.1248 57.2917 60.4164 57.2917Z"
-                    fill="#CA4832" />
-            </svg>
-            <h4 class="mt-3">Are you sure you want delete <br /> <span>XXXXXX</span></h4>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-gold">Delete</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>
 
 

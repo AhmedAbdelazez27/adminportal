@@ -12,6 +12,8 @@ export class filterprojectsDto {
   countryCode?: string | null = null;
   projectNumber?: string | null = null;
   applicationDate?: string | null = null;
+  fromDate?: string | null = null;
+  toDate?: string | null = null;
 
   entityIdstr?: string | null = null;
   projectNamestr?: string | null = null;

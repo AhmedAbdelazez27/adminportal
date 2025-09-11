@@ -9,10 +9,11 @@ export class FilterApPaymentsTransactionHDRDto {
   orderByValue: string = 'PAYMENT_ID asc';
   take: number|number = 10;
   skip: number = 0;
-
   entityIdstr: string | null = null;
   vendorNamestr: string | null = null;
   paymentTypeDescstr: string | null = null;
+  fromDate?: string | null = null;
+  toDate?: string | null = null;
 }
 
 

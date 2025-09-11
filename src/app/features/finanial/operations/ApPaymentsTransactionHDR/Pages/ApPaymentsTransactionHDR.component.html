@@ -49,7 +49,15 @@
               <label for="paymentDate" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.PaymentDate' | translate }}</label>
               <input type="date" name="PaymentDate" class="form-control" [(ngModel)]="searchParams.paymentDate" placeholder="Select date">
             </div>
+   <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'FinancialReportResourceName.fromDate' | translate }}</label>
+              <input type="date" class="form-control" [(ngModel)]="searchParams.fromDate" name="fromDate">
+            </div>
 
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'FinancialReportResourceName.toDate' | translate }}</label>
+              <input type="date" class="form-control" [(ngModel)]="searchParams.toDate" name="toDate">
+            </div>
             <div class="col-xl-4 mb-3">
               <label for="vendorNumber" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.VendorNumber' | translate }}</label>
               <input type="text" name="VendorNumber" class="form-control" [(ngModel)]="searchParams.vendorNumber" placeholder="Search">
@@ -152,7 +160,7 @@
 
         <div class="modal-body">
           <div class="border-bottom mb-4">
-            <h4 class="gold bold">{{ 'ApPaymentsTransactionHDRResourceName.Title' | translate }}</h4>
+          <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>  
 
             <div class="row">
               <div class="col-xxl-4 col-xl-6">
@@ -177,7 +185,9 @@
 
               <div class="col-xxl-4 col-xl-6">
                 <label for="inputamounTstr" class="black bold">{{ 'ApPaymentsTransactionHDRResourceName.PaymentAmount' | translate }}</label>
-                <p id="amounTstr">{{ loadformData.amounTstr }}</p>
+                <p id="amounTstr">{{ formatNumericCell(loadformData?.amounTstr, 2, 'en-US') }}</p>
+
+
               </div>
 
               <div class="col-xxl-4 col-xl-6">

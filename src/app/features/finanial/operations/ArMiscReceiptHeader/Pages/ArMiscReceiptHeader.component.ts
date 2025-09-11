@@ -14,12 +14,12 @@ import { FilterArMiscReceiptHeaderDto, FilterArMiscReceiptHeaderByIdDto, ArMiscR
 import { ArMiscReceiptHeaderService } from '../../../../../core/services/Financial/Operation/ArMiscReceiptHeader.service';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../../shared/generic-data-table/generic-data-table.component';
+import { formatNumericCell } from '../../../../../shared/utils/value-formatters';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-ArMiscReceiptHeader',
-  standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent],
   templateUrl: './ArMiscReceiptHeader.component.html',
   styleUrls: ['./ArMiscReceiptHeader.component.scss']
@@ -28,6 +28,7 @@ declare var bootstrap: any;
 export class ArMiscReceiptHeaderComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
   @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
+  public formatNumericCell = formatNumericCell;
 
   private destroy$ = new Subject<void>();
   userEntityForm!: FormGroup;
@@ -426,30 +427,19 @@ export class ArMiscReceiptHeaderComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
       { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.DocumentNumber'), field: 'receipT_NUMBER', width: 200 },
       { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.MISC_RECEIPT_DATE'), field: 'misC_RECEIPT_DATEstr', width: 200 },
       { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.BENEFICIARY_NAME'), field: 'beneficiarY_NAME', width: 200 },
-      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.AMOUNT'), field: 'amounTstr', width: 200 },
+      { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.AMOUNT'), field: 'amounTstr', width: 200,
+        valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US')
+       },
       { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.Status'), field: 'posted', width: 200 },
     ];
 
 
 
     this.columnDefsLineData = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.paginationLineData.currentPage - 1) * this.paginationLineData.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
+
       { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.RECEIPT_TYPE_DESC'), field: 'receipT_TYPE_DESC', width: 200 },
       { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.Accountnumber'), field: 'accountnumber', width: 200 },
       { headerName: this.translate.instant('ArMiscReceiptHeaderResourceName.AccountNameAr'), field: 'accountNameAr', width: 200 },

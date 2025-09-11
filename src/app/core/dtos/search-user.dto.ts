@@ -8,6 +8,8 @@ export class FilterUserDto {
   userType: number | null = null;
   userStatus: number | null = null;
   applyDate: Date | null = null;
+  DateFrom: Date | null = null;
+  DateTo: Date | null = null;
   searchValue: string | null = null;
   skip: number = 1;
   take: number = 10;

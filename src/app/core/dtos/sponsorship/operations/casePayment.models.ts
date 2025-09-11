@@ -22,7 +22,9 @@ export class filtercasePaymentByIdDto {
   entityId?: string | null = null;
   composeKey?: string | null = null;
 }
-
+export class filtercasePaymentBycomposeKeyDto {
+  composeKey?: string | null = null;
+}
 export class casePaymentDto {
   rowsCount?: string | null = null;
   composeKey?: string | null = null;

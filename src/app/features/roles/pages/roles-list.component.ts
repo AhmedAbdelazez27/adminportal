@@ -60,8 +60,10 @@ export class RolesListComponent {
     searchKeyword: string = '';
     selectedModuleFilter: string = 'all';
     originalModules: any[] = [];
+    moduleOptions: any[] = [];
     selectedUsers: any[] = [];
     originalUsers: any[] = [];
+    allScreensSelected: boolean = false;
 
     searchParams = new PagedDto();
     searchInput$ = new Subject<string>();
@@ -93,6 +95,10 @@ export class RolesListComponent {
     }
 
     ngOnInit(): void {
+        // Initialize search parameters
+        this.searchParams.searchValue = '';
+        this.searchText = '';
+        
         this.getRoles(this.currentPage, this.searchValue);
         this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
         this.getUsersList();
@@ -172,24 +178,30 @@ export class RolesListComponent {
         if (event > this.pages.length) event = this.pages.length;
 
         this.currentPage = event;
-        this.getRoles(event, this.searchValue);
+        this.pagination.currentPage = event;
+        this.getLoadDataGrid({ pageNumber: event, pageSize: this.pagination.take });
     }
 
     changePerPage(event: any): void {
         const perPage = parseInt(event.target.value, 10);
         if (!isNaN(perPage)) {
             this.itemsPerPage = perPage;
+            this.pagination.take = perPage;
             this.calculatePages();
-            this.getRoles(1, this.searchValue);
+            this.getLoadDataGrid({ pageNumber: 1, pageSize: perPage });
         }
     }
     onSearch(): void {
-        this.getRoles(1, this.searchValue);
+        this.searchText = this.searchValue;
+        this.searchParams.searchValue = this.searchValue;
+        this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
     }
 
     clear() {
         this.searchValue = '';
-        this.onSearch();
+        this.searchText = '';
+        this.searchParams.searchValue = '';
+        this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
     }
     // Save new role
     saveRole(): void {
@@ -201,7 +213,7 @@ export class RolesListComponent {
                     this.translate.instant('TOAST.TITLE.SUCCESS')
                 );
                 this.spinnerService.hide(); // Hide spinner after saving role
-                this.getRoles(1);
+                this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
                 this.newRole = { name: '' };
             },
             (error) => {
@@ -210,7 +222,6 @@ export class RolesListComponent {
                     this.translate.instant('TOAST.TITLE.ERROR')
                 );
                 this.spinnerService.hide(); // Hide spinner on failure
-                console.error('Error saving role:', error);
             }
         );
     }
@@ -237,7 +248,7 @@ export class RolesListComponent {
                     '.closeUpdate.btn-close'
                 ) as HTMLElement;
                 closeBtn?.click();
-                this.getRoles(1);
+                this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
             },
             (error) => {
                 this.toastr.error(
@@ -260,11 +271,18 @@ export class RolesListComponent {
     deleteRole(): void {
         if (this.roleToSelected) {
             this.spinnerService.show(); // Show spinner before deleting role
-            this.roleService.deleteRole(this.roleToSelected.id).subscribe(
-                (response) => {
-                    this.roles = this.roles.filter(
-                        (role) => role.id !== this.roleToSelected.id
-                    );
+            this.roleService.deleteRole(this.roleToSelected.id).subscribe({
+                next: (response) => {
+                    // Close the delete modal
+                    const modalElement = document.getElementById('deleteRoleModal');
+                    if (modalElement) {
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+                        modal?.hide();
+                    }
+                    
+                    // Refresh the table data
+                    this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
+                    
                     this.roleToSelected = null;
                     this.toastr.success(
                         this.translate.instant('ROLE.DELETED.SUCCESS'),
@@ -272,15 +290,14 @@ export class RolesListComponent {
                     );
                     this.spinnerService.hide(); // Hide spinner after deletion
                 },
-                (error) => {
+                error: (error) => {
                     this.toastr.error(
                         this.translate.instant('ROLE.DELETED.FAIL'),
                         this.translate.instant('TOAST.TITLE.ERROR')
                     );
                     this.spinnerService.hide(); // Hide spinner on failure
-                    console.error('Error deleting role:', error);
                 }
-            );
+            });
         }
     }
 
@@ -375,7 +392,7 @@ export class RolesListComponent {
                     '.btn-close-user-permissions'
                 ) as HTMLElement;
                 closeBtn?.click();
-                this.getRoles(1);
+                this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
             },
             error: () => {
                 this.toastr.error('Failed to update the role');
@@ -423,7 +440,6 @@ export class RolesListComponent {
                 this.userEntityForm.patchValue({ entityIds: selected });
             },
             error: (err) => {
-                console.error('Failed to load role entities', err);
             },
         });
     }
@@ -449,7 +465,7 @@ export class RolesListComponent {
                     '.closeEntity.btn-close'
                 ) as HTMLElement;
                 closeBtn?.click();
-                this.getRoles(this.currentPage); // refresh table
+                this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take }); // refresh table
             },
             error: () => {
                 this.toastr.error(this.translate.instant('ENTITIES_ASSIGN_FAILED'));
@@ -464,6 +480,17 @@ export class RolesListComponent {
             next: (res) => {
                 this.originalModules = res?.data || [];
                 this.modules = [...this.originalModules];
+                
+                // Create module options for ng-select
+                this.moduleOptions = [
+                    { id: 'all', text: this.translate.instant('AuthenticationResorceName.allModule') },
+                    ...this.originalModules.map(module => ({
+                        id: module.module,
+                        text: module.moduleName
+                    }))
+                ];
+                
+                this.updateAllScreensSelectedState();
                 const modalElement = document.getElementById('screens');
                 if (modalElement) {
                     const modal = new bootstrap.Modal(modalElement);
@@ -476,8 +503,19 @@ export class RolesListComponent {
     }
 
     applyFilter(): void {
-        const keyword = this.searchKeyword.toLowerCase().trim();
+        const keyword = this.searchKeyword.trim();
         const selectedModule = this.selectedModuleFilter;
+
+        // Normalize Arabic text for better search
+        const normalizeText = (text: string) => {
+            if (!text) return '';
+            return text.toLowerCase()
+                .replace(/[\u064B-\u0652\u0670\u0640]/g, '') // Remove Arabic diacritics
+                .replace(/\s+/g, ' ') // Normalize whitespace
+                .trim();
+        };
+
+        const normalizedKeyword = normalizeText(keyword);
 
         this.modules = this.originalModules
             .filter((module) => {
@@ -485,24 +523,64 @@ export class RolesListComponent {
                     selectedModule === 'all' ||
                     module.module.toString() === selectedModule;
 
-                const filteredScreens = module.screens.filter((screen: any) =>
-                    screen.name.toLowerCase().includes(keyword)
-                );
+                const filteredScreens = module.screens.filter((screen: any) => {
+                    if (!normalizedKeyword) return true; // Show all if no search term
+                    
+                    // Search in both name and localizedName
+                    const nameMatch = normalizeText(screen.name || '').includes(normalizedKeyword);
+                    const localizedNameMatch = normalizeText(screen.localizedName || '').includes(normalizedKeyword);
+                    
+                    return nameMatch || localizedNameMatch;
+                });
 
                 return matchesModule && filteredScreens.length > 0;
             })
             .map((module) => {
-                const filteredScreens = module.screens.filter((screen: any) =>
-                    screen.name.toLowerCase().includes(keyword)
-                );
+                const filteredScreens = module.screens.filter((screen: any) => {
+                    if (!normalizedKeyword) return true; // Show all if no search term
+                    
+                    // Search in both name and localizedName
+                    const nameMatch = normalizeText(screen.name || '').includes(normalizedKeyword);
+                    const localizedNameMatch = normalizeText(screen.localizedName || '').includes(normalizedKeyword);
+                    
+                    return nameMatch || localizedNameMatch;
+                });
                 return {
                     ...module,
                     screens: filteredScreens,
                 };
             });
+        
+        this.updateAllScreensSelectedState();
     }
 
-    onScreenToggle(screen: any) { }
+    clearScreenFilter(): void {
+        this.searchKeyword = '';
+        this.selectedModuleFilter = 'all';
+        this.modules = [...this.originalModules];
+        this.updateAllScreensSelectedState();
+    }
+
+    onScreenToggle(screen: any) {
+        this.updateAllScreensSelectedState();
+    }
+
+    selectAllScreens(): void {
+        const shouldSelectAll = !this.allScreensSelected;
+        
+        this.modules.forEach(module => {
+            module.screens.forEach((screen: any) => {
+                screen.selected = shouldSelectAll;
+            });
+        });
+        
+        this.allScreensSelected = shouldSelectAll;
+    }
+
+    updateAllScreensSelectedState(): void {
+        const allScreens = this.modules.flatMap(module => module.screens);
+        this.allScreensSelected = allScreens.length > 0 && allScreens.every(screen => screen.selected);
+    }
 
     saveScreensPermissions(): void {
         if (!this.selectedRoleId) {
@@ -582,6 +660,7 @@ export class RolesListComponent {
 
     onTableSearch(text: string): void {
         this.searchText = text;
+        this.searchParams.searchValue = text;
         this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
     }
 }

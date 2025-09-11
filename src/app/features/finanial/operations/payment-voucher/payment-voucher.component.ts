@@ -13,13 +13,14 @@ import { Select2Service } from '../../../../core/services/Select2.service';
 import { PaymentVoucherServiceService } from '../../../../core/services/Financial/Operation/payment-voucher-service.service';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
+import { NumberFormatPipe } from '../../../../core/services/number.pipe.service';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-payment-voucher',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent,NumberFormatPipe],
   templateUrl: './payment-voucher.component.html',
   styleUrls: ['./payment-voucher.component.scss']
 })
@@ -387,28 +388,23 @@ export class PaymentVoucherComponent implements OnInit {
 
   private buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
+
       { headerName: this.translate.instant('PaymentVoucherResourceName.paymenT_NUMBER'), field: 'paymenT_NUMBER', width: 200 },
       { headerName: this.translate.instant('PaymentVoucherResourceName.beneficiarY_NAME'), field: 'beneficiarY_NAME', width: 200 },
       { headerName: this.translate.instant('PaymentVoucherResourceName.misC_PAYMENT_DATE'), field: 'misC_PAYMENT_DATEstr', width: 200 },
-      { headerName: this.translate.instant('PaymentVoucherResourceName.amount'), field: 'amount', width: 200 },
+      { headerName: this.translate.instant('PaymentVoucherResourceName.amount'), field: 'amount', width: 200,
+         valueFormatter: (params) => {
+        if (params.value == null) return '';
+        return new Intl.NumberFormat('en-US', { 
+          minimumFractionDigits: 2, 
+          maximumFractionDigits: 2 
+        }).format(params.value);
+      }
+    }, 
       { headerName: this.translate.instant('PaymentVoucherResourceName.status'), field: 'posted', width: 200 },
     ];
 
     this.columnDefsLineData = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.paginationLineData.currentPage - 1) * this.paginationLineData.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
       { headerName: this.translate.instant('PaymentVoucherResourceName.accountnumber'), field: 'accountnumber', width: 200 },
       { headerName: this.translate.instant('PaymentVoucherResourceName.accountNameAr'), field: 'accountNameAr', width: 200 },
       { headerName: this.translate.instant('PaymentVoucherResourceName.tR_TAX'), field: 'tR_TAX', width: 200 },

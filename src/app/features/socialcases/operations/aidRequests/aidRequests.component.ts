@@ -199,10 +199,10 @@ export class aidRequestsComponent {
       });
   }
 
-  onentitySelect2Change(selectedvendor: any): void {
-    if (selectedvendor) {
-      this.searchParams.entityId = selectedvendor.id;
-      this.searchParams.entityIdstr = selectedvendor.text;
+  onentitySelect2Change(selected: any): void {
+    if (selected) {
+      this.searchParams.entityId = selected.id;
+      this.searchParams.entityIdstr = selected.text;
     } else {
       this.searchParams.entityId = null;
       this.searchParams.entityIdstr = null;
@@ -240,10 +240,10 @@ export class aidRequestsComponent {
       });
   }
 
-  oncaseNameSelect2Change(selectedvendor: any): void {
-    if (selectedvendor) {
-      this.searchParams.caseName = selectedvendor.id;
-      this.searchParams.caseNamestr = selectedvendor.text;
+  oncaseNameSelect2Change(selected: any): void {
+    if (selected) {
+      this.searchParams.caseName = selected.id;
+      this.searchParams.caseNamestr = selected.text;
     } else {
       this.searchParams.caseName = null;
       this.searchParams.caseNamestr = null;
@@ -281,10 +281,10 @@ export class aidRequestsComponent {
       });
   }
 
-  onbranchSelect2Change(selectedvendor: any): void {
-    if (selectedvendor) {
-      this.searchParams.branch = selectedvendor.id;
-      this.searchParams.branchstr = selectedvendor.text;
+  onbranchSelect2Change(selected: any): void {
+    if (selected) {
+      this.searchParams.branch = selected.id;
+      this.searchParams.branchstr = selected.text;
     } else {
       this.searchParams.branch = null;
       this.searchParams.branchstr = null;
@@ -322,10 +322,10 @@ export class aidRequestsComponent {
       });
   }
 
-  onaidTypeSelect2Change(selectedvendor: any): void {
-    if (selectedvendor) {
-      this.searchParams.aidType = selectedvendor.id;
-      this.searchParams.aidTypestr = selectedvendor.text;
+  onaidTypeSelect2Change(selected: any): void {
+    if (selected) {
+      this.searchParams.aidType = selected.id;
+      this.searchParams.aidTypestr = selected.text;
     } else {
       this.searchParams.aidType = null;
       this.searchParams.aidTypestr = null;
@@ -363,10 +363,10 @@ export class aidRequestsComponent {
       });
   }
 
-  onnationalitySelect2Change(selectedvendor: any): void {
-    if (selectedvendor) {
-      this.searchParams.nationality = selectedvendor.id;
-      this.searchParams.nationalitystr = selectedvendor.text;
+  onnationalitySelect2Change(selected: any): void {
+    if (selected) {
+      this.searchParams.nationality = selected.id;
+      this.searchParams.nationalitystr = selected.text;
     } else {
       this.searchParams.nationality = null;
       this.searchParams.nationalitystr = null;
@@ -404,10 +404,10 @@ export class aidRequestsComponent {
       });
   }
 
-  oncitySelect2Change(selectedvendor: any): void {
-    if (selectedvendor) {
-      this.searchParams.city = selectedvendor.id;
-      this.searchParams.citystr = selectedvendor.text;
+  oncitySelect2Change(selected: any): void {
+    if (selected) {
+      this.searchParams.city = selected.id;
+      this.searchParams.citystr = selected.text;
     } else {
       this.searchParams.city = null;
       this.searchParams.citystr = null;
@@ -434,21 +434,23 @@ export class aidRequestsComponent {
     this.searchSelect2Params.skip = this.gendersearchParams.skip;
     this.searchSelect2Params.take = this.gendersearchParams.take;
 
-    this.Select2Service.getGenderSelect2(this.searchSelect2Params)
+    this.Select2Service.getGenderSelect2Array(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
-        next: (response: SelectdropdownResult) => {
-          const newItems = response?.results || [];
+        next: (response: SelectdropdownResultResults[]) => {
+          const newItems = response || [];
           this.genderSelect2 = [...this.genderSelect2, ...newItems];
+
           this.loadinggender = false;
         },
         error: () => this.loadinggender = false
       });
   }
 
-  ongenderSelect2Change(selectedvendor: any): void {
-    if (selectedvendor) {
-      this.searchParams.gender = selectedvendor.id;
-      this.searchParams.genderstr = selectedvendor.text;
+  ongenderSelect2Change(selected: any): void {
+    if (selected) {
+      this.searchParams.gender = selected.id?.toString() ?? null;
+      this.searchParams.genderstr = selected.text;
+
     } else {
       this.searchParams.gender = null;
       this.searchParams.genderstr = null;
@@ -486,10 +488,10 @@ export class aidRequestsComponent {
       });
   }
 
-  onsourceSelect2Change(selectedvendor: any): void {
-    if (selectedvendor) {
-      this.searchParams.source = selectedvendor.id;
-      this.searchParams.sourcestr = selectedvendor.text;
+  onsourceSelect2Change(selected: any): void {
+    if (selected) {
+      this.searchParams.source = selected.id;
+      this.searchParams.sourcestr = selected.text;
     } else {
       this.searchParams.source = null;
       this.searchParams.sourcestr = null;
@@ -551,6 +553,9 @@ export class aidRequestsComponent {
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.loadgridData = response.data || [];
+          this.loadgridData.forEach((c) => {
+            c.comitY_DATEstr = this.openStandardReportService.formatDate(c.comitY_DATE ?? null);
+          });
           this.pagination.totalCount = response.data[0]?.rowsCount || 0;
           this.spinnerService.hide();
         },
@@ -577,7 +582,10 @@ export class aidRequestsComponent {
           this.loadformData = Array.isArray(result.showdetailheaderdata)
             ? result.showdetailheaderdata[0] ?? ({} as aidRequestsShowDetailsDto)
             : result.showdetailheaderdata;
-
+          this.loadformData.aiD_REQUEST_DATEstr = this.openStandardReportService.formatDate(this.loadformData.aiD_REQUEST_DATE ?? null);
+          this.loadformData.casE_BIRTH_DATEstr = this.openStandardReportService.formatDate(this.loadformData.casE_BIRTH_DATE ?? null);
+          this.loadformData.iD_END_DATEstr = this.openStandardReportService.formatDate(this.loadformData.iD_END_DATE ?? null);
+          this.loadformData.wifeiD_END_DATEstr = this.openStandardReportService.formatDate(this.loadformData.wifeiD_END_DATE ?? null);
           const modalElement = document.getElementById('viewdetails');;
           if (modalElement) {
             const modal = new bootstrap.Modal(modalElement);
@@ -647,6 +655,7 @@ export class aidRequestsComponent {
             this.spinnerService.hide();
           },
           error: (err) => {
+            this.toastr.info(this.translate.instant(err.error.reason));
             this.spinnerService.hide();
           }
         });
@@ -690,13 +699,6 @@ export class aidRequestsComponent {
       'AidRequestsResourceName.amount'
     ]).subscribe(translations => {
       this.columnDefs = [
-        {
-          headerName: '#',
-          valueGetter: (params) =>
-            (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-          width: 60,
-          colId: 'serialNumber'
-        },
         { headerName: translations['AidRequestsResourceName.entitY_NAME'], field: 'entitY_NAME', width: 200 },
         { headerName: translations['AidRequestsResourceName.namE_AR'], field: 'namE_AR', width: 200 },
         { headerName: translations['AidRequestsResourceName.gender'], field: 'sourcE_DESC', width: 200 },
@@ -705,7 +707,7 @@ export class aidRequestsComponent {
         { headerName: translations['AidRequestsResourceName.requesT_TYPE_DESC'], field: 'requesT_TYPE_DESC', width: 200 },
         { headerName: translations['AidRequestsResourceName.status'], field: 'statuS_DESC', width: 200 },
         { headerName: translations['AidRequestsResourceName.caseNo'], field: 'casE_NO', width: 200 },
-        { headerName: translations['AidRequestsResourceName.amount'], field: 'amountstr', width: 200 },
+        { headerName: translations['AidRequestsResourceName.amount'], field: 'amount', width: 200 },
       ];
     });
   }

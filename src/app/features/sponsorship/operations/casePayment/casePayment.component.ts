@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { casePaymentService } from '../../../../core/services/sponsorship/operations/casePayment.service';
 import { Select2Service } from '../../../../core/services/Select2.service';
 import { FndLookUpValuesSelect2RequestDto, Pagination, Select2RequestDto, SelectdropdownResult, SelectdropdownResultResults, reportPrintConfig } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { casePaymentDto, casePaymentHdrDto, filtercasePaymentByIdDto, filtercasePaymentDto } from '../../../../core/dtos/sponsorship/operations/casePayment.models';
+import { casePaymentDto, casePaymentHdrDto, filtercasePaymentByIdDto, filtercasePaymentBycomposeKeyDto, filtercasePaymentDto } from '../../../../core/dtos/sponsorship/operations/casePayment.models';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -352,6 +352,7 @@ export class casePaymentComponent implements OnInit, OnDestroy {
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;
+    this.searchParams.entityId = "2";
     this.searchParams.skip = skip;
     this.searchParams.take = event.pageSize;
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
@@ -359,7 +360,27 @@ export class casePaymentComponent implements OnInit, OnDestroy {
     this.casePaymentService.getAll(cleanedFilters)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
+          if (response?.data == null) {
+            this.translate
+              .get(['Common.NoData'])
+              .subscribe(translations => {
+                this.toastr.warning(
+                  `${translations['Common.NoData']}`,
+                  'Warning'
+                );
+              });
+            this.pagination.totalCount = 0;
+            this.loadgridData = [];
+            this.loadgridData.forEach((c) => {
+              c.starT_DATEstr = this.openStandardReportService.formatDate(c.starT_DATE ?? null);
+              c.enD_DATEstr = this.openStandardReportService.formatDate(c.enD_DATE ?? null);
+            });
+            this.spinnerService.hide();
+            return;
+          }
           this.loadgridData = response?.data || [];
+
+
           this.pagination.totalCount = response?.data[0]?.rowsCount || 0;
           this.spinnerService.hide();
         },
@@ -370,6 +391,9 @@ export class casePaymentComponent implements OnInit, OnDestroy {
   }
 
   getFormDatabyId(event: { pageNumber: number; pageSize: number }, composeKey: string, entitY_ID: string): void {
+    const param: filtercasePaymentBycomposeKeyDto = {
+      composeKey: composeKey
+    };
     const params: filtercasePaymentByIdDto = {
       entityId: entitY_ID,
       composeKey: composeKey
@@ -387,6 +411,10 @@ export class casePaymentComponent implements OnInit, OnDestroy {
           : result.headeraderdata;
         this.paginationPaymentHdr.totalCount = result?.detaildata.length || 0;
 
+
+        this.loadHdrformData.forEach((c) => {
+          c.receivE_DATEstr = this.openStandardReportService.formatDate(c.receivE_DATE ?? null);
+        });
         const modalElement = document.getElementById('viewdetails');;
         if (modalElement) {
           const modal = new bootstrap.Modal(modalElement);
@@ -402,39 +430,29 @@ export class casePaymentComponent implements OnInit, OnDestroy {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
-
       { headerName: this.translate.instant('CasePaymentResourceName.paymenT_DESC'), field: 'paymenT_DESC', width: 200 },
       { headerName: this.translate.instant('CasePaymentResourceName.starT_DATE'), field: 'starT_DATEstr', width: 200 },
       { headerName: this.translate.instant('CasePaymentResourceName.enD_DATE'), field: 'enD_DATEstr', width: 200 },
       { headerName: this.translate.instant('CasePaymentResourceName.statuS_CODE_DESC'), field: 'statuS_CODE_DESC', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.amounT_AED'), field: 'amounT_AEDstr', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.gifT_AMOUNT'), field: 'gifT_AMOUNTstr', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.amounT_AED'), field: 'amounT_AED', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.gifT_AMOUNT'), field: 'gifT_AMOUNT', width: 200 },
       { headerName: this.translate.instant('CasePaymentResourceName.totalAmount'), field: 'totalAmount', width: 200 },
     ];
 
     this.columnDefsPaymentHdr = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.paginationPaymentHdr.currentPage - 1) * this.paginationPaymentHdr.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
-      { headerName: this.translate.instant('CasePaymentResourceName.PaymentNumber'), field: 'paymenT_NUMBER', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.PaymentDate'), field: 'paymenT_DATEstr', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.PaymentTypeDesc'), field: 'paymenT_TYPE_DESC', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.VendorNumber'), field: 'vendoR_NUMBER', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.VendorName'), field: 'vendoR_NAME', width: 200 },
-      { headerName: this.translate.instant('CasePaymentResourceName.Amount'), field: 'paymenT_AMOUNTstr', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.casE_NO'), field: 'casE_NO', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.casE_Name'), field: 'casename', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.sponsoR_CATEGORY_DESC'), field: 'sponsoR_CATEGORY_DESC', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.casE_STATUS_DESC'), field: 'casE_STATUS_DESC', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.kafalA_STATUS_DESC'), field: 'kafalA_STATUS_DESC', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.amounT_AED'), field: 'amounT_AED', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.gifT_AMOUNT'), field: 'gifT_AMOUNT', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.totalAmount'), field: 'totalstr', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.receivE_DATE'), field: 'receivE_DATEstr', width: 200 },
+      { headerName: this.translate.instant('CasePaymentResourceName.iS_RECEIVED'), field: 'iS_RECEIVED', width: 200 },
     ];
   }
+  
 
   onTableAction(event: { action: string, row: any }) {
     var data = event.row.composeKey.split(',');

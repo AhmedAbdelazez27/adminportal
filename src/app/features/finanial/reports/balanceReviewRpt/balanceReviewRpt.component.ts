@@ -17,6 +17,7 @@ import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
 import { GlAccountSelectionType } from '../../../../core/enum/user-type.enum';
 import { param } from 'jquery';
+import { formatNumericCell } from '../../../../shared/utils/value-formatters';
 
 @Component({
   selector: 'app-balanceReviewRpt',
@@ -1019,21 +1020,16 @@ export class BalanceReviewRptComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
-      { headerName: this.translate.instant('FinancialReportResourceName.accountT_CODE'), field: 'accountT_CODE', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.accounT_CODE'), field: 'accounT_CODE', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.accounT_NAME'), field: 'accounT_NAME', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.jE_NAME'), field: 'jE_NAME', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.jE_DATE'), field: 'jE_DATEstr', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.jE_SOURCE_DESC'), field: 'jE_SOURCE_DESC', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.notes'), field: 'notes', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.debiT_AMOUNT'), field: 'debiT_AMOUNTstr', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.crediT_AMOUNT'), field: 'crediT_AMOUNTstr', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.debiT_AMOUNT'), field: 'debiT_AMOUNTstr', width: 200,  
+      valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
+      { headerName: this.translate.instant('FinancialReportResourceName.crediT_AMOUNT'), field: 'crediT_AMOUNTstr', width: 200,  
+       valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
     ];
   }
 
@@ -1075,7 +1071,7 @@ export class BalanceReviewRptComponent {
                   ],
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },
-                    { label: this.translate.instant('FinancialReportResourceName.accountT_CODE'), key: 'accountT_CODE' },
+                    { label: this.translate.instant('FinancialReportResourceName.accounT_CODE'), key: 'accounT_CODE' },
                     { label: this.translate.instant('FinancialReportResourceName.accounT_NAME'), key: 'accounT_NAME' },
                     { label: this.translate.instant('FinancialReportResourceName.jE_NAME'), key: 'jE_NAME' },
                     { label: this.translate.instant('FinancialReportResourceName.jE_DATE'), key: 'jE_DATE' },
@@ -1144,7 +1140,7 @@ export class BalanceReviewRptComponent {
                   ],
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },
-                    { label: this.translate.instant('FinancialReportResourceName.accountT_CODE'), key: 'accountT_CODE' },
+                    { label: this.translate.instant('FinancialReportResourceName.accounT_CODE'), key: 'accounT_CODE' },
                     { label: this.translate.instant('FinancialReportResourceName.accounT_NAME'), key: 'accounT_NAME' },
                     { label: this.translate.instant('FinancialReportResourceName.jE_NAME'), key: 'jE_NAME' },
                     { label: this.translate.instant('FinancialReportResourceName.jE_DATE'), key: 'jE_DATE' },

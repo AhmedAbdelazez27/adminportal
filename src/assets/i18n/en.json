@@ -13,8 +13,29 @@
     "FAIL": "Error assigning role"
   },
 
+  "ROLE": {
+    "CREATED": {
+      "SUCCESS": "Role created successfully",
+      "FAIL": "Failed to create role"
+    },
+    "UPDATED": {
+      "SUCCESS": "Role updated successfully",
+      "FAIL": "Failed to update role"
+    },
+    "DELETED": {
+      "SUCCESS": "Role deleted successfully",
+      "FAIL": "Failed to delete role"
+    }
+  },
+
   "ERROR": {
-    "FETCH_DEPARTMENTS": "Error while fetching departments"
+    "FETCH_DEPARTMENTS": "Error while fetching departments",
+    "FETCH_ROLES": "Error while fetching roles",
+    "PERMISSION_ERROR": "Permission Error",
+    "DASHBOARD_PERMISSION_ERROR": "Dashboard Permission Error",
+    "MUST_ASSIGN_ROLE": "Must Assign Role For This User First",
+    "FAILED_TO_LOAD_PERMISSIONS": "Failed to load permissions",
+    "FAILED_TO_LOAD_DASHBOARD_PERMISSIONS": "Failed to load dashboard permissions"
   },
 
   "TOAST": {
@@ -78,7 +99,9 @@
     "REGION_UPDATED": "Region updated successfully",
     "REGION_UPDATE_FAILED": "Error updating region",
     "REGION_DELETED": "Region deleted successfully",
-    "REGION_DELETE_FAILED": "Error deleting region"
+    "REGION_DELETE_FAILED": "Error deleting region",
+    "PERMISSIONS_UPDATED": "Permissions updated successfully.",
+    "PERMISSIONS_UPDATE_FAILED": "Failed to update permissions."
   },
 
   "VALIDATION": {
@@ -161,7 +184,14 @@
     "VIEW": "View",
     "EDIT": "Edit",
     "DELETE": "Delete",
-    "DASHBOARD_PERMISSIONS": "DashBoard Permissions",
+    
+    "dept": "Department",
+    "entities": "Entities", 
+    "permissions": "Permissions",
+    "edit": "Edit",
+    "role": "Roles",
+    "ViewInfo": "View Details",
+    "Total": "Total",
     "CANCEL": "Cancel",
     "CLOSE": "Close",
     "CREATE": "Create",
@@ -304,7 +334,8 @@
     "LOCATION": "Location",
     "METHOD": "Method",
     "NO_ADS": "No Ads",
-    "NO_PARTNERS": "No Partners"
+    "NO_PARTNERS": "No Partners",
+    "DASHBOARD_PERMISSIONS": "Dashboard Permissions"
   },
 
   "ENTITY": {
@@ -331,6 +362,7 @@
     "SHOW_IN_PORTAL_DESC": "Display this entity in the public portal",
     "IS_DONATION": "Is Donation",
     "IS_DONATION_DESC": "Mark this entity as a donation entity",
+    "ACTIVE": "Active",
     "ADD_NEW": "Add New Entity",
     "EDIT": "Edit Entity",
     "VIEW": "View Entity",
@@ -456,20 +488,7 @@
     }
   },
 
-  "ROLE": {
-    "CREATED": {
-      "SUCCESS": "Role created successfully",
-      "FAIL": "Failed to create role"
-    },
-    "UPDATED": {
-      "SUCCESS": "Role updated successfully",
-      "FAIL": "Failed to update role"
-    },
-    "DELETED": {
-      "SUCCESS": "Role deleted successfully",
-      "FAIL": "Failed to delete role"
-    }
-  },
+ 
 
   "FILE": {
     "CURRENT_IMAGE": "Current Image",
@@ -706,6 +725,7 @@
     "NoData": "No data available to display",
     "SearchTitle": "Filter",
     "Select": "-- Select --",
+    "Required": "Required",
     "PrintExcel": "Export to Excel",
     "Total": "Total",
     "Print": " Print PDF",
@@ -720,6 +740,8 @@
     "cancel": "Cancel",
     "addNew": "Add New",
     "save": "Save",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
     "upDate": "Update",
     "role": "Roles",
     "permissions": "Permissions",
@@ -732,6 +754,7 @@
     "updateSuccessfully": "Update Successfully",
     "noPreview": "No Preview Available",
     "ServiceInfo": "Service Information",
+    "Information": "Information",
     "BACK": "Back",
     "DATA_NOT_FOUND": "Data Not Found",
     "DOWNLOAD": "Download",
@@ -781,7 +804,8 @@
     "Show": "Show",
     "Entries": "entries",
     "Cancel": "Cancel",
-    "DASHBOARD_PERMISSIONS": "DashBoard Permissions"
+    "DASHBOARD_PERMISSIONS": "Dashboard Permissions"
+    
   },
 
   "AuthenticationResorceName": {
@@ -803,7 +827,7 @@
     "selectUser": "Select User",
     "screens": "Screens",
     "allModule": "All Modules",
-    "applyFilter": "Apply Filter",
+    "applyFilter": "Apply",
     "entitiesTitle": "Entities",
     "addEntities": "Add Entities",
     "roleTitle": "Role",
@@ -813,6 +837,8 @@
     "id": "Id",
     "entityInfo": "Entity Info",
     "applyDate": "Apply Date",
+    "dateFrom": "Date From",
+    "dateTo": "Date To",
     "organization": "Organization Name",
     "license": "License No",
     "addDept": "Add Department",
@@ -846,7 +872,10 @@
     "selectDate": "Select Date",
     "optionOne": "Option 1",
     "optionTwo": "Option 2",
-    "optionThree": "Option 3"
+    "optionThree": "Option 3",
+    "entities": "Entities",
+    "Departments": "Departments",
+    "Dashboard": "Dashboard"
   },
 
   "ArMiscReceiptHeaderResourceName": {
@@ -1153,7 +1182,7 @@
     "chequeAmount": "Cheque Amount",
     "administrativeAmount": "Administrative Amount",
     "collectorName": "Collector Name",
-    "accountT_CODE": "Account Code",
+    "accounT_CODE": "Account Code",
     "accounT_NAME": "Account Name",
     "jE_NAME": "Name",
     "jE_DATE": "Date",
@@ -1886,7 +1915,19 @@
     "office": "Office",
     "entity": "Entity",
     "year": "Year",
-    "month": "Month"
+    "month": "Month",
+    "numbersOfSponsorsheader": "Interactive reports to prepare sponsors",
+    "numbersByPeriodAndTypeheader": "Interactive reports for Number of sponsors by period and type of sponsorship",
+    "numbersByTypeAndNationalityheader": "Interactive reports for Number of sponsored by type of sponsorship and nationality",
+    "totalDonationsByTypeheader": "Total donations by type of sponsorship",
+    "contractStatsByPaymentMethodheader": "Contract statistics by payment method",
+    "numbersByEntityAndTypeheader": "Interactive reports for Number of sponsors according to the office of the association and the type of sponsorship",
+    "numbersInOutCountryheader": "Interactive reports for Number of sponsors inside and outside the state",
+    "comparisonOfCasesheader": "Comparison of Cases",
+    "byTypeOfSponsorshipheader": "Type of sponsorship",
+    "byNationalityheader": "By Nationality",
+    "byEntityOfficeheader": "Office of entity",
+    "casesAvailableForSponsorshipheader": "Cases available for sponsorship"
   },
 
   "mainApplyServiceResourceName": {
@@ -2346,6 +2387,7 @@
     "jopTitle": "Job Title",
     "permitNumber": "Permit Number",
     "licenseEndDate": "License End date",
+    "serviceName": "Service Name",
     "WORKFLOW": {
       "PROCESS_STEPS": "Workflow Process Steps",
       "PROCESS_STEPS_DESC": "View workflow process steps",
@@ -2908,6 +2950,7 @@
     "SEARCH": "Search",
     "SEARCH_PLACEHOLDER": "Search services...",
     "FILTER": "Filter",
+    "FILTER_BY_MODULES": "Filter by Module(s)",
     "SORT_BY": "Sort by",
     "SORT_NAME": "Name",
     "SORT_TYPE": "Type",
@@ -3651,6 +3694,7 @@
   "ADVERTISEMENT": {
     "VIEW_TITLE": "View Advertisement",
     "DETAILS": "Advertisement Details",
+    "PERMIT_INFORMATION": "Permit Information",
     "TITLE": "Title",
     "LANGUAGE": "Language",
     "START_DATE": "Start Date",

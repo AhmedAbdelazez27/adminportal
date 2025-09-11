@@ -9,7 +9,7 @@ import { openStandardReportService } from '../../../../core/services/openStandar
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { Select2Service } from '../../../../core/services/Select2.service';
 import { NgSelectComponent } from '@ng-select/ng-select';
-import { Pagination, FndLookUpValuesSelect2RequestDto, SelectdropdownResultResults, Select2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { Pagination, FndLookUpValuesSelect2RequestDto, SelectdropdownResultResults, Select2RequestDto, SelectdropdownResult, reportPrintConfig, FndLookUpValuesSelect2RequestbyIdDto } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { caseAidEntitiesRptInputDto } from '../../../../core/dtos/sponsorship/reports/sponsorshipInput.dto';
 import { caseAidEntitiesRptOutputDto } from '../../../../core/dtos/sponsorship/reports/sponsorshipOutput.dto';
 import { SponsorshipReportservice } from '../../../../core/services/sponsorship/reports/sponsorshipReport.service';
@@ -37,8 +37,11 @@ export class caseAidEntitiesRptComponent {
   rowActions: Array<{ label: string, icon?: string, action: string }> = [];
 
   searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
+  searchSelect2ByIdParams = new FndLookUpValuesSelect2RequestbyIdDto();
   searchParams = new caseAidEntitiesRptInputDto();
   getAllDataForReports: caseAidEntitiesRptOutputDto[] = [];
+  printExcelDataForReports: caseAidEntitiesRptOutputDto[] = [];
+  printPDFDataForReports: caseAidEntitiesRptOutputDto[] = [];
 
   entitySelect2: SelectdropdownResultResults[] = [];
   loadingentity = false;
@@ -58,7 +61,7 @@ export class caseAidEntitiesRptComponent {
     private translate: TranslateService,
     private openStandardReportService: openStandardReportService,
     private spinnerService: SpinnerService,
-    private Select2Service: Select2Service
+    private Select2Service: Select2Service,
   ) {
 
   }
@@ -75,7 +78,6 @@ export class caseAidEntitiesRptComponent {
       .subscribe(() => this.fetchcaseAidSelect2());
 
     this.fetchentitySelect2();
-    this.fetchcaseAidSelect2();
   }
 
   ngOnDestroy(): void {
@@ -128,6 +130,7 @@ export class caseAidEntitiesRptComponent {
 
     this.searchParams.entityId = selectedObj?.id ?? null;
     this.searchParams.entityName = selectedObj?.text ?? null;
+    this.fetchcaseAidSelect2();
   }
 
 
@@ -147,11 +150,12 @@ export class caseAidEntitiesRptComponent {
   fetchcaseAidSelect2(): void {
     this.loadingcaseAid = true;
     const searchVal = this.caseAidsearchParams.searchValue?.trim();
-    this.searchSelect2Params.searchValue = searchVal === '' ? null : searchVal;
-    this.searchSelect2Params.skip = this.caseAidsearchParams.skip;
-    this.searchSelect2Params.take = this.caseAidsearchParams.take;
+    this.searchSelect2ByIdParams.searchValue = searchVal === '' ? null : searchVal;
+    this.searchSelect2ByIdParams.skip = this.caseAidsearchParams.skip;
+    this.searchSelect2ByIdParams.take = this.caseAidsearchParams.take;
+    this.searchSelect2ByIdParams.entityId = this.searchParams.entityId;
 
-    this.Select2Service.getSpCaseSelect2(this.searchSelect2Params)
+    this.Select2Service.getCaseAidEntitiesSelect2(this.searchSelect2ByIdParams)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
@@ -178,6 +182,7 @@ export class caseAidEntitiesRptComponent {
     this.searchParams.caseName = selectedObj?.text ?? null;
   }
 
+
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
     if (!this.searchParams.entityId) {
       this.translate.get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
@@ -198,6 +203,10 @@ export class caseAidEntitiesRptComponent {
         next: (response: any) => {
           this.getAllDataForReports = response?.data || [];
           this.pagination.totalCount = response?.totalCount || 0;
+
+          this.getAllDataForReports.forEach((c) => {
+            c.startdatestr = this.openStandardReportService.formatDate(c.startdate);
+          });
           this.spinnerService.hide();
         },
         error: (error) => {
@@ -243,11 +252,10 @@ export class caseAidEntitiesRptComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      { headerName: '#', valueGetter: 'node.rowIndex + 1', width: 40, colId: '#' },
       { headerName: this.translate.instant('SponsorshipReportResourceName.entityName'), field: 'entitY_NAME', width: 150 },
       { headerName: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), field: 'sponceR_CATEGORY_DESC', width: 200 },
       { headerName: this.translate.instant('SponsorshipReportResourceName.startDate'), field: 'startdatestr', width: 100 },
-      { headerName: this.translate.instant('SponsorshipReportResourceName.caseAmount'), field: 'caseAmountstr', width: 100 },
+      { headerName: this.translate.instant('SponsorshipReportResourceName.caseAmount'), field: 'caseAmount', width: 100 },
       { headerName: this.translate.instant('SponsorshipReportResourceName.haiOffice'), field: 'haI_OFFICE' },
       { headerName: this.translate.instant('SponsorshipReportResourceName.caseStatusDesc'), field: 'casE_STATUS_DESC' },
       { headerName: this.translate.instant('SponsorshipReportResourceName.nameAr'), field: 'namE_AR' },
@@ -273,7 +281,11 @@ export class caseAidEntitiesRptComponent {
         next: (response: any) => {
           const totalCount = response?.totalCount || response?.data?.length || 0;
 
-          const data = response?.data || response || [];
+          this.printExcelDataForReports = response?.data || response || [];
+          this.printExcelDataForReports.forEach((c) => {
+            c.startdatestr = c.startdate ? this.openStandardReportService.formatDate(c.startdate) : '';
+          });
+          const data = this.printExcelDataForReports
 
           const reportConfig: reportPrintConfig = {
             title: this.translate.instant('SponsorshipReportResourceName.caseAidEntitiesRpt_Title'),
@@ -288,8 +300,8 @@ export class caseAidEntitiesRptComponent {
               { label: '#', key: 'rowNo', title: '#' },
               { label: this.translate.instant('SponsorshipReportResourceName.entityName'), key: 'entitY_NAME' },
               { label: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), key: 'sponceR_CATEGORY_DESC' },
-              { label: this.translate.instant('SponsorshipReportResourceName.startDate'), key: 'startdate' },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseAmount'), key: 'caseAmountstr' },
+              { label: this.translate.instant('SponsorshipReportResourceName.startDate'), key: 'startdatestr' },
+              { label: this.translate.instant('SponsorshipReportResourceName.caseAmount'), key: 'caseAmount' },
               { label: this.translate.instant('SponsorshipReportResourceName.haiOffice'), key: 'haI_OFFICE' },
               { label: this.translate.instant('SponsorshipReportResourceName.caseStatusDesc'), key: 'casE_STATUS_DESC' },
               { label: this.translate.instant('SponsorshipReportResourceName.nameAr'), key: 'namE_AR' },
@@ -300,7 +312,7 @@ export class caseAidEntitiesRptComponent {
               rowNo: index + 1
             })),
             totalLabel: this.translate.instant('Common.Total'),
-            totalKeys: ['caseAmountstr']
+            totalKeys: ['caseAmount']
           };
 
           this.openStandardReportService.openStandardReportExcel(reportConfig);
@@ -328,8 +340,11 @@ export class caseAidEntitiesRptComponent {
       .subscribe({
         next: (response: any) => {
           const totalCount = response?.totalCount || response?.data?.length || 0;
-
-          const data = response?.data || response || [];
+          this.printPDFDataForReports = response?.data || response || [];
+          this.printPDFDataForReports.forEach((c) => {
+            c.startdatestr = c.startdate ? this.openStandardReportService.formatDate(c.startdate) : '';
+          });
+          const data = this.printPDFDataForReports
 
           const reportConfig: reportPrintConfig = {
             title: this.translate.instant('SponsorshipReportResourceName.caseAidEntitiesRpt_Title'),
@@ -344,8 +359,8 @@ export class caseAidEntitiesRptComponent {
               { label: '#', key: 'rowNo', title: '#' },
               { label: this.translate.instant('SponsorshipReportResourceName.entityName'), key: 'entitY_NAME' },
               { label: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), key: 'sponceR_CATEGORY_DESC' },
-              { label: this.translate.instant('SponsorshipReportResourceName.startDate'), key: 'startdate' },
-              { label: this.translate.instant('SponsorshipReportResourceName.caseAmount'), key: 'caseAmountstr' },
+              { label: this.translate.instant('SponsorshipReportResourceName.startDate'), key: 'startdatestr' },
+              { label: this.translate.instant('SponsorshipReportResourceName.caseAmount'), key: 'caseAmount' },
               { label: this.translate.instant('SponsorshipReportResourceName.haiOffice'), key: 'haI_OFFICE' },
               { label: this.translate.instant('SponsorshipReportResourceName.caseStatusDesc'), key: 'casE_STATUS_DESC' },
               { label: this.translate.instant('SponsorshipReportResourceName.nameAr'), key: 'namE_AR' },
@@ -356,7 +371,7 @@ export class caseAidEntitiesRptComponent {
               rowNo: index + 1
             })),
             totalLabel: this.translate.instant('Common.Total'),
-            totalKeys: ['caseAmountstr']
+            totalKeys: ['caseAmount']
           };
           this.openStandardReportService.openStandardReportPDF(reportConfig);
           this.spinnerService.hide();

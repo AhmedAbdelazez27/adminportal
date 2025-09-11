@@ -9,7 +9,8 @@ export class filterspContractsDto {
   beneficentNo: string | null = null;
   beneficentId: string | null = null;
   bankAccount: string | null = null;
-
+  fromDate: string | null = null;
+  toDate: string | null = null;
   orderByValue: string = 'CONTRACT_NUMBER desc';
   take: number = 10;
   skip: number = 0;

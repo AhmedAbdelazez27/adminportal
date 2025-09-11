@@ -15,6 +15,7 @@ import { FinancialReportService } from '../../../../core/services/Financial/Repo
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
+import { formatNumericCell } from '../../../../shared/utils/value-formatters';
 
 @Component({
   selector: 'app-vendorsPayTransRPT',
@@ -389,19 +390,14 @@ export class vendorsPayTransRPTComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
       { headerName: this.translate.instant('FinancialReportResourceName.vendorNumber'), field: 'vendoR_NUMBER', width: 150 },
       { headerName: this.translate.instant('FinancialReportResourceName.vendorName'), field: 'vendoR_NAME', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.workTel'), field: 'worK_TEL', width: 100 },
       { headerName: this.translate.instant('FinancialReportResourceName.trxType'), field: 'trX_TYPE', width: 100 },
-      { headerName: this.translate.instant('FinancialReportResourceName.DebitAmount'), field: 'debiT_AMOUNT', width: 100 },
-      { headerName: this.translate.instant('FinancialReportResourceName.creditAmount'), field: 'crediT_AMOUNT', width: 100 },
+      { headerName: this.translate.instant('FinancialReportResourceName.DebitAmount'), field: 'debiT_AMOUNT', width: 100,    
+     valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
+      { headerName: this.translate.instant('FinancialReportResourceName.creditAmount'), field: 'crediT_AMOUNT', width: 100,   
+     valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
     ];
     this.columnHeaderMap = {
       'vendoR_NUMBER': this.translate.instant('FinancialReportResourceName.vendorNumber'),

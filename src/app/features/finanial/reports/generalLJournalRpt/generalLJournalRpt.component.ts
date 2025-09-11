@@ -15,6 +15,7 @@ import { FinancialReportService } from '../../../../core/services/Financial/Repo
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
+import { formatNumericCell } from '../../../../shared/utils/value-formatters';
 
 @Component({
   selector: 'app-generalLJournalRpt',
@@ -457,21 +458,17 @@ export class generalLJournalRptComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
+
       { headerName: this.translate.instant('FinancialReportResourceName.accountT_CODE'), field: 'accountT_CODE', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.accounT_NAME'), field: 'accounT_NAME', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.jE_NAME'), field: 'jE_NAME', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.jE_DATE'), field: 'jE_DATEstr', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.jE_SOURCE_DESC'), field: 'jE_SOURCE_DESC', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.notes'), field: 'notes', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.debiT_AMOUNT'), field: 'debiT_AMOUNTstr', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.crediT_AMOUNT'), field: 'crediT_AMOUNTstr', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.debiT_AMOUNT'), field: 'debiT_AMOUNTstr', width: 200,   
+     valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
+      { headerName: this.translate.instant('FinancialReportResourceName.crediT_AMOUNT'), field: 'crediT_AMOUNTstr', width: 200, 
+     valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US')},
     ];
   }
 

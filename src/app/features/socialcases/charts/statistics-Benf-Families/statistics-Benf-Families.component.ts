@@ -69,7 +69,7 @@ export class StatisticsOfBeneficiaryFamiliesComponents implements OnInit {
       next: (res) => {
         this.yearsList = res.years.results;
         this.chartTypes = res.chartTypes;
-        this.entities = [{ id: "", text: 'No Select' }, ...res.entities?.results];
+        this.entities = [{ id: "", text: this.translate.instant('Common.Select') }, ...res.entities?.results];
         this.selectedEntity = "";
 
         const maxIdItem = res.years.results.reduce((maxItem: any, currentItem: any) => {

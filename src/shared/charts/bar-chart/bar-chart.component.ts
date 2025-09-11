@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { HighchartsChartModule } from 'highcharts-angular';
 import Highcharts, { Options, SeriesOptionsType } from 'highcharts';
+import { ChartUtilsService } from '../../services/chart-utils.service';
 
 @Component({
   selector: 'app-bar-chart',
@@ -16,6 +17,8 @@ export class BarChartComponent implements OnChanges {
   chart: Highcharts.Chart | undefined;
   previewChart: Highcharts.Chart | undefined;
   isPreviewOpen = false;
+  
+  private chartUtils = inject(ChartUtilsService);
 
   @Input() categories: string[] = [];
   @Input() seriesData: { name: string; data: number[]; color?: string }[] = [];
@@ -25,6 +28,7 @@ export class BarChartComponent implements OnChanges {
   @Input() enablePreview: boolean = true;
   @Input() seriesColor: string = '#dc3545';
   @Input() valueColor: string = '#dc3545';
+  @Input() useDynamicColors: boolean = false;
 
   ngOnChanges(_: SimpleChanges): void {
     console.log("categories ", this.categories);
@@ -100,22 +104,37 @@ export class BarChartComponent implements OnChanges {
           }
         } as Highcharts.YAxisOptions)
       : ({
-          min: 0,
         title: { text: NULL_TEXT },
         gridLineWidth: 0,
          gridLineColor: '#fffefeff',
         labels: {
             formatter() { return H.numberFormat(Number(this.value), 0, '.', ','); },
           style: { fontSize: '0px', color: '#ffffff' }
-        }
+        },
+        plotLines: [{
+          value: 0,
+          width: 1,
+          color: '#808080',
+          zIndex: 4
+        }]
         } as Highcharts.YAxisOptions);
 
-    const series = this.seriesData.map<SeriesOptionsType>(seriesItem => ({
-      name: seriesItem.name,
-      type: this.chartType,
-      data: areCategoriesReversed ? ([...seriesItem.data].reverse() as unknown as Highcharts.Series['data']) : (seriesItem.data as unknown as Highcharts.Series['data']),
-      color: seriesItem.color ?? this.seriesColor
-    }));
+    const series = this.seriesData.map<SeriesOptionsType>((seriesItem, index) => {
+      let color = seriesItem.color ?? this.seriesColor;
+      
+      if (this.useDynamicColors && !seriesItem.color) {
+        const baseColor = this.chartUtils.generateDynamicColor(index, this.seriesData.length);
+        const hasNegativeValues = seriesItem.data.some(value => value < 0);
+        color = hasNegativeValues ? this.chartUtils.adjustColorForNegative(baseColor) : baseColor;
+      }
+      
+      return {
+        name: seriesItem.name,
+        type: this.chartType,
+        data: areCategoriesReversed ? ([...seriesItem.data].reverse() as unknown as Highcharts.Series['data']) : (seriesItem.data as unknown as Highcharts.Series['data']),
+        color: color
+      };
+    });
 
     this.chartOptionsBar = {
       chart: {
@@ -153,7 +172,7 @@ export class BarChartComponent implements OnChanges {
       },
       inside: false,
       y: -6,
-      filter: { property: 'y', operator: '>', value: 0 },
+      filter: { property: 'y', operator: '!=', value: 0 },
       style: {
         fontSize: '12px',
         fontWeight: 'normal',
@@ -178,7 +197,7 @@ export class BarChartComponent implements OnChanges {
             inside: false,
             align: 'left',
             x: 4,
-            filter: { property: 'y', operator: '>', value: 0 },
+            filter: { property: 'y', operator: '!=', value: 0 },
             style: { fontSize: '12px', fontWeight: 'normal', color: this.valueColor }
           }
         },
@@ -191,7 +210,7 @@ export class BarChartComponent implements OnChanges {
               if (isNaN(v) || v === 0) return '';
               return H.numberFormat(v, 0, '.', ',');
             },
-            filter: { property: 'y', operator: '>', value: 0 },
+            filter: { property: 'y', operator: '!=', value: 0 },
             style: { fontSize: '12px', fontWeight: 'normal', color: this.valueColor }
           }
         },

@@ -707,13 +707,6 @@ getFormDatabyId(id: string, mode: 'edit' | 'view'): void {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
       { headerName: this.translate.instant('glAccountEntityResourceName.entityId'), field: 'entity.entitY_NAME', width: 200 },
       { headerName: this.translate.instant('glAccountEntityResourceName.accountCode'), field: 'accountCode', width: 200 },
       { headerName: this.translate.instant('glAccountEntityResourceName.parentCode'), field: 'mappedAccountCode', width: 200 },

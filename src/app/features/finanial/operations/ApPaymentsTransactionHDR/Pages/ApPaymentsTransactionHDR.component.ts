@@ -14,6 +14,7 @@ import { FndLookUpValuesSelect2RequestDto, Pagination, Select2RequestDto, Select
 import { Select2Service } from '../../../../../core/services/Select2.service';
 import { FilterApPaymentsTransactionHDRDto, FilterApPaymentsTransactionHDRByIdDto, ApPaymentsTransactionHDRDto } from '../../../../../core/dtos/FinancialDtos/OperationDtos/ApPaymentsTransactionHDR.dto';
 import { ApPaymentsTransactionHDRService } from '../../../../../core/services/Financial/Operation/ApPaymentsTransactionHDR.service';
+import { formatNumericCell } from '../../../../../shared/utils/value-formatters';
 
 declare var bootstrap: any;
 
@@ -29,6 +30,7 @@ declare var bootstrap: any;
 export class ApPaymentsTransactionHDRComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
   @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
+  public formatNumericCell = formatNumericCell;
 
   private destroy$ = new Subject<void>();
   userEntityForm!: FormGroup;
@@ -331,19 +333,18 @@ export class ApPaymentsTransactionHDRComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
+ 
       { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentNumber'), field: 'paymenT_NUMBER', width: 200 },
       { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentDate'), field: 'paymenT_DATEstr', width: 200 },
       { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentTypeDesc'), field: 'paymenT_TYPE_DESC', width: 200 },
       { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.VendorNumber'), field: 'vendoR_NUMBER', width: 200 },
       { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.VendorName'), field: 'vendoR_NAME', width: 200 },
-      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.Amount'), field: 'paymenT_AMOUNTstr', width: 200 },
+      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.Amount'), field: 'paymenT_AMOUNTstr', width: 200,
+     valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US')
+       },
+       
+  
+     
     ];
   }
 

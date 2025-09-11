@@ -136,6 +136,16 @@
               <input type="date" class="form-control" [(ngModel)]="searchParams.je_Date" name="je_Date"
                      placeholder="Select date">
             </div>
+
+               <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'FinancialReportResourceName.fromDate' | translate }}</label>
+              <input type="date" class="form-control" [(ngModel)]="searchParams.fromDate" name="fromDate">
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'FinancialReportResourceName.toDate' | translate }}</label>
+              <input type="date" class="form-control" [(ngModel)]="searchParams.toDate" name="toDate">
+            </div>
           </div>
         </form>
 
@@ -199,7 +209,7 @@
 
         <div class="modal-body">
           <div class="border-bottom mb-4">
-            <h4 class="gold bold">Information</h4>
+            <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>
             <div class="row">
               <div class="col-xxl-4 col-xl-6">
                 <label class="bold black">{{ 'glJEResourceName.name' | translate }}</label>
@@ -236,7 +246,7 @@
 
             </div>
 
-            <h4 class="gold bold">{{ 'glJEResourceName.title_details' | translate }}</h4>
+            <h4 class="gold bold">{{ 'SpContractsResourceName.Title_SpContractCase' | translate }}</h4>
             <div *ngIf="loadformdetailsData && loadformdetailsData.length > 0">
               <app-generic-data-table [columnDefs]="columnDefslineData"
                                       [rowData]="loadformdetailsData"

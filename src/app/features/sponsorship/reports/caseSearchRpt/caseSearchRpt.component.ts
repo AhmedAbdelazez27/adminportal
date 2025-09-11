@@ -244,7 +244,6 @@ export class caseSearchRptComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      { headerName: '#', valueGetter: 'node.rowIndex + 1', width: 40, colId: '#' },
       { headerName: this.translate.instant('SponsorshipReportResourceName.caseNo'), field: 'casE_NO', width: 150 },
       { headerName: this.translate.instant('SponsorshipReportResourceName.caseName'), field: 'casename', width: 200 },
       { headerName: this.translate.instant('SponsorshipReportResourceName.birthDate'), field: 'birthdatestr', width: 100 },

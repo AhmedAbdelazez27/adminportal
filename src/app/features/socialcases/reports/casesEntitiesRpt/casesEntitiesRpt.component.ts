@@ -192,6 +192,9 @@ export class casesEntitiesRptComponent {
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.getAllDataForReports = response?.data || [];
+          this.getAllDataForReports.forEach((c) => {
+            c.comitY_DATEstr = this.openStandardReportService.formatDate(c.comitY_DATE ?? null);
+          });
           this.pagination.totalCount = response?.totalCount || 0;
           this.spinnerService.hide();
         },
@@ -250,13 +253,6 @@ export class casesEntitiesRptComponent {
       'SocialCaseReportsResourceName.statuS_DESC',
     ]).subscribe(translations => {
       this.columnDefs = [
-        {
-          headerName: '#',
-          valueGetter: (params) =>
-            (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-          width: 60,
-          colId: 'serialNumber'
-        },
         { headerName: translations['SocialCaseReportsResourceName.namE_AR'], field: 'namE_AR', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.casE_ID_NUMBER'], field: 'casE_ID_NUMBER', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.wifE_ID'], field: 'wifE_ID', width: 200 },

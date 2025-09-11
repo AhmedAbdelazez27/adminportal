@@ -186,11 +186,16 @@ export class PieChartComponent implements OnChanges {
         title: { text: NULL_TEXT }
       },
       yAxis: {
-        min: 0,
         title: { text: NULL_TEXT },
         gridLineWidth: 1,
         gridLineColor: isDark ? '#444' : '#ccc',
-        labels: { formatter() { return H.numberFormat(Number(this.value), 0, '.', ','); }, style: { fontSize: '14px', color: textColor } }
+        labels: { formatter() { return H.numberFormat(Number(this.value), 0, '.', ','); }, style: { fontSize: '14px', color: textColor } },
+        plotLines: [{
+          value: 0,
+          width: 1,
+          color: '#808080',
+          zIndex: 4
+        }]
       },
       series: mapSeries(this.seriesData),
       tooltip: {

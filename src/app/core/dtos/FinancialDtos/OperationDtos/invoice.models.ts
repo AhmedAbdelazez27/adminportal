@@ -83,4 +83,6 @@ export class InvoiceFilter {
   skip: number = 0;
   sortColumn: string | null = null;
   sortDirection: string | null = null;
+    fromDate?: string | null = null;
+  toDate?: string | null = null;
 } 

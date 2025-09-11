@@ -57,7 +57,8 @@ export class RoleService {
     }
 
     deleteRole(roleId: string): Observable<any> {
-        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.Delete(roleId)}`, {});
+        const url = `${this.BASE_URL}${ApiEndpoints.Roles.Delete(roleId)}`;
+        return this.http.post(url, {});
     }
 
     getRolesSelect2List(payload: RoleSelect2RequestDto): Observable<any> {

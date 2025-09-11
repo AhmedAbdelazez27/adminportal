@@ -96,11 +96,13 @@ export class UsersListComponent implements OnInit {
   screenOptions: { module: string; label: string; value: string }[] = [];
   filteredScreens: { label: string; value: string }[] = [];
   filteredPermissions: any[] = [];
+  allScreensSelected: boolean = false;
 
 
   dashboardPermissions: any[] = [];
   originalDashboardPermissions: string[] = [];
   filterDasboardForm: FormGroup;
+  allDashboardScreensSelected: boolean = false;
   moduleDashboardOptions: { label: string; value: string }[] = [];
   screenDashboardOptions: { module: string; label: string; value: string }[] = [];
   filteredDashboardScreens: { label: string; value: string }[] = [];
@@ -115,6 +117,7 @@ export class UsersListComponent implements OnInit {
   userRoles: any[] = [];
   user: any
   attachment: any[] = [];
+  genderOptions: any[] = [];
 
   searchParams = new PagedDto();
   searchInput$ = new Subject<string>();
@@ -153,7 +156,7 @@ export class UsersListComponent implements OnInit {
       nameEn: ['', [Validators.required, Validators.minLength(1)]],
       telNumber: [null, [Validators.maxLength(50)]],
       address: [null, [Validators.maxLength(1000)]],
-      gender: [false],
+      gender: [null],
       cityId: [null, [Validators.maxLength(50)]],
       countryId: [null, [Validators.maxLength(50)]],
       entityIdInfo: [null, [Validators.maxLength(50)]],
@@ -198,6 +201,7 @@ export class UsersListComponent implements OnInit {
     this.fetchcountrySelect2();
     this.fetchUsersStatusSelect2();
     this.fetchUsersTypesSelect2();
+    this.initializeGenderOptions();
     // user permissions subscribe
     this.filterForm
       .get('selectedModules')
@@ -431,7 +435,7 @@ export class UsersListComponent implements OnInit {
     this.mode = 'add';
     this.submitted = false;
     this.userForm.reset({
-      gender: false,
+      gender: null,
       userType: 1,
       roles: [],
     });
@@ -453,7 +457,6 @@ export class UsersListComponent implements OnInit {
     this.userForm.patchValue({
       ...user,
       roles: user.roles?.map((r: any) => r.id) || [],
-
       gender: genderValue,
       id: user.id ?? null,
       masterId: user?.masterId ?? null,
@@ -711,14 +714,27 @@ export class UsersListComponent implements OnInit {
         this.filteredPermissions = [...this.userPermissions];
         // this.populateModuleAndScreenOptions();
         this.populateModuleAndScreenOptions('userPermissions','moduleOptions')
+        this.updateAllScreensSelectedState();
         const modalElement = document.getElementById('permissions');
         if (modalElement) {
           const modal = new bootstrap.Modal(modalElement);
           modal.show();
         };
       },
-      error: () => {
-        this.toastr.error('Failed to load permissions');
+      error: (error: any) => {
+        console.error('Error loading permissions:', error);
+        
+        // Check if it's a 400 error with the specific business error response
+        if (error.status === 400 && error.error) {
+          const errorResponse = error.error;
+          if (errorResponse.reason) {
+            this.toastr.error(errorResponse.reason, this.translate.instant('ERROR.PERMISSION_ERROR'));
+          } else {
+            this.toastr.error(this.translate.instant('ERROR.FAILED_TO_LOAD_PERMISSIONS'));
+          }
+        } else {
+          this.toastr.error(this.translate.instant('ERROR.FAILED_TO_LOAD_PERMISSIONS'));
+        }
       },
     });
   }
@@ -741,14 +757,27 @@ export class UsersListComponent implements OnInit {
         this.filteredDashboardPermissions = [...this.dashboardPermissions];
         // this.populateModuleAndScreenOptions();
         this.populateModuleAndScreenOptions('dashboardPermissions','moduleDashboardOptions','screenDashboardOptions')
+        this.updateAllDashboardScreensSelectedState();
         const modalElement = document.getElementById('permissionsdashboard');
         if (modalElement) {
           const modal = new bootstrap.Modal(modalElement);
           modal.show();
         };
       },
-      error: () => {
-        this.toastr.error('Failed to load permissions');
+      error: (error: any) => {
+        console.error('Error loading dashboard permissions:', error);
+        
+        // Check if it's a 400 error with the specific business error response
+        if (error.status === 400 && error.error) {
+          const errorResponse = error.error;
+          if (errorResponse.reason) {
+            this.toastr.error(errorResponse.reason, this.translate.instant('ERROR.DASHBOARD_PERMISSION_ERROR'));
+          } else {
+            this.toastr.error(this.translate.instant('ERROR.FAILED_TO_LOAD_DASHBOARD_PERMISSIONS'));
+          }
+        } else {
+          this.toastr.error(this.translate.instant('ERROR.FAILED_TO_LOAD_DASHBOARD_PERMISSIONS'));
+        }
       },
     });
   }
@@ -778,6 +807,56 @@ export class UsersListComponent implements OnInit {
         }
       }
     }
+    
+    if (permissionsType === 'dashboardPermissions') {
+      this.updateAllDashboardScreensSelectedState();
+    } else {
+      this.updateAllScreensSelectedState();
+    }
+  }
+
+  selectAllScreens(): void {
+    const shouldSelectAll = !this.allScreensSelected;
+    
+    this.filteredPermissions.forEach(module => {
+      module.screenPermissions.forEach((screen: any) => {
+        screen.permissionValues.forEach((permission: any) => {
+          permission.isAllowed = shouldSelectAll;
+        });
+      });
+    });
+    
+    this.allScreensSelected = shouldSelectAll;
+  }
+
+  updateAllScreensSelectedState(): void {
+    const allPermissions = this.filteredPermissions
+      .flatMap(module => module.screenPermissions)
+      .flatMap(screen => screen.permissionValues);
+    
+    this.allScreensSelected = allPermissions.length > 0 && allPermissions.every(permission => permission.isAllowed);
+  }
+
+  selectAllDashboardScreens(): void {
+    const shouldSelectAll = !this.allDashboardScreensSelected;
+    
+    this.filteredDashboardPermissions.forEach(module => {
+      module.screenPermissions.forEach((screen: any) => {
+        screen.permissionValues.forEach((permission: any) => {
+          permission.isAllowed = shouldSelectAll;
+        });
+      });
+    });
+    
+    this.allDashboardScreensSelected = shouldSelectAll;
+  }
+
+  updateAllDashboardScreensSelectedState(): void {
+    const allPermissions = this.filteredDashboardPermissions
+      .flatMap(module => module.screenPermissions)
+      .flatMap(screen => screen.permissionValues);
+    
+    this.allDashboardScreensSelected = allPermissions.length > 0 && allPermissions.every(permission => permission.isAllowed);
   }
 
   isPermissionAvailable(screen: any, action: string): boolean {
@@ -916,6 +995,12 @@ export class UsersListComponent implements OnInit {
         )
       }))
       .filter((m:any) => m.screenPermissions.length > 0);
+    
+    if (permission === 'dashboardPermissions') {
+      this.updateAllDashboardScreensSelectedState();
+    } else {
+      this.updateAllScreensSelectedState();
+    }
   }
 
   // end of permissions
@@ -968,6 +1053,13 @@ export class UsersListComponent implements OnInit {
         this.toastr.error('Failed to load Country.', 'Error');
       }
     });
+  }
+
+  initializeGenderOptions(): void {
+    this.genderOptions = [
+      { value: false, text: this.translate.instant('MALE') },
+      { value: true, text: this.translate.instant('FEMALE') }
+    ];
   }
 
   // show user roles 
@@ -1048,9 +1140,44 @@ export class UsersListComponent implements OnInit {
       { headerName: this.translate.instant('AuthenticationResorceName.name'), field: 'nameEn', width: 200 },
       { headerName: this.translate.instant('AuthenticationResorceName.userName'), field: 'userName', width: 200 },
       { headerName: this.translate.instant('AuthenticationResorceName.userTypeName'), field: 'userTypeName', width: 200 },
-      { headerName: this.translate.instant('AuthenticationResorceName.userStatusName'), field: 'userStatusName', width: 200 },
-      { headerName: this.translate.instant('AuthenticationResorceName.foundationName'), field: 'foundationName', width: 200 },
+      { 
+        headerName: this.translate.instant('AuthenticationResorceName.userStatusName'), 
+        field: 'userStatusName', 
+        width: 200,
+        cellRenderer: (params: any) => {
+          const status = params.data?.userStatus;
+          const statusName = params.data?.userStatusName;
+          
+          // Return empty string if status is null/undefined or statusName is null/undefined
+          if (!status || !statusName || statusName === 'null') {
+            return '';
+          }
+          
+          const statusClass = this.getStatusClass(status);
+          return `<span class="${statusClass}">${statusName}</span>`;
+        }
+      },
     ];
+  }
+
+  public getStatusClass(status: number): string {
+    // Return empty string if status is null/undefined
+    if (!status) {
+      return '';
+    }
+    
+    switch (status) {
+      case 1: // New
+        return 'badge status-waiting';
+      case 2: // Active
+        return 'badge status-approved';
+      case 3: // Suspended
+        return 'badge status-rejected';
+      case 4: // Rejected
+        return 'badge status-rejected';
+      default:
+        return 'badge status-inactive';
+    }
   }
 
   onTableAction(event: { action: string, row: any }) {
@@ -1123,6 +1250,8 @@ export class UsersListComponent implements OnInit {
                     { label: this.translate.instant('AuthenticationResorceName.userStatusName'), value: this.filterUserCriteria.userStatus },
                     { label: this.translate.instant('AuthenticationResorceName.userTypeName'), value: this.filterUserCriteria.userType },
                     { label: this.translate.instant('AuthenticationResorceName.applyDate'), value: this.filterUserCriteria.applyDate },
+                    { label: this.translate.instant('AuthenticationResorceName.dateFrom'), value: this.filterUserCriteria.DateFrom },
+                    { label: this.translate.instant('AuthenticationResorceName.dateTo'), value: this.filterUserCriteria.DateTo },
                     { label: this.translate.instant('AuthenticationResorceName.userName'), value: this.filterUserCriteria.searchValue },
                     { label: this.translate.instant('AuthenticationResorceName.organization'), value: this.filterUserCriteria.foundationName },
                     { label: this.translate.instant('AuthenticationResorceName.license'), value: this.filterUserCriteria.licenseNumber },
@@ -1134,7 +1263,6 @@ export class UsersListComponent implements OnInit {
                     { label: this.translate.instant('AuthenticationResorceName.userName'), key: 'userName' },
                     { label: this.translate.instant('AuthenticationResorceName.userTypeName'), key: 'userTypeName' },
                     { label: this.translate.instant('AuthenticationResorceName.userStatusName'), key: 'userStatusName' },
-                    { label: this.translate.instant('AuthenticationResorceName.foundationName'), key: 'foundationName' },
                   ],
                   data: data.map((item: any, index: number) => ({
                     ...item,

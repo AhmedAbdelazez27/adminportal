@@ -399,13 +399,6 @@ export class GlAccountComponent implements OnInit, OnDestroy {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
       { headerName: this.translate.instant('glAccountResourceName.accountCode'), field: 'accountCode', width: 200 },
       { headerName: this.translate.instant('glAccountResourceName.parentCode'), field: 'parentCode', width: 200 },
       { headerName: this.translate.instant('glAccountResourceName.accountDescription'), field: 'accountDescription', width: 200 },

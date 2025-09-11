@@ -69,7 +69,7 @@ export class ProjectReceiptsComponents implements OnInit {
       next: (res) => {
         this.yearsList = res.years.results;
         this.chartTypes = res.chartTypes;
-        this.entities = [{ id: "", text: 'No Select' }, ...res.entities?.results];
+        this.entities = [{ id: "", text: this.translate.instant('Common.Select') }, ...res.entities?.results];
         this.selectedEntity = "";
 
         const maxIdItem = res.years.results.reduce((maxItem: any, currentItem: any) => {
@@ -83,12 +83,12 @@ export class ProjectReceiptsComponents implements OnInit {
 
         switch (this.defaultChartType) {
           case 'Country':
-            this.pageTitle = "SocialServiceCharts.menugeneral_title";
+            this.pageTitle = `${this.translate.instant('ProjectCharts.titleForprojectReceipt')} ${this.translate.instant('ProjectCharts.menubyCountry')}`;
             this.selectedChart1 = this.findChartTypeId("ByType");
             this.selectedChart2 = this.findChartTypeId("ByType");
             break;
           case 'Type':
-            this.pageTitle = "SocialServiceCharts.menuperiodsdept_title";
+            this.pageTitle = `${this.translate.instant('ProjectCharts.titleForprojectReceipt')} ${this.translate.instant('ProjectCharts.menubyCountry')}`;
             this.selectedChart1 = this.findChartTypeId("ByType");
             this.selectedChart2 = this.findChartTypeId("ByType");
             break;

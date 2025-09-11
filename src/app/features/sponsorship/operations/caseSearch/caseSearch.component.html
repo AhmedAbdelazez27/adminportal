@@ -221,7 +221,7 @@
     
 
   <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl custom-modal-width">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="editLabel">{{ 'CaseSearchResourceName.Title' | translate }}</h1>
@@ -229,7 +229,7 @@
         </div>
         <div class="modal-body">
           <div class="border-bottom mb-4">
-            <h4 class="gold bold">{{ 'CaseSearchResourceName.Title' | translate }}</h4>
+            <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>
 
             <div class="d-flex align-items-center gap-3 p-3 mb-4" style=" background-color: #eef2f3; border-radius: 10px;">
               <img src="img/300-15.jpg" style="border-radius: 100px; width: 150px; height: 150px;" />
@@ -421,7 +421,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
         </div>
       </div>
     </div>
@@ -430,7 +430,7 @@
 
 
   <div class="modal fade" id="viewcasehistorydetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl custom-modal-width">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="editLabel">{{ 'CaseSearchResourceName.CaseHistory_Title' | translate }}</h1>
@@ -438,7 +438,7 @@
         </div>
         <div class="modal-body">
           <div class="border-bottom mb-4">
-            <h4 class="gold bold">{{ 'CaseSearchResourceName.CaseHistory_Title' | translate }}</h4>
+            <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>
             <div class="row">
               <div class="col-xxl-4 col-xl-6">
                 <label for="inputcasE_NO" class="black bold">{{ 'CaseSearchResourceName.casE_NO' | translate }}</label>
@@ -461,7 +461,7 @@
                                     [rowActions]="rowActions"
                                     (actionClick)="onTableAction($event)"
                                     (pageChange)="onPageChangeCaseHistory($event)"
-                                    [showActionColumn]="true"
+                                    [showActionColumn]="false"
                                     (search)="onTableSearchCaseHistory($event)"
                                     (languageChanged)="buildColumnDefs()">
             </app-generic-data-table>
@@ -472,7 +472,7 @@
      
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
         </div>
       </div>
     </div>
@@ -480,7 +480,7 @@
 
 
   <div class="modal fade" id="viewCasePaymentDetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl custom-modal-width">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="editLabel">{{ 'CaseSearchResourceName.CasePayment_Title' | translate }}</h1>
@@ -488,7 +488,7 @@
         </div>
         <div class="modal-body">
           <div class="border-bottom mb-4">
-            <h4 class="gold bold">{{ 'CaseSearchResourceName.CasePayment_Title' | translate }}</h4>
+            <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>
             <div class="row">
               <div class="col-xxl-4 col-xl-6">
                 <label for="inputcasE_NO" class="black bold">{{ 'CaseSearchResourceName.casE_NO' | translate }}</label>
@@ -511,7 +511,7 @@
                                     [rowActions]="rowActions"
                                     (actionClick)="onTableAction($event)"
                                     (pageChange)="onPageChangePaymentHdr($event)"
-                                    [showActionColumn]="true"
+                                    [showActionColumn]="false"
                                     (search)="onTableSearchPaymentHdr($event)"
                                     (languageChanged)="buildColumnDefs()">
             </app-generic-data-table>
@@ -536,14 +536,14 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
         </div>
       </div>
     </div>
   </div>
 
   <div class="modal fade" id="viewContractDetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl custom-modal-width">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="editLabel">{{ 'CaseSearchResourceName.ContractCaseTitle' | translate }}</h1>
@@ -551,7 +551,7 @@
         </div>
         <div class="modal-body">
           <div class="border-bottom mb-4">
-            <h4 class="gold bold">{{ 'CaseSearchResourceName.ContractCaseTitle' | translate }}</h4>
+            <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>
             <div class="row">
               <div class="col-xxl-4 col-xl-6">
                 <label for="inputcontracT_NUMBER" class="black bold">{{ 'CaseSearchResourceName.contracT_NUMBER' | translate }}</label>
@@ -598,7 +598,7 @@
                                     [rowActions]="rowActions"
                                     (actionClick)="onTableAction($event)"
                                     (pageChange)="onPageChangeContract($event)"
-                                    [showActionColumn]="true"
+                                    [showActionColumn]="false"
                                     (search)="onTableSearchContract($event)"
                                     (languageChanged)="buildColumnDefs()">
             </app-generic-data-table>
@@ -608,7 +608,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
         </div>
       </div>
     </div>

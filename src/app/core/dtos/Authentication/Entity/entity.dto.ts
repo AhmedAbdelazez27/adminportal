@@ -11,6 +11,7 @@ export interface EntityDto {
   DescriptionEn?: string;
   IsShowInPortal: boolean;
   IsDonation?: boolean;
+  Active?: boolean;
   MasterId: number; // Changed to long type to match backend
   Attachment?: AttachmentDto; // Single attachment object from API response
 }
@@ -29,6 +30,7 @@ export interface BackendEntityDto {
   descriptionEn?: string;
   isShowInPortal: boolean;
   isDonation?: boolean;
+  active?: boolean;
   masterId: number; // Changed to long type to match backend
   attachment?: AttachmentDto; // Single object, not array
 }
@@ -45,6 +47,7 @@ export interface CreateEntityDto {
   DescriptionEn?: string;
   IsShowInPortal: boolean; // Changed from optional to required boolean
   IsDonation?: boolean;
+  Active?: boolean;
   Attachment?: AttachmentBase64Dto;
 }
 
@@ -61,6 +64,7 @@ export interface UpdateEntityDto {
   DescriptionEn?: string;
   IsShowInPortal: boolean; // Changed from optional to required boolean
   IsDonation?: boolean;
+  Active?: boolean;
 }
 
 export interface GetEntityByIdDto {
@@ -76,6 +80,7 @@ export interface GetEntityByIdDto {
   DescriptionEn?: string;
   IsShowInPortal: boolean;
   IsDonation?: boolean;
+  Active?: boolean;
   MasterId: number; // Changed to long type to match backend
   Attachment?: AttachmentDto; // Single attachment object from API response
 }
@@ -90,6 +95,7 @@ export interface EntityParameter {
   entityId?: string;
   isShowInPortal: boolean;
   isDonation?: boolean;
+  active?: boolean;
   skip: number;
   take: number;
 }

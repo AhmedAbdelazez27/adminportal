@@ -120,7 +120,8 @@ export class caseAidEntitiesRptOutputDto {
   casE_ID_NUMBER?: string | null = null;
   wifE_ID?: string | null = null;
   sponceR_CATEGORY_DESC?: string | null = null;
-  startdate?: string | null = null;
+  startdate: Date | null = null;
+  startdatestr?: string | null = null;
   caseAmount?: string | null = null;
   haI_OFFICE?: string | null = null;
   casE_STATUS_DESC?: string | null = null;

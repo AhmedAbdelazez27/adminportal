@@ -7,21 +7,15 @@
         <div class="col-xl-6 mb-3">
             <div class="main-container h-100">
                 <div class="row mb-4">
-                    <div class="col-xl-6">
+                    <div class="col-xl-12">
                         <ng-select [items]="yearsList" bindLabel="text" bindValue="id" [(ngModel)]="selectedYearId"
                             [closeOnSelect]="true" class="ng-select-custom" (change)="onYearChange()" placeholder="{{ 'FinancialCharts.year' | translate }}">
                         </ng-select>
                     </div>
-                     <div class="col-xl-6">
-                        <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
-                            [closeOnSelect]="true" class="ng-select-custom" (change)="onYearChange('changeEntit')" placeholder="{{ 'FinancialCharts.entity' | translate }}">
-                        </ng-select>
-                    </div>
-                </div>
-              
-               
+                 
+                </div>           
                 <ng-container *ngIf="seriesData.length">
-                    <app-bar-chart [categories]="categories" [seriesData]="seriesData">
+                    <app-bar-chart [categories]="categories" [seriesData]="seriesData" [useDynamicColors]="true">
                     </app-bar-chart>
                 </ng-container>
             </div>
@@ -30,7 +24,12 @@
         <div class="col-xl-6 mb-3">
             <div class="main-container h-100">
                 <div class="row mb-4"  *ngIf="defaultChartType == 'General'">
-                    <div class="col-xl-12">
+                        <div class="col-xl-6">
+                        <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
+                            [closeOnSelect]="true" class="ng-select-custom" (change)="onYearChange('changeEntit')" placeholder="{{ 'FinancialCharts.entity' | translate }}">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
                          <ng-select [items]="chartTypes" bindLabel="text" bindValue="id" [(ngModel)]="selectedChart1"
                             [closeOnSelect]="true" class="ng-select-custom"
                             (change)='onTypeChange(selectedChart1, "categories2", "seriesData2")' placeholder="Type">
@@ -39,7 +38,7 @@
                     </div>
                 </div>
                 <ng-container *ngIf="seriesData2.length">
-                    <app-bar-chart [categories]="categories2" [seriesData]="seriesData2">
+                    <app-bar-chart [categories]="categories2" [seriesData]="seriesData2" [useDynamicColors]="true">
                     </app-bar-chart>
                 </ng-container>
             </div>
@@ -57,7 +56,7 @@
                     </div>
                 </div>
                 <ng-container *ngIf="seriesData3.length">
-                    <app-bar-chart [categories]="categories3" [seriesData]="seriesData3" [chartType]="'line'">
+                    <app-bar-chart [categories]="categories3" [seriesData]="seriesData3" [chartType]="'line'" [useDynamicColors]="true">
                     </app-bar-chart>
                 </ng-container>
             </div>

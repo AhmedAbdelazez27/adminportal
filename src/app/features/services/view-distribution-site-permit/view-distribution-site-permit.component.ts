@@ -1606,7 +1606,7 @@ export class ViewDistributionSitePermitComponent implements OnInit, OnDestroy {
       id: 0,
       empId: localStorage.getItem('userId'),
       workFlowStepsId: this.originalworkFlowId,
-      comment: "ملاحظات حول الموافقة: " + this.originalNotes,
+      comment: "ملاحظات: " + this.originalNotes,
       commentTypeId: 2,
     };
 
@@ -1641,7 +1641,7 @@ export class ViewDistributionSitePermitComponent implements OnInit, OnDestroy {
       id: null,
       empId: localStorage.getItem('userId'),
       workFlowStepsId: this.originalworkFlowId,
-      comment: "ملاحظات حول الموافقة: " + this.originalNotes,
+      comment: "ملاحظات: " + this.originalNotes,
       commentTypeId: 2,
     };
 

@@ -37,12 +37,10 @@
                    [(ngModel)]="searchValue">
           </div>
           <div class="col-xl-4 mb-3">
-            <label for="statusFilter" class="form-label">{{ 'AuthenticationResorceName.status' | translate }}</label>
-            <select class="form-select" id="statusFilter" [(ngModel)]="isActiveFilter">
-              <option [ngValue]="undefined">All</option>
-              <option [ngValue]="true">Active</option>
-              <option [ngValue]="false">Inactive</option>
-            </select>
+            <label class="form-label">{{ 'AuthenticationResorceName.status' | translate }}</label>
+            <ng-select [items]="statusOptions" bindLabel="text" bindValue="id" [multiple]="false"
+                       [closeOnSelect]="true" [(ngModel)]="isActiveFilter" class="ng-select-custom">
+            </ng-select>
           </div>
         </div>
 

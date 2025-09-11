@@ -8,8 +8,17 @@
     "SUCCESS": "تم تعيين الدور بنجاح",
     "FAIL": "حدث خطأ أثناء تعيين الدور"
   },
+
+
+
   "ERROR": {
-    "FETCH_DEPARTMENTS": "خطأ في جلب الأقسام"
+    "FETCH_DEPARTMENTS": "خطأ في جلب الأقسام",
+    "FETCH_ROLES": "خطأ في جلب الأدوار",
+    "PERMISSION_ERROR": "خطأ في الصلاحيات",
+    "DASHBOARD_PERMISSION_ERROR": "خطأ في صلاحيات الشاشة الرئيسية",
+    "MUST_ASSIGN_ROLE": "يجب تعيين دور لهذا المستخدم أولاً",
+    "FAILED_TO_LOAD_PERMISSIONS": "فشل في تحميل الصلاحيات",
+    "FAILED_TO_LOAD_DASHBOARD_PERMISSIONS": "فشل في تحميل صلاحيات الشاشة الرئيسية"
   },
   "ADD_USER": "إضافة مستخدم جديد",
   "EDIT_USER": "تعديل المستخدم",
@@ -56,7 +65,7 @@
     "HERO_SECTION_CREATED": "تم إنشاء القسم الرئيسي بنجاح.",
     "HERO_SECTION_UPDATED": "تم تحديث القسم الرئيسي بنجاح.",
     "HERO_SECTION_DELETED": "تم حذف القسم الرئيسي بنجاح.",
-    "FETCH_HERO_SECTION_SETTINGS": "خطأ في جلب إعدادات القسم الرئيسي",
+    "FETCH_HERO_SECTION_SETTINGS": "خطأ في جلب    الاخبار  ",
     "DELETE_ERROR": "فشل في حذف العنصر.",
     "FILE_SELECTED_SUCCESSFULLY": "تم اختيار الملف بنجاح.",
     "IMAGE_UPDATED_SUCCESSFULLY": "تم تحديث الصورة بنجاح",
@@ -73,7 +82,9 @@
     "REGION_UPDATED": "تم تحديث المنطقة بنجاح",
     "REGION_UPDATE_FAILED": "حدث خطأ أثناء تحديث المنطقة",
     "REGION_DELETED": "تم حذف المنطقة بنجاح",
-    "REGION_DELETE_FAILED": "حدث خطأ أثناء حذف المنطقة"
+    "REGION_DELETE_FAILED": "حدث خطأ أثناء حذف المنطقة",
+    "PERMISSIONS_UPDATED": "تم تحديث الصلاحيات بنجاح.",
+    "PERMISSIONS_UPDATE_FAILED": "فشل في تحديث الصلاحيات."
   },
   "VALIDATION": {
     "REQUIRED": "هذا الحقل مطلوب",
@@ -108,6 +119,13 @@
     "EDIT": "تعديل",
     "DELETE": "حذف",
     "DASHBOARD_PERMISSIONS": "صلاحيات الشاشة الرئيسية",
+    "dept": "القسم",
+    "entities": "الجمعيات",
+    "permissions": "الصلاحيات",
+    "edit": "تعديل",
+    "role": "الأدوار",
+    "ViewInfo": "عرض التفاصيل",
+    "Total": "المجموع",
     "CANCEL": "إلغاء",
     "CLOSE": "إغلاق",
     "CREATE": "إنشاء",
@@ -185,9 +203,9 @@
     "DEPARTMENT": "القسم",
     "FILES": "الملفات",
     "VIEW_ATTACHMENT": "عرض المرفق",
-    "WORKFLOW_COMMENTS": "تعليقات سير العمل",
+    "WORKFLOW_COMMENTS": "التعليقات  ",
     "WORKFLOW_COMMENTS_DESC": "عرض وإضافة تعليقات سير العمل",
-    "ADD_COMMENT": "إعادة ارسال الطلب",
+    "ADD_COMMENT": " إضافة تعليق    ",
     "NO_WORKFLOW_STEP_FOUND": "لم يتم العثور على خطوة سير عمل لإضافة التعليقات",
     "ENTER_COMMENT": "أدخل تعليق",
     "ATTACHMENTS": "المرفقات",
@@ -265,7 +283,8 @@
     "SHOW_IN_PORTAL": "إظهار في البوابة",
     "SHOW_IN_PORTAL_DESC": "عرض هذه الجمعية في البوابة العامة",
     "IS_DONATION": "جهة تبرع",
-    "IS_DONATION_DESC": "تصريح جمع  التبرعات    ",
+    "IS_DONATION_DESC": "تحديد هذه الجمعية كجهة تبرع",
+    "ACTIVE": "نشط",
     "ADD_NEW": "إضافة جمعيه جديد",
     "EDIT": "تعديل الجمعيه",
     "VIEW": "عرض الجمعيه",
@@ -580,7 +599,7 @@
     "currentPWDReq": "كلمة المرور الحالية مطلوبة",
     "operation": "العمليات",
     "report": "التقارير",
-    "chart": "التقارير",
+    "chart": "التقارير التفاعلية",
     "invoiceTitle": "الفواتير",
     "gljeTitle": "القيود",
     "paymentvoucherTitle": "سندات صرف",
@@ -604,9 +623,9 @@
     "caseSearchListRptTitle": "قوائم المكفولين حسب الجنسيه",
     "aidRequestsTitle": "بحث فى الحالات",
     "branchOrdersListrptTitle": "قائمه الطلبات حسب الفرع",
-    "emiratesOrdersListrptTitle": "قائمه الطلبات حسب الاماره",
+    "emiratesOrdersListrptTitle": "قائمه الطلبات    ",
     "casesEntitiesrptTitle": "الحاصلين على مساعدات فى اكثر من جمعيه",
-    "casesHelprptTitle": "كشف مساعدات حاله",
+    "casesHelprptTitle": "كشف مساعدات الحاله",
     "projectsTitle": "تفاصيل المشاريع",
     "countryProjectListrtpTitle": "كشف مشاريع حسب الدوله",
     "typeProjectListrptTitle": "كشف مشاريع حسب النوع",
@@ -646,6 +665,8 @@
     "cancel": "إلغاء",
     "addNew": "إضافة جديد",
     "save": "حفظ",
+    "selectAll": "تحديد الكل",
+    "deselectAll": "إلغاء تحديد الكل",
     "upDate": "تحديث",
     "role": "الأدوار",
     "permissions": "الصلاحيات",
@@ -659,6 +680,7 @@
     "updateSuccessfully": "تم التحديث بنجاح",
     "noPreview": "لا يوجد معاينة متاحة",
     "ServiceInfo": "معلومات الخدمة",
+    "Information": "معلومات",
     "BACK": "رجوع",
     "DATA_NOT_FOUND": "البيانات غير موجودة",
     "DOWNLOAD": "تحميل",
@@ -740,10 +762,12 @@
     "deletetitle": "تأكيد الحذف",
     "deleteWarning": "هل أنت متأكد أنك تريد حذف الدور؟",
     "applyDate": "تاريخ التقديم",
+    "dateFrom": "من تاريخ",
+    "dateTo": "إلى تاريخ",
     "organization": "اسم المؤسسة",
     "license": "رقم الترخيص",
     "addDept": "إضافة قسم",
-    "dept": "مجموعة المستخدمين",
+    "dept": "الأقسام",
     "users": "المستخدمون",
     "employer": "صاحب العمل",
     "email": "البريد الإلكتروني",
@@ -775,7 +799,9 @@
     "entityInfo": "معلومات الجمعيه",
     "optionOne": "الخيار الأول",
     "optionTwo": "الخيار الثاني",
-    "optionThree": "الخيار الثالث"
+    "optionThree": "الخيار الثالث",
+    "entities": "الجمعيات",
+    "Dashboard": "الشاشة الرئيسية"
   },
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "اسم الجمعية",
@@ -1267,7 +1293,7 @@
     "ordersListBranchRptTitle": "قائمه الطلبات حسب الفرع",
     "ordersListCityRptTitle": "قائمه الطلبات حسب الاماره",
     "casesEntitiesRptTitle": "الحاصلين على مساعدات فى اكثر من جمعيه",
-    "caseHelpRptTitle": "كشف مساعدات حاله",
+    "caseHelpRptTitle": "كشف مساعدات الحالة",
     "entityId": "اسم الجمعية",
     "caseId": "اسم الحاله",
     "idNumber": "رقم الهويه",
@@ -1320,6 +1346,7 @@
     "ContractCaseTitle": "العقد",
     "CasePayment_Title": "صرفيات الكفالات ",
     "CaseHistory_Title": "تاريخ المستفيد  ",
+    "DetailTabTitle": "التفاصيل",
     "HdrTitle": "أظهر مُدخلات ",
     "officeId": "مكتب الجمعيه",
     "accounT_NO": " رقم الحساب  ",
@@ -1406,7 +1433,11 @@
     "totalstr": "المجموع",
     "trX_DATE": " تاريخ العمليه ",
     "trX_DATEstr": " تاريخ العمليه ",
-    "trX_DESC": ""
+    "trX_DESC": "",
+    "total1": "اجمالى الكفاله",
+    "total2": "اجمالى الهديه",
+    "total3": "الاجمالى",
+    "NoContract": "No Contracts"
   },
   "AVAILABLE_NUMBER": {
     "TITLE": "       الخدمات  / الاعدادات /  الأرقام المتاحة",
@@ -1716,7 +1747,7 @@
     "finisH_DATE": " تاريخ الانتهاء "
   },
   "FinancialCharts": {
-    "charts": "التقارير",
+    "charts": "التقارير التفاعلية",
     "titleForReceiptPaymentAnalysis": "   تحليل المقبوضات والمدفوعات",
     "menugeneral": "عام",
     "menuperiodsdept": "الفترات والاقسام",
@@ -1746,7 +1777,7 @@
     "start": "يبدأ"
   },
   "SocialServiceCharts": {
-    "charts": "التقارير",
+    "charts": "التقارير التفاعلية",
     "titleForstatisticsofBenfFamilies": "  احصائيات الاسر المستفيدة",
     "menubyNationality": "  الحالات الإجتماعية / حسب الجنسيه",
     "menubyRegions": " الحالات الإجتماعية / حسب المناطق",
@@ -1766,7 +1797,7 @@
     "menubyType": "ألمشاريع / حسب النوع"
   },
   "sponsorshipchart": {
-    "charts": "التقارير",
+    "charts": "التقارير التفاعلية",
     "numbersOfSponsors": "اعداد المكفولين",
     "numbersByPeriodAndType": "اعداد المكفولين حسب الفترات ونوع الكفالة",
     "numbersByTypeAndNationality": "اعداد المكفولين حسب نوع الكفالة والجنسيات",
@@ -1782,10 +1813,23 @@
     "office": "مكتب الجمعية",
     "year": "سنة",
     "entity": "الجمعيه",
-    "month": "شهر"
+    "month": "شهر",
+    "numbersOfSponsorsheader": "التقارير التفاعلية لاعداد المكفولين",
+    "numbersByPeriodAndTypeheader": "التقارير التفاعلية لاعداد المكفولين حسب الفترة و نوع الكفالة",
+    "numbersByTypeAndNationalityheader": "التقارير التفاعلية لاعداد المكفولين حسب نوع الكفالة والجنسية",
+    "totalDonationsByTypeheader": "إجمالى التبرعات حسب نوع الكفالة",
+    "contractStatsByPaymentMethodheader": "إحصائيات العقود حسب طريقة الدفع",
+    "numbersByEntityAndTypeheader": " التقارير التفاعلية لاعداد المكفولين حسب مكتب الجمعية و نوع الكفالة",
+    "numbersInOutCountryheader": " التقارير التفاعلية لاعداد المكفولين داخل وخارج الدوله",
+    "comparisonOfCasesheader": "مقارنات الكفالات",
+    "byTypeOfSponsorshipheader": "حسب نوع الكفاله",
+    "byNationalityheader": "حسب الجنسيه",
+    "byEntityOfficeheader": "حسب مكتب الجمعية",
+    "casesAvailableForSponsorshipheader": "الحالات المتاحه للكفاله"
   },
 
   "mainApplyServiceResourceName": {
+    "serviceName": "اسم الخدمة",
     "title": "الطلبات المقدمة",
     "masterData": "Master Data",
     "attachmentTitle": "المرفقات",
@@ -1946,7 +1990,7 @@
     "requestPlaintJustification": "مبرر التظلم",
     "commentType": "نوع التعليق",
     "commentDate": "تاريخ التعليق",
-    "notesConsent": "ملاحظات حول الموافقة",
+    "notesConsent": "ملاحظات    ",
     "BASIC_INFORMATION": "المعلومات الأساسية",
     "BASIC_INFO_DESC": "عرض المعلومات الأساسية للطلب",
     "MAIN_INFO": "المعلومات الأساسية",
@@ -2019,18 +2063,18 @@
     "isDisabled": "مقفل",
     "natureOfAccount": "طبيعة الحساب",
     "trialBalance": "ميزان المراجعة",
-    "brofitLoss": "الارباح والخسائر",
+    "profitLoss": "الارباح والخسائر",
     "balanceSheet": "ميزانيه",
     "commentDate": "تاريخ التعليق"
   },
 
   "glAccountEntityResourceName": {
     "title": "شجرة الحسابات",
-    "parentId": "Parent Id",
-    "entityId": "ENtity Name",
-    "accountStatus": "Account Status",
+    "parentId": "الاب",
+    "entityId": "الجمعيه",
+    "accountStatus": "الحاله",
     "mappedAccountCode": "Mapped Account Code",
-    "accountId": "Account",
+    "accountId": "الحساب",
     "accountCode": "رقم الحساب",
     "parentCode": "الاب",
     "accountDescription": "الاسم لاتيني",
@@ -2050,14 +2094,14 @@
     "initiative": "المبادرات",
     "attachment": "المرفقات ",
     "contactus": "   طلبات التواصل",
-    "heroSectionSetting": "إعدادات القسم الرئيسي"
+    "heroSectionSetting": "إعدادات  الاخبار  "
 
   },
   "HERO_SECTION_SETTING": {
-    "TITLE": "إدارة إعدادات القسم الرئيسي",
-    "ADD_NEW": "إضافة قسم رئيسي جديد",
-    "EDIT": "تعديل القسم الرئيسي",
-    "VIEW": "عرض القسم الرئيسي",
+    "TITLE": "إدارة الاخبار    ",
+    "ADD_NEW": "إضافة   ",
+    "EDIT": "تعديل الاخبار  ",
+    "VIEW": "عرض    الاخبار",
     "TITLE_AR": "العنوان (عربي)",
     "TITLE_EN": "العنوان (إنجليزي)",
     "ENTER_TITLE_AR": "أدخل العنوان بالعربية",
@@ -2534,6 +2578,7 @@
     "SEARCH": "بحث",
     "SEARCH_PLACEHOLDER": "البحث في الخدمات...",
     "FILTER": "تصفية",
+    "FILTER_BY_MODULES": "تصفية حسب الوحدة/الوحدات",
     "SORT_BY": "ترتيب حسب",
     "SORT_NAME": "الاسم",
     "SORT_TYPE": "النوع",
@@ -3274,6 +3319,7 @@
   "ADVERTISEMENT": {
     "VIEW_TITLE": "عرض الإعلان",
     "DETAILS": "تفاصيل الإعلان",
+    "PERMIT_INFORMATION": "معلومات التصريح",
     "TITLE": "العنوان",
     "LANGUAGE": "اللغة",
     "START_DATE": "تاريخ البداية",

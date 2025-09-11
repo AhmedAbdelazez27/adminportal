@@ -30,6 +30,9 @@ export class NavbarComponent {
 
   constructor(public translation: TranslationService, private authService: AuthService, private toastr: ToastrService, private fb: FormBuilder, private spinnerService: SpinnerService,
     private translate: TranslateService, private userService: UserService) {
+    console.log('NavbarComponent constructor called');
+    console.log('localStorage permissions:', localStorage.getItem('permissions'));
+    
     this.changePasswordForm = this.fb.group({
       currentPassword: ['', [Validators.required, Validators.minLength(1)]],
       newPassword: ['', [Validators.required, Validators.minLength(1)]],
@@ -62,11 +65,91 @@ export class NavbarComponent {
   }
   hasPermission(permission: string): boolean {
     const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
-    return permissions.includes(permission);
+    const result = permissions.includes(permission);
+    // console.log(`Permission check for "${permission}":`, {
+    //   permissions: permissions,
+    //   result: result
+    // });
+    return result;
   }
   hasPagePermission(pagePermission: string): boolean {
     const pages = JSON.parse(localStorage.getItem('pages') || '[]');
     return pages.includes(pagePermission);
+  }
+
+  hasAnyAuthenticationPermission(): boolean {
+    console.log('hasAnyAuthenticationPermission() method called!');
+    const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
+    console.log('Authentication permissions check:', {
+      permissions: permissions,
+      hasRoleView: this.hasPermission('Role.View'),
+      hasUserView: this.hasPermission('User.View'),
+      hasEntityView: this.hasPermission('Entity.View'),
+      hasDepartmentsView: this.hasPermission('Departments.View')
+    });
+    return this.hasPermission('Role.View') || 
+           this.hasPermission('User.View') || 
+           this.hasPermission('Entity.View') || 
+           this.hasPermission('Departments.View');
+  }
+
+  hasAnyFinancialPermission(): boolean {
+    return this.hasPermission('VwApInvoiceHd.View') ||
+           this.hasPermission('GlJeHeader.View') ||
+           this.hasPermission('ApMiscPaymentHeader.View') ||
+           this.hasPermission('ArMiscReciptHeader.View') ||
+           this.hasPermission('ApPaymentTransactionsHdr.View') ||
+           this.hasPermission('ApVendor.View') ||
+           this.hasAnyFinancialReportsPermission() ||
+           this.hasAnyFinancialChartsPermission();
+  }
+
+  hasAnySponsorshipPermission(): boolean {
+    return this.hasPermission('SpCasesPayment.View') ||
+           this.hasPermission('SpBeneficents.View') ||
+           this.hasPermission('SpContracts.View') ||
+           this.hasPermission('SpCases.View') ||
+           this.hasPermission('BeneficentsRpt.View') ||
+           this.hasPermission('CaseSearchRpt.View') ||
+           this.hasPermission('BenifcientTotalRpt.View') ||
+           this.hasPermission('CaseAidEntitiesRpt.View') ||
+           this.hasPermission('CaseSearchListRpt.View');
+  }
+
+  hasAnySocialCasesPermission(): boolean {
+    return this.hasPermission('AidRequest.View') ||
+           this.hasPermission('OrdersListRpt.View') ||
+           this.hasPermission('CasesEntitiesRpt.View') ||
+           this.hasPermission('CaseAidEntitiesRpt.View');
+  }
+
+  hasAnyProjectsPermission(): boolean {
+    return this.hasPermission('ScProject.View') ||
+           this.hasPermission('ProjectsHdr.View');
+  }
+
+  hasAnyServicesPermission(): boolean {
+    return this.hasPermission('ServiceRequestsDetailsRpt.View') ||
+           this.hasPermission('TotalServiceRequestsRpt.View') ||
+           this.hasPermission('Services.View') ||
+           this.hasPermission('MainApplyRequestService.View');
+  }
+
+  hasAnyFinancialReportsPermission(): boolean {
+    return this.hasPermission('CatchReceiptRpt.View') ||
+           this.hasPermission('GeneralGlJournalRpt.View') ||
+           this.hasPermission('BalanceReviewRpt.View') ||
+           this.hasPermission('ReceiptRpt.View') ||
+           this.hasPermission('VendorsPayRpt.View') ||
+           this.hasPermission('TotalBenDonationsRpt.View');
+  }
+
+  hasAnyFinancialChartsPermission(): boolean {
+    return this.hasPermission('FinancialCharts.View') ||
+           this.hasPermission('RevenueAndExpensesCharts.View') ||
+           this.hasPermission('ReceiptPaymentCharts.View') ||
+           this.hasPermission('ReceiptsAndPaymentsCharts.View') ||
+           this.hasPermission('RevenueComparisonCharts.View');
   }
 
   logout() {

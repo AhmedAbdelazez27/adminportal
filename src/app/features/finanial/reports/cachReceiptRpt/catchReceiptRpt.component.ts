@@ -15,6 +15,7 @@ import { FinancialReportService } from '../../../../core/services/Financial/Repo
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
+import { formatNumericCell } from '../../../../shared/utils/value-formatters';
 
 @Component({
   selector: 'app-catchReceiptRpt',
@@ -294,23 +295,21 @@ export class catchReceiptRptComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
+
       { headerName: this.translate.instant('FinancialReportResourceName.bankAccountName'), field: 'banK_ACCOUNT_NAME', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.beneficiaryName'), field: 'beneficiarY_NAME', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.notes'), field: 'notes', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.transactionTypeDesc'), field: 'transactioN_TYPE_DESC', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.receiptNumber'), field: 'receipT_NUMBER', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.miscReceiptDate'), field: 'misC_RECEIPT_DATEstr', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.receiptAmount'), field: 'receipT_AMOUNTstr', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.chequeAmount'), field: 'chequE_AMOUNTstr', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.amount'), field: 'casH_AMOUNTstr', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.administrativeAmount'), field: 'administrativE_AMOUNTstr', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.receiptAmount'), field: 'receipT_AMOUNTstr', width: 200, 
+      valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
+      { headerName: this.translate.instant('FinancialReportResourceName.chequeAmount'), field: 'chequE_AMOUNTstr', width: 200,   
+    valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
+      { headerName: this.translate.instant('FinancialReportResourceName.amount'), field: 'casH_AMOUNTstr', width: 200,  
+   valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
+      { headerName: this.translate.instant('FinancialReportResourceName.administrativeAmount'), field: 'administrativE_AMOUNTstr', width: 200,    
+     valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
       { headerName: this.translate.instant('FinancialReportResourceName.collectorName'), field: 'collectoR_NAME', width: 200 },
     ];
   }

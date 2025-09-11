@@ -355,13 +355,6 @@ export class VendorComponent implements OnInit {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
       { headerName: this.translate.instant('vendorResourceName.vendorNo'), field: 'vendoR_NUMBER', width: 200 },
       { headerName: this.translate.instant('vendorResourceName.vendorName'), field: 'vendoR_NAME', width: 200 },
       { headerName: this.translate.instant('vendorResourceName.status'), field: 'statuS_DESC', width: 200 },

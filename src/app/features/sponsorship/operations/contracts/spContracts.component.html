@@ -139,6 +139,16 @@
                            placeholder="{{ 'Common.Select' | translate }}">
                 </ng-select>
               </div>
+
+              <div class="col-xl-4 mb-3">
+                <label for="fromDate" class="form-label">{{ 'FinancialReportResourceName.fromDate' | translate}}</label>
+                <input type="date" name="fromDate" class="form-control" [(ngModel)]="searchParams.fromDate" placeholder="Search">
+              </div>
+
+              <div class="col-xl-4 mb-3">
+                <label for="toDate" class="form-label">{{ 'FinancialReportResourceName.toDate' | translate}}</label>
+                <input type="date" name="toDate" class="form-control" [(ngModel)]="searchParams.toDate" placeholder="Search">
+              </div>
             </div>
           </form>
 
@@ -182,7 +192,7 @@
       
     
     <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl">
+      <div class="modal-dialog modal-xl custom-modal-width">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="editLabel">{{ 'SpContractsResourceName.Title' | translate }}</h1>
@@ -191,7 +201,7 @@
 
           <div class="modal-body">
             <div class="border-bottom mb-4">
-              <h4 class="gold bold">{{ 'SpContractsResourceName.Title' | translate }}</h4>
+              <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>
 
               <div class="row">
                 <div class="col-xxl-4 col-xl-6">
@@ -235,28 +245,26 @@
                 </div>
               </div>
             </div>
-          </div>
+            <h4 class="gold bold">{{ 'SpContractsResourceName.Title_SpContractCase' | translate }}</h4>
+            <div *ngIf="loadformDetailsData && loadformDetailsData.length > 0">
+              <app-generic-data-table [columnDefs]="contractCasescolumnDefs"
+                                      [rowData]="loadformDetailsData"
+                                      [totalCount]="contractCasespagination.totalCount"
+                                      [pageSize]="contractCasespagination.take"
+                                      [currentPage]="contractCasespagination.currentPage - 1"
+                                      [columnHeaderMap]="columnHeaderMap"
+                                      [rowActions]="rowActions"
+                                      (pageChange)="oncontractCasesPageChange($event)"
+                                      [showActionColumn]="false"
+                                      (search)="oncontractCasesTableSearch($event)"
+                                      (languageChanged)="buildColumnDefs()">
+              </app-generic-data-table>
+            </div>
 
-          <h4 class="gold bold">{{ 'SpContractsResourceName.Title_SpContractCase' | translate }}</h4>
-          <div *ngIf="loadformDetailsData && loadformDetailsData.length > 0">
-            <app-generic-data-table [columnDefs]="contractCasescolumnDefs"
-                                    [rowData]="loadformDetailsData"
-                                    [totalCount]="contractCasespagination.totalCount"
-                                    [pageSize]="contractCasespagination.take"
-                                    [currentPage]="contractCasespagination.currentPage - 1"
-                                    [columnHeaderMap]="columnHeaderMap"
-                                    [rowActions]="rowActions"
-                                    (pageChange)="oncontractCasesPageChange($event)"
-                                    [showActionColumn]="false"
-                                    (search)="oncontractCasesTableSearch($event)"
-                                    (languageChanged)="buildColumnDefs()">
-            </app-generic-data-table>
+            <div *ngIf="!loadformDetailsData || loadformDetailsData.length === 0" class="alert alert-info">
+              {{ 'Common.NoData' | translate }}
+            </div>
           </div>
-
-          <div *ngIf="!loadformDetailsData || loadformDetailsData.length === 0" class="alert alert-info">
-            {{ 'Common.NoData' | translate }}
-          </div>
-         
 
           <div class="modal-footer">
             <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>

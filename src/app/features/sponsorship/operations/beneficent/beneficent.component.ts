@@ -294,13 +294,6 @@ export class BeneficentComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
       { headerName: this.translate.instant('beneficentResourceName.beneficentNumber'), field: 'beneficenT_NO', width: 50 },
       { headerName: this.translate.instant('beneficentResourceName.beneficentName'), field: 'beneficentname', width: 200 },
       { headerName: this.translate.instant('beneficentResourceName.beneficentAddress'), field: 'address', width: 100 },

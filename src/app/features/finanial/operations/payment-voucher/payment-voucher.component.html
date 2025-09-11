@@ -149,7 +149,7 @@
 
         <div class="modal-body">
           <div class="border-bottom mb-4">
-            <h4 class="gold bold">{{ 'PaymentVoucherResourceName.Title' | translate }}</h4>
+          <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>  
             <div class="row">
               <div class="col-xxl-4 col-xl-6">
                 <label for="inputreceipT_NUMBER" class="black bold">{{ 'PaymentVoucherResourceName.paymenT_NUMBER' | translate }}</label>
@@ -178,7 +178,7 @@
 
               <div class="col-xxl-4 col-xl-6">
                 <label for="inputreceipT_NUMBER" class="black bold">{{ 'PaymentVoucherResourceName.total' | translate }}</label>
-                <p>{{ loadformData.amounTstr }}</p>
+                <p>{{ loadformData.amounTstr ?? '' | numberFormat }}</p>
               </div>
 
               <div class="col-xxl-4 col-xl-6">

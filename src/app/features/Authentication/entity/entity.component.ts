@@ -63,6 +63,7 @@ export class EntityComponent implements OnInit, OnDestroy {
     editingEntityId: string | null = null;
     selectedEntityToDelete: string | null = null;
     selectedEntityObject: EntityDto | null = null;
+    isActiveFilter: boolean | undefined = undefined;
     isLoading: boolean = false;
     Math = Math; // Make Math available in template
     environment = environment; // Make environment available in template
@@ -87,6 +88,13 @@ export class EntityComponent implements OnInit, OnDestroy {
         { id: 'ACC003', text: 'Account Details 3' },
         { id: 'ACC004', text: 'Account Details 4' },
         { id: 'ACC005', text: 'Account Details 5' },
+    ];
+
+    // Status options for ng-select
+    statusOptions: any[] = [
+        { id: undefined, text: 'All' },
+        { id: true, text: 'Active' },
+        { id: false, text: 'Inactive' }
     ];
 
     // Table configuration
@@ -120,6 +128,7 @@ export class EntityComponent implements OnInit, OnDestroy {
         entityId: undefined,
         isShowInPortal: false,
         isDonation: undefined,
+        active: undefined,
         skip: 0,
         take: 10
     };
@@ -182,6 +191,7 @@ export class EntityComponent implements OnInit, OnDestroy {
             DescriptionEn: ['', [Validators.maxLength(4000)]],
             IsShowInPortal: [false],
             IsDonation: [false],
+            Active: [true],
         });
     }
 
@@ -446,6 +456,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                 DescriptionEn: item.descriptionEn || (item as any).DescriptionEn,
                 IsShowInPortal: item.isShowInPortal !== undefined ? item.isShowInPortal : (item as any).IsShowInPortal,
                 IsDonation: item.isDonation !== undefined ? item.isDonation : (item as any).IsDonation,
+                Active: item.active !== undefined ? item.active : (item as any).Active,
                 MasterId: item.masterId || (item as any).MasterId,
                 // Handle single attachment object
                 Attachment: item.attachment || (item as any).attachment
@@ -462,6 +473,8 @@ export class EntityComponent implements OnInit, OnDestroy {
         const skip = (event.pageNumber - 1) * event.pageSize;
         this.searchParams.skip = skip;
         this.searchParams.take = event.pageSize;
+        this.searchParams.active = this.isActiveFilter;
+        this.searchParams.searchValue = this.searchValue;
         const cleanedFilters = this.cleanFilterObject(this.searchParams);
         cleanedFilters.searchValue = cleanedFilters.searchValue != null ? cleanedFilters.searchValue : '';
 
@@ -554,6 +567,8 @@ export class EntityComponent implements OnInit, OnDestroy {
             take: this.itemsPerPage,
             searchValue: searchValue,
             isShowInPortal: false,
+            isDonation: undefined,
+            active: this.isActiveFilter,
         };
 
         this.entityService.getAllEntities(parameters).subscribe({
@@ -664,8 +679,8 @@ export class EntityComponent implements OnInit, OnDestroy {
 
     clear(): void {
         this.searchValue = '';
+        this.isActiveFilter = undefined;
         this.searchParams.searchValue = '';
-        this.searchParams.isDonation = undefined;
         this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
     }
 
@@ -746,6 +761,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                     DescriptionEn: formData.DescriptionEn?.trim() || null,
                     IsShowInPortal: formData.IsShowInPortal || false,
                     IsDonation: formData.IsDonation || false,
+                    Active: formData.Active !== undefined ? formData.Active : true,
                     Attachment: attachmentDto || undefined,
                 };
 
@@ -775,6 +791,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                     DescriptionEn: formData.DescriptionEn?.trim() || null,
                     IsShowInPortal: formData.IsShowInPortal || false,
                     IsDonation: formData.IsDonation || false,
+                    Active: formData.Active !== undefined ? formData.Active : true,
                 };
 
                 this.entityService.updateEntity(updateData).subscribe({
@@ -905,6 +922,7 @@ export class EntityComponent implements OnInit, OnDestroy {
             DescriptionEn: entity.DescriptionEn,
             IsShowInPortal: entity.IsShowInPortal,
             IsDonation: entity.IsDonation,
+            Active: entity.Active,
         });
     }
 
@@ -925,6 +943,7 @@ export class EntityComponent implements OnInit, OnDestroy {
             DescriptionEn: apiResponse.descriptionEn || apiResponse.DescriptionEn,
             IsShowInPortal: apiResponse.isShowInPortal || apiResponse.IsShowInPortal,
             IsDonation: apiResponse.isDonation || apiResponse.IsDonation,
+            Active: apiResponse.active !== undefined ? apiResponse.active : apiResponse.Active,
             MasterId: apiResponse.masterId || apiResponse.MasterId,
             Attachment: apiResponse.attachment || apiResponse.Attachment
         };
@@ -1085,7 +1104,19 @@ export class EntityComponent implements OnInit, OnDestroy {
             { headerName: this.translate.instant('ENTITY.PHONE'), field: 'ENTITY_PHONE', width: 200 },
             { headerName: this.translate.instant('ENTITY.WEBSITE'), field: 'ENTITY_WEBSITE', width: 200 },
             { headerName: this.translate.instant('ENTITY.EMAIL'), field: 'ENTITY_MAIL', width: 200 },
-            { headerName: this.translate.instant('ENTITY.ACCOUNT_DETAILS'), field: 'ACC_DETAILS_ID', width: 200 }
+            { headerName: this.translate.instant('ENTITY.ACCOUNT_DETAILS'), field: 'ACC_DETAILS_ID', width: 200 },
+            {
+                field: 'Active',
+                headerName: this.translate.instant('ENTITY.STATUS'),
+                width: 100,
+                sortable: true,
+                filter: true,
+                cellRenderer: (params: any) => {
+                    const isActive = params.value;
+                    return `<span class="badge ${isActive ? 'status-approved' : 'status-rejected'
+                        }">${isActive ? 'Active' : 'Inactive'}</span>`;
+                },
+            }
         ];
     }
 
@@ -1362,7 +1393,7 @@ export class EntityComponent implements OnInit, OnDestroy {
         this.fileValidationSuccess = false;
 
         if (mode === 'add') {
-            this.entityForm.reset({ IsShowInPortal: false, IsDonation: false });
+            this.entityForm.reset({ IsShowInPortal: false, IsDonation: false, Active: true });
             this.selectedEntityObject = null;
         }
 

@@ -91,6 +91,7 @@ type RequestAdvertisementDto = {
   advertisementStatusName?: string | null;
   attachments?: AttachmentDto[];
   mainApplyService?: any;
+  parentMainApplyService?: any;
   requestAdvertisementTargets?: RequestAdvertisementTargetDto[];
   requestAdvertisementAdLocations?: RequestAdvertisementAdLocationDto[];
   requestAdvertisementAdMethods?: RequestAdvertisementAdMethodDto[];
@@ -142,7 +143,7 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
   methods: any[] = [];
   locations: any[] = [];
   workFlowSteps: WorkFlowStepDto[] = [];
-  attachments: any[] = []; // Keep as any[] for main service attachments
+  attachments: any[] = []; // Keep as any[] for main service attachments for 
   workFlowComments: WorkFlowCommentDto[] = [];
   
   // Generic table properties for workflow comments
@@ -409,7 +410,8 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
       advertisementStatusName: adData.advertisementStatusName,
       requestAdvertisementTargets: (adData.requestAdvertisementTargets || []) as any,
       requestAdvertisementAdLocations: (adData.requestAdvertisementAdLocations || []) as any,
-      requestAdvertisementAdMethods: (adData.requestAdvertisementAdMethods || []) as any
+      requestAdvertisementAdMethods: (adData.requestAdvertisementAdMethods || []) as any,
+      parentMainApplyService: adData.parentMainApplyService || null
     };
   }
 
@@ -674,6 +676,30 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
   formatDateTime(date: string | Date | null | undefined): string {
     if (!date) return '';
     return new Date(date).toLocaleString();
+  }
+
+  // Helper method to get localized status based on current language
+  getLocalizedStatus(arabicStatus: string | null, englishStatus: string | null): string {
+    const currentLang = this.translate.currentLang || this.translate.defaultLang;
+    if (currentLang === 'ar' && arabicStatus) {
+      return arabicStatus;
+    } else if (currentLang === 'en' && englishStatus) {
+      return englishStatus;
+    }
+    // Fallback to available status
+    return arabicStatus || englishStatus || '-';
+  }
+
+  // Helper method to get localized service name based on current language
+  getLocalizedServiceName(arabicName: string | null, englishName: string | null): string {
+    const currentLang = this.translate.currentLang || this.translate.defaultLang;
+    if (currentLang === 'ar' && arabicName) {
+      return arabicName;
+    } else if (currentLang === 'en' && englishName) {
+      return englishName;
+    }
+    // Fallback to available name
+    return arabicName || englishName || '-';
   }
 
   // Workflow Steps Helper Methods

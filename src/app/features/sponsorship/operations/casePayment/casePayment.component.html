@@ -155,7 +155,7 @@
     </app-generic-data-table>
     
   <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl custom-modal-width">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="editLabel">{{ 'CasePaymentResourceName.Title' | translate }}</h1>
@@ -163,7 +163,7 @@
         </div>
         <div class="modal-body">
           <div class="border-bottom mb-4">
-            <h4 class="gold bold">{{ 'CasePaymentResourceName.Title' | translate }}</h4>
+            <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>
             <div class="row">
               <div class="col-xxl-4 col-xl-6">
                 <label for="inputreceipT_NUMBER" class="black bold">{{ 'CasePaymentResourceName.paymenT_DESC' | translate }}</label>
@@ -183,40 +183,47 @@
               </div>
             </div>
           </div>
-          <h4 class="gold bold">{{ 'CasePaymentResourceName.HdrTitle' | translate }}</h4>
-          <app-generic-data-table [columnDefs]="columnDefsPaymentHdr"
-                                  [rowData]="loadHdrformData"
-                                  [totalCount]="paginationPaymentHdr.totalCount"
-                                  [pageSize]="paginationPaymentHdr.take"
-                                  [currentPage]="paginationPaymentHdr.currentPage - 1"
-                                  [columnHeaderMap]="columnHeaderMap"
-                                  [rowActions]="rowActions"
-                                  (actionClick)="onTableAction($event)"
-                                  (pageChange)="onPageChangePaymentHdr($event)"
-                                  [showActionColumn]="false"
-                                  (search)="onTableSearch($event)"
-                                  (languageChanged)="buildColumnDefs()">
-          </app-generic-data-table>
+          <h4 class="gold bold">{{ 'SpContractsResourceName.Title_SpContractCase' | translate }}</h4>
+          <div *ngIf="!loadHdrformData || loadHdrformData.length === 0" class="alert alert-info">
+            {{ 'Common.NoData' | translate }}
+          </div>
+          <div *ngIf="loadHdrformData && loadHdrformData.length > 0">
+            <app-generic-data-table [columnDefs]="columnDefsPaymentHdr"
+                                    [rowData]="loadHdrformData"
+                                    [totalCount]="paginationPaymentHdr.totalCount"
+                                    [pageSize]="paginationPaymentHdr.take"
+                                    [currentPage]="paginationPaymentHdr.currentPage - 1"
+                                    [columnHeaderMap]="columnHeaderMap"
+                                    [rowActions]="rowActions"
+                                    (actionClick)="onTableAction($event)"
+                                    (pageChange)="onPageChangePaymentHdr($event)"
+                                    [showActionColumn]="false"
+                                    (search)="onTableSearch($event)"
+                                    (languageChanged)="buildColumnDefs()">
+            </app-generic-data-table>
+          </div>
+
+         
 
           <div class="row">
             <div class="col-xxl-4 col-xl-6">
-              <label class="bold black">{{ 'CasePaymentResourceName.total1' | translate }}</label>
+              <label class="bold black">{{ 'CaseSearchResourceName.total1' | translate }}</label>
               <p>{{ loadformData.amounT_AEDstr | number:'1.2-2' }}</p>
             </div>
             <div class="col-xxl-4 col-xl-6">
-              <label class="bold black">{{ 'CasePaymentResourceName.total2' | translate }}</label>
+              <label class="bold black">{{ 'CaseSearchResourceName.total2' | translate }}</label>
               <p>{{ loadformData.gifT_AMOUNTstr | number:'1.2-2'}}</p>
             </div>
             <div class="col-xxl-4 col-xl-6">
-              <label class="bold black">{{ 'CasePaymentResourceName.total3' | translate }}</label>
+              <label class="bold black">{{ 'CaseSearchResourceName.total3' | translate }}</label>
               <p>{{ loadformData.totalAmountstr | number:'1.2-2'  }}</p>
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Close</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
+          </div>
         </div>
-      </div>
     </div>
   </div>
 </div>

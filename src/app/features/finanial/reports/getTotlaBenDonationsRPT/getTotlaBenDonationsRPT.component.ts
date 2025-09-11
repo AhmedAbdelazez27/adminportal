@@ -15,6 +15,7 @@ import { FinancialReportService } from '../../../../core/services/Financial/Repo
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
+import { formatNumericCell } from '../../../../shared/utils/value-formatters';
 @Component({
   selector: 'app-getTotlaBenDonationsRPT',
   standalone: true,
@@ -243,20 +244,15 @@ export class getTotlaBenDonationsRPTComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
+
       { headerName: this.translate.instant('FinancialReportResourceName.beneficentName'), field: 'beneficentName', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.beneficentNo'), field: 'beneficenT_NO', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.receiptNumber'), field: 'receipT_NUMBER', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.miscReceiptDate'), field: 'misC_RECEIPT_DATEstr', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.receiptTypeDesc'), field: 'receipT_TYPE_DESC', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.notes'), field: 'notes', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.miscReceiptAmount'), field: 'misC_RECEIPT_AMOUNTstr', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.miscReceiptAmount'), field: 'misC_RECEIPT_AMOUNTstr', width: 200, 
+    valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
       { headerName: this.translate.instant('FinancialReportResourceName.administrative'), field: 'administrativEstr', width: 200 },
     ];
   }

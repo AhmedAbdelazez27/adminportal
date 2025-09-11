@@ -9,7 +9,8 @@ export class filterGljeListHeaderDto {
   je_Curr: string | null = null;
   je_Date: string | null = null;
   OrderbyValue: string = 'ENTITY_ID';
-
+    fromDate?: string | null = null;
+  toDate?: string | null = null;
   statusstr: string | null = null;
   entityIdstr: string | null = null;
   je_Sourestr: string | null = null;

@@ -245,6 +245,9 @@ export class projectTypeListRptComponent {
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.getAllDataForReports = response.data || [];
+          this.getAllDataForReports.forEach((c) => {
+            c.applicatioN_DATEstr = this.openStandardReportService.formatDate(c.applicatioN_DATE ?? null);
+          });
           this.pagination.totalCount = response?.totalCount || 0;
           this.spinnerService.hide();
         },
@@ -304,21 +307,14 @@ export class projectTypeListRptComponent {
       'ProjectReportResourceName.statuS_DESC',
     ]).subscribe(translations => {
       this.columnDefs = [
-        {
-          headerName: '#',
-          valueGetter: (params) =>
-            (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-          width: 60,
-          colId: 'serialNumber'
-        },
         { headerName: translations['ProjectReportResourceName.projecT_NAME'], field: 'projecT_NAME', width: 200 },
         { headerName: translations['ProjectReportResourceName.projecT_NUMBER'], field: 'projecT_NUMBER', width: 200 },
         { headerName: translations['ProjectReportResourceName.applicatioN_DATE'], field: 'applicatioN_DATEstr', width: 200 },
         { headerName: translations['ProjectReportResourceName.projecT_TYPE_DESC'], field: 'projecT_TYPE_DESC', width: 200 },
-        { headerName: translations['ProjectReportResourceName.cost'], field: 'coststr', width: 200 },
+        { headerName: translations['ProjectReportResourceName.cost'], field: 'cost', width: 200 },
         { headerName: translations['ProjectReportResourceName.currancY_NAME'], field: 'currancY_NAME', width: 200 },
-        { headerName: translations['ProjectReportResourceName.local_cost'], field: 'local_coststr', width: 200 },
-        { headerName: translations['ProjectReportResourceName.misC_RECEIPT_AMOUNT'], field: 'misC_RECEIPT_AMOUNTstr', width: 200 },
+        { headerName: translations['ProjectReportResourceName.local_cost'], field: 'local_cost', width: 200 },
+        { headerName: translations['ProjectReportResourceName.misC_RECEIPT_AMOUNT'], field: 'misC_RECEIPT_AMOUNT', width: 200 },
         { headerName: translations['ProjectReportResourceName.statuS_DESC'], field: 'statuS_DESC', width: 200 },
       ];
     });
@@ -345,7 +341,7 @@ export class projectTypeListRptComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse[0]?.rowsCount || 0;
+          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
 
           this.projectReportservice.getprojectListRptData({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
@@ -368,12 +364,12 @@ export class projectTypeListRptComponent {
                     { label: '#', key: 'rowNo', title: '#' },
                     { label: this.translate.instant('ProjectReportResourceName.projecT_NAME'), key: 'projecT_NAME' },
                     { label: this.translate.instant('ProjectReportResourceName.projecT_NUMBER'), key: 'projecT_NUMBER' },
-                    { label: this.translate.instant('ProjectReportResourceName.applicatioN_DATE'), key: 'applicatioN_DATEstr' },
+                    { label: this.translate.instant('ProjectReportResourceName.applicatioN_DATE'), key: 'applicatioN_DATE' },
                     { label: this.translate.instant('ProjectReportResourceName.projecT_TYPE_DESC'), key: 'projecT_TYPE_DESC' },
-                    { label: this.translate.instant('ProjectReportResourceName.cost'), key: 'coststr' },
+                    { label: this.translate.instant('ProjectReportResourceName.cost'), key: 'cost' },
                     { label: this.translate.instant('ProjectReportResourceName.currancY_NAME'), key: 'currancY_NAME' },
-                    { label: this.translate.instant('ProjectReportResourceName.local_cost'), key: 'local_coststr' },
-                    { label: this.translate.instant('ProjectReportResourceName.misC_RECEIPT_AMOUNT'), key: 'misC_RECEIPT_AMOUNTstr' },
+                    { label: this.translate.instant('ProjectReportResourceName.local_cost'), key: 'local_cost' },
+                    { label: this.translate.instant('ProjectReportResourceName.misC_RECEIPT_AMOUNT'), key: 'misC_RECEIPT_AMOUNT' },
                     { label: this.translate.instant('ProjectReportResourceName.statuS_DESC'), key: 'statuS_DESC' },
                   ],
                   data: data.map((item: any, index: number) => ({
@@ -438,12 +434,12 @@ export class projectTypeListRptComponent {
                     { label: '#', key: 'rowNo', title: '#' },
                     { label: this.translate.instant('ProjectReportResourceName.projecT_NAME'), key: 'projecT_NAME' },
                     { label: this.translate.instant('ProjectReportResourceName.projecT_NUMBER'), key: 'projecT_NUMBER' },
-                    { label: this.translate.instant('ProjectReportResourceName.applicatioN_DATE'), key: 'applicatioN_DATEstr' },
-                    { label: this.translate.instant('ProjectReportResourceName.countrY_code'), key: 'countrY_code' },
-                    { label: this.translate.instant('ProjectReportResourceName.cost'), key: 'coststr' },
+                    { label: this.translate.instant('ProjectReportResourceName.applicatioN_DATE'), key: 'applicatioN_DATE' },
                     { label: this.translate.instant('ProjectReportResourceName.projecT_TYPE_DESC'), key: 'projecT_TYPE_DESC' },
-                    { label: this.translate.instant('ProjectReportResourceName.local_cost'), key: 'local_coststr' },
-                    { label: this.translate.instant('ProjectReportResourceName.misC_RECEIPT_AMOUNT'), key: 'misC_RECEIPT_AMOUNTstr' },
+                    { label: this.translate.instant('ProjectReportResourceName.cost'), key: 'cost' },
+                    { label: this.translate.instant('ProjectReportResourceName.currancY_NAME'), key: 'currancY_NAME' },
+                    { label: this.translate.instant('ProjectReportResourceName.local_cost'), key: 'local_cost' },
+                    { label: this.translate.instant('ProjectReportResourceName.misC_RECEIPT_AMOUNT'), key: 'misC_RECEIPT_AMOUNT' },
                     { label: this.translate.instant('ProjectReportResourceName.statuS_DESC'), key: 'statuS_DESC' },
                   ],
                   data,

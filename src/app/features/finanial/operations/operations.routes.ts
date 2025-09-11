@@ -41,7 +41,7 @@ export const operationsRoutes: Routes = [
     data: { pagePermission: 'ApVendor' } //ApVendor   , ApVendor.View
   },
   {
-    path: 'glAccount', component: GlAccountComponent, canActivate: [authGuard],
+    path: 'glAccount', component: GlAccountComponent,
     data: { pagePermission: 'GlAccount' } //GlAccount   , GlAccount.View
   },
   {

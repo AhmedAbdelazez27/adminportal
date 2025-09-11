@@ -14,13 +14,14 @@ import { InvoiceService } from '../../../../core/services/Financial/Operation/in
 import { InvoiceFilter, FilterInvoiceByIdDto, Invoice, InvoiceHeader, InvoiceTransaction } from '../../../../core/dtos/FinancialDtos/OperationDtos/invoice.models';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
+import { NumberFormatPipe } from '../../../../core/services/number.pipe.service';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-invoice',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent,NumberFormatPipe ],
   templateUrl: './invoice.component.html',
   styleUrls: ['./invoice.component.scss']
 })
@@ -347,29 +348,22 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
       { headerName: this.translate.instant('InvoiceHdResourceName.hD_INNO'), field: 'hD_INNO', width: 200 },
       { headerName: this.translate.instant('InvoiceHdResourceName.hD_DATE'), field: 'hD_DATEstr', width: 200 },
       { headerName: this.translate.instant('InvoiceHdResourceName.vendoR_NUMBER'), field: 'vendoR_NUMBER', width: 200 },
       { headerName: this.translate.instant('InvoiceHdResourceName.vendoR_NAME'), field: 'vendoR_NAME', width: 200 },
       { headerName: this.translate.instant('InvoiceHdResourceName.hD_TYPE_DESC'), field: 'hD_TYPE_DESC', width: 200 },
-      { headerName: this.translate.instant('InvoiceHdResourceName.totalVal'), field: 'totalValstr', width: 200 },
-    ];
+      { headerName: this.translate.instant('InvoiceHdResourceName.totalVal'), field: 'totalVal', width: 200,
+      valueFormatter: (params) => {
+        if (params.value == null) return '';
+        return new Intl.NumberFormat('en-US', { 
+          minimumFractionDigits: 2, 
+          maximumFractionDigits: 2 
+        }).format(params.value);
+      }
+    },    ];
 
     this.columnDefstrListData = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.paginationtrListData.currentPage - 1) * this.paginationtrListData.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
       { headerName: this.translate.instant('InvoiceHdResourceName.accountnumber'), field: 'accountnumber', width: 200 },
       { headerName: this.translate.instant('InvoiceHdResourceName.accountNameAr'), field: 'accountNameAr', width: 200 },
       { headerName: this.translate.instant('InvoiceHdResourceName.tR_ITEM'), field: 'tR_ITEM', width: 200 },

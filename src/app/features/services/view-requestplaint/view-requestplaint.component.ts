@@ -559,7 +559,7 @@ export class ViewRequestplaintComponent implements OnInit {
       id: 0,
       empId: localStorage.getItem('userId'),
       workFlowStepsId: this.originalworkFlowId,
-      comment: "ملاحظات حول الموافقة: " + this.originalNotes,
+      comment: "ملاحظات: " + this.originalNotes,
       commentTypeId: 2,
     };
 
@@ -594,7 +594,7 @@ export class ViewRequestplaintComponent implements OnInit {
       id: null,
       empId: localStorage.getItem('userId'),
       workFlowStepsId: this.originalworkFlowId,
-      comment: "ملاحظات حول الموافقة: " + this.originalNotes,
+      comment: "ملاحظات: " + this.originalNotes,
       commentTypeId: 2,
     };
 

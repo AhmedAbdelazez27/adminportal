@@ -305,4 +305,9 @@ export class Select2Service {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetPlaintReasonsSelect2List}`
     return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
+
+  getCaseAidEntitiesSelect2(params: FndLookUpValuesSelect2RequestbyIdDto): Observable<SelectdropdownResult> {
+    const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetCaseAidEntitiesSelect2List}`
+    return this.http.post<SelectdropdownResult>(apiUrl, params);
+  }
 }

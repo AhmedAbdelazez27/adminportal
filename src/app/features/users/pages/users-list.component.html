@@ -46,21 +46,7 @@
             <input type="text" class="form-control" id="username" placeholder="{{ 'Common.Search' | translate }}"
                    [(ngModel)]="filterUserCriteria.name" />
           </div>
-          <!-- User ID -->
-          <div class="col-xl-4 mb-3">
-            <label for="userID" class="form-label">{{ 'AuthenticationResorceName.id' | translate }}</label>
-            <input type="text" class="form-control" id="userID" placeholder="{{ 'Common.Search' | translate }}"
-                   [(ngModel)]="filterUserCriteria.idNumber" />
-          </div>
 
-          <!-- Entity Info ID -->
-          <div class="col-xl-4 mb-3">
-            <label class="form-label">{{ 'AuthenticationResorceName.entityInfo' | translate }}</label>
-            <ng-select [items]="entitiesInfo" bindLabel="text" bindValue="id" [multiple]="false"
-                       [closeOnSelect]="true" [(ngModel)]="filterUserCriteria.entityInfoId"
-                       class="ng-select-custom">
-            </ng-select>
-          </div>
 
           <!-- Entity ID -->
           <div class="col-xl-4 mb-3">
@@ -92,15 +78,24 @@
             <input type="date" class="form-control" [(ngModel)]="filterUserCriteria.applyDate"
                    placeholder="{{ 'AuthenticationResorceName.selectDate' | translate }}" />
           </div>
+
+          <!-- Date From -->
+          <div class="col-xl-4 mb-3">
+            <label class="form-label">{{ 'AuthenticationResorceName.dateFrom' | translate }}</label>
+            <input type="date" class="form-control" [(ngModel)]="filterUserCriteria.DateFrom"
+                   placeholder="{{ 'AuthenticationResorceName.selectDate' | translate }}" />
+          </div>
+
+          <!-- Date To -->
+          <div class="col-xl-4 mb-3">
+            <label class="form-label">{{ 'AuthenticationResorceName.dateTo' | translate }}</label>
+            <input type="date" class="form-control" [(ngModel)]="filterUserCriteria.DateTo"
+                   placeholder="{{ 'AuthenticationResorceName.selectDate' | translate }}" />
+          </div>
           <div class="col-xl-4 mb-3">
             <label for="username" class="form-label">{{ 'AuthenticationResorceName.userName' | translate }}</label>
             <input type="text" class="form-control" id="username" placeholder="{{ 'Common.Search' | translate }}"
                    [(ngModel)]="filterUserCriteria.searchValue">
-          </div>
-          <div class="col-xl-4 mb-3">
-            <label for="organizationName" class="form-label">{{ 'AuthenticationResorceName.organization' | translate }}</label>
-            <input type="text" class="form-control" id="organizationName" placeholder="{{ 'Common.Search' | translate }}"
-                   [(ngModel)]="filterUserCriteria.foundationName">
           </div>
           <div class="col-xl-4 mb-3">
             <label for="LicenseNo" class="form-label">{{ 'AuthenticationResorceName.license' | translate }}</label>
@@ -319,13 +314,9 @@
               <!-- Gender -->
               <div class="col-xl-6 mb-3">
                 <label for="gender" class="form-label">{{ 'GENDER' | translate }}</label>
-                <select id="gender" class="form-select"
-                        [ngClass]="{'is-invalid': userForm.get('gender')?.invalid && (userForm.get('gender')?.touched || submitted)}"
-                        formControlName="gender">
-                  <option [ngValue]="null">{{ 'SELECT' | translate }}</option>
-                  <option [ngValue]="false">{{ 'MALE' | translate }}</option>
-                  <option [ngValue]="true">{{ 'FEMALE' | translate }}</option>
-                </select>
+                <ng-select [items]="genderOptions" bindLabel="text" bindValue="value" [multiple]="false"
+                           [closeOnSelect]="true" formControlName="gender" class="ng-select-custom">
+                </ng-select>
               </div>
 
               <!-- Country -->
@@ -346,14 +337,9 @@
               <!-- Employer -->
               <div class="col-xl-6 mb-3">
                 <label for="entityIdInfo" class="form-label">{{ 'EMPLOYER' | translate }}</label>
-                <select id="entityIdInfo" class="form-select"
-                        [ngClass]="{'is-invalid': userForm.get('entityIdInfo')?.invalid && (userForm.get('entityIdInfo')?.touched || submitted)}"
-                        formControlName="entityIdInfo">
-                  <option value="">{{ 'SELECT' | translate }}</option>
-                  <option *ngFor="let entity of entitiesInfo" [value]="entity.id">
-                    {{ entity.text }}
-                  </option>
-                </select>
+                <ng-select [items]="entitiesInfo" bindLabel="text" bindValue="id" [multiple]="false"
+                           [closeOnSelect]="true" formControlName="entityIdInfo" class="ng-select-custom">
+                </ng-select>
               </div>
               <!-- User Type -->
               <!-- <div class="col-xl-6 mb-3">
@@ -509,7 +495,7 @@
         <div class="modal-body">
           <form [formGroup]="userDepartmentForm">
             <div class="mb-3 relative-select">
-              <label for="departments" class="form-label">Departments</label>
+              <label for="departments" class="form-label">{{ 'AuthenticationResorceName.Departments' | translate }}</label>
               <ng-select [items]="departments" bindLabel="text" bindValue="id" [multiple]="true"
                          [closeOnSelect]="true" formControlName="departmentIds" class="ng-select-custom">
               </ng-select>
@@ -547,8 +533,8 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}Cancel</button>
-          <button type="button" class="btn btn-gold" (click)="assignIntities()">{{ 'Common.save' | translate }}Save</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
+          <button type="button" class="btn btn-gold" (click)="assignIntities()">{{ 'Common.save' | translate }}</button>
         </div>
       </div>
     </div>
@@ -706,12 +692,19 @@
                 </ng-select>
               </div>
               <div class="text-end mb-3 col-xl-2">
-                <button type="button" class="btn btn-gold" (click)="applySearch()">
+                <button type="button" class="btn btn-gold w-100" style="height:48px;" (click)="applySearch()">
                   Apply Filter
                 </button>
+                <div class="mt-2">
+                  <button type="button" 
+                          [class]="allScreensSelected ? 'btn btn-outline w-100' : 'btn btn-gold w-100'"
+                          style="height:48px;"
+                          (click)="selectAllScreens()">
+                    {{ allScreensSelected ? ('Common.deselectAll' | translate) : ('Common.selectAll' | translate) }}
+                  </button>
+                </div>
               </div>
             </form>
-
           </div>
           <table class="table new-table mb-3">
             <thead>
@@ -767,7 +760,7 @@
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="UsersLabel">{{ 'Common.DASHBOARD_PERMISSIONS' | translate }}</h1>
+          <h1 class="modal-title fs-5" id="UsersLabel">{{ 'COMMON.DASHBOARD_PERMISSIONS' | translate }}</h1>
           <button type="button" class="btn-close btn-close-dashboard-permissions" data-bs-dismiss="modal"
                   aria-label="Close"></button>
         </div>
@@ -780,7 +773,7 @@
                 <!-- <label class="form-label">Filter by Module(s)</label> -->
                 <ng-select [items]="moduleDashboardOptions" bindLabel="label" bindValue="value" [multiple]="true"
                            [closeOnSelect]="false" formControlName="selectedModules" class="ng-select-custom"
-                           [placeholder]="filterDasboardForm.get('selectedModules')?'Filter by Module(s)':''">
+                           placeholder="{{'SERVICES.FILTER_BY_MODULES' | translate}}">
                 </ng-select>
               </div>
 
@@ -793,9 +786,17 @@
                 </ng-select>
               </div>
               <div class="text-end mb-3 col-xl-2">
-                <button type="button" class="btn btn-gold" (click)="applySearch('filterDasboardForm','filteredDashboardPermissions','dashboardPermissions')">
+                <button type="button" class="btn btn-gold w-100" style="height:48px;" (click)="applySearch('filterDasboardForm','filteredDashboardPermissions','dashboardPermissions')">
                   Apply Filter
                 </button>
+                <div class="mt-2">
+                  <button type="button" 
+                          [class]="allDashboardScreensSelected ? 'btn btn-outline w-100' : 'btn btn-gold w-100'"
+                          style="height:48px;"
+                          (click)="selectAllDashboardScreens()">
+                    {{ allDashboardScreensSelected ? ('Common.deselectAll' | translate) : ('Common.selectAll' | translate) }}
+                  </button>
+                </div>
               </div>
             </form>
 
@@ -961,6 +962,14 @@
             <div class="col-xl-4 col-lg-6">
               <label class="bold black">{{ 'address' | translate }}</label>
               <p>{{ user?.address || '-' }}</p>
+            </div>
+            <div class="col-xl-4 col-lg-6">
+              <label class="bold black">{{ 'AuthenticationResorceName.userStatusName' | translate }}</label>
+              <p>
+                <span *ngIf="user?.userStatus && user?.userStatusName && user?.userStatusName !== 'null'" 
+                      [ngClass]="getStatusClass(user?.userStatus)">{{ user?.userStatusName }}</span>
+                <span *ngIf="!user?.userStatus || !user?.userStatusName || user?.userStatusName === 'null'">-</span>
+              </p>
             </div>
           </div>
 

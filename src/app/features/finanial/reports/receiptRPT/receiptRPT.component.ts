@@ -15,6 +15,7 @@ import { FinancialReportService } from '../../../../core/services/Financial/Repo
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
+import { formatNumericCell } from '../../../../shared/utils/value-formatters';
 @Component({
   selector: 'app-receiptRPT',
   standalone: true,
@@ -195,19 +196,14 @@ export class receiptRPTComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
+
       { headerName: this.translate.instant('FinancialReportResourceName.paymentCategory'), field: 'paymenT_CATEGORY', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.paymentNumber'), field: 'paymenT_NUMBER', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.beneficiaryName'), field: 'beneficiarY_NAME', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.paymentDate'), field: 'paymenT_DATEstr', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.paymentType'), field: 'paymenT_TYPE', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.amount'), field: 'amounTstr', width: 200 },
+      { headerName: this.translate.instant('FinancialReportResourceName.amount'), field: 'amounTstr', width: 200,   
+    valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
       { headerName: this.translate.instant('FinancialReportResourceName.notes'), field: 'notes', width: 200 },
       { headerName: this.translate.instant('FinancialReportResourceName.bankAccount'), field: 'banK_ACCOUNT', width: 200 },
     ];

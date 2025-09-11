@@ -171,7 +171,7 @@
 
         <div class="modal-body">
           <div class="border-bottom mb-4">
-            <h4 class="gold bold">{{ 'ArMiscReceiptHeaderResourceName.Title' | translate }}</h4>
+          <h4 class="gold bold">{{ 'Common.Information' | translate }}</h4>  
 
             <div class="row">
               <div class="col-xxl-4 col-xl-6">
@@ -206,7 +206,7 @@
 
               <div class="col-xxl-4 col-xl-6">
                 <label for="inputamounTstr" class="black bold">{{ 'ArMiscReceiptHeaderResourceName.HEADER_AMOUNT' | translate }}</label>
-                <p id="amounTstr">{{ loadformData.amounTstr }}</p>
+                <p id="amounTstr">{{ formatNumericCell(loadformData?.amounTstr, 2, 'en-US') }}</p>
               </div>
 
               <div class="col-xxl-4 col-xl-6">

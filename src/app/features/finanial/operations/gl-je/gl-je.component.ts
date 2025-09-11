@@ -406,13 +406,7 @@ export class GLJEComponent implements OnInit {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
+
       { headerName: this.translate.instant('glJEResourceName.jvNo'), field: 'attributE10', width: 200 },
       { headerName: this.translate.instant('glJEResourceName.jvName'), field: 'jE_NAME', width: 200 },
       { headerName: this.translate.instant('glJEResourceName.jvDate'), field: 'jE_DATEstr', width: 200 },
@@ -423,13 +417,6 @@ export class GLJEComponent implements OnInit {
     ];
 
     this.columnDefslineData = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.paginationlineData.currentPage - 1) * this.paginationlineData.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
       { headerName: this.translate.instant('glJEResourceName.accountNo'), field: 'accountnumber', width: 200 },
       { headerName: this.translate.instant('glJEResourceName.accountName'), field: 'accountNameAr', width: 200 },
       { headerName: this.translate.instant('glJEResourceName.jvDesc'), field: 'sourcE_DESC_DETAILS', width: 200 },
@@ -483,6 +470,8 @@ export class GLJEComponent implements OnInit {
                     { label: this.translate.instant('glJEResourceName.jvStatus'), value: this.searchParams.je_State },
                     { label: this.translate.instant('glJEResourceName.jvDate'), value: this.searchParams.je_Date },
                     { label: this.translate.instant('glJEResourceName.currency'), value: this.searchParams.je_Curr },
+                   { label: this.translate.instant('FinancialReportResourceName.toDate'), value: this.searchParams.toDate },
+                    { label: this.translate.instant('FinancialReportResourceName.fromDate'), value: this.searchParams.fromDate },
                   ],
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },

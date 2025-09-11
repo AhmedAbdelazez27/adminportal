@@ -231,7 +231,6 @@ export class getBeneficentsRptComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      { headerName: '#', valueGetter: 'node.rowIndex + 1', width: 40, colId: '#' },
       { headerName: this.translate.instant('SponsorshipReportResourceName.beneficenNo'), field: 'beneficenT_NO', width: 150 },
       { headerName: this.translate.instant('SponsorshipReportResourceName.beneficentName'), field: 'beneficentname', width: 200 },
       { headerName: this.translate.instant('SponsorshipReportResourceName.sponcerCategory'), field: 'sponceR_CATEGORY_DESC', width: 100 },

@@ -65,7 +65,7 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
 
   categoriees2: string[] = [];
   seriesData2: any[] = [];
-
+  lang: string | null = null;
   currentLang: string = "en";
   id: string = "";
   typeService: string = "";
@@ -92,6 +92,7 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
     });
     this.getYearAndChartTypesList();
   //  this.monthsList = MonthConstants.monthsList;
+  this.lang = localStorage.getItem('lang');
   }
 
 

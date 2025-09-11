@@ -184,10 +184,10 @@ export class ordersListCityRptComponent {
       });
   }
 
-  oncaseIdSelect2Change(selectedcaseId: any): void {
-    if (selectedcaseId) {
-      this.searchParams.caseId = selectedcaseId.id;
-      this.searchParams.caseName = selectedcaseId.text;
+  oncaseIdSelect2Change(selected: any): void {
+    if (selected) {
+      this.searchParams.caseId = selected.id;
+      this.searchParams.caseName = selected.text;
     } else {
       this.searchParams.caseId = null;
       this.searchParams.caseName = null;
@@ -299,6 +299,9 @@ export class ordersListCityRptComponent {
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.getAllDataForReports = response?.data || [];
+          this.getAllDataForReports.forEach((c) => {
+            c.aiD_REQUEST_DATEstr = this.openStandardReportService.formatDate(c.aiD_REQUEST_DATE);
+          });
           this.pagination.totalCount = response?.totalCount || 0;
           this.spinnerService.hide();
         },
@@ -359,21 +362,14 @@ export class ordersListCityRptComponent {
       'SocialCaseReportsResourceName.citY_DESC'
     ]).subscribe(translations => {
       this.columnDefs = [
-        {
-          headerName: '#',
-          valueGetter: (params) =>
-            (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-          width: 60,
-          colId: 'serialNumber'
-        },
         { headerName: translations['SocialCaseReportsResourceName.referencenumber'], field: 'referencenumber', width: 200 },
-        { headerName: translations['SocialCaseReportsResourceName.aiD_REQUEST_DATE'], field: 'aiD_REQUEST_DATE', width: 200 },
+        { headerName: translations['SocialCaseReportsResourceName.aiD_REQUEST_DATE'], field: 'aiD_REQUEST_DATEstr', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.requesT_TYPE_DESC'], field: 'requesT_TYPE_DESC', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.namE_AR'], field: 'namE_AR', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.casE_ID_NUMBER'], field: 'casE_ID_NUMBER', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.familY_PERS_NO'], field: 'familY_PERS_NO', width: 200 },
-        { headerName: translations['SocialCaseReportsResourceName.toT_INCOME'], field: 'toT_INCOMEstr', width: 200 },
-        { headerName: translations['SocialCaseReportsResourceName.toT_DUTIES'], field: 'toT_DUTIESstr', width: 200 },
+        { headerName: translations['SocialCaseReportsResourceName.toT_INCOME'], field: 'toT_INCOME', width: 200 },
+        { headerName: translations['SocialCaseReportsResourceName.toT_DUTIES'], field: 'toT_DUTIES', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.statuS_DESC'], field: 'statuscodE_DESC', width: 200 },
         { headerName: translations['SocialCaseReportsResourceName.citY_DESC'], field: 'citY_DESC', width: 200 },
       ];
@@ -429,8 +425,8 @@ export class ordersListCityRptComponent {
                     { label: this.translate.instant('SocialCaseReportsResourceName.namE_AR'), key: 'namE_AR' },
                     { label: this.translate.instant('SocialCaseReportsResourceName.casE_ID_NUMBER'), key: 'casE_ID_NUMBER' },
                     { label: this.translate.instant('SocialCaseReportsResourceName.familY_PERS_NO'), key: 'familY_PERS_NO' },
-                    { label: this.translate.instant('SocialCaseReportsResourceName.toT_INCOME'), key: 'toT_INCOMEstr' },
-                    { label: this.translate.instant('SocialCaseReportsResourceName.toT_DUTIES'), key: 'toT_DUTIESstr' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.toT_INCOME'), key: 'toT_INCOME' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.toT_DUTIES'), key: 'toT_DUTIES' },
                     { label: this.translate.instant('SocialCaseReportsResourceName.statuS_DESC'), key: 'statuscodE_DESC' },
                     { label: this.translate.instant('SocialCaseReportsResourceName.citY_DESC'), key: 'citY_DESC' },
                   ],
@@ -439,7 +435,7 @@ export class ordersListCityRptComponent {
                     rowNo: index + 1
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['toT_INCOMEstr', 'toT_DUTIESstr']
+                  totalKeys: ['toT_INCOME', 'toT_DUTIES']
                 };
 
                 this.openStandardReportService.openStandardReportExcel(reportConfig);
@@ -502,8 +498,8 @@ export class ordersListCityRptComponent {
                     { label: this.translate.instant('SocialCaseReportsResourceName.namE_AR'), key: 'namE_AR' },
                     { label: this.translate.instant('SocialCaseReportsResourceName.casE_ID_NUMBER'), key: 'casE_ID_NUMBER' },
                     { label: this.translate.instant('SocialCaseReportsResourceName.familY_PERS_NO'), key: 'familY_PERS_NO' },
-                    { label: this.translate.instant('SocialCaseReportsResourceName.toT_INCOME'), key: 'toT_INCOMEstr' },
-                    { label: this.translate.instant('SocialCaseReportsResourceName.toT_DUTIES'), key: 'toT_DUTIESstr' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.toT_INCOME'), key: 'toT_INCOME' },
+                    { label: this.translate.instant('SocialCaseReportsResourceName.toT_DUTIES'), key: 'toT_DUTIES' },
                     { label: this.translate.instant('SocialCaseReportsResourceName.brancH_DESC'), key: 'brancH_DESC' },
                     { label: this.translate.instant('SocialCaseReportsResourceName.branchE_CODE'), key: 'branchE_CODE' },
                     { label: this.translate.instant('SocialCaseReportsResourceName.statuS_DESC'), key: 'statuscodE_DESC' },
@@ -512,7 +508,7 @@ export class ordersListCityRptComponent {
                   ],
                   data,
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['toT_INCOMEstr', 'toT_DUTIESstr']
+                  totalKeys: ['toT_INCOME', 'toT_DUTIES']
                 };
                     this.openStandardReportService.openStandardReportPDF(reportConfig);
                     this.spinnerService.hide();

@@ -37,12 +37,10 @@
                    [(ngModel)]="searchValue">
           </div>
           <div class="col-xl-4 mb-3">
-            <label for="isDonationFilter" class="form-label">{{ 'ENTITY.IS_DONATION' | translate }}</label>
-            <select class="form-select" id="isDonationFilter" [(ngModel)]="searchParams.isDonation">
-              <option value="undefined">{{ 'COMMON.ALL' | translate }}</option>
-              <option value="true">{{ 'COMMON.YES' | translate }}</option>
-              <option value="false">{{ 'COMMON.NO' | translate }}</option>
-            </select>
+            <label class="form-label">{{ 'ENTITY.STATUS' | translate }}</label>
+            <ng-select [items]="statusOptions" bindLabel="text" bindValue="id" [multiple]="false"
+                       [closeOnSelect]="true" [(ngModel)]="isActiveFilter" class="ng-select-custom">
+            </ng-select>
           </div>
         </div>
 
@@ -52,7 +50,7 @@
               <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
                     fill="#5B5B5B" />
             </svg>
-            {{ 'COMMON.CLEAR' | translate }}
+            {{ 'COMMON.Clear' | translate }}
           </button>
           <button class="btn btn-gold" (click)="onSearch()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -247,6 +245,17 @@
                 <input class="form-check-input" type="checkbox" id="IsDonation" formControlName="IsDonation">
                 <label class="form-check-label" for="IsDonation">
                   {{ 'ENTITY.IS_DONATION_DESC' | translate }}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="Active" class="form-label">
+                {{ 'ENTITY.STATUS' | translate }}
+              </label>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="Active" formControlName="Active">
+                <label class="form-check-label" for="Active">
+                  {{ 'ENTITY.ACTIVE' | translate }}
                 </label>
               </div>
             </div>
@@ -464,8 +473,9 @@
           <strong>{{ 'ENTITY.WEBSITE' | translate }}:</strong> {{ selectedEntityObject.ENTITY_WEBSITE || 'N/A' }}<br>
           <strong>{{ 'ENTITY.EMAIL' | translate }}:</strong> {{ selectedEntityObject.ENTITY_MAIL || 'N/A' }}<br>
           <strong>{{ 'ENTITY.ACCOUNT_DETAILS' | translate }}:</strong> {{ getAccountDetailsName(selectedEntityObject.ACC_DETAILS_ID || '') }}<br>
-          <strong>{{ 'ENTITY.STATUS' | translate }}:</strong> {{ selectedEntityObject.IsShowInPortal ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}<br>
-          <strong>{{ 'ENTITY.IS_DONATION' | translate }}:</strong> {{ selectedEntityObject.IsDonation ? ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}
+          <strong>{{ 'ENTITY.SHOW_IN_PORTAL' | translate }}:</strong> {{ selectedEntityObject.IsShowInPortal ? ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}<br>
+          <strong>{{ 'ENTITY.IS_DONATION' | translate }}:</strong> {{ selectedEntityObject.IsDonation ? ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}<br>
+          <strong>{{ 'ENTITY.STATUS' | translate }}:</strong> {{ selectedEntityObject.Active ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
         </div>
         <p class="text-danger mt-3">{{ 'COMMON.ACTION_CANNOT_BE_UNDONE' | translate }}</p>
       </div>

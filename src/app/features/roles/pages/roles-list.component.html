@@ -147,24 +147,36 @@
         <div class="modal-body">
           <div class="row mb-3">
             <div class="col-xl-5">
-              <select class="form-select mb-3" [(ngModel)]="selectedModuleFilter">
-                <option value="all">{{ 'AuthenticationResorceName.allModule' | translate }}</option>
-                <option *ngFor="let module of originalModules" [value]="module.module">
-                  {{ module.moduleName }}
-                </option>
-              </select>
+              <ng-select [items]="moduleOptions" bindLabel="text" bindValue="id" [multiple]="false"
+                         [closeOnSelect]="true" [(ngModel)]="selectedModuleFilter" class="ng-select-custom mb-3">
+              </ng-select>
             </div>
             <div class="col-xl-5">
               <div class="mb-3">
                 <input type="text" class="form-control" placeholder="{{ 'AuthenticationResorceName.searchScreen' | translate }}"
-                       [(ngModel)]="searchKeyword" />
+                       [(ngModel)]="searchKeyword" (input)="applyFilter()" />
 
               </div>
             </div>
             <div class="col-xl-2">
-              <button type="button" class="btn btn-gold w-100" style="height:48px;"
-                      (click)="applyFilter()">
-                {{ 'AuthenticationResorceName.applyFilter' | translate }}
+              <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline flex-fill" style="height:48px;"
+                        (click)="clearScreenFilter()">
+                  {{ 'Common.Clear' | translate }}
+                </button>
+                <button type="button" class="btn btn-gold w-100" style="height:48px;"
+                        (click)="applyFilter()">
+                  {{ 'AuthenticationResorceName.applyFilter' | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-end">
+              <button type="button" 
+                      [class]="allScreensSelected ? 'btn btn-outline' : 'btn btn-gold'"
+                      (click)="selectAllScreens()">
+                {{ allScreensSelected ? ('Common.deselectAll' | translate) : ('Common.selectAll' | translate) }}
               </button>
             </div>
           </div>

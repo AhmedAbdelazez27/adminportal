@@ -209,7 +209,7 @@ export class projectsComponent {
     this.searchSelect2Params.skip = this.statussearchParams.skip;
     this.searchSelect2Params.take = this.statussearchParams.take;
 
-    this.Select2Service.getArMiscStatusSelect2(this.searchSelect2Params)
+    this.Select2Service.getScProjectStatusSelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: SelectdropdownResult) => {
           this.statusSelect2 = response?.results || [];
@@ -478,6 +478,9 @@ export class projectsComponent {
       .pipe(takeUntil(this.destroy$)).subscribe({
       next: (response: any) => {
           this.loadgridData = response.data || [];
+          this.loadgridData.forEach((c) => {
+            c.applicatioN_DATEstr = this.openStandardReportService.formatDate(c.applicatioN_DATE ?? null);
+          });
           this.pagination.totalCount = response.data[0]?.rowsCount || 0;
           this.spinnerService.hide();
       },
@@ -504,6 +507,21 @@ export class projectsComponent {
         this.loadformData = Array.isArray(result.mischeaderdata)
           ? result.mischeaderdata[0] ?? ({} as projectsDto)
           : result.mischeaderdata;
+
+        this.loadformData.applicatioN_DATEstr = this.openStandardReportService.formatDate(this.loadformData.applicatioN_DATE ?? null);
+        this.loadformData.starT_DATEstr = this.openStandardReportService.formatDate(this.loadformData.starT_DATE ?? null);
+        this.loadformData.enD_DATEstr = this.openStandardReportService.formatDate(this.loadformData.enD_DATE ?? null);
+        this.loadformData.misC_RECEIPT_DATEstr = this.openStandardReportService.formatDate(this.loadformData.misC_RECEIPT_DATE ?? null);
+
+        this.loadformDetailsData.forEach((c) => {
+          c.implemenT_DATEstr = this.openStandardReportService.formatDate(c.implemenT_DATE ?? null);
+          c.starT_IMPLEMENTstr = this.openStandardReportService.formatDate(c.starT_IMPLEMENT ?? null);
+          c.finisH_DATEstr = this.openStandardReportService.formatDate(c.finisH_DATE ?? null);
+        });
+
+        this.loadformLineData.forEach((c) => {
+          c.misC_RECEIPT_DATEstr = this.openStandardReportService.formatDate(c.misC_RECEIPT_DATE ?? null);
+        });
         const modalElement = document.getElementById('viewdetails');;
         if (modalElement) {
           const modal = new bootstrap.Modal(modalElement);
@@ -530,13 +548,6 @@ export class projectsComponent {
       'ProjectsResourceName.projecT_DESC',
     ]).subscribe(translations => {
       this.columnDefs = [
-        {
-          headerName: '#',
-          valueGetter: (params) =>
-            (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-          width: 60,
-          colId: 'serialNumber'
-        },
         { headerName: translations['ProjectsResourceName.projecT_NUMBER'], field: 'projecT_NUMBER', width: 200 },
         { headerName: translations['ProjectsResourceName.projecT_NAME'], field: 'projecT_NAME', width: 200 },
         { headerName: translations['ProjectsResourceName.statuS_DESC'], field: 'statuS_DESC', width: 200 },
@@ -566,7 +577,7 @@ export class projectsComponent {
         },
         { headerName: translations['ProjectsResourceName.receipT_NUMBER'], field: 'receipT_NUMBER', width: 200 },
         { headerName: translations['ProjectsResourceName.misC_RECEIPT_DATE'], field: 'misC_RECEIPT_DATEstr', width: 200 },
-        { headerName: translations['ProjectsResourceName.misC_RECEIPT_AMOUNT'], field: 'misC_RECEIPT_AMOUNTstr', width: 200 },
+        { headerName: translations['ProjectsResourceName.misC_RECEIPT_AMOUNT'], field: 'misC_RECEIPT_AMOUNT', width: 200 },
         { headerName: translations['ProjectsResourceName.beneficiarY_NAME'], field: 'beneficiarY_NAME', width: 200 },
         { headerName: translations['ProjectsResourceName.notes'], field: 'notes', width: 200 },
       ];
