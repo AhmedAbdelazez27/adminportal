@@ -35,6 +35,9 @@ import {
 } from '../../../core/dtos/attachments/attachments-config.dto';
 import { UpdateAttachmentBase64Dto } from '../../../core/dtos/attachments/attachment.dto';
 import * as L from 'leaflet';
+import { QuillModule } from 'ngx-quill';
+import Quill from 'quill';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-initiative-component',
@@ -47,6 +50,7 @@ import * as L from 'leaflet';
     NgSelectModule,
     GenericDataTableComponent,
     AttachmentGalleryComponent,
+    QuillModule
   ],
   templateUrl: './initiative-component.component.html',
   styleUrl: './initiative-component.component.scss',
@@ -109,6 +113,20 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
 
   detailsRowActions: any[] = [];
 
+  private quill?: Quill;
+  private langSub?: Subscription;
+
+  quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ align: [] }],            
+      [{ direction: 'rtl' }],     
+      ['link', 'clean']
+    ]
+  };
+
   constructor(
     private initiativeService: InitiativeService,
     private attachmentService: AttachmentService,
@@ -137,13 +155,29 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('🚀 Initiative Component ngOnInit called');
+
+     this.langSub = this.translate.onLangChange.subscribe(() => {
+      this.applyEditorDir();
+    });
+
     this.initializeColumnDefinitions();
     this.loadInitiatives();
     this.loadAttachmentsConfig();
     this.fixLeafletIcons();
-    console.log('✅ Initiative Component initialization completed');
   }
+onQuillCreated(q: Quill) {
+    this.quill = q;
+    this.applyEditorDir();
+  }
+
+  private applyEditorDir() {
+    if (!this.quill) return;
+    const isAr = this.translate.currentLang === 'ar';
+    const editorEl = this.quill.root as HTMLElement;
+    editorEl.setAttribute('dir', isAr ? 'rtl' : 'ltr');
+    editorEl.style.textAlign = isAr ? 'right' : 'left';
+  }
+
 
   private initializeColumnDefinitions(): void {
     this.columnDefs = [
@@ -260,6 +294,7 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
     // Reset loading state
     this.isMapLoading = false;
     

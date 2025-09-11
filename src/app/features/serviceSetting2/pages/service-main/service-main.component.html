@@ -1,6 +1,7 @@
 <div class="container-fluid">
   <h2 class="title">
     <span *ngIf="serviceDetails" class="service-name">
+      {{"navbarMenu.services"|translate}}/{{"navbarMenu.operation"|translate}}/{{"navbarMenu.serviceSetting2Title"|translate}}/
       {{ (translate.currentLang === 'ar' ? serviceDetails.serviceName : serviceDetails.serviceNameEn) }}
     </span>
   </h2>
@@ -9,11 +10,11 @@
     <div class="row">
       <div class="col-md-6 mb-3">
         <label class="form-label">{{ 'SERVICE_SETTING.SERVICE_NAME' | translate }}</label>
-        <input type="text" class="form-control" formControlName="serviceName" readonly />
+        <input type="text" class="form-control" formControlName="serviceName" [readonly]="!isEditMode" />
       </div>
       <div class="col-md-6 mb-3">
         <label class="form-label">{{ 'SERVICE_SETTING.SERVICE_NAME_EN' | translate }}</label>
-        <input type="text" class="form-control" formControlName="serviceNameEn" readonly />
+        <input type="text" class="form-control" formControlName="serviceNameEn" [readonly]="!isEditMode" />
       </div>
       <div class="col-md-6 mb-3">
         <label class="form-label">{{ 'SERVICE_SETTING.SERVICE_REFERENCE_NO' | translate }}</label>
@@ -21,8 +22,8 @@
       </div>
       <div class="col-md-6 mb-3">
         <label class="form-label">{{ 'SERVICE_SETTING.SERVICE_TYPE' | translate }}</label>
-        <input type="text" class="form-control" formControlName="serviceTypeName" readonly />
-      </div>
+        <input type="text" class="form-control" formControlName="serviceTypeName" [readonly]="!isEditMode" />
+      </div> 
       <div class="col-md-6 mb-3">
         <label class="form-label">{{ 'SERVICE_SETTING.DESCRIPTION_AR' | translate }}</label>
         <textarea rows="3" class="form-control" [class.is-invalid]="isFieldInvalid('descriptionAr')"
@@ -43,11 +44,13 @@
       </div>
       <div class="col-md-12 mb-3">
         <label class="form-label">{{ 'SERVICE_SETTING.STATUS' | translate }}</label>
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="active" formControlName="active" [disabled]="!isEditMode">
+        <div class="form-check form-switch d-flex">
+         <div>
+           <input class="form-check-input" type="checkbox" id="active" formControlName="active" [disabled]="!isEditMode">
           <label class="form-check-label" for="active">
             {{ 'SERVICE_SETTING.ACTIVE' | translate }}
           </label>
+         </div>
         </div>
       </div>
     </div>

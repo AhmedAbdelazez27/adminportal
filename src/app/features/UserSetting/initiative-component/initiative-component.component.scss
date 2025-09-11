@@ -1,5 +1,4 @@
 // Initiative Component Styles following attachments-config pattern
-
 // Title styling
 .title {
   color: var(--Color-25, #8D734D);
@@ -678,4 +677,11 @@ h6.text-primary {
       background: #a8a8a8;
     }
   }
+}
+
+
+:host ::ng-deep quill-editor,
+:host ::ng-deep .quill-editor,
+:host ::ng-deep .ql-container {
+  width: 100% !important;
 }

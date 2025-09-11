@@ -4,9 +4,11 @@
     <div>
       <button class="btn btn-gold" (click)="openAddModal()">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM18 12.75H12.75V18C12.75 18.41 12.41 18.75 12 18.75C11.59 18.75 11.25 18.41 11.25 18V12.75H6C5.59 12.75 5.25 12.41 5.25 12C5.25 11.59 5.59 11.25 6 11.25H11.25V6C11.25 5.59 11.59 5.25 12 5.25C12.41 5.25 12.75 5.59 12.75 6V11.25H18C18.41 11.25 18.75 11.59 18.75 12C18.75 12.41 18.41 12.75 18 12.75Z" fill="white"/>
-</svg> 
-{{ 'HERO_SECTION_SETTING.ADD_NEW' | translate }}
+          <path
+            d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM18 12.75H12.75V18C12.75 18.41 12.41 18.75 12 18.75C11.59 18.75 11.25 18.41 11.25 18V12.75H6C5.59 12.75 5.25 12.41 5.25 12C5.25 11.59 5.59 11.25 6 11.25H11.25V6C11.25 5.59 11.59 5.25 12 5.25C12.41 5.25 12.75 5.59 12.75 6V11.25H18C18.41 11.25 18.75 11.59 18.75 12C18.75 12.41 18.41 12.75 18 12.75Z"
+            fill="white" />
+        </svg>
+        {{ 'HERO_SECTION_SETTING.ADD_NEW' | translate }}
       </button>
     </div>
   </div>
@@ -79,15 +81,18 @@
   </app-generic-data-table>
 
   <!-- Hero Section Modal -->
-  <div class="modal fade" id="heroSectionModal" tabindex="-1" aria-labelledby="heroSectionModalLabel" aria-hidden="true">
+  <div class="modal fade" id="heroSectionModal" tabindex="-1" aria-labelledby="heroSectionModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="heroSectionModalLabel">
-            {{ mode === 'add' ? ('HERO_SECTION_SETTING.ADD_NEW' | translate) : mode === 'edit' ? ('HERO_SECTION_SETTING.EDIT' | translate) :
+            {{ mode === 'add' ? ('HERO_SECTION_SETTING.ADD_NEW' | translate) : mode === 'edit' ?
+            ('HERO_SECTION_SETTING.EDIT' | translate) :
             ('HERO_SECTION_SETTING.VIEW' | translate) }}
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" [attr.aria-label]="'COMMON.CLOSE' | translate"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+            [attr.aria-label]="'COMMON.CLOSE' | translate"></button>
         </div>
 
         <form [formGroup]="heroSectionForm" (ngSubmit)="submit()">
@@ -99,9 +104,12 @@
                 <input type="text" id="titleAr" class="form-control"
                   [ngClass]="{'is-invalid': heroSectionForm.get('titleAr')?.invalid && (heroSectionForm.get('titleAr')?.touched || submitted)}"
                   formControlName="titleAr" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_TITLE_AR' | translate }}">
-                <div class="invalid-feedback" *ngIf="heroSectionForm.get('titleAr')?.invalid && (heroSectionForm.get('titleAr')?.touched || submitted)">
-                  <div *ngIf="heroSectionForm.get('titleAr')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
-                  <div *ngIf="heroSectionForm.get('titleAr')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' | translate: {max: 200} }}</div>
+                <div class="invalid-feedback"
+                  *ngIf="heroSectionForm.get('titleAr')?.invalid && (heroSectionForm.get('titleAr')?.touched || submitted)">
+                  <div *ngIf="heroSectionForm.get('titleAr')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate
+                    }}</div>
+                  <div *ngIf="heroSectionForm.get('titleAr')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' |
+                    translate: {max: 200} }}</div>
                 </div>
               </div>
 
@@ -110,15 +118,18 @@
                 <input type="text" id="titleEn" class="form-control"
                   [ngClass]="{'is-invalid': heroSectionForm.get('titleEn')?.invalid && (heroSectionForm.get('titleEn')?.touched || submitted)}"
                   formControlName="titleEn" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_TITLE_EN' | translate }}">
-                <div class="invalid-feedback" *ngIf="heroSectionForm.get('titleEn')?.invalid && (heroSectionForm.get('titleEn')?.touched || submitted)">
-                  <div *ngIf="heroSectionForm.get('titleEn')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
-                  <div *ngIf="heroSectionForm.get('titleEn')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' | translate: {max: 200} }}</div>
+                <div class="invalid-feedback"
+                  *ngIf="heroSectionForm.get('titleEn')?.invalid && (heroSectionForm.get('titleEn')?.touched || submitted)">
+                  <div *ngIf="heroSectionForm.get('titleEn')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate
+                    }}</div>
+                  <div *ngIf="heroSectionForm.get('titleEn')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' |
+                    translate: {max: 200} }}</div>
                 </div>
               </div>
             </div>
 
             <div class="row">
-              <div class="col-xl-6 mb-3">
+              <!-- <div class="col-xl-12 mb-3">
                 <label for="descriptionAr" class="form-label">{{ 'HERO_SECTION_SETTING.DESCRIPTION_AR' | translate }}</label>
                 <textarea id="descriptionAr" class="form-control" rows="4"
                   [ngClass]="{'is-invalid': heroSectionForm.get('descriptionAr')?.invalid && (heroSectionForm.get('descriptionAr')?.touched || submitted)}"
@@ -127,18 +138,72 @@
                   <div *ngIf="heroSectionForm.get('descriptionAr')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
                   <div *ngIf="heroSectionForm.get('descriptionAr')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' | translate: {max: 1000} }}</div>
                 </div>
-              </div>
+              </div> -->
+              <div class="col-xl-12 mb-3" [attr.dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
+                <label for="descriptionAr" class="form-label">
+                  {{ 'HERO_SECTION_SETTING.DESCRIPTION_AR' | translate }}
+                </label>
 
-              <div class="col-xl-6 mb-3">
-                <label for="descriptionEn" class="form-label">{{ 'HERO_SECTION_SETTING.DESCRIPTION_EN' | translate }}</label>
-                <textarea id="descriptionEn" class="form-control" rows="4"
-                  [ngClass]="{'is-invalid': heroSectionForm.get('descriptionEn')?.invalid && (heroSectionForm.get('descriptionEn')?.touched || submitted)}"
-                  formControlName="descriptionEn" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_DESCRIPTION_EN' | translate }}"></textarea>
-                <div class="invalid-feedback" *ngIf="heroSectionForm.get('descriptionEn')?.invalid && (heroSectionForm.get('descriptionEn')?.touched || submitted)">
-                  <div *ngIf="heroSectionForm.get('descriptionEn')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
-                  <div *ngIf="heroSectionForm.get('descriptionEn')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' | translate: {max: 1000} }}</div>
+                <quill-editor id="descriptionAr" formControlName="descriptionAr" class="w-100 quill-editor"
+                  [modules]="quillModules" theme="snow" [styles]="{ height: '200px' }" [ngClass]="{
+      'is-invalid': heroSectionForm.get('descriptionAr')?.invalid && (heroSectionForm.get('descriptionAr')?.touched || submitted),
+      'is-valid': heroSectionForm.get('descriptionAr')?.valid && (heroSectionForm.get('descriptionAr')?.touched || submitted)
+    }" (onEditorCreated)="onQuillCreated($event)"
+                  placeholder="{{ 'HERO_SECTION_SETTING.ENTER_DESCRIPTION_AR' | translate }}">
+                </quill-editor>
+
+                <div class="invalid-feedback d-block"
+                  *ngIf="heroSectionForm.get('descriptionAr')?.invalid && (heroSectionForm.get('descriptionAr')?.touched || submitted)">
+                  <div *ngIf="heroSectionForm.get('descriptionAr')?.errors?.['required']">
+                    {{ 'VALIDATION.REQUIRED' | translate }}
+                  </div>
+                  <div *ngIf="heroSectionForm.get('descriptionAr')?.errors?.['maxlength']">
+                    {{ 'VALIDATION.MAX_LENGTH' | translate: {max: 1000} }}
+                  </div>
                 </div>
               </div>
+
+
+              <!-- <div class="col-xl-12 mb-3">
+                <label for="descriptionEn" class="form-label">{{ 'HERO_SECTION_SETTING.DESCRIPTION_EN' | translate
+                  }}</label>
+                <textarea id="descriptionEn" class="form-control" rows="4"
+                  [ngClass]="{'is-invalid': heroSectionForm.get('descriptionEn')?.invalid && (heroSectionForm.get('descriptionEn')?.touched || submitted)}"
+                  formControlName="descriptionEn"
+                  placeholder="{{ 'HERO_SECTION_SETTING.ENTER_DESCRIPTION_EN' | translate }}"></textarea>
+                <div class="invalid-feedback"
+                  *ngIf="heroSectionForm.get('descriptionEn')?.invalid && (heroSectionForm.get('descriptionEn')?.touched || submitted)">
+                  <div *ngIf="heroSectionForm.get('descriptionEn')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' |
+                    translate }}</div>
+                  <div *ngIf="heroSectionForm.get('descriptionEn')?.errors?.['maxlength']">{{ 'VALIDATION.MAX_LENGTH' |
+                    translate: {max: 1000} }}</div>
+                </div>
+              </div> -->
+              <div class="col-xl-12 mb-3" [attr.dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
+                <label for="descriptionEn" class="form-label">
+                  {{ 'HERO_SECTION_SETTING.DESCRIPTION_EN' | translate }}
+                </label>
+
+                <quill-editor id="descriptionEn" formControlName="descriptionEn" class="w-100 quill-editor"
+                  [modules]="quillModules" theme="snow" [styles]="{ height: '200px' }" [ngClass]="{
+      'is-invalid': heroSectionForm.get('descriptionEn')?.invalid && (heroSectionForm.get('descriptionEn')?.touched || submitted),
+      'is-valid': heroSectionForm.get('descriptionEn')?.valid && (heroSectionForm.get('descriptionEn')?.touched || submitted)
+    }" (onEditorCreated)="onQuillCreated($event)"
+                  placeholder="{{ 'HERO_SECTION_SETTING.ENTER_DESCRIPTION_EN' | translate }}">
+                </quill-editor>
+
+                <div class="invalid-feedback d-block"
+                  *ngIf="heroSectionForm.get('descriptionEn')?.invalid && (heroSectionForm.get('descriptionEn')?.touched || submitted)">
+                  <div *ngIf="heroSectionForm.get('descriptionEn')?.errors?.['required']">
+                    {{ 'VALIDATION.REQUIRED' | translate }}
+                  </div>
+                  <div *ngIf="heroSectionForm.get('descriptionEn')?.errors?.['maxlength']">
+                    {{ 'VALIDATION.MAX_LENGTH' | translate: { max: 1000 } }}
+                  </div>
+                </div>
+              </div>
+
+
             </div>
 
             <div class="row">
@@ -147,7 +212,8 @@
                 <input type="url" id="link" class="form-control"
                   [ngClass]="{'is-invalid': heroSectionForm.get('link')?.invalid && (heroSectionForm.get('link')?.touched || submitted)}"
                   formControlName="link" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_LINK' | translate }}">
-                <div class="invalid-feedback" *ngIf="heroSectionForm.get('link')?.invalid && (heroSectionForm.get('link')?.touched || submitted)">
+                <div class="invalid-feedback"
+                  *ngIf="heroSectionForm.get('link')?.invalid && (heroSectionForm.get('link')?.touched || submitted)">
                   {{ getFieldError('link') }}
                 </div>
               </div>
@@ -157,9 +223,12 @@
                 <input type="number" id="viewOrder" class="form-control"
                   [ngClass]="{'is-invalid': heroSectionForm.get('viewOrder')?.invalid && (heroSectionForm.get('viewOrder')?.touched || submitted)}"
                   formControlName="viewOrder" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_VIEW_ORDER' | translate }}">
-                <div class="invalid-feedback" *ngIf="heroSectionForm.get('viewOrder')?.invalid && (heroSectionForm.get('viewOrder')?.touched || submitted)">
-                  <div *ngIf="heroSectionForm.get('viewOrder')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' | translate }}</div>
-                  <div *ngIf="heroSectionForm.get('viewOrder')?.errors?.['min']">{{ 'VALIDATION.MIN_VALUE' | translate: {min: 0} }}</div>
+                <div class="invalid-feedback"
+                  *ngIf="heroSectionForm.get('viewOrder')?.invalid && (heroSectionForm.get('viewOrder')?.touched || submitted)">
+                  <div *ngIf="heroSectionForm.get('viewOrder')?.errors?.['required']">{{ 'VALIDATION.REQUIRED' |
+                    translate }}</div>
+                  <div *ngIf="heroSectionForm.get('viewOrder')?.errors?.['min']">{{ 'VALIDATION.MIN_VALUE' | translate:
+                    {min: 0} }}</div>
                 </div>
               </div>
 
@@ -174,7 +243,8 @@
                 </div>
                 <!-- Show badge for view mode -->
                 <div *ngIf="mode === 'view'">
-                  <span class="badge" [ngClass]="heroSectionForm.get('isActive')?.value ? 'status-approved' : 'status-rejected'">
+                  <span class="badge"
+                    [ngClass]="heroSectionForm.get('isActive')?.value ? 'status-approved' : 'status-rejected'">
                     {{ heroSectionForm.get('isActive')?.value ? 'Active' : 'Inactive' }}
                   </span>
                 </div>
@@ -185,7 +255,7 @@
             <div class="row" *ngIf="mode !== 'view'">
               <div class="col-xl-12 mb-3">
                 <div class="file-upload-section">
-                 
+
 
                   <!-- Enhanced Existing Image Display for Edit Mode -->
                   <div *ngIf="existingImageUrl && mode === 'edit'" class="existing-image-container mb-3">
@@ -218,47 +288,57 @@
 
                   <!-- Enhanced File Input Area -->
                   <div class="file-input-container">
-                    
+
                     <div class="file-drop-zone" [class.has-file]="selectedFile || (existingImageUrl && mode === 'edit')"
                       [class.is-dragover]="isDragOver" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
                       (drop)="onDrop($event)">
                       <div class="file-drop-content">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="41" viewBox="0 0 40 41" fill="none">
-                          <path d="M34.167 16.9999H29.3503C25.4003 16.9999 22.1837 13.7832 22.1837 9.83319V5.01652C22.1837 4.09985 21.4337 3.34985 20.517 3.34985H13.4503C8.31699 3.34985 4.16699 6.68319 4.16699 12.6332V27.3999C4.16699 33.3499 8.31699 36.6832 13.4503 36.6832H26.5503C31.6837 36.6832 35.8337 33.3499 35.8337 27.3999V18.6665C35.8337 17.7499 35.0837 16.9999 34.167 16.9999ZM19.217 22.5665C18.967 22.8165 18.6503 22.9332 18.3337 22.9332C18.017 22.9332 17.7003 22.8165 17.4503 22.5665L16.2503 21.3665V28.3499C16.2503 29.0332 15.6837 29.5999 15.0003 29.5999C14.317 29.5999 13.7503 29.0332 13.7503 28.3499V21.3665L12.5503 22.5665C12.067 23.0499 11.267 23.0499 10.7837 22.5665C10.3003 22.0832 10.3003 21.2832 10.7837 20.7999L14.117 17.4665C14.2337 17.3665 14.3503 17.2832 14.4837 17.2165C14.517 17.1999 14.567 17.1832 14.6003 17.1665C14.7003 17.1332 14.8003 17.1165 14.917 17.0999C14.967 17.0999 15.0003 17.0999 15.0503 17.0999C15.1837 17.0999 15.317 17.1332 15.4503 17.1832C15.467 17.1832 15.467 17.1832 15.4837 17.1832C15.617 17.2332 15.7503 17.3332 15.8503 17.4332C15.867 17.4499 15.8837 17.4499 15.8837 17.4665L19.217 20.7999C19.7003 21.2832 19.7003 22.0832 19.217 22.5665Z" fill="#CDAD5F"/>
-                          <path d="M29.0501 14.7C30.6335 14.7167 32.8335 14.7167 34.7168 14.7167C35.6668 14.7167 36.1668 13.6 35.5001 12.9333C33.1001 10.5167 28.8001 6.16667 26.3335 3.7C25.6501 3.01667 24.4668 3.48334 24.4668 4.43334V10.25C24.4668 12.6833 26.5335 14.7 29.0501 14.7Z" fill="#CDAD5F"/>
+                          <path
+                            d="M34.167 16.9999H29.3503C25.4003 16.9999 22.1837 13.7832 22.1837 9.83319V5.01652C22.1837 4.09985 21.4337 3.34985 20.517 3.34985H13.4503C8.31699 3.34985 4.16699 6.68319 4.16699 12.6332V27.3999C4.16699 33.3499 8.31699 36.6832 13.4503 36.6832H26.5503C31.6837 36.6832 35.8337 33.3499 35.8337 27.3999V18.6665C35.8337 17.7499 35.0837 16.9999 34.167 16.9999ZM19.217 22.5665C18.967 22.8165 18.6503 22.9332 18.3337 22.9332C18.017 22.9332 17.7003 22.8165 17.4503 22.5665L16.2503 21.3665V28.3499C16.2503 29.0332 15.6837 29.5999 15.0003 29.5999C14.317 29.5999 13.7503 29.0332 13.7503 28.3499V21.3665L12.5503 22.5665C12.067 23.0499 11.267 23.0499 10.7837 22.5665C10.3003 22.0832 10.3003 21.2832 10.7837 20.7999L14.117 17.4665C14.2337 17.3665 14.3503 17.2832 14.4837 17.2165C14.517 17.1999 14.567 17.1832 14.6003 17.1665C14.7003 17.1332 14.8003 17.1165 14.917 17.0999C14.967 17.0999 15.0003 17.0999 15.0503 17.0999C15.1837 17.0999 15.317 17.1332 15.4503 17.1832C15.467 17.1832 15.467 17.1832 15.4837 17.1832C15.617 17.2332 15.7503 17.3332 15.8503 17.4332C15.867 17.4499 15.8837 17.4499 15.8837 17.4665L19.217 20.7999C19.7003 21.2832 19.7003 22.0832 19.217 22.5665Z"
+                            fill="#CDAD5F" />
+                          <path
+                            d="M29.0501 14.7C30.6335 14.7167 32.8335 14.7167 34.7168 14.7167C35.6668 14.7167 36.1668 13.6 35.5001 12.9333C33.1001 10.5167 28.8001 6.16667 26.3335 3.7C25.6501 3.01667 24.4668 3.48334 24.4668 4.43334V10.25C24.4668 12.6833 26.5335 14.7 29.0501 14.7Z"
+                            fill="#CDAD5F" />
                         </svg>
                         <h6 class="file-upload-title">
-                          {{ selectedFile ? ('HERO_SECTION_SETTING.FILE_SELECTED' | translate) : (existingImageUrl && mode === 'edit' ? ('HERO_SECTION_SETTING.CURRENT_IMAGE_AVAILABLE' | translate) : ('HERO_SECTION_SETTING.DROP_YOUR_IMAGE_HERE' | translate)) }}
+                          {{ selectedFile ? ('HERO_SECTION_SETTING.FILE_SELECTED' | translate) : (existingImageUrl &&
+                          mode === 'edit' ? ('HERO_SECTION_SETTING.CURRENT_IMAGE_AVAILABLE' | translate) :
+                          ('HERO_SECTION_SETTING.DROP_YOUR_IMAGE_HERE' | translate)) }}
                         </h6>
                         <!-- <p class="file-upload-subtitle">
                           {{ selectedFile ? selectedFile.name : 'or click to browse' }}
                         </p> -->
-                       
+
                       </div>
                       <input type="file" class="form-control file-input" id="heroSectionImage"
                         accept=".jpg,.jpeg,.png,.pdf" (change)="onFileSelected($event)">
 
-                        <label for="heroSectionImage" class="form-label" >
+                      <label for="heroSectionImage" class="form-label">
                         {{ 'HERO_SECTION_SETTING.OR_CLICK_TO_BROWSE' | translate }}
-                        </label>
+                      </label>
                     </div>
-                     
+
                   </div>
-                   <div class="file-requirements">
-                          <small class="text-muted">
-                            <i class="fas fa-info-circle me-1"></i>
-                            {{ 'HERO_SECTION_SETTING.SUPPORTED_FORMATS' | translate }}
-                          </small>
-                        </div>
+                  <div class="file-requirements">
+                    <small class="text-muted">
+                      <i class="fas fa-info-circle me-1"></i>
+                      {{ 'HERO_SECTION_SETTING.SUPPORTED_FORMATS' | translate }}
+                    </small>
+                  </div>
 
                   <!-- Enhanced New File Preview -->
                   <div *ngIf="filePreview" class="new-file-preview mt-3">
                     <div class="preview-header mb-3">
                       <div class="d-flex align-items-center gap-2 mb-2">
-                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M17.7082 7.62506C15.7832 4.60006 12.9665 2.8584 9.99984 2.8584C8.5165 2.8584 7.07484 3.29173 5.75817 4.10007C4.4415 4.91673 3.25817 6.1084 2.2915 7.62506C1.45817 8.9334 1.45817 11.0584 2.2915 12.3667C4.2165 15.4001 7.03317 17.1334 9.99984 17.1334C11.4832 17.1334 12.9248 16.7001 14.2415 15.8917C15.5582 15.0751 16.7415 13.8834 17.7082 12.3667C18.5415 11.0667 18.5415 8.9334 17.7082 7.62506ZM9.99984 13.3667C8.13317 13.3667 6.63317 11.8584 6.63317 10.0001C6.63317 8.14173 8.13317 6.6334 9.99984 6.6334C11.8665 6.6334 13.3665 8.14173 13.3665 10.0001C13.3665 11.8584 11.8665 13.3667 9.99984 13.3667Z" fill="#5B5B5B"/>
-                        <path d="M10 7.6167C8.69167 7.6167 7.625 8.68337 7.625 10C7.625 11.3084 8.69167 12.375 10 12.375C11.3083 12.375 12.3833 11.3084 12.3833 10C12.3833 8.6917 11.3083 7.6167 10 7.6167Z" fill="#5B5B5B"/>
-                      </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path
+                            d="M17.7082 7.62506C15.7832 4.60006 12.9665 2.8584 9.99984 2.8584C8.5165 2.8584 7.07484 3.29173 5.75817 4.10007C4.4415 4.91673 3.25817 6.1084 2.2915 7.62506C1.45817 8.9334 1.45817 11.0584 2.2915 12.3667C4.2165 15.4001 7.03317 17.1334 9.99984 17.1334C11.4832 17.1334 12.9248 16.7001 14.2415 15.8917C15.5582 15.0751 16.7415 13.8834 17.7082 12.3667C18.5415 11.0667 18.5415 8.9334 17.7082 7.62506ZM9.99984 13.3667C8.13317 13.3667 6.63317 11.8584 6.63317 10.0001C6.63317 8.14173 8.13317 6.6334 9.99984 6.6334C11.8665 6.6334 13.3665 8.14173 13.3665 10.0001C13.3665 11.8584 11.8665 13.3667 9.99984 13.3667Z"
+                            fill="#5B5B5B" />
+                          <path
+                            d="M10 7.6167C8.69167 7.6167 7.625 8.68337 7.625 10C7.625 11.3084 8.69167 12.375 10 12.375C11.3083 12.375 12.3833 11.3084 12.3833 10C12.3833 8.6917 11.3083 7.6167 10 7.6167Z"
+                            fill="#5B5B5B" />
+                        </svg>
                         <span class="">{{ 'HERO_SECTION_SETTING.NEW_FILE_PREVIEW' | translate }}</span>
                       </div>
                       <div class="preview-actions">
@@ -344,23 +424,33 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">{{ 'HERO_SECTION_SETTING.DELETE_CONFIRMATION_TITLE' | translate }}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" [attr.aria-label]="'COMMON.CLOSE' | translate"></button>
+          <h5 class="modal-title" id="deleteModalLabel">{{ 'HERO_SECTION_SETTING.DELETE_CONFIRMATION_TITLE' | translate
+            }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+            [attr.aria-label]="'COMMON.CLOSE' | translate"></button>
         </div>
         <div class="modal-body">
           <p>{{ 'HERO_SECTION_SETTING.DELETE_CONFIRMATION' | translate }}</p>
           <div *ngIf="selectedHeroSectionToDelete" class="delete-confirmation-details">
-            <strong>{{ 'HERO_SECTION_SETTING.TITLE_AR' | translate }}:</strong> {{ selectedHeroSectionToDelete.titleAr || 'N/A' }}<br>
-            <strong>{{ 'HERO_SECTION_SETTING.TITLE_EN' | translate }}:</strong> {{ selectedHeroSectionToDelete.titleEn || 'N/A' }}<br>
-            <strong>{{ 'HERO_SECTION_SETTING.DESCRIPTION_AR' | translate }}:</strong> {{ selectedHeroSectionToDelete.descriptionAr || 'N/A' }}<br>
-            <strong>{{ 'HERO_SECTION_SETTING.DESCRIPTION_EN' | translate }}:</strong> {{ selectedHeroSectionToDelete.descriptionEn || 'N/A' }}<br>
-            <strong>{{ 'HERO_SECTION_SETTING.LINK' | translate }}:</strong> {{ selectedHeroSectionToDelete.link || 'N/A' }}<br>
-            <strong>{{ 'HERO_SECTION_SETTING.STATUS' | translate }}:</strong> 
-            <span class="badge" [ngClass]="selectedHeroSectionToDelete.isActive ? 'status-approved' : 'status-rejected'">
+            <strong>{{ 'HERO_SECTION_SETTING.TITLE_AR' | translate }}:</strong> {{ selectedHeroSectionToDelete.titleAr
+            || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.TITLE_EN' | translate }}:</strong> {{ selectedHeroSectionToDelete.titleEn
+            || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.DESCRIPTION_AR' | translate }}:</strong> {{
+            selectedHeroSectionToDelete.descriptionAr || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.DESCRIPTION_EN' | translate }}:</strong> {{
+            selectedHeroSectionToDelete.descriptionEn || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.LINK' | translate }}:</strong> {{ selectedHeroSectionToDelete.link || 'N/A'
+            }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.STATUS' | translate }}:</strong>
+            <span class="badge"
+              [ngClass]="selectedHeroSectionToDelete.isActive ? 'status-approved' : 'status-rejected'">
               {{ selectedHeroSectionToDelete.isActive ? 'Active' : 'Inactive' }}
             </span><br>
-            <strong>{{ 'HERO_SECTION_SETTING.VIEW_ORDER' | translate }}:</strong> {{ selectedHeroSectionToDelete.viewOrder || 'N/A' }}<br>
-            <strong>{{ 'HERO_SECTION_SETTING.ATTACHMENT' | translate }}:</strong> {{ selectedHeroSectionToDelete.attachment ? 'Yes' : 'No' }}
+            <strong>{{ 'HERO_SECTION_SETTING.VIEW_ORDER' | translate }}:</strong> {{
+            selectedHeroSectionToDelete.viewOrder || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.ATTACHMENT' | translate }}:</strong> {{
+            selectedHeroSectionToDelete.attachment ? 'Yes' : 'No' }}
           </div>
           <p class="text-danger">{{ 'HERO_SECTION_SETTING.DELETE_WARNING' | translate }}</p>
         </div>
@@ -382,26 +472,32 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteAttachmentModalLabel">{{ 'HERO_SECTION_SETTING.DELETE_ATTACHMENT_CONFIRMATION_TITLE' | translate }}</h5>
+          <h5 class="modal-title" id="deleteAttachmentModalLabel">{{
+            'HERO_SECTION_SETTING.DELETE_ATTACHMENT_CONFIRMATION_TITLE' | translate }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
             (click)="cancelDeleteAttachment()"></button>
         </div>
         <div class="modal-body">
           <p>{{ 'HERO_SECTION_SETTING.DELETE_ATTACHMENT_CONFIRMATION' | translate }}</p>
           <div *ngIf="selectedAttachmentToDelete" class="delete-confirmation-details">
-            <strong>{{ 'HERO_SECTION_SETTING.ATTACHMENT_TITLE' | translate }}:</strong> {{ selectedAttachmentToDelete.attachmentTitle || 'N/A' }}<br>
-            <strong>{{ 'HERO_SECTION_SETTING.FILE_PATH' | translate }}:</strong> {{ selectedAttachmentToDelete.imgPath || 'N/A' }}<br>
-            <strong>{{ 'HERO_SECTION_SETTING.MASTER_TYPE' | translate }}:</strong> {{ selectedAttachmentToDelete.masterType || 'N/A' }}<br>
-            <strong>{{ 'HERO_SECTION_SETTING.MASTER_ID' | translate }}:</strong> {{ selectedAttachmentToDelete.masterId || 'N/A' }}<br>
-            <strong>{{ 'HERO_SECTION_SETTING.CONFIG_ID' | translate }}:</strong> {{ selectedAttachmentToDelete.attConfigID || 'N/A' }}
+            <strong>{{ 'HERO_SECTION_SETTING.ATTACHMENT_TITLE' | translate }}:</strong> {{
+            selectedAttachmentToDelete.attachmentTitle || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.FILE_PATH' | translate }}:</strong> {{ selectedAttachmentToDelete.imgPath
+            || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.MASTER_TYPE' | translate }}:</strong> {{
+            selectedAttachmentToDelete.masterType || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.MASTER_ID' | translate }}:</strong> {{ selectedAttachmentToDelete.masterId
+            || 'N/A' }}<br>
+            <strong>{{ 'HERO_SECTION_SETTING.CONFIG_ID' | translate }}:</strong> {{
+            selectedAttachmentToDelete.attConfigID || 'N/A' }}
           </div>
           <p class="text-danger">{{ 'HERO_SECTION_SETTING.DELETE_ATTACHMENT_WARNING' | translate }}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal"
-            (click)="cancelDeleteAttachment()">{{ 'Common.Cancel' | translate }}</button>
-          <button type="button" class="btn btn-danger" (click)="confirmDeleteAttachment()"
-            data-bs-dismiss="modal">{{ 'Common.Delete' | translate }}</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal" (click)="cancelDeleteAttachment()">{{
+            'Common.Cancel' | translate }}</button>
+          <button type="button" class="btn btn-danger" (click)="confirmDeleteAttachment()" data-bs-dismiss="modal">{{
+            'Common.Delete' | translate }}</button>
         </div>
       </div>
     </div>

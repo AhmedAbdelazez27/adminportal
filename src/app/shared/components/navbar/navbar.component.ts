@@ -27,6 +27,7 @@ export class NavbarComponent {
   showCPassword: boolean = false;
   submitted: boolean = false;
   currentLang: string = 'en';
+  userName : string = ""
 
   constructor(public translation: TranslationService, private authService: AuthService, private toastr: ToastrService, private fb: FormBuilder, private spinnerService: SpinnerService,
     private translate: TranslateService, private userService: UserService) {
@@ -47,6 +48,7 @@ export class NavbarComponent {
       this.currentLang = lang.lang;
     });
 
+    this.userName = localStorage.getItem('userName')|| '' ;
   }
 
   toggleLang() {

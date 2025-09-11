@@ -25,6 +25,9 @@ import {
 import { AttachmentBase64Dto, AttachmentDto, UpdateAttachmentBase64Dto } from '../../../core/dtos/attachments/attachment.dto';
 import { AttachmentsConfigType } from '../../../core/dtos/attachments/attachments-config.dto';
 import { AttachmentsConfigDto } from '../../../core/dtos/attachments/attachments-config.dto';
+import { QuillModule } from 'ngx-quill';
+import Quill from 'quill';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-hero-section-setting',
@@ -36,6 +39,7 @@ import { AttachmentsConfigDto } from '../../../core/dtos/attachments/attachments
     TranslateModule,
     NgSelectModule,
     GenericDataTableComponent,
+    QuillModule
   ],
   templateUrl: './hero-section-setting.component.html',
   styleUrl: './hero-section-setting.component.scss',
@@ -73,12 +77,26 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
   attachmentConfigs: AttachmentsConfigDto[] = [];
   isLoadingDropdowns: boolean = false;
 
+    private quill?: Quill;
+  private langSub?: Subscription;
+
+  quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ align: [] }],            
+      [{ direction: 'rtl' }],     
+      ['link', 'clean']
+    ]
+  };
+
   constructor(
     private heroSectionSettingService: HeroSectionSettingService,
     private attachmentService: AttachmentService,
     private spinnerService: SpinnerService,
     private toastr: ToastrService,
-    private translate: TranslateService,
+    public translate: TranslateService,
     private fb: FormBuilder
   ) {
     this.heroSectionForm = this.fb.group({
@@ -97,7 +115,22 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+        this.langSub = this.translate.onLangChange.subscribe(() => {
+      this.applyEditorDir();
+    });
     this.loadHeroSectionSettings();
+  }
+  onQuillCreated(q: Quill) {
+    this.quill = q;
+    this.applyEditorDir();
+  }
+
+  private applyEditorDir() {
+    if (!this.quill) return;
+    const isAr = this.translate.currentLang === 'ar';
+    const editorEl = this.quill.root as HTMLElement;
+    editorEl.setAttribute('dir', isAr ? 'rtl' : 'ltr');
+    editorEl.style.textAlign = isAr ? 'right' : 'left';
   }
 
   private initializeColumnDefs(): void {
@@ -200,6 +233,7 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
     // Cleanup if needed
   }
 

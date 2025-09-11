@@ -1,6 +1,8 @@
 // Import Leaflet CSS (using CDN link instead of node_modules due to import issues)
 // Note: Make sure to include Leaflet CSS via CDN in index.html or via direct import
 @use "sass:color";
+@import 'quill/dist/quill.snow.css';
+
 
 @font-face {
     font-family: 'Cairo-reg';
@@ -4871,4 +4873,16 @@ td {
   background: rgba(146, 29, 66, 0.50);
   color: #fff;
   font-size: 14px;
+}
+
+.btn:disabled{
+    display: flex;
+    padding: 12px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid #8D734D;
+    background-color: var(--Color-25, #8D734D);
+    color: #fff;
 }

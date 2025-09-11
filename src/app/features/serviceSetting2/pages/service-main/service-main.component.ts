@@ -95,10 +95,10 @@ export class ServiceMainComponent implements OnInit, OnDestroy {
 
   private buildForm(): void {
     this.form = this.fb.group({
-      serviceName: [{ value: '', disabled: true }],
-      serviceNameEn: [{ value: '', disabled: true }],
+      serviceName: [{ value: ''}],
+      serviceNameEn: [{ value: '' }],
       serviceRefrenceNo: [{ value: '', disabled: true }],
-      serviceTypeName: [{ value: '', disabled: true }],
+      serviceTypeName: [{ value: '' }],
       descriptionAr: ['', [Validators.maxLength(500)]],
       descriptionEn: ['', [Validators.maxLength(500)]],
       active: [false],

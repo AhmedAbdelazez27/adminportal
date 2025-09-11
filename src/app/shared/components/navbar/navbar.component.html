@@ -26,6 +26,7 @@
     <div class="dropdown" style="height: 44px;">
       <button class="btn-profile-img dropdown-more dropdown-toggle" type="button" data-bs-toggle="dropdown"
         aria-expanded="false">
+        
       </button>
       <ul class="dropdown-menu">
         <li>
@@ -42,7 +43,7 @@
             {{ 'navbarMenu.changePWD' | translate }}
           </a>
         </li>
-        <li>
+        <!-- <li>
           <a class="dropdown-item align-items-center d-flex gap-2 pt-2 pb-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path
@@ -51,7 +52,7 @@
             </svg>
             {{ 'navbarMenu.profile' | translate }}
           </a>
-        </li>
+        </li> -->
         <li>
           <a class="dropdown-item align-items-center d-flex gap-2 pt-2 pb-2" (click)="logout()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -67,6 +68,9 @@
         </li>
       </ul>
     </div>
+    <span>
+      {{userName}}
+    </span>
     <button class="btn-lang" (click)="toggleLang()">
       {{ currentLang === 'ar' ? 'English' : 'عربي' }}
     </button>
@@ -1259,7 +1263,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li>
+                  <!-- <li>
                     <a [routerLink]="['/settings/regions']">
                       {{ 'navbarMenu.regionsTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -1268,7 +1272,7 @@
                           fill="#8D734D" />
                       </svg>
                     </a>
-                  </li>
+                  </li> -->
 
                   <li *ngIf="hasPermission('MainApplyRequestService.View')">
                     <a [routerLink]="['/mainServices/services']">

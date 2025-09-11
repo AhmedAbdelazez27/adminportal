@@ -710,7 +710,8 @@
     "totalRequestsReportTitle": "Total Requests Reports",
     "mainServices": "Main Services",
     "glAccountTitle": "GlAccounts",
-    "glAccountEntityTitle": "GlAccounts Entity"
+    "glAccountEntityTitle": "GlAccounts Entity",
+    "generalSetting":" General Setting"
   },
 
   "Common": {
