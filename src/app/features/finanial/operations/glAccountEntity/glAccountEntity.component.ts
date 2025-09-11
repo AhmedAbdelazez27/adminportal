@@ -488,8 +488,7 @@ onentityIdSelect2ChangeNew(selected: any): void {
   }
 
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
-    debugger;
-    if (!this.searchParams.entityId) {
+     if (!this.searchParams.entityId) {
       this.loadgridData = [];
       this.pagination.totalCount = 0;
       return;
@@ -517,7 +516,7 @@ onentityIdSelect2ChangeNew(selected: any): void {
 
 
   onSubmit(): void {
-    debugger;
+     ;
     this.submitted = true;
     const formData = this.glAccountForm.value;
     if (!formData.glAccountEntityId && formData.parentCode) {

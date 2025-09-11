@@ -70,8 +70,7 @@ export class DistributionSiteRequestService {
       'Content-Type': 'application/json',
       'Apikey': 'Apikeytest' 
     });
-    console.log('Making API call to Location Select2:', `${this.LOCATION_URL}${ApiEndpoints.Location.Select2}`);
-    
+     
     return this.http.post<Select2Result>(
       `${this.LOCATION_URL}${ApiEndpoints.Location.Select2}`,
       request,
@@ -84,8 +83,7 @@ export class DistributionSiteRequestService {
       'Content-Type': 'application/json',
       'Apikey': 'Apikeytest' 
     });
-    console.log('Making API call to CheckAvailable:', `${this.LOCATION_URL}${ApiEndpoints.Location.CheckAvailable}`);
-    
+     
     return this.http.post<boolean>(
       `${this.LOCATION_URL}${ApiEndpoints.Location.CheckAvailable}`,
       dto,
@@ -98,8 +96,7 @@ export class DistributionSiteRequestService {
       'Content-Type': 'application/json',
       'Apikey': 'Apikeytest' 
     });
-    console.log('Making API call to GetLocationById:', `${this.LOCATION_URL}${ApiEndpoints.Location.GetById(id)}`);
-    
+     
     return this.http.get<LocationDetailsDto>(
       `${this.LOCATION_URL}${ApiEndpoints.Location.GetById(id)}`,
       { headers }
@@ -112,8 +109,7 @@ export class DistributionSiteRequestService {
       'Apikey': 'Apikeytest' 
     });
     const url = `${this.LOCATION_URL}${ApiEndpoints.Location.GetInteractiveMap}`;
-    console.log('Making API call to GetInteractiveMap:', url);
-    
+     
     return this.http.post<LocationMapDto[]>(
       url,
       {},
@@ -125,8 +121,7 @@ export class DistributionSiteRequestService {
   getDistributionLocationTypes(): Observable<DistributionLocationTypeDto[]> {
     const headers = new HttpHeaders({ Apikey: 'Apikeytest' });
     const url = `${this.LOOKUP_URL}${ApiEndpoints.Lookup.DistributionLocationType}`;
-    console.log('Making API call to getDistributionLocationTypes:', url);
-    console.log('Request headers:', headers);
+     
     
     return this.http.post<DistributionLocationTypeDto[]>(
       url,
@@ -134,9 +129,7 @@ export class DistributionSiteRequestService {
       { headers }
     ).pipe(
       tap(response => {
-        console.log('getDistributionLocationTypes API response:', response);
-        console.log('Response type:', typeof response);
-        console.log('Is response array?', Array.isArray(response));
+      
       })
     );
   }

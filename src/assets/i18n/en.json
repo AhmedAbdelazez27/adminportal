@@ -12,14 +12,17 @@
     "SUCCESS": "Role assigned successfully",
     "FAIL": "Error assigning role"
   },
+
   "ERROR": {
     "FETCH_DEPARTMENTS": "Error while fetching departments"
   },
+
   "TOAST": {
     "TITLE": {
       "SUCCESS": "Success",
       "ERROR": "Error"
     },
+
     "USER_STATUS_UPDATED": {
       "ACTIVATED": "User account has been activated successfully.",
       "REJECTED": "User account has been rejected.",
@@ -27,6 +30,7 @@
       "GENERIC": "User status updated.",
       "ERROR": "Failed to update user status."
     },
+
     "VALIDATION_ERROR": "Please fill in the required fields correctly.",
     "FETCH_ROLES": "Error while fetching users",
     "USER_CREATED": "User added successfully.",
@@ -76,6 +80,7 @@
     "REGION_DELETED": "Region deleted successfully",
     "REGION_DELETE_FAILED": "Error deleting region"
   },
+
   "VALIDATION": {
     "REQUIRED": "This field is required",
     "MIN_LENGTH": "Minimum length is {{min}} characters",
@@ -150,6 +155,7 @@
     "START_DATE_PAST_MESSAGE": "Start date cannot be in the past. Please select a valid future date.",
     "END_DATE_BEFORE_START_MESSAGE": "End date must be after start date. Please select a valid end date."
   },
+
   "COMMON": {
     "ACTIONS": "Actions",
     "VIEW": "View",
@@ -300,6 +306,7 @@
     "NO_ADS": "No Ads",
     "NO_PARTNERS": "No Partners"
   },
+
   "ENTITY": {
     "TITLE": "Entities",
     "ARABIC_NAME": "Arabic Name",
@@ -332,6 +339,7 @@
     "NO_IMAGE": "No image available",
     "STATUS": "Status"
   },
+
   "INITIATIVE": {
     "TITLE": "Initiative Management",
     "DESCRIPTION": "Manage initiatives and their details",
@@ -447,6 +455,7 @@
       "FIELD_REQUIRED": "This field is required"
     }
   },
+
   "ROLE": {
     "CREATED": {
       "SUCCESS": "Role created successfully",
@@ -461,6 +470,7 @@
       "FAIL": "Failed to delete role"
     }
   },
+
   "FILE": {
     "CURRENT_IMAGE": "Current Image",
     "REMOVE": "Remove",
@@ -487,10 +497,12 @@
     "ERROR_LOADING_ATTACHMENT_CONFIG": "Error loading attachment configuration",
     "IMAGE_LOAD_ERROR_TITLE": "Image Load Error"
   },
+
   "ATTACHMENT": {
     "CONFIRM_DELETE_TITLE": "Confirm Delete Attachment",
     "CONFIRM_DELETE_MESSAGE": "Are you sure you want to delete this attachment?"
   },
+
   "NAME": "Name",
   "ENTER_NAME": "Enter name",
   "NAME_REQUIRED": "Name is required",
@@ -560,6 +572,12 @@
   "ENTITIES_ASSIGNED": "Entities assigned successfully.",
   "ENTITIES_ASSIGN_FAILED": "Failed to assign entities.",
   "CORECT_EMAIL": "Please enter a valid email address",
+
+  "OTP": {
+    "VERIFY_SUCCESS": "OTP Verified Successfully!",
+    "VERIFY_FAILED": "Invalid OTP. Please try again."
+  },
+
   "RESET_PASSWORD": "Reset Password",
   "ENTER_NEW_PASSWORD": "Enter your new password",
   "CONFIRM": "Confirm",
@@ -616,6 +634,7 @@
   "period_and_branches": "Period & Branches",
   "branches_and_accounts": "Branches & Accounts",
   "branches_and_departments": "Branches & Departments",
+
   "navbarMenu": {
     "dashboard": "DashBoard",
     "profile": "Profile",
@@ -672,9 +691,9 @@
     "totalRequestsReportTitle": "Total Requests Reports",
     "mainServices": "Main Services",
     "glAccountTitle": "GlAccounts",
-    "glAccountEntityTitle": "GlAccounts Entity",
-    "generalSetting": "General Settings"
+    "glAccountEntityTitle": "GlAccounts Entity"
   },
+
   "Common": {
     "Action": "Action",
     "ViewInfo": "Show Details",
@@ -764,6 +783,7 @@
     "Cancel": "Cancel",
     "DASHBOARD_PERMISSIONS": "DashBoard Permissions"
   },
+
   "AuthenticationResorceName": {
     "titleRole": "Roles",
     "name": "name",
@@ -828,6 +848,7 @@
     "optionTwo": "Option 2",
     "optionThree": "Option 3"
   },
+
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "Entity Name",
     "DocumentNumber": "Document No",
@@ -870,6 +891,7 @@
     "NoData": "No data available to display",
     "SearchTitle": "Filter"
   },
+
   "ApPaymentsTransactionHDRResourceName": {
     "EntityId": "Entity Name",
     "PaymentNumber": "Document No",
@@ -885,6 +907,7 @@
     "Notes": "Notes",
     "Title": "Payment Details"
   },
+
   "InvoiceHdResourceName": {
     "Title": "Invoice",
     "TrTitle": "Invoice Details",
@@ -914,6 +937,7 @@
     "total_Amount": "Total Amount",
     "total_TR": "Total Tax"
   },
+
   "PaymentVoucherResourceName": {
     "Title": "Payment Voucher",
     "PaymentDetailTitle": "Cheque Details",
@@ -945,6 +969,7 @@
     "accountNameEn": "Account Name",
     "accountNameAr": "Account Name"
   },
+
   "vendorResourceName": {
     "entityId": "EntityId",
     "vendorName": "Vendor Name",
@@ -960,6 +985,7 @@
     "mobile": "Mobile",
     "workTEL": "Work Tel"
   },
+
   "glJEResourceName": {
     "title": "GL_JE",
     "entityId": "EntityId",
@@ -986,6 +1012,7 @@
     "totalCredit": "Total Credit",
     "title_details": "Details"
   },
+
   "beneficentResourceName": {
     "Title": "Beneficent",
     "title_details": "Details",
@@ -1010,6 +1037,7 @@
     "city": "City",
     "titleDto": "Title"
   },
+
   "CasePaymentResourceName": {
     "Title": "Payment Inquiry",
     "entityId": "Entity Name",
@@ -1047,6 +1075,7 @@
     "deliverY_METHOD_DESC": "",
     "attacheD_FILE": ""
   },
+
   "SpContractsResourceName": {
     "Title": "Contract Search",
     "Title_SpContractCase": "Details",
@@ -1081,6 +1110,7 @@
     "sponceR_CATEGORY_DESC": "Sponsorship Type",
     "startdate": "Start Date"
   },
+
   "FinancialReportResourceName": {
     "catchReceiptRpt_Title": "Receipt Voucher",
     "generalLJournalRpt_Title": "Balance Sheet",
@@ -1171,6 +1201,7 @@
     "endDept": "endDept",
     "endCredit": "endCredit"
   },
+
   "AidRequestsResourceName": {
     "Title": "Aid Request",
     "aiD_REQUEST_DATE": "Request Date",
@@ -1234,6 +1265,7 @@
     "wifE_NAME": "Spouse Name",
     "wifeiD_END_DATE": "Spouse emirates ID expiry date"
   },
+
   "SponsorshipReportResourceName": {
     "arabicValue": "Arabic Value",
     "benifcientTotalRpt_Title": "Total No of Beneficiaries",
@@ -1308,6 +1340,7 @@
     "value": "Value",
     "wifeId": "Wife Id"
   },
+
   "SocialCaseReportsResourceName": {
     "ordersListCityRptTitle": "Aid Requests City Reports",
     "orderListBranchRptTitle": "Aid Requests Branch Reports",
@@ -1339,6 +1372,7 @@
     "entitY_NAME": "Entity Name",
     "ord": "Order"
   },
+
   "ServiceRequestsReportsResourceName": {
     "requestDetailsEntitiesRPT_Title": "Applied Requests Reports",
     "totalRequestsEntitiesRPT_Title": "Total Requests Report",
@@ -1359,6 +1393,7 @@
     "rejectedRequestsNo": "Rejected Request No",
     "postedRequestsNo": "Posted Request No"
   },
+
   "CaseSearchResourceName": {
     "Title": "Case Search Survey Form",
     "MenuBarTitle": "Case Search",
@@ -1457,6 +1492,7 @@
     "total3": "Total",
     "NoContract": "No Contracts"
   },
+
   "AVAILABLE_NUMBER": {
     "TITLE": "Available Numbers",
     "ADD_NEW": "Add New Available Number",
@@ -1470,6 +1506,7 @@
     "ENTER_ALLOWED_NUMBER": "Enter allowed number",
     "DELETE_CONFIRMATION": "Are you sure you want to delete this available number? This action cannot be undone."
   },
+
   "CONTACT_INFORMATION": {
     "TITLE": "Contact Information",
     "ADD_NEW": "Add New Contact",
@@ -1491,6 +1528,7 @@
     "UPDATE_SUCCESS": "Contact updated successfully",
     "DELETE_SUCCESS": "Contact deleted successfully"
   },
+
   "ATTACHMENTS_CONFIG": {
     "TITLE": "Attachments Configuration",
     "ADD_NEW": "Add New Attachment Config",
@@ -1511,6 +1549,7 @@
     "CREATE": "Create",
     "UPDATE": "Update"
   },
+
   "LOCATIONS": {
     "TITLE": "Locations Management",
     "ADD_NEW": "Add New Location",
@@ -1551,6 +1590,7 @@
     "CREATE": "Create",
     "UPDATE": "Update"
   },
+
   "REGIONS": {
     "TITLE": "Regions Management",
     "ADD_NEW": "Add New Region",
@@ -1575,6 +1615,7 @@
     "CREATE": "Create",
     "UPDATE": "Update"
   },
+
   "POLLS": {
     "TITLE": "Polls Management",
     "ADD_NEW": "Add New Poll",
@@ -1611,6 +1652,7 @@
     "ENGLISH_DESCRIPTION": "English Description",
     "VIEW_LINK": "View Link"
   },
+
   "ProjectReportResourceName": {
     "projectTypeListRpt_Title": "Projects by Type",
     "projectCountryListRpt_Title": "Projects by Country",
@@ -1634,6 +1676,7 @@
     "projecT_TYPE_DESC": "Status",
     "countrY_code": "Country"
   },
+
   "SERVICE_SETTING": {
     "TITLE": "Service Settings",
     "ADD_NEW": "Add New Service",
@@ -1721,6 +1764,7 @@
     "SERVICE_DEPARTMENT_UPDATED_SUCCESS": "Service department updated successfully",
     "SERVICE_DEPARTMENT_DELETED_SUCCESS": "Service department deleted successfully"
   },
+
   "ProjectsResourceName": {
     "Title": "Project Details",
     "Tab1_Title": " Receipts",
@@ -1772,6 +1816,7 @@
     "finisH_DATE": "End Implement",
     "imP_TYPE": "Implement Type"
   },
+
   "FinancialCharts": {
     "charts": "Charts",
     "titleForReceiptPaymentAnalysis": "Analysis of Receipts and Payments",
@@ -1796,12 +1841,13 @@
     "menupaymentsbyAcc": "Payments by Accounts",
     "entity": "Entity",
     "year": "Year",
-    "department": "Department",
+    "department": "User Groups",
     "branch": "Branch",
     "account": "Account",
     "month": "Month",
     "start": "Start"
   },
+
   "SocialServiceCharts": {
     "charts": "Charts",
     "titleForstatisticsofBenfFamilies": "Statistics of beneficiary families",
@@ -1813,6 +1859,7 @@
     "titleForRequeststatistics": "Requests Statistics",
     "menugeneral_title": "Interactive reports of receipts and payments"
   },
+
   "ProjectCharts": {
     "charts": "Charts",
     "titleForcostofProject": "Costs of Projects",
@@ -1821,6 +1868,7 @@
     "menubyCountry": "By Country",
     "menubyType": "By Type"
   },
+
   "sponsorshipchart": {
     "charts": "Charts",
     "numbersOfSponsors": "Numbers of sponsors",
@@ -1840,6 +1888,7 @@
     "year": "Year",
     "month": "Month"
   },
+
   "mainApplyServiceResourceName": {
     "title": "Main Services",
     "masterData": "Master Data",
@@ -2311,6 +2360,7 @@
       "STATUS_RETURN_FOR_MODIFICATIONS": "Return for Modifications",
       "STATUS_UNKNOWN": "Unknown Status"
     },
+
     "LOCATION": {
       "DETAILS": "Location Details",
       "DESC": "View location information and map",
@@ -2324,6 +2374,7 @@
       "SELECTED_LOCATION": "Selected Location",
       "SELECTED_COORDINATES": "Selected Coordinates"
     },
+
     "MAP": {
       "LOADING_ISSUE": "Map Loading Issue",
       "LOADING_ERROR": "Failed to load map. Please try refreshing the page.",
@@ -2342,6 +2393,7 @@
       }
     }
   },
+
   "glAccountResourceName": {
     "title": "GlAccounts",
     "accountCode": "Account Code",
@@ -2354,6 +2406,7 @@
     "profitLoss": "Fit Loss",
     "balanceSheet": "Balance Sheet"
   },
+
   "glAccountEntityResourceName": {
     "title": "GlAccountsEntity",
     "parentId": "Parent Id",
@@ -2371,6 +2424,7 @@
     "profitLoss": "Fit Loss",
     "balanceSheet": "Balance Sheet"
   },
+
   "settingsservices": {
     "title": "  Setting",
     "Region": "Region",
@@ -2381,6 +2435,7 @@
     "contactus": " Contact Information ",
     "heroSectionSetting": "Hero Section Setting"
   },
+
   "HERO_SECTION_SETTING": {
     "TITLE": "Hero Section Settings Management",
     "ADD_NEW": "Add New Hero Section",
@@ -2434,6 +2489,7 @@
     "MASTER_ID": "Master ID",
     "CONFIG_ID": "Config ID"
   },
+
   "HOME": {
     "LATEST_NOTIFICATIONS": "Latest Notifications",
     "NOTIFICATION_TITLE": "Notification title",
@@ -2467,6 +2523,7 @@
     "PREVIOUS": "Previous",
     "NEXT": "Next"
   },
+
   "NOTIFICATIONS": {
     "TITLE": "Notifications",
     "NO_NOTIFICATIONS": "No notifications",
@@ -2540,6 +2597,7 @@
       "PAGE_SIZE": "items per page"
     }
   },
+
   "AUTH": {
     "LOGIN": {
       "TITLE": "Login",
@@ -2603,6 +2661,7 @@
       "LOGOUT_SUCCESS": "You have been logged out successfully"
     }
   },
+
   "PROFILE": {
     "BASIC_INFO": "Basic Information",
     "ENGLISH_NAME": "English Name",
@@ -2657,6 +2716,7 @@
     "FILE_TYPE_ERROR": "Only JPEG, PNG, GIF, and PDF files are allowed",
     "VALIDATION_ERROR": "Please fill all required fields correctly"
   },
+
   "CONTACT": {
     "TITLE": "Contact Us",
     "CONTACT_INFORMATION": "Contact Information",
@@ -2677,6 +2737,7 @@
     "SEND": "Send",
     "SENDING": "Sending..."
   },
+
   "REGISTRATION": {
     "INDIVIDUAL": {
       "TITLE": "Individual Registration"
@@ -2771,6 +2832,7 @@
       "GO_TO_HOME": "Go to Home"
     }
   },
+
   "EDIT_PROFILE": {
     "TITLE": "Edit Profile",
     "SUBTITLE": "Update your account information and documents",
@@ -2824,6 +2886,7 @@
     "FILE_PREVIEW": "File preview",
     "LOGO": "Logo"
   },
+
   "SERVICES": {
     "TITLE": "Services",
     "DETAILS": "Service Details",
@@ -2859,6 +2922,7 @@
     "VIEW_DETAILS": "View Details",
     "START_REQUEST": "Start Request"
   },
+
   "REQUEST_PLAINT": {
     "TITLE": "Request a Grievance",
     "DESCRIPTION": "Submit your grievance request by filling out the form below with all required information and supporting documents.",
@@ -2890,6 +2954,7 @@
     "ATTACHMENTS": "Required Documents",
     "NO_ENTITIES_AVAILABLE": "No entities available for this user"
   },
+
   "REQUEST_COMPLAINT": {
     "TITLE": "Request Complaint",
     "DESCRIPTION": "Submit your complaint request with detailed information",
@@ -2911,6 +2976,7 @@
     "MOCK_SUGGESTION": "Suggestion",
     "MOCK_THANKS": "Thanks"
   },
+
   "ATTACHMENTS_GENERAL": {
     "TITLE": "Attachments",
     "DOCUMENT_TYPE": "Document Type",
@@ -2921,6 +2987,7 @@
     "OR": "or",
     "BROWSE_FILES": "Browse files"
   },
+
   "ATTACHMENTS": {
     "TITLE": "Attachments",
     "DOCUMENT_TYPE": "Document Type",
@@ -2931,10 +2998,12 @@
     "OR": "or",
     "BROWSE_FILES": "Browse files"
   },
+
   "SUCCESS": {
     "REQUEST_PLAINT_CREATED": "Your grievance request has been submitted successfully!",
     "REQUEST_COMPLAINT_CREATED": "Complaint request created successfully"
   },
+
   "ERRORS": {
     "SERVICE_ID_NOT_FOUND": "Service ID not found",
     "FAILED_LOAD_SERVICE_DETAILS": "Failed to load service details. Please try again.",
@@ -2962,9 +3031,11 @@
     "FAILED_LOAD_HERO_SECTION": "Failed to load hero section details. Please try again.",
     "INVALID_ID": "Invalid ID provided."
   },
+
   "WARNINGS": {
     "REASON_ALREADY_ADDED": "This reason has already been added."
   },
+
   "SHARED": {
     "FORMS": {
       "SUPERVISOR_INFO": "Supervisor Information",
@@ -3067,6 +3138,7 @@
       "ATTACHMENTS_TAB": "Attachments"
     }
   },
+
   "VIEW_DISTRIBUTION_SITE": {
     "TITLE": "View Distribution Site Permit",
     "DESCRIPTION": "View and manage distribution site permit details",
@@ -3091,6 +3163,7 @@
       "REJECTED": "Rejected"
     }
   },
+
   "DISTRIBUTION_SITE": {
     "TITLE": "Distribution Site Permit",
     "DESCRIPTION": "Apply for a distribution site permit to distribute goods and services",
@@ -3099,6 +3172,7 @@
       "DATE_DETAILS_DESC": "Specify the start and end dates for the distribution site"
     }
   },
+
   "FASTING_TENT": {
     "TITLE": "Fasting Tent and Food Distribution",
     "DESCRIPTION": "Submit your request to set up a fasting tent or distribution site by completing the required information and documents.",
@@ -3114,11 +3188,14 @@
       "SETUP_DATE": "Setup Date",
       "TENT_SETUP_DATE": "Tent Setup Date"
     }
+
   },
+
   "COMMONCHARITY_EVENT": {
     "NEXT": "Next",
     "SELECT_OPTION": "Select..."
   },
+
   "VALIDATIONCHARITY_EVENT": {
     "RFC3339_REQUIRED": "This field is required",
     "REQUIRED_FIELD": "This field is required",
@@ -3126,6 +3203,7 @@
     "DATE_RANGE": "End date must be after or equal to start date",
     "MIN_ONE_CHANNEL": "Select at least one channel"
   },
+
   "CHARITY_EVENT": {
     "STEP1_TITLE": "Main Information",
     "REQUEST_NO": "Request No",
@@ -3172,6 +3250,7 @@
     "MOBILE": "Mobile number",
     "FAX": "Fax"
   },
+
   "CHARITY_ORGANIZATIONS": {
     "TITLE": "Charity Organizations",
     "DESCRIPTION": "Discover and connect with charitable organizations",
@@ -3187,6 +3266,7 @@
     "ERROR_LOADING": "Failed to load charity organizations",
     "RETRY": "Try Again"
   },
+
   "NAVIGATION": {
     "HOME": "Home",
     "ABOUT_US": "About Us",
@@ -3198,6 +3278,7 @@
     "CHARITY_ORGANIZATIONS": "Charity Organizations",
     "CONTACT_US": "Contact Us"
   },
+
   "INITIATIVES": {
     "TITLE": "Initiatives",
     "NO_INITIATIVES": "No Initiatives Available",
@@ -3216,6 +3297,7 @@
     "BACK_TO_INITIATIVES": "Back to Initiatives",
     "BACK_TO_HOME": "Back to Home"
   },
+
   "event": {
     "PmStartTime": "Evening Start Time",
     "PmEndTime": "Evening End Time",
@@ -3232,6 +3314,7 @@
     "TELEPHONE": "Telephone",
     "beneficiaryIdNumber": "Beneficiary ID Number"
   },
+
   "PARTNERS": {
     "NAME": "Partner Name",
     "TYPE": "Partner Type",
@@ -3241,6 +3324,7 @@
     "CONTACT_DETAILS": "Contact Details",
     "MAIN_APPLY_SERVICE": "Main Apply Service (Optional)"
   },
+
   "WORKFLOW": {
     "PROCESS_STEPS": "Workflow Process Steps",
     "PROCESS_STEPS_DESC": "View workflow process steps",
@@ -3255,11 +3339,13 @@
     "STATUS_RETURN_FOR_MODIFICATIONS": "Return for Modifications",
     "STATUS_UNKNOWN": "Unknown Status"
   },
+
   "COMMENTS": {
     "ENTER_COMMENT": "Please enter a comment",
     "COMMENT_ADDED": "Comment added successfully",
     "ERROR_ADDING_COMMENT": "Error adding comment"
   },
+
   "DIST_SITE": {
     "TITLE": "Distribution Site Permit",
     "DESCRIPTION": "Apply for a distribution site permit by completing the required information, selecting location coordinates on the map, and uploading necessary documents.",
@@ -3316,6 +3402,7 @@
     "CONTACT_DETAILS_PLACEHOLDER": "Enter contact details",
     "ATTACHMENTS": "Attachments"
   },
+
   "FASTING_TENT_REQ": {
     "TITLE": "Fasting Tent and Food Distribution Request",
     "DESCRIPTION": "Submit your request to set up a fasting tent or distribution site by completing the required information and documents.",
@@ -3380,6 +3467,7 @@
     "CONTACT_DETAILS": "Contact Details",
     "CONTACT_DETAILS_PLACEHOLDER": "Enter contact details"
   },
+
   "VIEW_FASTING_TENT": {
     "VIEW_TITLE": "View Fasting Tent Request",
     "BASIC_INFORMATION": "Basic Information",
@@ -3431,6 +3519,7 @@
     "CONTACT_DETAILS": "Contact Details",
     "NO_ATTACHMENTS": "No attachments found"
   },
+
   "REQUEST_EVENT_PERMIT": {
     "TITLE": "Project/Campaign Donation Statement",
     "VIEW_TITLE": "View Event/Donation Campaign Permit Request",
@@ -3486,6 +3575,7 @@
     "TARGET_TYPE": "Target Type",
     "NO_ADS": "No advertisements"
   },
+
   "CHARITY_EVENT_PERMIT": {
     "TITLE": "Declaration of charity effectiveness",
     "VIEW_TITLE": "View Charity Event Permit",
@@ -3534,24 +3624,30 @@
     "SERVICE_DESCRIPTION": "Service Description",
     "SERVICE_INFO": "Service Information"
   },
+
   "VIEW_REQUESTPLAINT": {
     "TITLE": "View Grievance Request"
   },
+
   "REQUEST_INFO": {
     "WORKFLOW_STEPS": "Workflow Steps",
     "EVIDENCE": "Evidence",
     "JUSTIFICATIONS": "Justifications"
   },
+
   "VIEW_COMPLAINTREQUEST": {
     "TITLE": "View Complaint Request"
   },
+
   "NAVBAR": {
     "LOGIN": "Login",
     "CHANGE_PASSWORD": "Change Password",
     "PROFILE": "Profile",
     "LOGOUT": "Logout"
   },
+
   "ADD_ADVERTISEMENT": "Add Advertisement",
+
   "ADVERTISEMENT": {
     "VIEW_TITLE": "View Advertisement",
     "DETAILS": "Advertisement Details",
@@ -3574,6 +3670,7 @@
     "METHOD": "Method",
     "LOCATION": "Location"
   },
+
   "COUNCIL": {
     "TITLE": "About the Council",
     "P1": "The Council for the Coordination of Charitable Activities and Awqaf was established pursuant to Emiri Decree No. (9) of 2012 AD, and this council was formed under the chairmanship of His Highness Sheikh Ammar bin Humaid Al Nuaimi, Crown Prince of the Emirate of Ajman, and six members with experience and knowledge of charitable work and Awqaf and has a legal personality to the extent necessary to enable him to do To conduct legal acts in his own name.",
@@ -3587,11 +3684,13 @@
       "6. Creating more fruitful cooperation channels and continuous communication between charitable societies and Awqaf funds operating in the Emirate of Ajman with the aim of attracting, coordinating, and collaborating their efforts effectively to achieve their goals"
     ]
   },
+
   "MESSAGE": {
     "TITLE": "General Manager's Message",
     "NAME": "H.E. / Maryam Ali Al Maamari",
     "P1": "Charitable work is a characteristic of high-end societies, as it stems from the call of Allah's messengers to the Solidarity and cooperation for good and righteousness, and that the United Arab Emirates has established itself the principles of charitable work have become a part of its structure and one of the means for its advancement and its renaissance, and when we mention the humanitarian march of the UAE, we cannot forget The imprint of charitable institutions operating in the emirate of Ajman and its efforts with The rest of the other work institutions spread throughout the Emirates in establishing work Charity and making the UAE the first donor of humanitarian aid globally for five Consecutive years"
   },
+
   "FOOTER": {
     "HOME": "Home",
     "ABOUT_US": "About Us",

@@ -40,8 +40,7 @@ export class ShortcutService {
     const navigationPath = this.routeMappingService.getNavigationPath(shortcut.pageName);
     
     if (navigationPath) {
-      console.log(`Navigating to ${shortcut.pageName}:`, navigationPath);
-      
+       
       if (navigationPath.queryParams) {
         return this.router.navigate([navigationPath.path], { 
           queryParams: navigationPath.queryParams 

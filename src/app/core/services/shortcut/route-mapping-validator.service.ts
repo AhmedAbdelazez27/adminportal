@@ -117,25 +117,19 @@ export class RouteMappingValidatorService {
     const pageNames = backendShortcuts.map(shortcut => shortcut.pageName);
     const validation = this.validatePageNames(pageNames);
 
-    console.group('🚀 Route Mapping Validation Report');
-    console.log(`✅ Mapped: ${validation.mapped.length}/${pageNames.length}`);
-    console.log(`❌ Unmapped: ${validation.unmapped.length}/${pageNames.length}`);
-    console.log(`⚠️  Invalid: ${validation.invalid.length}/${pageNames.length}`);
+  
 
     if (validation.unmapped.length > 0) {
-      console.group('❌ Unmapped PageNames:');
-      validation.unmapped.forEach(pageName => {
+       validation.unmapped.forEach(pageName => {
         const suggestions = this.getSuggestions(pageName);
-        console.log(`  • ${pageName}${suggestions.length > 0 ? ` (suggestions: ${suggestions.join(', ')})` : ''}`);
-      });
+       });
       console.groupEnd();
     }
 
     if (validation.invalid.length > 0) {
       console.group('⚠️  Invalid Mappings:');
       validation.invalid.forEach(pageName => {
-        console.log(`  • ${pageName}`);
-      });
+       });
       console.groupEnd();
     }
 

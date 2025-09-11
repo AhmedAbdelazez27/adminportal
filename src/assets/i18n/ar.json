@@ -241,6 +241,7 @@
     "BACK_TO_HOME": "العودة إلى الرئيسية",
     "OPEN_IN_GOOGLE_MAPS": "فتح في خرائط جوجل"
   },
+
   "ENTITY": {
     "TITLE": "الصلاحيات /الجمعيات",
     "ARABIC_NAME": "الاسم العربي",
@@ -264,7 +265,7 @@
     "SHOW_IN_PORTAL": "إظهار في البوابة",
     "SHOW_IN_PORTAL_DESC": "عرض هذه الجمعية في البوابة العامة",
     "IS_DONATION": "جهة تبرع",
-    "IS_DONATION_DESC": "تحديد هذه الجمعية كجهة تبرع",
+    "IS_DONATION_DESC": "تصريح جمع  التبرعات    ",
     "ADD_NEW": "إضافة جمعيه جديد",
     "EDIT": "تعديل الجمعيه",
     "VIEW": "عرض الجمعيه",
@@ -478,8 +479,8 @@
   "LICENSE_NUMBER": "رقم الرخصة",
   "ENTER_LICENSE_NUMBER": "ادخل رقم الرخصة",
   "LICENSE_END_DATE": "تاريخ انتهاء الرخصة",
-  "CIVIL_ID": "الرقم المدني",
-  "ENTER_CIVIL_ID": "ادخل الرقم المدني",
+  "CIVIL_ID": "رقم الهوية ",
+  "ENTER_CIVIL_ID": "ادخل رقم الهوية ",
   "FAX": "فاكس",
   "ENTER_FAX": "ادخل الفاكس",
   "BOX_NO": "صندوق البريد",
@@ -531,7 +532,7 @@
   "activate_account": "تفعيل الحساب",
   "reject_account": "رفض الحساب",
   "block_account": "حظر الحساب",
-  "finanial_charts_general_expenses": "التقارير التفاعلية للمصروفات والايرادات",
+  "finanial_charts_general_expenses": "التقارير التفاعلية للايرادات  والمصروفات ",
   "finanial_charts_periods_branches": "تحليل المصاريف والايرادات حسب الفترات والفروع",
   "finanial_charts_periods_Department": "تحليل المصاريف والايرادات حسب الفترات والاقسام",
   "finanial_charts_branch_account": "تحليل المصاريف والايرادات حسب الفروع والحسابات",
@@ -710,6 +711,8 @@
     "Entries": "سجلات",
     "DASHBOARD_PERMISSIONS": "صلاحيات الشاشة الرئيسية"
   },
+
+
   "AuthenticationResorceName": {
     "titleRole": " الصلاحيات /الدور الوظيفي",
     "name": "اسم",
@@ -740,7 +743,7 @@
     "organization": "اسم المؤسسة",
     "license": "رقم الترخيص",
     "addDept": "إضافة قسم",
-    "dept": "الأقسام",
+    "dept": "مجموعة المستخدمين",
     "users": "المستخدمون",
     "employer": "صاحب العمل",
     "email": "البريد الإلكتروني",
@@ -751,7 +754,7 @@
     "address": "العنوان",
     "userPermission": "صلاحيات المستخدم",
     "noOfRole": "لا توجد أدوار متاحة",
-    "titleDepartments": "الصلاحيات /الأقسام",
+    "titleDepartments": "الصلاحيات /مجموعة المستخدمين",
     "searchName": "بحث بالاسم",
     "loading": "جارٍ التحميل...",
     "searchPlaceholder": "البحث بالاسم العربي أو الإنجليزي",
@@ -1123,6 +1126,8 @@
     "endDept": "endDept",
     "endCredit": "endCredit"
   },
+
+
   "SponsorshipReportResourceName": {
     "arabicValue": "",
     "benifcientTotalRpt_Title": "اجمالى عدد المستفيدين",
@@ -1519,6 +1524,7 @@
     "CLOSE": "إغلاق",
     "CANCEL": "إلغاء",
     "regionsTitle": "اعداد المناطق",
+
     "CREATE": "إنشاء",
     "UPDATE": "تحديث"
   },
@@ -1749,6 +1755,7 @@
     "menutotalAidsbyCategory": " الحالات الإجتماعية / اجمالى المساعدات حسب فئه المتقدم",
     "titleForRequeststatistics": " احصائيات الطلبات",
     "menugeneral_title": " المالية/ التقارير التفاعلية للمقبوضات والمدفوعات"
+
   },
   "ProjectCharts": {
     "charts": "التقارير",
@@ -1777,6 +1784,7 @@
     "entity": "الجمعيه",
     "month": "شهر"
   },
+
   "mainApplyServiceResourceName": {
     "title": "الطلبات المقدمة",
     "masterData": "Master Data",
@@ -1953,6 +1961,7 @@
     "jopTitle": "المسمى الوظيفي",
     "permitNumber": "رقم التصريح",
     "licenseEndDate": "تاريخ انتهاء الترخيص",
+
     "LOCATION": {
       "DETAILS": "تفاصيل الموقع",
       "DESC": "عرض معلومات الموقع والخريطة",
@@ -1966,6 +1975,7 @@
       "SELECTED_LOCATION": "الموقع المحدد",
       "SELECTED_COORDINATES": "الإحداثيات المحددة"
     },
+
     "WORKFLOW": {
       "PROCESS_STEPS": "خطوات سير العمل",
       "PROCESS_STEPS_DESC": "عرض خطوات سير العمل",
@@ -1980,6 +1990,7 @@
       "STATUS_RETURN_FOR_MODIFICATIONS": "إرجاع للتعديل",
       "STATUS_UNKNOWN": "حالة غير معروفة"
     },
+
     "MAP": {
       "LOADING_ISSUE": "مشكلة في تحميل الخريطة",
       "LOADING_ERROR": "فشل في تحميل الخريطة. يرجى تحديث الصفحة.",
@@ -1998,6 +2009,7 @@
       }
     }
   },
+
   "glAccountResourceName": {
     "title": "شجرة الحسابات",
     "accountCode": "رقم الحساب",
@@ -2011,6 +2023,7 @@
     "balanceSheet": "ميزانيه",
     "commentDate": "تاريخ التعليق"
   },
+
   "glAccountEntityResourceName": {
     "title": "شجرة الحسابات",
     "parentId": "Parent Id",
@@ -2038,6 +2051,7 @@
     "attachment": "المرفقات ",
     "contactus": "   طلبات التواصل",
     "heroSectionSetting": "إعدادات القسم الرئيسي"
+
   },
   "HERO_SECTION_SETTING": {
     "TITLE": "إدارة إعدادات القسم الرئيسي",
@@ -2125,6 +2139,8 @@
     "PREVIOUS": "السابق",
     "NEXT": "التالي"
   },
+
+
   "NOTIFICATIONS": {
     "TITLE": "الإشعارات",
     "NO_NOTIFICATIONS": "لا توجد إشعارات",
@@ -2198,6 +2214,7 @@
       "PAGE_SIZE": "عنصر في الصفحة"
     }
   },
+
   "AUTH": {
     "LOGIN": {
       "TITLE": "تسجيل الدخول",
@@ -2270,6 +2287,7 @@
       "LOGOUT_SUCCESS": "تم تسجيل الخروج بنجاح"
     }
   },
+
   "PROFILE": {
     "BASIC_INFO": "المعلومات الأساسية",
     "ENGLISH_NAME": "الاسم بالإنجليزية",
@@ -2324,6 +2342,7 @@
     "FILE_TYPE_ERROR": "يُسمح فقط بملفات JPEG و PNG و GIF و PDF",
     "VALIDATION_ERROR": "يرجى ملء جميع الحقول المطلوبة بشكل صحيح"
   },
+
   "CONTACT": {
     "TITLE": "اتصل بنا",
     "CONTACT_INFORMATION": "معلومات الاتصال",
@@ -2344,6 +2363,7 @@
     "SEND": "إرسال",
     "SENDING": "جاري الإرسال..."
   },
+
   "REGISTRATION": {
     "INDIVIDUAL": {
       "TITLE": "تسجيل الفرد"
@@ -2438,6 +2458,7 @@
       "GO_TO_HOME": "الذهاب إلى الصفحة الرئيسية"
     }
   },
+
   "EDIT_PROFILE": {
     "TITLE": "تحرير الملف الشخصي",
     "SUBTITLE": "تحديث معلومات حسابك والمستندات",
@@ -2491,6 +2512,7 @@
     "FILE_PREVIEW": "معاينة الملف",
     "LOGO": "الشعار"
   },
+
   "SERVICES": {
     "TITLE": "الخدمات",
     "DETAILS": "تفاصيل الخدمة",
@@ -2526,6 +2548,7 @@
     "VIEW_DETAILS": "عرض التفاصيل",
     "START_REQUEST": "بدء الطلب"
   },
+
   "REQUEST_PLAINT": {
     "TITLE": "طلب تظلم",
     "DESCRIPTION": "قدم طلب التظلم الخاص بك من خلال ملء النموذج أدناه بجميع المعلومات والمستندات المطلوبة.",
@@ -2557,6 +2580,7 @@
     "ATTACHMENTS": "المستندات المطلوبة",
     "NO_ENTITIES_AVAILABLE": "لا توجد جهات متاحة لهذا المستخدم"
   },
+
   "REQUEST_COMPLAINT": {
     "TITLE": "طلب شكوى",
     "DESCRIPTION": "قدم طلب الشكوى مع المعلومات التفصيلية",
@@ -2578,6 +2602,7 @@
     "MOCK_SUGGESTION": "اقتراح",
     "MOCK_THANKS": "شكر"
   },
+
   "ATTACHMENTS": {
     "TITLE": "المرفقات",
     "DOCUMENT_TYPE": "نوع المستند",
@@ -2588,6 +2613,7 @@
     "OR": "أو",
     "BROWSE_FILES": "تصفح الملفات"
   },
+
   "SUCCESS": {
     "REQUEST_PLAINT_CREATED": "تم تقديم طلب التظلم بنجاح!",
     "REQUEST_COMPLAINT_CREATED": "تم إنشاء طلب الشكوى بنجاح",
@@ -2598,6 +2624,7 @@
     "PARTNER_ADDED": "تم إضافة الشريك بنجاح",
     "PARTNER_REMOVED": "تم إزالة الشريك بنجاح"
   },
+
   "ERRORS": {
     "SERVICE_ID_NOT_FOUND": "معرف الخدمة غير موجود",
     "FAILED_LOAD_SERVICE_DETAILS": "فشل في تحميل تفاصيل الخدمة. يرجى المحاولة مرة أخرى.",
@@ -2625,9 +2652,11 @@
     "FAILED_LOAD_HERO_SECTION": "فشل في تحميل تفاصيل القسم الرئيسي. يرجى المحاولة مرة أخرى.",
     "INVALID_ID": "معرف غير صالح."
   },
+
   "WARNINGS": {
     "REASON_ALREADY_ADDED": "تم إضافة هذا السبب مسبقاً."
   },
+
   "SHARED": {
     "FORMS": {
       "SUPERVISOR_INFO": "معلومات المشرف",
@@ -2730,6 +2759,7 @@
       "ATTACHMENTS_TAB": "المرفقات"
     }
   },
+
   "VIEW_DISTRIBUTION_SITE": {
     "TITLE": "عرض تصريح موقع التوزيع",
     "DESCRIPTION": "عرض وإدارة تفاصيل تصريح موقع التوزيع",
@@ -2754,6 +2784,7 @@
       "REJECTED": "مرفوض"
     }
   },
+
   "DISTRIBUTION_SITE": {
     "TITLE": "تصريح موقع التوزيع",
     "DESCRIPTION": "قدم طلبك للحصول على تصريح موقع توزيع من خلال استكمال المعلومات المطلوبة واختيار إحداثيات الموقع على الخريطة ورفع المستندات اللازمة.",
@@ -2762,6 +2793,7 @@
       "DATE_DETAILS_DESC": "الجدولة وتوقيت الإعداد"
     }
   },
+
   "FASTING_TENT": {
     "TITLE": "خيمة الإفطار وتوزيع المواد الغذائية",
     "DESCRIPTION": "قدم طلبك لإقامة خيمة إفطار أو موقع توزيع من خلال استكمال المعلومات والوثائق المطلوبة.",
@@ -2777,11 +2809,14 @@
       "SETUP_DATE": "تاريخ الإعداد",
       "TENT_SETUP_DATE": "تاريخ إقامة الخيمة"
     }
+
   },
+
   "COMMONCHARITY_EVENT": {
     "NEXT": "التالي",
     "SELECT_OPTION": "اختر..."
   },
+
   "VALIDATIONCHARITY_EVENT": {
     "REQUIRED_FIELD": "هذا الحقل مطلوب",
     "INVALID_EMAIL": "من فضلك أدخل بريدًا صحيحًا",
@@ -2791,6 +2826,7 @@
     "PLEASE_COMPLETE_REQUIRED_FIELDS": "من فضلك أكمل الحقول المطلوبة.",
     "PLEASE_UPLOAD_REQUIRED_ATTACHMENTS": "يرجى رفع جميع المرفقات المطلوبة"
   },
+
   "CHARITY_EVENT": {
     "STEP1_TITLE": "البيانات الأساسية",
     "REQUEST_NO": "رقم الطلب",
@@ -2837,6 +2873,7 @@
     "MOBILE": "رقم الجوال",
     "FAX": "رقم الفاكس"
   },
+
   "CHARITY_ORGANIZATIONS": {
     "TITLE": "المؤسسات الخيرية",
     "DESCRIPTION": "اكتشف وتواصل مع المؤسسات الخيرية",
@@ -2852,6 +2889,7 @@
     "ERROR_LOADING": "فشل في تحميل المؤسسات الخيرية",
     "RETRY": "حاول مرة أخرى"
   },
+
   "NAVIGATION": {
     "HOME": "الرئيسية",
     "ABOUT_US": "من نحن",
@@ -2863,6 +2901,7 @@
     "CHARITY_ORGANIZATIONS": "المؤسسات الخيرية",
     "CONTACT_US": "اتصل بنا"
   },
+
   "INITIATIVES": {
     "TITLE": "المبادرات",
     "NO_INITIATIVES": "لا توجد مبادرات متاحة",
@@ -2881,6 +2920,7 @@
     "BACK_TO_INITIATIVES": "العودة إلى المبادرات",
     "BACK_TO_HOME": "العودة إلى الرئيسية"
   },
+
   "event": {
     "PmStartTime": "وقت البدء مساء",
     "PmEndTime": "وقت الانتهاء مساء",
@@ -2897,6 +2937,7 @@
     "TELEPHONE": "الهاتف",
     "beneficiaryIdNumber": "رقم هوية المستفيد"
   },
+
   "PARTNERS": {
     "NAME": "اسم الشريك",
     "TYPE": "نوع الشريك",
@@ -2906,6 +2947,7 @@
     "CONTACT_DETAILS": "بيانات التواصل",
     "MAIN_APPLY_SERVICE": "الخدمة الرئيسية (اختياري)"
   },
+
   "WORKFLOW": {
     "PROCESS_STEPS": "خطوات سير العمل",
     "PROCESS_STEPS_DESC": "عرض خطوات سير العمل",
@@ -2920,11 +2962,13 @@
     "STATUS_RETURN_FOR_MODIFICATIONS": "إرجاع للتعديل",
     "STATUS_UNKNOWN": "حالة غير معروفة"
   },
+
   "COMMENTS": {
     "ENTER_COMMENT": "يرجى إدخال تعليق",
     "COMMENT_ADDED": "تم إضافة التعليق بنجاح",
     "ERROR_ADDING_COMMENT": "خطأ في إضافة التعليق"
   },
+
   "DIST_SITE": {
     "TITLE": "تصريح موقع التوزيع",
     "DESCRIPTION": "قدم طلبك للحصول على تصريح موقع توزيع من خلال استكمال المعلومات المطلوبة واختيار إحداثيات الموقع على الخريطة ورفع المستندات اللازمة.",
@@ -2981,6 +3025,7 @@
     "CONTACT_DETAILS_PLACEHOLDER": "أدخل تفاصيل الاتصال",
     "ATTACHMENTS": "المرفقات"
   },
+
   "FASTING_TENT_REQ": {
     "TITLE": "طلب خيمة الإفطار وتوزيع المواد الغذائية",
     "DESCRIPTION": "قدم طلبك لإقامة خيمة إفطار أو موقع توزيع من خلال استكمال المعلومات والوثائق المطلوبة.",
@@ -3045,6 +3090,7 @@
     "CONTACT_DETAILS": "تفاصيل الاتصال",
     "CONTACT_DETAILS_PLACEHOLDER": "أدخل تفاصيل الاتصال"
   },
+
   "VIEW_FASTING_TENT": {
     "VIEW_TITLE": "عرض طلب خيمة الإفطار",
     "BASIC_INFORMATION": "المعلومات الأساسية",
@@ -3096,6 +3142,7 @@
     "CONTACT_DETAILS": "تفاصيل الاتصال",
     "NO_ATTACHMENTS": "لم يتم العثور على مرفقات"
   },
+
   "REQUEST_EVENT_PERMIT": {
     "TITLE": "تصريح مشروع / حملة تبرع",
     "VIEW_TITLE": "عرض طلب تصريح فعالية / حملة تبرع",
@@ -3151,6 +3198,7 @@
     "TARGET_TYPE": "الفئة",
     "NO_ADS": "لا توجد إعلانات"
   },
+
   "CHARITY_EVENT_PERMIT": {
     "TITLE": "تصريح فعالية خيرية",
     "VIEW_TITLE": "عرض طلب تصريح فعالية خيرية",
@@ -3199,24 +3247,30 @@
     "SERVICE_DESCRIPTION": "وصف الخدمة",
     "SERVICE_INFO": "معلومات الخدمة"
   },
+
   "VIEW_REQUESTPLAINT": {
     "TITLE": "  طلب التظلم"
   },
+
   "REQUEST_INFO": {
     "WORKFLOW_STEPS": "خطوات سير العمل",
     "EVIDENCE": "الأدلة",
     "JUSTIFICATIONS": "التبريرات"
   },
+
   "VIEW_COMPLAINTREQUEST": {
     "TITLE": "  طلب الشكوى"
   },
+
   "NAVBAR": {
     "LOGIN": "تسجيل الدخول",
     "CHANGE_PASSWORD": "تغيير كلمة المرور",
     "PROFILE": "الملف الشخصي",
     "LOGOUT": "تسجيل الخروج"
   },
+
   "ADD_ADVERTISEMENT": "إضافة إعلان",
+
   "ADVERTISEMENT": {
     "VIEW_TITLE": "عرض الإعلان",
     "DETAILS": "تفاصيل الإعلان",
@@ -3239,6 +3293,7 @@
     "METHOD": "الطريقة",
     "LOCATION": "الموقع"
   },
+
   "COUNCIL": {
     "TITLE": "عن المجلس",
     "P1": "تأسس مجلس تنسيق العمل الخيري والأوقاف بموجب المرسوم الأميري رقم (9) لسنة 2012م، وشكل هذا المجلس برئاسة سمو الشيخ عمار بن حميد النعيمي ولي عهد إمارة عجمان وستة أعضاء من ذوي الخبرة والدراية بأعمال البر والإحسان والأوقاف وله شخصية اعتبارية بقدر ما هو لازم لتمكينه من القيام بإجراء التصرفات القانونية باسمه الخاص",
@@ -3253,11 +3308,13 @@
       "7. خلق المزيد من قنوات التعاون المثمر، والتواصل المستمر فيما بين الجمعيات الخيرية وصناديق الأوقاف العاملة في إمارة عجمان بهدف استقطاب جهودها وتنسيقها وتضافرها بصورة فعالة لتحقيق أهدافها"
     ]
   },
+
   "MESSAGE": {
     "TITLE": "كلمة الامين العام",
     "NAME": "سعادة / مريم علي المعمري",
     "P1": "العمل الخيري سمة المجتمعات الراقية، فهو نابع من دعوة رسل الله إلى التكافل والتعاون على الخير والبر، وإن دولة الإمارات العربية المتحدة رسخ مبادئ العمل الخيري حتى أضحى جزءا من بنيانها وإحدى وسائل تقدمها ونهضتها، وحين نذكر المسيرة الإنسانية لدولة الإمارات لا يمكن أن ننسى بصمة الجمعيات المؤسسات الخيرية العاملة في إمارة عجمان وجهودها مع بقية مؤسسات العمل الأخرى المنتشرة في كافة أرجاء الإمارات في إرساء العمل الخيري وجعل دولة الإمارات المانح الأول للمساعدات الإنسانية عالميا لخمسة أعوام متتالية."
   },
+
   "FOOTER": {
     "HOME": "الرئيسية",
     "ABOUT_US": "من نحن",
