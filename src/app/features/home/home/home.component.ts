@@ -76,7 +76,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private homeService: HomeService, 
-    private translate: TranslateService,
+    public translate: TranslateService,
     private shortcutService: ShortcutService,
     private router: Router,
     private routeValidator: RouteMappingValidatorService

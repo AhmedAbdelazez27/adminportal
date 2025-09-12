@@ -4886,3 +4886,16 @@ td {
     background-color: var(--Color-25, #8D734D);
     color: #fff;
 }
+  .btn-notifications {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 50px;
+    background: var(--Color-25, #8D734D);
+    border: none;
+    margin-top: 8px;
+  }
