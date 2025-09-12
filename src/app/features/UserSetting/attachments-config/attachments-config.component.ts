@@ -42,7 +42,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
   attachmentsConfigs: AttachmentsConfigDto[] = [];
   totalCount: number = 0;
   currentPage: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 10;   
   searchValue: string = '';
   attachmentsConfigForm: FormGroup;
   submitted: boolean = false;
@@ -288,7 +288,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
         .getAttachmentsConfigTypeLookup(this.searchSelect2Params)
         .subscribe({
           next: (response) => {
-            this.attachmentsConfigTypeOptions = response.results;
+            this.attachmentsConfigTypeOptions = response;
             this.spinnerService.hide();
             // Load data after options are loaded
             this.loadData();
@@ -481,7 +481,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
     this.submitted = false;
 
     // Ensure options are loaded before setting form values
-    if (this.attachmentsConfigTypeOptions.length === 0) {
+    if (this.attachmentsConfigTypeOptions?.length === 0) {
       this.loadAttachmentsConfigTypes()
         .then(() => {
           this.setFormValues(config);
@@ -512,7 +512,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
     this.submitted = false;
 
     // Ensure options are loaded before setting form values
-    if (this.attachmentsConfigTypeOptions.length === 0) {
+    if (this.attachmentsConfigTypeOptions?.length === 0) {
       this.loadAttachmentsConfigTypes()
         .then(() => {
           this.setFormValues(config);
@@ -617,7 +617,7 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
     // Convert configType to string for comparison
     const configTypeStr = configType.toString();
 
-    const configTypeOption = this.attachmentsConfigTypeOptions.find(
+    const configTypeOption = this.attachmentsConfigTypeOptions?.find(
       (option) => option.id.toString() === configTypeStr
     );
 

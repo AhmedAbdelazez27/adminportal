@@ -47,6 +47,9 @@ export class ServiceMainComponent implements OnInit, OnDestroy {
   attachmentsCollapsed = true;
 
   private languageSubscription!: Subscription;
+  
+  userTypeService: any[] = [];
+
 
   constructor(
     private fb: FormBuilder,
@@ -58,7 +61,15 @@ export class ServiceMainComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private spinnerService: SpinnerService
   ) {}
-
+  getUserServiceType(){
+    this.serviceSettingService.getUserServiceType().subscribe({
+      next : (res)=>{
+        this.userTypeService = res ;
+        console.log("Res",res);
+        
+      }
+    })
+  }
   ngOnInit(): void {
     this.serviceId = +this.route.snapshot.paramMap.get('id')!;
     this.isEditMode = this.route.snapshot.url.some((u) => u.path === 'edit');
@@ -70,6 +81,7 @@ export class ServiceMainComponent implements OnInit, OnDestroy {
     this.languageSubscription = this.translate.onLangChange.subscribe(() => {
       this.setPageTitle();
     });
+    this.getUserServiceType();
   }
 
   private setPageTitle(): void {
@@ -98,10 +110,10 @@ export class ServiceMainComponent implements OnInit, OnDestroy {
       serviceName: [{ value: ''}],
       serviceNameEn: [{ value: '' }],
       serviceRefrenceNo: [{ value: '', disabled: true }],
-      serviceTypeName: [{ value: '' }],
+      serviceType: [{ value: '' }],
       descriptionAr: ['', [Validators.maxLength(500)]],
       descriptionEn: ['', [Validators.maxLength(500)]],
-      active: [false],
+      active: [false],  
     });
 
     if (!this.isEditMode) {
@@ -132,7 +144,7 @@ export class ServiceMainComponent implements OnInit, OnDestroy {
           serviceName: res.serviceName,
           serviceNameEn: res.serviceNameEn,
           serviceRefrenceNo: res.serviceRefrenceNo,
-          serviceTypeName: res.serviceTypeName,
+          serviceType: Number(res.serviceType) ,
           descriptionAr: res.descriptionAr,
           descriptionEn: res.descriptionEn,
           active: res.active,
@@ -170,10 +182,10 @@ export class ServiceMainComponent implements OnInit, OnDestroy {
       // Update existing service
       const updateDto: UpdateServiceDto = {
         serviceId: this.serviceId,
-        serviceName: this.serviceDetails.serviceName,
-        serviceNameEn: this.serviceDetails.serviceNameEn,
+        serviceName: this.form.value.serviceName,
+        serviceNameEn: this.form.value.serviceNameEn,
         serviceRefrenceNo: this.serviceDetails.serviceRefrenceNo,
-        serviceType: this.serviceDetails.serviceType,
+        serviceType: this.form.value.serviceType,
         descriptionAr: this.form.value.descriptionAr,
         descriptionEn: this.form.value.descriptionEn,
         active: this.form.value.active,

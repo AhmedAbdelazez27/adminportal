@@ -17,7 +17,7 @@ export class AttachmentsConfigTypeService {
   // Get attachments config type lookup values
   getAttachmentsConfigTypeLookup(
     request: FndLookUpValuesSelect2RequestDto
-  ): Observable<Select2Result> {
+  ): Observable<any> {
     return this.http.post<Select2Result>(`${this.BASE_URL}`, request);
   }
 }

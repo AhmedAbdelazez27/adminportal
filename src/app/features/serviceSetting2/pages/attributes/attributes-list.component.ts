@@ -51,7 +51,6 @@ export class AttributesListComponent implements OnInit, OnDestroy {
   attributeValueForm!: FormGroup;
   attributeModal: any;
   currentAttributeValues: any[] = [];
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -73,6 +72,7 @@ export class AttributesListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.cleanupModal();
   }
+
 
   // Permission checking methods
   hasPermission(permission: string): boolean {

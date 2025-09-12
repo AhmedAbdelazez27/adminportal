@@ -434,3 +434,20 @@
 .spinner-border.text-gold {
   color: #8D734D !important;
 }
+
+
+
+
+
+
+.smooth-cols .col-anim {
+  transition:
+    width 600ms ease,
+    max-width 600ms ease,
+    flex-basis 600ms ease,
+    opacity 200ms ease;
+  will-change: width, max-width, flex-basis, opacity;
+}
+.w-20{
+  width: 38px;
+}

@@ -56,4 +56,13 @@ export class ServiceSettingService {
       `${this.BASE_URL}${ApiEndpoints.Services.Delete(id)}`
     );
   }
+
+    // Get service by ID
+  getUserServiceType(): Observable<any> {
+    return this.http.get<any>(
+      `${environment.apiBaseUrl}/Lookup/UserServiceType
+`,
+      {}
+    );
+  }
 }
