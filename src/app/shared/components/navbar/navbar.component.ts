@@ -31,8 +31,7 @@ export class NavbarComponent {
 
   constructor(public translation: TranslationService, private authService: AuthService, private toastr: ToastrService, private fb: FormBuilder, private spinnerService: SpinnerService,
     private translate: TranslateService, private userService: UserService) {
-    console.log('NavbarComponent constructor called');
-    console.log('localStorage permissions:', localStorage.getItem('permissions'));
+
     
     this.changePasswordForm = this.fb.group({
       currentPassword: ['', [Validators.required, Validators.minLength(1)]],
@@ -68,10 +67,7 @@ export class NavbarComponent {
   hasPermission(permission: string): boolean {
     const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
     const result = permissions.includes(permission);
-    // console.log(`Permission check for "${permission}":`, {
-    //   permissions: permissions,
-    //   result: result
-    // });
+  
     return result;
   }
   hasPagePermission(pagePermission: string): boolean {
@@ -80,19 +76,19 @@ export class NavbarComponent {
   }
 
   hasAnyAuthenticationPermission(): boolean {
-    console.log('hasAnyAuthenticationPermission() method called!');
     const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
-    console.log('Authentication permissions check:', {
-      permissions: permissions,
-      hasRoleView: this.hasPermission('Role.View'),
-      hasUserView: this.hasPermission('User.View'),
-      hasEntityView: this.hasPermission('Entity.View'),
-      hasDepartmentsView: this.hasPermission('Departments.View')
-    });
+    // console.log('Authentication permissions check:', {
+    //   permissions: permissions,
+    //   hasRoleView: this.hasPermission('Role.View'),
+    //   hasUserView: this.hasPermission('User.View'),
+    //   hasEntityView: this.hasPermission('Entity.View'),
+    //   hasDepartmentsView: this.hasPermission('Departments.View')
+    // });
     return this.hasPermission('Role.View') || 
            this.hasPermission('User.View') || 
            this.hasPermission('Entity.View') || 
-           this.hasPermission('Departments.View');
+           this.hasPermission('Departments.View') ||
+           this.hasPermission('DataTransLogs.View');
   }
 
   hasAnyFinancialPermission(): boolean {
@@ -168,7 +164,6 @@ export class NavbarComponent {
 
   submitChangePassword(): void {
     this.submitted = true;
-    console.log(this.changePasswordForm);
 
     if (this.changePasswordForm.invalid) {
       this.changePasswordForm.markAllAsTouched();

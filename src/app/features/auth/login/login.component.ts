@@ -45,6 +45,7 @@ export class LoginComponent {
         const decodedData = this.auth.decodeToken();
         
         if (decodedData && decodedData.Permissions) {
+          localStorage.setItem('departmentId', decodedData.DepartmentId);
           const permissions = decodedData.Permissions;
           localStorage.setItem('userName',decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'])
           localStorage.setItem('permissions', JSON.stringify(permissions));

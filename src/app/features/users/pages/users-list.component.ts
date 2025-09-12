@@ -704,6 +704,12 @@ export class UsersListComponent implements OnInit {
       next: (res: any) => {
         this.userPermissions = res || [];
 
+        // Debug: Check if ApVendor and CaseSearchListRpt are in the response
+        const vendorModule = res.find((m: any) => m.screenPermissions?.some((s: any) => s.screenName === 'ApVendor'));
+        const caseSearchModule = res.find((m: any) => m.screenPermissions?.some((s: any) => s.screenName === 'CaseSearchListRpt'));
+        console.log("Vendor module found:", vendorModule);
+        console.log("CaseSearchListRpt module found:", caseSearchModule);
+
         this.originalPermissions = res
           .flatMap((module: any) => module.screenPermissions)
           .flatMap((screen: any) =>
@@ -884,6 +890,13 @@ export class UsersListComponent implements OnInit {
       });
     console.log("currentPermissions = ", currentPermissions);
     console.log("this.originalPermissions = ", (this as any)[originalPermissions]);
+    
+    // Debug: Check if there are any permissions for ApVendor or CaseSearchListRpt
+    const vendorPermissions = currentPermissions.filter(p => p.value && p.value.includes('ApVendor'));
+    const caseSearchPermissions = currentPermissions.filter(p => p.value && p.value.includes('CaseSearchListRpt'));
+    console.log("Vendor permissions found:", vendorPermissions);
+    console.log("CaseSearchListRpt permissions found:", caseSearchPermissions);
+    
     const result = this.diffPermissions((this as any)[originalPermissions], currentPermissions);
 
 

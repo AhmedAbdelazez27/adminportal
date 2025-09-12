@@ -668,6 +668,7 @@
     "user": "Users",
     "entity": "Entity",
     "department": "Department",
+    "datatranslogs": "Data Pull",
     "changePWD": "Change Password",
     "changePWDReq": "Current password must be at least 1 character long",
     "currentPWD": "Current Password",
@@ -712,6 +713,28 @@
     "glAccountTitle": "GlAccounts",
     "glAccountEntityTitle": "GlAccounts Entity",
     "generalSetting":" General Setting"
+  },
+
+  "dataTransLogs": {
+    "title": "Data Pull",
+    "headers": {
+      "serial": "#",
+      "entity": "Entity",
+      "operationDate": "Operation Date",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "duration": "Duration",
+      "status": "Status"
+    },
+    "filters": {
+      "fromDate": "From Date",
+      "toDate": "To Date"
+    },
+    "status": {
+      "success": "Operation Completed Successfully",
+      "error": "Error Occurred",
+      "inProgress": "In Progress"
+    }
   },
 
   "Common": {
@@ -2023,6 +2046,7 @@
     "details": "Details",
     "disagree": "Request rejected",
     "disagreereas": "Request rejected and the rejection reason recorded",
+    "desc": "Description",
     "DistributionRequest": "طلب تصريح موقع توزيع",
     "dnexist": "Department already exist",
     "done": "Done",
@@ -2347,7 +2371,7 @@
     "uploadf": "Loading",
     "uploadsuccess": "uploaded successfully",
     "userdata": "User info",
-    "username": "requester name",
+    "username": "Requester name",
     "UsersConfirmtitle": "Seach Public Requests",
     "userstatues": "Requester Status",
     "UserStatusName": "UserStatusNameEN",
@@ -2389,6 +2413,8 @@
     "permitNumber": "Permit Number",
     "licenseEndDate": "License End date",
     "serviceName": "Service Name",
+    "NoPermission": "No Permission",
+
     "WORKFLOW": {
       "PROCESS_STEPS": "Workflow Process Steps",
       "PROCESS_STEPS_DESC": "View workflow process steps",

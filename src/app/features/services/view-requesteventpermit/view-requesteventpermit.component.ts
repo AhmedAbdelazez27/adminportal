@@ -53,6 +53,7 @@ type WorkFlowCommentDto = {
 
 type WorkFlowStepDto = {
   id: number;
+  deptId: number;
   departmentName: string;
   serviceStatus: number | null;
   serviceStatusName?: string;
@@ -306,7 +307,8 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
   firstLevel: boolean = false;
   screenMode: 'edit' | 'view' = 'view';
   isEditMode: boolean = false;
-  serviceDepartmentActions: number = 0;
+  serviceDepartmentActions: number[] = [];
+  userForm: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
@@ -331,6 +333,10 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
     });
     this.returnModificationForm = this.fb.group({
       returnModificationreasonTxt: [[], Validators.required]
+    });
+    this.userForm = this.fb.group({
+      comment: ['', [Validators.required, Validators.minLength(1)]],
+      commentTypeId: [null, Validators.required],
     });
   }
 
@@ -364,8 +370,69 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
         this.workFlowSteps = resp.workFlowSteps || [];
         this.partners = resp.partners || [];
         this.attachments = resp.attachments || [];
-        this.serviceDepartmentActions = this.mainApplyService?.workFlowSteps?.[0]?.serviceDepartmentActions!;
-        this.originalworkFlowId = this.mainApplyService?.workFlowSteps?.[0]?.id;
+
+        let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+
+        const storedDeptIds = storeddepartmentId
+          .replace(/"/g, '')
+          .split(',')
+          .map(x => x.trim())
+          .filter(x => x !== '');
+
+        storeddepartmentId = storeddepartmentId.replace(/"/g, '').trim();
+
+        this.workFlowSteps = this.workFlowSteps.map((step: any) => ({
+          ...step,
+          isMatched: storedDeptIds.includes(String(step?.deptId).trim())
+        }));
+
+        const matchedIndices = this.workFlowSteps
+          .map((s, i) => (storedDeptIds.includes(String(s?.deptId).trim()) ? i : -1))
+          .filter(i => i !== -1);
+
+        let selectedStep: any = null;
+
+        for (let idx of matchedIndices) {
+          if (idx > 0) {
+            const prevStep = this.workFlowSteps[idx - 1];
+            if (
+              String(prevStep?.deptId).trim() !== storeddepartmentId &&
+              prevStep?.serviceStatus !== 1
+            ) {
+              selectedStep = null;
+              break;
+            }
+          }
+          if (this.workFlowSteps[idx].serviceStatus !== 1) {
+            selectedStep = this.workFlowSteps[idx];
+            break;
+          }
+        }
+
+        for (let idx of matchedIndices) {
+          if (idx > 0) {
+            const prevStep = this.workFlowSteps[idx - 1];
+            if (
+              !storedDeptIds.includes(String(prevStep?.deptId).trim()) &&
+              prevStep?.serviceStatus !== 1
+            ) {
+              selectedStep = null;
+              break;
+            }
+          }
+          if (this.workFlowSteps[idx].serviceStatus !== 1) {
+            selectedStep = this.workFlowSteps[idx];
+            break;
+          }
+        }
+
+        this.workFlowQuery = selectedStep ? [selectedStep] : [];
+
+        this.serviceDepartmentActions = (this.workFlowQuery ?? [])
+          .map((s: any) => s.serviceDepartmentActions)
+          .filter((x: any): x is number => typeof x === 'number');
+
+        this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;
 
         this.findTargetWorkFlowStep();
         if (this.targetWorkFlowStep) {
@@ -383,6 +450,10 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(sub);
+  }
+
+  get hasActionButtons(): boolean {
+    return this.serviceDepartmentActions?.some(x => [1, 2, 3].includes(x)) ?? false;
   }
 
   private findTargetWorkFlowStep(): void {
@@ -1122,15 +1193,9 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
         lkpAdMethodId: Number(id),
         othertxt: null
       })),
-
-
     };
-
-
-    console.log('requestAdvertisements', ad);
     this._AdvertisementsService.createDepartment(ad).subscribe({
       next: (res) => {
-        console.log(res);
         this.resetAttachments(adAttachType);
 
         this.advertForm.reset({
@@ -1153,11 +1218,8 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
             modalInstance.hide();
           }
         }
-
       },
       error: (err) => {
-        console.log(err);
-
       }
     })
     this.resetAttachments(adAttachType);
@@ -1507,5 +1569,40 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
       })
     );
   }
+
+  submitComment(): void {
+    this.submitted = true;
+
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      this.toastr.error(this.translate.instant('TOAST.VALIDATION_ERROR'));
+      return;
+    }
+
+    const formData = this.userForm.value;
+
+    const params: WorkFlowCommentDtos = {
+      id: null,
+      empId: localStorage.getItem('userId'),
+      workFlowStepsId: this.originalworkFlowId,
+      comment: formData.comment,
+      commentTypeId: formData.commentTypeId,
+    };
+
+    this.spinnerService.show();
+    this.mainApplyServiceService.saveComment(params).subscribe({
+      next: (res) => {
+        this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
+        this.spinnerService.hide();
+        this.loadMainApplyServiceData();
+      },
+      error: (err) => {
+        this.toastr.error(this.translate.instant('COMMON.ERROR_SAVING_DATA'));
+        this.spinnerService.hide();
+      },
+      complete: () => this.spinnerService.hide(),
+    });
+  }
+
 }
 

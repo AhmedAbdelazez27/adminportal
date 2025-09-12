@@ -31,8 +31,8 @@ export class BarChartComponent implements OnChanges {
   @Input() useDynamicColors: boolean = false;
 
   ngOnChanges(_: SimpleChanges): void {
-    console.log("categories ", this.categories);
-    console.log("seriesData ", this.seriesData);
+    // console.log("categories ", this.categories);
+    // console.log("seriesData ", this.seriesData);
     this.buildChartOptions();
   }
 

@@ -1,3 +1,4 @@
+import { ServiceStatus } from "../../enum/user-type.enum";
 
 export class FiltermainApplyServiceDto {
   searchValue?: string | null = null;
@@ -9,7 +10,10 @@ export class FiltermainApplyServiceDto {
   serviceId?: string | null = null;
   serviceType?: string | null = null;
   serviceStatus?: string | null = null;
+  ServiceStatusIds?: ServiceStatus[] =[];
   applyDate?: string | null = null;
+  fromDate?: string | null = null;
+  toDate?: string | null = null;
   applyNo?: string | null = null;
   excludeAdverisment?: boolean = false;
 
@@ -36,8 +40,10 @@ export class mainApplyServiceDto {
   lastStatus?: string | null = null;
   lastStatusEN?: string | null = null;
   permitNumber?: string | null = null;
+  entityName: string | null = null;
   notesForApproving?: string | null = null;
   reasonForModification?: string | null = null;
+  description?: string | null = null;
   service?: ServiceDto | null = null;
   user?: AppUserDto | null = null;
   fastingTentService?: FastingTentServiceDto | null = null;

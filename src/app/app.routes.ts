@@ -74,6 +74,15 @@ export const routes: Routes = [
             canActivate: [authGuard],
             data: { permission: 'Entity.View' },
           },
+          {
+            path: 'datatranslogs',
+            loadChildren: () =>
+              import('./features/Authentication/datatranslogs/datatranslogs.routes').then(
+                (m) => m.DataTransLogsRoutes
+              ),
+            canActivate: [authGuard],
+            data: { permission: 'DataTransLogs.View' }, 
+          },
         ],
       },
       {
@@ -114,26 +123,20 @@ export const routes: Routes = [
             loadChildren: () =>
               import('./features/finanial/operations/operations.routes').then(
                 (m) => m.operationsRoutes
-              ),
-            canActivate: [authGuard],
-            data: { permission: 'Financial.View' }
+              )
           },
           {
             path: 'reports',
             loadChildren: () =>
               import('./features/finanial/reports/reports.routes').then(
                 (m) => m.reportsRoutes
-              ),
-            canActivate: [authGuard],
-            data: { permission: 'Financial.View' }
+              )
           }, {
             path: 'charts',
             loadChildren: () =>
               import('./features/finanial/charts/charts.routes').then(
                 (m) => m.chartsRoutes
-              ),
-            canActivate: [authGuard],
-            data: { permission: 'Financial.View' }
+              )
           },
 
         ],

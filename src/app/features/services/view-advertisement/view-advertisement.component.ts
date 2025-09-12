@@ -169,7 +169,7 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
   targetWorkFlowStep: WorkFlowStepDto | null = null;
   screenMode: 'edit' | 'view' = 'view';
   isEditMode: boolean = false;
-  serviceDepartmentActions: number = 0;
+  serviceDepartmentActions: number[] = [];
   
   commentForm!: FormGroup;
   
@@ -187,7 +187,12 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
   targetsColumns: ColDef[] = [];
   methodsColumns: ColDef[] = [];
   locationsColumns: ColDef[] = [];
-  
+  workFlowQuery: any;
+  originalworkFlowId: number | null | undefined;
+  originalNotes: string | null = null;
+  userForm: FormGroup;
+  submitted = false;
+
   private subscriptions: Subscription[] = [];
   
   constructor(
@@ -206,6 +211,10 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
     private spinnerService: SpinnerService
   ) {
     this.initializeCommentForm();
+    this.userForm = this.fb.group({
+      comment: ['', [Validators.required, Validators.minLength(1)]],
+      commentTypeId: [null, Validators.required],
+    });
   }
 
   private initializeCommentForm(): void {
@@ -349,8 +358,84 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
         this.requestAdvertisement = this.processAdvertisementData(response);
         this.workFlowSteps = response.workFlowSteps || [];
         this.attachments = response.attachments || [];
-        this.serviceDepartmentActions = this.mainApplyService?.workFlowSteps?.[0]?.serviceDepartmentActions!;
-        
+        let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+
+        const storedDeptIds = storeddepartmentId
+          .replace(/"/g, '')
+          .split(',')
+          .map(x => x.trim())
+          .filter(x => x !== '');
+
+        storeddepartmentId = storeddepartmentId.replace(/"/g, '').trim();
+
+        //this.workFlowSteps = this.workFlowSteps.map((step: any) => ({
+        //  ...step,
+        //  isMatched: step?.deptId?.toString() === storeddepartmentId.toString()
+        //}));
+
+        this.workFlowSteps = this.workFlowSteps.map((step: any) => ({
+          ...step,
+          isMatched: storedDeptIds.includes(String(step?.deptId).trim())
+        }));
+
+        //const matchedSteps = this.workFlowSteps.filter(
+        //  (step: any) => String(step?.deptId).trim() === storeddepartmentId
+        //);
+        //const matchedIndices = this.workFlowSteps
+        //  .map((s, i) => (String(s?.deptId).trim() === storeddepartmentId ? i : -1))
+        //  .filter(i => i !== -1);
+
+        const matchedSteps = this.workFlowSteps.filter(
+          (step: any) => storedDeptIds.includes(String(step?.deptId).trim())
+        );
+
+        const matchedIndices = this.workFlowSteps
+          .map((s, i) => (storedDeptIds.includes(String(s?.deptId).trim()) ? i : -1))
+          .filter(i => i !== -1);
+
+        let selectedStep: any = null;
+
+        for (let idx of matchedIndices) {
+          if (idx > 0) {
+            const prevStep = this.workFlowSteps[idx - 1];
+            if (
+              String(prevStep?.deptId).trim() !== storeddepartmentId &&
+              prevStep?.serviceStatus !== 1
+            ) {
+              selectedStep = null;
+              break;
+            }
+          }
+          if (this.workFlowSteps[idx].serviceStatus !== 1) {
+            selectedStep = this.workFlowSteps[idx];
+            break;
+          }
+        }
+
+        for (let idx of matchedIndices) {
+          if (idx > 0) {
+            const prevStep = this.workFlowSteps[idx - 1];
+            if (
+              !storedDeptIds.includes(String(prevStep?.deptId).trim()) &&
+              prevStep?.serviceStatus !== 1
+            ) {
+              selectedStep = null;
+              break;
+            }
+          }
+          if (this.workFlowSteps[idx].serviceStatus !== 1) {
+            selectedStep = this.workFlowSteps[idx];
+            break;
+          }
+        }
+
+        this.workFlowQuery = selectedStep ? [selectedStep] : [];
+
+        this.serviceDepartmentActions = (this.workFlowQuery ?? [])
+          .map((s: any) => s.serviceDepartmentActions)
+          .filter((x: any): x is number => typeof x === 'number');
+
+        this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;        
         // Extract targets, methods, and locations from the nested structure
         if ((response as any).requestAdvertisement) {
           this.targets = (response as any).requestAdvertisement.requestAdvertisementTargets || [];
@@ -383,7 +468,11 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(subscription);
   }
-  
+
+  get hasActionButtons(): boolean {
+    return this.serviceDepartmentActions?.some(x => [1, 2, 3].includes(x)) ?? false;
+  }
+
   private processAdvertisementData(response: any): RequestAdvertisementDto {
     // The advertisement data is nested under requestAdvertisement property
     const adData = response.requestAdvertisement || {};
@@ -1166,4 +1255,44 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
       window.history.back();
     }
   }
+
+
+  onNotesChange(newValue: string) {
+    this.originalNotes = newValue;
+  }
+
+  submitComment(): void {
+    this.submitted = true;
+
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      this.toastr.error(this.translate.instant('TOAST.VALIDATION_ERROR'));
+      return;
+    }
+
+    const formData = this.userForm.value;
+
+    const params: WorkFlowCommentDtos = {
+      id: null,
+      empId: localStorage.getItem('userId'),
+      workFlowStepsId: this.originalworkFlowId,
+      comment: formData.comment,
+      commentTypeId: formData.commentTypeId,
+    };
+
+    this.spinnerService.show();
+    this.mainApplyServiceService.saveComment(params).subscribe({
+      next: (res) => {
+        this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
+        this.spinnerService.hide();
+        this.loadMainApplyServiceData();
+      },
+      error: (err) => {
+        this.toastr.error(this.translate.instant('COMMON.ERROR_SAVING_DATA'));
+        this.spinnerService.hide();
+      },
+      complete: () => this.spinnerService.hide(),
+    });
+  }
+
 }

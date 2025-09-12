@@ -55,6 +55,7 @@
     "ENTITY_DELETE_ERROR": "فشل في حذف الجمعية",
     "ERROR_LOADING_ENTITY_DETAILS": "خطأ في تحميل تفاصيل الجمعية",
     "FETCH_ENTITIES": "خطأ في جلب الجمعيات",
+    "FETCH_DATA_TRANS_LOGS": "خطأ في جلب سجلات نقل البيانات",
     "POLL_CREATED": "تم إنشاء الاستطلاع بنجاح",
     "POLL_UPDATED": "تم تحديث الاستطلاع بنجاح",
     "POLL_DELETED": "تم حذف الاستطلاع بنجاح",
@@ -593,6 +594,8 @@
     "user": "المستخدمين",
     "entity": "الجمعيات",
     "department": "قسم",
+    "datatranslogs": "سحب البيانات",
+
     "changePWD": "تغيير كلمة المرور",
     "changePWDReq": "يجب أن تتكون كلمة المرور الحالية من حرف واحد على الأقل",
     "currentPWD": "كلمة المرور الحالية",
@@ -637,6 +640,27 @@
     "glAccountTitle": "شجرة الحسابات",
     "glAccountEntityTitle": "شجرة الحسابات",
     "generalSetting": "  الإعدادات العامة "
+  },
+  "dataTransLogs": {
+    "title": "سحب البيانات",
+    "headers": {
+      "serial": "م",
+      "entity": "الجمعية",
+      "operationDate": "تاريخ العمليه",
+      "startTime": "وقت البدايه",
+      "endTime": "وقت النهايه",
+      "duration": "المده",
+      "status": "الحاله"
+    },
+    "filters": {
+      "fromDate": "من تاريخ",
+      "toDate": "إلى تاريخ"
+    },
+    "status": {
+      "success": "تمت العمليه بنجاح",
+      "error": "حدث خطأ",
+      "inProgress": "قيد العمل"
+    }
   },
   "Common": {
     "Action": "العمليات",
@@ -1892,8 +1916,10 @@
     "Choosefileup": "اختر ملف للتحميل",
     "city": "المدينه",
     "CityNAME": "ARABIC_City_NAME",
+    "desc": "الوصف",
     "rid": "رقم الهويه*",
     "rusername": "اسم المستخدم*",
+    "RequestNo": "رقم الطلب",
     "saddress": "العنوان *",
     "salary": "المرتب *",
     "save": "حفظ",
@@ -2005,6 +2031,7 @@
     "jopTitle": "المسمى الوظيفي",
     "permitNumber": "رقم التصريح",
     "licenseEndDate": "تاريخ انتهاء الترخيص",
+    "NoPermission": "لا إذن",
 
     "LOCATION": {
       "DETAILS": "تفاصيل الموقع",

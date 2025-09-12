@@ -417,4 +417,9 @@ export class ApiEndpoints {
   static readonly Advertisement = {
     Create: '/Advertisement/Create'
   };
+
+  static readonly DataTransLogs = {
+    Base: '/DataTransLogs',
+    GetAll: '/GetAll',
+  };
 }

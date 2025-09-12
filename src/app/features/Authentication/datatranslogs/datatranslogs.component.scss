@@ -1,0 +1,66 @@
+// Data Trans Logs Component Styles
+
+.container-fluid {
+  padding: 1rem;
+}
+
+.title {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 0;
+  font-size: 1.75rem;
+}
+
+
+// Table styles
+.text-danger {
+  color: #dc3545 !important;
+  font-weight: 600;
+}
+
+// .badge {
+//   font-size: 0.875rem;
+//   padding: 0.5rem 0.75rem;
+//   border-radius: 4px;
+//   font-weight: 500;
+
+//   &.bg-success {
+//     background-color: #28a745 !important;
+//   }
+
+//   &.bg-danger {
+//     background-color: #dc3545 !important;
+//   }
+
+//   &.bg-warning {
+//     background-color: #ffc107 !important;
+//     color: #212529;
+//   }
+
+//   &.bg-secondary {
+//     background-color: #6c757d !important;
+//   }
+// }
+
+// Loading spinner
+.spinner-border {
+  color: #CDAD5F;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 0.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+}
+
+// RTL Support
+[dir="rtl"] {
+  .title {
+    text-align: right;
+  }
+}

@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { EMPTY, forkJoin, Observable, Subject, throwError } from 'rxjs';
-import { catchError, debounceTime, takeUntil, tap } from 'rxjs/operators';
+import { EMPTY, forkJoin, Observable, of, Subject, throwError } from 'rxjs';
+import { catchError, debounceTime, map, takeUntil, tap } from 'rxjs/operators';
 import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../shared/generic-data-table/generic-data-table.component';
@@ -16,6 +16,7 @@ import { Pagination, FndLookUpValuesSelect2RequestDto, SelectdropdownResultResul
 import { MainApplyService } from '../../../core/services/mainApplyService/mainApplyService.service';
 import { ServiceDataType, serviceIdEnum } from '../../../core/enum/user-type.enum';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EntityService } from '../../../core/services/entit.service';
 
 declare var bootstrap: any;
 
@@ -73,6 +74,7 @@ export class MainApplyServiceComponent {
   addReason = new mainApplyServiceDto();
 
   loadgridData: mainApplyServiceDto[] = [];
+  loadexcelData: mainApplyServiceDto[] = [];
   loadformData: mainApplyServiceDto = {} as mainApplyServiceDto;
   loaduserformData: AppUserDto = {} as AppUserDto;
   loaduserattachmentsListformData: AttachmentDto[] = [];
@@ -123,7 +125,9 @@ export class MainApplyServiceComponent {
     private Select2Service: Select2Service,
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private entityService: EntityService,
+
   ) {
     this.rejectResonsForm = this.fb.group({
       reasonTxt: [[], Validators.required]
@@ -140,6 +144,7 @@ export class MainApplyServiceComponent {
   ngOnInit(): void {
     this.buildColumnDefs();
     this.lang = this.translate.currentLang;
+    console.log("lang", this.lang);
     this.rowActions = [
       { label: this.translate.instant('Common.applicantData'), icon: 'fas fa-address-card', action: 'onViewApplicantData' },
       //{ label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceConfirmationData' },
@@ -237,20 +242,24 @@ export class MainApplyServiceComponent {
 
     this.Select2Service.getMainServiceStatusSelect2(this.searchSelect2Params)
       .pipe(takeUntil(this.destroy$)).subscribe({
-        next: (response: SelectdropdownResult) => {
-          this.statusSelect2 = response?.results || [];
+        next: (response: any) => {
+          this.statusSelect2 = response;
+          console.log("statusSelect2", response);
           this.loadingstatus = false;
         },
         error: () => this.loadingstatus = false
       });
   }
 
-  onstatusSelect2Change(selectedstatus: any): void {
-    if (selectedstatus) {
-      this.searchParams.serviceStatus = selectedstatus.id;
-      this.searchParams.serviceStatusstr = selectedstatus.text;
+  onstatusSelect2Change(selectedstatus: any[]): void {
+    if (selectedstatus && selectedstatus.length > 0) {
+      // Extract only the IDs into an array
+      this.searchParams.ServiceStatusIds = selectedstatus.map(s => s.id);
+
+      // Optional: join text for display
+      this.searchParams.serviceStatusstr = selectedstatus.map(s => s.text).join(', ');
     } else {
-      this.searchParams.serviceStatus = null;
+      this.searchParams.ServiceStatusIds = [];
       this.searchParams.serviceStatusstr = null;
     }
   }
@@ -487,29 +496,47 @@ export class MainApplyServiceComponent {
     this.spinnerService.show();
 
     this.mainApplyService.getAll(cleanedFilters)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: any) => {
-          this.loadgridData = response.data || [];
-          this.loadgridData.forEach((c) => {
-            c.applyDate = this.formatDate(c.applyDate);
-          });
+          if (response.totalCount > 0) {
+            const rows = response.data || [];
+            const entityRequests = rows.map((c: any) => {
+              c.applyDate = this.openStandardReportService.formatDate(c.applyDate);
 
-          this.pagination.totalCount = response.totalCount || 0;
+              if (c.user?.entityId != null) {
+                return this.entityName(c.user.entityId).pipe(
+                  map((name) => {
+                    c.entityName = name;
+                    return c;
+                  })
+                );
+              } else {
+                c.entityName = "";
+                return of(c);
+              }
+            });
 
-          this.loadgridData = response.data.map((row: any) => {
-            return {
-              ...row,
-              rowActions: this.getRowActions(row) // <-- CALL it, don�t pass reference
-            };
-          });
-
-          this.spinnerService.hide();
+            forkJoin(entityRequests)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((resolvedRows) => {
+                this.loadgridData = resolvedRows as any[];
+                this.pagination.totalCount = response.totalCount || 0;
+                this.spinnerService.hide();
+              });
+          }
+          else {
+            this.loadgridData = [];
+            this.pagination.totalCount = response.totalCount || 0;
+            this.spinnerService.hide();
+          }
         },
-        error: (error) => {
-          this.spinnerService.hide();;
+        error: () => {
+          this.spinnerService.hide();
         }
       });
   }
+
 
   getRowActions(row: any): Array<{ label: string, icon?: string, action: string }> {
     if (row.serviceId === "1") {
@@ -925,53 +952,62 @@ export class MainApplyServiceComponent {
     return d.toLocaleDateString();
   }
 
+  entityName(id: any): Observable<string> {
+    return this.entityService.getEntityById(id ?? "0").pipe(
+      takeUntil(this.destroy$),
+      map((entityResp: any) => {
+        return this.lang == 'ar' ? entityResp.entitY_NAME : entityResp.entitY_NAME_EN;
+      })
+    );
+  }
+
+
+ 
+
+
+
   formatDateTime(date: Date | string | null): string {
     if (!date) return '';
     const d = typeof date === 'string' ? new Date(date) : date;
     return d.toLocaleString();
   }
 
+  getStatusClassForGrid(serviceStatus: any): string {
+    switch (serviceStatus) {
+      case 1: // Accept
+        return 'status-approved';
+      case 2: // Reject
+        return 'status-rejected';
+      case 3: // Reject For Reason
+        return 'status-reject-for-reason';
+      case 4: // Waiting
+        return 'status-waiting';
+      case 5: // Received
+        return 'status-received';
+      case 7: // Return For Modifications
+        return 'status-return-for-modification';
+      default:
+        return 'status-waiting';
+    }
+  }
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-      {
-        headerName: '#',
-        valueGetter: (params) =>
-          (params?.node?.rowIndex ?? 0) + 1 + ((this.pagination.currentPage - 1) * this.pagination.take),
-        width: 60,
-        colId: 'serialNumber'
-      },
-      { headerName: this.translate.instant('mainApplyServiceResourceName.RefNo'), field: 'applyNo', width: 200 },
-      { headerName: this.translate.instant('mainApplyServiceResourceName.sevicet'), field: 'service.serviceName', width: 200 },
-      { headerName: this.translate.instant('mainApplyServiceResourceName.ordername'), field: 'user.foundationName', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.RequestNo'), field: 'applyNo', width: 200 },
       { headerName: this.translate.instant('mainApplyServiceResourceName.applydate'), field: 'applyDate', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.sevicet'), field: this.lang == 'ar' ? 'service.serviceName' : 'service.serviceNameEn', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.username'), field: this.lang == 'ar' ? 'user.nameEn' : 'user.name', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.userName'), field: 'entityName', width: 200 },
       {
         headerName: this.translate.instant('mainApplyServiceResourceName.statues'),
-        field: 'lastStatus',
+        field: this.lang == 'ar' ? 'lastStatus' : 'lastStatusEN',
         width: 200,
-        cellRenderer: (params: { value: any; }) => {
-          const value = params.value;
-          let color = 'black';
-
-          switch (value) {
-            case 'تم تقديم الطلب':
-              color = 'blue';
-              break;
-            case 'جاري مراجعة الطلب': 
-              color = 'orange';
-              break;
-            case 'تم رفض الطلب لسبب':
-            case 'تم رفض الطلب':  
-              color = 'red';
-              break;
-            case 'تمت الموافقة علي الطلب':
-              color = 'green';
-              break;
-          }
-
-          return `<span style="color:${color}; font-weight:600;">${value}</span>`;
+        cellRenderer: (params: any) => {
+          const statusClass = this.getStatusClassForGrid(params.data.serviceStatus);
+          return `<div class="${statusClass}">${params.value || ''}</div>`;
         }
       },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.desc'), field: 'description', width: 200 },
     ];
 
 
@@ -1156,17 +1192,16 @@ export class MainApplyServiceComponent {
         sessionStorage.setItem("screenmode", 'view');
         window.open(`/mainServices/services/view-fasting-tent-request/${event.row.id}`, '_blank');
       }
-      else if (event.row.serviceId === 1001) {
-        sessionStorage.setItem("screenmode", 'view');
-        window.open(`/mainServices/services/view-distribution-site-permit/${event.row.id}`, '_blank');
-      }
       else if (event.row.serviceId == serviceIdEnum.serviceId2) {
         sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
         sessionStorage.setItem("screenmode", 'view');
         window.open(`/mainServices/services/charity-event-permit/${event.row.id}`, '_blank');
       }
-
-
+      else if (event.row.serviceId == serviceIdEnum.serviceId5) {
+        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+        sessionStorage.setItem("screenmode", 'view');
+        window.open(`/mainServices/services/advertisement/${event.row.id}`, '_blank');
+      }
       else if (event.row.serviceId == serviceIdEnum.serviceId6) {
         sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
         sessionStorage.setItem("screenmode", 'view');
@@ -1182,10 +1217,9 @@ export class MainApplyServiceComponent {
         sessionStorage.setItem("screenmode", 'view');
         window.open(`/mainServices/services/complaint-request/${event.row.id}`, '_blank');
       }
-      else if (event.row.serviceId == serviceIdEnum.serviceId5) {
-        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+      else if (event.row.serviceId === 1001) {
         sessionStorage.setItem("screenmode", 'view');
-        window.open(`/mainServices/services/advertisement/${event.row.id}`, '_blank');
+        window.open(`/mainServices/services/view-distribution-site-permit/${event.row.id}`, '_blank');
       }
       else {
         this.translate
@@ -1497,7 +1531,27 @@ export class MainApplyServiceComponent {
             .subscribe({
               next: (response: any) => {
                 const data = response?.data || [];
+                const entityRequests = data.map((c: any) => {
+                  c.applyDate = this.openStandardReportService.formatDate(c.applyDate);
 
+                  if (c.user?.entityId != null) {
+                    return this.entityName(c.user.entityId).pipe(
+                      map((name) => {
+                        c.entityName = name;
+                        return c;
+                      })
+                    );
+                  } else {
+                    c.entityName = "";
+                    return of(c);
+                  }
+                });
+
+                forkJoin(entityRequests)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((resolvedRows) => {
+                    this.loadexcelData = resolvedRows as any[];
+                  });
                 const reportConfig: reportPrintConfig = {
                   title: this.translate.instant('mainApplyServiceResourceName.mainApplyService_Title'),
                   reportTitle: this.translate.instant('mainApplyServiceResourceName.mainApplyService_Title'),
@@ -1513,15 +1567,15 @@ export class MainApplyServiceComponent {
 
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },
-                    { label: this.translate.instant('mainApplyServiceResourceName.ServiceType'), key: 'user.name' },
-                    { label: this.translate.instant('mainApplyServiceResourceName.ServiceType'), key: 'serviceTypeName' },
-                    { label: this.translate.instant('mainApplyServiceResourceName.sevicet'), key: 'serviceName' },
-                    { label: this.translate.instant('mainApplyServiceResourceName.RefNo'), key: 'applyNo' },
-                    { label: this.translate.instant('mainApplyServiceResourceName.address'), key: 'user.address' },
-                    { label: this.translate.instant('mainApplyServiceResourceName.statues'), key: 'lastStatus' },
+                    { label: this.translate.instant('mainApplyServiceResourceName.RequestNo'), key: 'applyNo' },
                     { label: this.translate.instant('mainApplyServiceResourceName.applydate'), key: 'applyDate' },
+                    { label: this.translate.instant('mainApplyServiceResourceName.sevicet'), key: this.lang == 'ar' ? 'service.serviceName' : 'service.serviceNameEn' },
+                    { label: this.translate.instant('mainApplyServiceResourceName.username'), key: this.lang == 'ar' ? 'user.nameEn' : 'user.name' },
+                    { label: this.translate.instant('mainApplyServiceResourceName.userName'), key: 'entityName' },
+                    { label: this.translate.instant('mainApplyServiceResourceName.statues'), key: this.lang == 'ar' ? 'lastStatus' : 'lastStatusEN'},
+                    { label: this.translate.instant('mainApplyServiceResourceName.desc'), key: 'description' },
                   ],
-                  data: data.map((item: any, index: number) => ({
+                  data: this.loadexcelData.map((item: any, index: number) => ({
                     ...item,
                     rowNo: index + 1
                   })),

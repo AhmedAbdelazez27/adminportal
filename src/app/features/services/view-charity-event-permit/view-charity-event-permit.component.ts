@@ -69,6 +69,7 @@ type WorkFlowCommentDtos = {
 
 type WorkFlowStepDto = {
   id: number;
+  deptId: number;
   departmentName: string;
   serviceStatus: number | null;
   serviceStatusName?: string;
@@ -279,7 +280,7 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
-    // ad add
+  // ad add
   advertForm!: FormGroup;
   isDragOver = false;
   advertisementType: any[] = [];
@@ -298,7 +299,8 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
   firstLevel: boolean = false;
   screenMode: 'edit' | 'view' = 'view';
   isEditMode: boolean = false;
-  serviceDepartmentActions: number = 0;
+  serviceDepartmentActions: number[] = [];
+  userForm: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
@@ -314,7 +316,7 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
     public translationService: TranslationService,
     private _CharityEventPermitRequestService: CharityEventPermitRequestService,
     private _AdvertisementsService: AdvertisementsService,
-    private spinnerService: SpinnerService,
+    private spinnerService: SpinnerService
   ) {
     this.commentForm = this.fb.group({ comment: [''] });
     this.initAdvertisementForm();
@@ -323,6 +325,10 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
     });
     this.returnModificationForm = this.fb.group({
       returnModificationreasonTxt: [[], Validators.required]
+    });
+    this.userForm = this.fb.group({
+      comment: ['', [Validators.required, Validators.minLength(1)]],
+      commentTypeId: [null, Validators.required],
     });
   }
 
@@ -350,16 +356,89 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
 
     const sub = this.mainApplyServiceService.getDetailById({ id }).subscribe({
       next: (resp: any) => {
-
         this.mainApplyService = resp;
         this.charityEventPermit = resp.charityEventPermit || null;
         this.workFlowSteps = resp.workFlowSteps || [];
         this.partners = resp.partners || [];
         this.attachments = resp.attachments || [];
-        this.workFlowQuery = this.workFlowSteps?.find(q => q.id === resp.currentStepId) ?? null;
-        this.serviceDepartmentActions = this.mainApplyService?.workFlowSteps?.[0]?.serviceDepartmentActions!;
-        this.originalworkFlowId = this.mainApplyService?.workFlowSteps?.[0]?.id;
+        let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
 
+        const storedDeptIds = storeddepartmentId
+          .replace(/"/g, '')
+          .split(',')
+          .map(x => x.trim())
+          .filter(x => x !== '');
+
+        storeddepartmentId = storeddepartmentId.replace(/"/g, '').trim();
+
+        //this.workFlowSteps = this.workFlowSteps.map((step: any) => ({
+        //  ...step,
+        //  isMatched: step?.deptId?.toString() === storeddepartmentId.toString()
+        //}));
+      
+        this.workFlowSteps = this.workFlowSteps.map((step: any) => ({
+          ...step,
+          isMatched: storedDeptIds.includes(String(step?.deptId).trim())
+        }));
+       
+        //const matchedSteps = this.workFlowSteps.filter(
+        //  (step: any) => String(step?.deptId).trim() === storeddepartmentId
+        //);
+        //const matchedIndices = this.workFlowSteps
+        //  .map((s, i) => (String(s?.deptId).trim() === storeddepartmentId ? i : -1))
+        //  .filter(i => i !== -1);
+
+        const matchedSteps = this.workFlowSteps.filter(
+          (step: any) => storedDeptIds.includes(String(step?.deptId).trim())
+        );
+
+        const matchedIndices = this.workFlowSteps
+          .map((s, i) => (storedDeptIds.includes(String(s?.deptId).trim()) ? i : -1))
+          .filter(i => i !== -1);
+
+        let selectedStep: any = null;
+
+        for (let idx of matchedIndices) {
+          if (idx > 0) {
+            const prevStep = this.workFlowSteps[idx - 1];
+            if (
+              String(prevStep?.deptId).trim() !== storeddepartmentId &&
+              prevStep?.serviceStatus !== 1
+            ) {
+              selectedStep = null;
+              break;
+            }
+          }
+          if (this.workFlowSteps[idx].serviceStatus !== 1) {
+            selectedStep = this.workFlowSteps[idx];
+            break;
+          }
+        }
+
+        for (let idx of matchedIndices) {
+          if (idx > 0) {
+            const prevStep = this.workFlowSteps[idx - 1];
+            if (
+              !storedDeptIds.includes(String(prevStep?.deptId).trim()) &&
+              prevStep?.serviceStatus !== 1
+            ) {
+              selectedStep = null;
+              break;
+            }
+          }
+          if (this.workFlowSteps[idx].serviceStatus !== 1) {
+            selectedStep = this.workFlowSteps[idx];
+            break;
+          }
+        }
+
+        this.workFlowQuery = selectedStep ? [selectedStep] : [];
+
+        this.serviceDepartmentActions = (this.workFlowQuery ?? [])
+          .map((s: any) => s.serviceDepartmentActions)
+          .filter((x: any): x is number => typeof x === 'number');
+
+        this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;
         this.findTargetWorkFlowStep();
         if (this.targetWorkFlowStep) {
           this.loadWorkFlowComments();
@@ -373,6 +452,10 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(sub);
+  }
+
+  get hasActionButtons(): boolean {
+    return this.serviceDepartmentActions?.some(x => [1, 2, 3].includes(x)) ?? false;
   }
 
   private findTargetWorkFlowStep(): void {
@@ -564,7 +647,7 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
     //   const id = parseInt(btn.getAttribute('data-comment-id'), 10);
     //   if (id) this.fetchAndViewCommentAttachments(id);
     // }
-     if (id) this.fetchAndViewCommentAttachments(id);
+    if (id) this.fetchAndViewCommentAttachments(id);
   }
   onCommentsTableAction(_: { action: string; row: any }) { /* hook جاهز */ }
 
@@ -644,22 +727,22 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
 
 
   // start comment attachment
-    loadCommentAttachmentConfigs(): void {
-      const sub = this.attachmentService.getAttachmentsConfigByServiceType(
-        AttachmentsConfigType.Comment,
-        true,
-        null
-      ).subscribe({
-        next: (configs: any) => {
-          this.commentAttachmentConfigs = configs || [];
-          this.initializeCommentAttachments();
-        },
-        error: (error) => {
-          // Handle error silently
-        }
-      });
-      this.subscriptions.push(sub);
-    }
+  loadCommentAttachmentConfigs(): void {
+    const sub = this.attachmentService.getAttachmentsConfigByServiceType(
+      AttachmentsConfigType.Comment,
+      true,
+      null
+    ).subscribe({
+      next: (configs: any) => {
+        this.commentAttachmentConfigs = configs || [];
+        this.initializeCommentAttachments();
+      },
+      error: (error) => {
+        // Handle error silently
+      }
+    });
+    this.subscriptions.push(sub);
+  }
 
   // Comment management methods
   addWorkFlowComment(): void {
@@ -847,11 +930,11 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
     }
   }
 
-    initializeCommentAttachments(): void {
+  initializeCommentAttachments(): void {
     this.commentAttachments = {};
     this.commentSelectedFiles = {};
     this.commentFilePreviews = {};
-    
+
     this.commentAttachmentConfigs.forEach(config => {
       if (config.id) {
         this.commentAttachments[config.id] = {
@@ -862,8 +945,8 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
-    // Legacy file handling methods (keeping for backward compatibility)
+
+  // Legacy file handling methods (keeping for backward compatibility)
   onFileSelected(event: any): void {
     const files = event.target.files;
     if (files && files.length > 0) {
@@ -1189,7 +1272,6 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
 
         },
         error: (error: any) => {
-          console.error('Error loading essential data:', error);
           this.toastr.error(this.translate.instant('ERRORS.FAILED_LOAD_DATA'));
           this.isLoading = false;
           this.isFormInitialized = true;
@@ -1467,6 +1549,42 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
         complete: () => this.spinnerService.hide()
       })
     );
+  }
+
+
+
+  submitComment(): void {
+    this.submitted = true;
+
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      this.toastr.error(this.translate.instant('TOAST.VALIDATION_ERROR'));
+      return;
+    }
+
+    const formData = this.userForm.value;
+
+    const params: WorkFlowCommentDtos = {
+      id: null,
+      empId: localStorage.getItem('userId'),
+      workFlowStepsId: this.originalworkFlowId,
+      comment: formData.comment,
+      commentTypeId: formData.commentTypeId,
+    };
+
+    this.spinnerService.show();
+    this.mainApplyServiceService.saveComment(params).subscribe({
+      next: (res) => {
+        this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
+        this.spinnerService.hide();
+        this.loadMainApplyServiceData();
+      },
+      error: (err) => {
+        this.toastr.error(this.translate.instant('COMMON.ERROR_SAVING_DATA'));
+        this.spinnerService.hide();
+      },
+      complete: () => this.spinnerService.hide(),
+    });
   }
 
 }

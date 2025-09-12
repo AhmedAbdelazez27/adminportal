@@ -24,8 +24,7 @@
           <div class="w-100">
             <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
               <h4 class="title mb-2">{{ 'VIEW_FASTING_TENT.VIEW_TITLE' | translate }}</h4>
-              <button *ngIf="targetWorkFlowStep && isEditMode" type="button" class="btn btn-gold" data-bs-toggle="modal"
-                      data-bs-target="#commentModal">
+              <button *ngIf="targetWorkFlowStep && isEditMode  && workFlowQuery?.length" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
                 <i class="fas fa-plus me-2"></i>
                 {{ 'COMMON.ADD_COMMENT' | translate }}
               </button>
@@ -103,7 +102,28 @@
             <div id="statusInfo">
               <div class="main-container mb-4">
                 <div id="workFlowStep" class="mb-3">
+                  <div *ngIf="!workFlowQuery?.length || workFlowQuery[0].serviceStatus == 4 || workFlowQuery[0].serviceStatus == 5; else readonlyNotes"
+                       class="mt-3">
+                    <div class="form-group mb-3">
+                      <label for="NotesForApproving" class="control-label mb-2">
+                        {{ 'mainApplyServiceResourceName.notesConsent' | translate }}
+                      </label>
+                      <textarea id="NotesForApproving" class="form-control"
+                                [(ngModel)]="mainApplyService.notesForApproving"
+                                (ngModelChange)="onNotesChange($event)" [disabled]="!isEditMode"></textarea>
+                    </div>
+                  </div>
+
+                  <ng-template #readonlyNotes>
+                    <div class="form-group mb-3">
+                      <label for="NotesForApproving" class="control-label col-md-12">
+                        {{ 'mainApplyServiceResourceName.notes' | translate }}
+                      </label>
+                      <textarea id="NotesForApproving" class="form-control" readonly> {{ mainApplyService.notesForApproving }}</textarea>
+                    </div>
+                  </ng-template>
                   <div *ngIf="workFlowQuery?.length; else noWorkflow">
+
                     <div *ngIf="workFlowQuery[0].serviceStatus == 1" class="alert alert-success text-center">
                       {{ 'mainApplyServiceResourceName.agree' | translate }}
                     </div>
@@ -123,9 +143,7 @@
                       </div>
                     </div>
 
-                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1
-           && workFlowQuery[0].serviceStatus != 2
-           && workFlowQuery[0].serviceStatus != 3">
+                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 3">
                       <ng-template #returnForModification>
                         <div class="alert alert-warning text-center">
                           <div class="popover__wrapper">
@@ -141,48 +159,32 @@
 
                       <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else returnForModification">
                         <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
-                          <div *ngIf="serviceDepartmentActions == 1" class="d-flex flex-wrap gap-2 justify-content-center">
-                            <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
-                              {{ 'mainApplyServiceResourceName.taksis' | translate }}
-                            </button>
-                          </div>
 
-                          <div *ngIf="serviceDepartmentActions == 2" class="d-flex flex-wrap gap-2 justify-content-center">
+                          <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
                             <button type="button" (click)="acceptbtn()" class="btn btn-success">
                               {{ 'mainApplyServiceResourceName.accep' | translate }}
                             </button>
                             <button type="button" (click)="rejectbtn()" class="btn btn-danger">
                               {{ 'mainApplyServiceResourceName.refu' | translate }}
                             </button>
-                            <button type="button" (click)="rejectWithReasonbtn()" class="btn btn-warning">
-                              {{ 'mainApplyServiceResourceName.refusefor' | translate }}
-                            </button>
                           </div>
 
-                          <div *ngIf="serviceDepartmentActions == 3" class="d-flex flex-wrap gap-2 justify-content-center">
-                            <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
+                          <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
+                            <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
                               {{ 'mainApplyServiceResourceName.taksis' | translate }}
                             </button>
                           </div>
 
-                          <div *ngIf="serviceDepartmentActions !== 1 && serviceDepartmentActions !== 2 && serviceDepartmentActions !== 3"
-                               class="d-flex flex-wrap gap-2 justify-content-center">
+                          <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
+                            <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
+                              {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
+                            </button>
                           </div>
+
+                          <div *ngIf="!hasActionButtons" class="d-flex flex-wrap gap-2 justify-content-center">
+                          </div>
+
                         </div>
-                        <!--<div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
-    <button type="button" (click)="acceptbtn()" class="btn btn-success">
-      {{ 'mainApplyServiceResourceName.accep' | translate }}
-    </button>
-
-    <button type="button" (click)="rejectWithReasonbtn()" class="btn btn-danger">
-      {{ 'mainApplyServiceResourceName.refusefor' | translate }}
-    </button>
-
-    <button *ngIf="mainApplyService.serviceId == 1 || mainApplyService.serviceId == 1001"
-            type="button" (click)="returnForModificationsbtn()" class="btn btn-dark">
-      {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
-    </button>
-  </div>-->
                       </div>
                     </ng-container>
                   </div>
@@ -203,79 +205,32 @@
 
                     <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else noWorkflowReturn">
                       <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
-                        <div *ngIf="serviceDepartmentActions == 1" class="d-flex flex-wrap gap-2 justify-content-center">
-                          <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
-                            {{ 'mainApplyServiceResourceName.taksis' | translate }}
-                          </button>
-                        </div>
 
-                        <div *ngIf="serviceDepartmentActions == 2" class="d-flex flex-wrap gap-2 justify-content-center">
+                        <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
                           <button type="button" (click)="acceptbtn()" class="btn btn-success">
                             {{ 'mainApplyServiceResourceName.accep' | translate }}
                           </button>
                           <button type="button" (click)="rejectbtn()" class="btn btn-danger">
                             {{ 'mainApplyServiceResourceName.refu' | translate }}
                           </button>
-                          <button type="button" (click)="rejectWithReasonbtn()" class="btn btn-warning">
-                            {{ 'mainApplyServiceResourceName.refusefor' | translate }}
-                          </button>
                         </div>
 
-                        <div *ngIf="serviceDepartmentActions == 3" class="d-flex flex-wrap gap-2 justify-content-center">
-                          <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
+                        <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
+                          <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
                             {{ 'mainApplyServiceResourceName.taksis' | translate }}
                           </button>
                         </div>
 
-                        <div *ngIf="serviceDepartmentActions !== 1 && serviceDepartmentActions !== 2 && serviceDepartmentActions !== 3"
-                             class="d-flex flex-wrap gap-2 justify-content-center">
+                        <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
+                          <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
+                            {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
+                          </button>
                         </div>
+
+                        <div *ngIf="!hasActionButtons" class="d-flex flex-wrap gap-2 justify-content-center">
+                        </div>
+
                       </div>
-                      <!--<div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
-    <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
-      {{ 'mainApplyServiceResourceName.taksis' | translate }}
-    </button>
-
-    <button type="button" (click)="acceptbtn()" class="btn btn-success">
-      {{ 'mainApplyServiceResourceName.accep' | translate }}
-    </button>
-
-    <button type="button" (click)="rejectbtn()" class="btn btn-danger">
-      {{ 'mainApplyServiceResourceName.refu' | translate }}
-    </button>
-
-    <button type="button" (click)="rejectWithReasonbtn()" class="btn btn-warning">
-      {{ 'mainApplyServiceResourceName.refusefor' | translate }}
-    </button>
-
-    <button *ngIf="mainApplyService.serviceId == 1 || mainApplyService.serviceId == 1001"
-            type="button" (click)="returnForModificationsbtn()" class="btn btn-secondary">
-      {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
-    </button>
-  </div>-->
-                    </div>
-                  </ng-template>
-
-                  <div *ngIf="!workFlowQuery?.length
-|| workFlowQuery[0].serviceStatus == 4
-|| workFlowQuery[0].serviceStatus == 5; else readonlyNotes"
-                       class="mt-3">
-                    <div class="form-group">
-                      <label for="NotesForApproving" class="control-label mb-2">
-                        {{ 'mainApplyServiceResourceName.notesConsent' | translate }}
-                      </label>
-                      <textarea id="NotesForApproving" class="form-control"
-                                [(ngModel)]="mainApplyService.notesForApproving"
-                                (ngModelChange)="onNotesChange($event)" [disabled]="!isEditMode"></textarea>
-                    </div>
-                  </div>
-
-                  <ng-template #readonlyNotes>
-                    <div class="form-group">
-                      <label for="NotesForApproving" class="control-label col-md-12">
-                        {{ 'mainApplyServiceResourceName.notes' | translate }}
-                      </label>
-                      <textarea id="NotesForApproving" class="form-control" readonly>{{ mainApplyService.notesForApproving }}</textarea>
                     </div>
                   </ng-template>
                 </div>
@@ -536,7 +491,7 @@
                   </div>
                 </div>
 
-                <div class="accordion-item">
+                <div class="accordion-item mb-4">
                   <h2 class="accordion-header" id="wfHeader">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#wfComments" aria-expanded="false" aria-controls="wfComments">
@@ -548,9 +503,8 @@
                     <div class="accordion-body">
                       <div class="step-content">
 
-                        <div *ngIf="isEditMode" class="d-flex justify-content-end align-items-center mb-4">
-                          <button *ngIf="targetWorkFlowStep" type="button" class="btn btn-gold" data-bs-toggle="modal"
-                                  data-bs-target="#commentModal">
+                        <div *ngIf="isEditMode  && workFlowQuery?.length" class="d-flex justify-content-end align-items-center mb-4">
+                          <button *ngIf="targetWorkFlowStep" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
                             <i class="fas fa-plus me-2"></i>
                             {{ 'COMMON.ADD_COMMENT' | translate }}
                           </button>
@@ -606,6 +560,144 @@
                 </div>
               </div>
             </div>
+
+            <div id="statusInfo">
+              <div class="main-container mb-4">
+                <div id="workFlowStep" class="mb-3">
+                  <div *ngIf="!workFlowQuery?.length || workFlowQuery[0].serviceStatus == 4 || workFlowQuery[0].serviceStatus == 5; else readonlyNotes"
+                       class="mt-3">
+                    <div class="form-group mb-3">
+                      <label for="NotesForApproving" class="control-label mb-2">
+                        {{ 'mainApplyServiceResourceName.notesConsent' | translate }}
+                      </label>
+                      <textarea id="NotesForApproving" class="form-control"
+                                [(ngModel)]="mainApplyService.notesForApproving"
+                                (ngModelChange)="onNotesChange($event)" [disabled]="!isEditMode"></textarea>
+                    </div>
+                  </div>
+
+                  <ng-template #readonlyNotes>
+                    <div class="form-group mb-3">
+                      <label for="NotesForApproving" class="control-label col-md-12">
+                        {{ 'mainApplyServiceResourceName.notes' | translate }}
+                      </label>
+                      <textarea id="NotesForApproving" class="form-control" readonly> {{ mainApplyService.notesForApproving }}</textarea>
+                    </div>
+                  </ng-template>
+                  <div *ngIf="workFlowQuery?.length; else noWorkflow">
+
+                    <div *ngIf="workFlowQuery[0].serviceStatus == 1" class="alert alert-success text-center">
+                      {{ 'mainApplyServiceResourceName.agree' | translate }}
+                    </div>
+
+                    <div *ngIf="workFlowQuery[0].serviceStatus == 2" class="alert alert-danger text-center">
+                      {{ 'mainApplyServiceResourceName.disagree' | translate }}
+                    </div>
+
+                    <div *ngIf="workFlowQuery[0].serviceStatus == 3" class="alert alert-warning text-center">
+                      <div class="popover__wrapper">
+                        <a href="javascript:void(0);">
+                          <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
+                        </a>
+                        <div class="popover__content w-60">
+                          <p class="popover__message">{{ workFlowQuery[0].refuseReason }}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 3">
+                      <ng-template #returnForModification>
+                        <div class="alert alert-warning text-center">
+                          <div class="popover__wrapper">
+                            <a href="javascript:void(0);">
+                              <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
+                            </a>
+                            <div class="popover__content w-60">
+                              <p class="popover__message">{{ mainApplyService.reasonForModification }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
+
+                      <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else returnForModification">
+                        <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
+
+                          <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
+                            <button type="button" (click)="acceptbtn()" class="btn btn-success">
+                              {{ 'mainApplyServiceResourceName.accep' | translate }}
+                            </button>
+                            <button type="button" (click)="rejectbtn()" class="btn btn-danger">
+                              {{ 'mainApplyServiceResourceName.refu' | translate }}
+                            </button>
+                          </div>
+
+                          <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
+                            <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
+                              {{ 'mainApplyServiceResourceName.taksis' | translate }}
+                            </button>
+                          </div>
+
+                          <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
+                            <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
+                              {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
+                            </button>
+                          </div>
+
+                          <div *ngIf="!hasActionButtons" class="d-flex flex-wrap gap-2 justify-content-center">
+                          </div>
+
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+
+                  <ng-template #noWorkflow>
+                    <ng-template #noWorkflowReturn>
+                      <div class="alert alert-warning text-center">
+                        <div class="popover__wrapper">
+                          <a href="javascript:void(0);">
+                            <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
+                          </a>
+                          <div class="popover__content w-60">
+                            <p class="popover__message">{{ mainApplyService.reasonForModification }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+
+                    <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else noWorkflowReturn">
+                      <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
+
+                        <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
+                          <button type="button" (click)="acceptbtn()" class="btn btn-success">
+                            {{ 'mainApplyServiceResourceName.accep' | translate }}
+                          </button>
+                          <button type="button" (click)="rejectbtn()" class="btn btn-danger">
+                            {{ 'mainApplyServiceResourceName.refu' | translate }}
+                          </button>
+                        </div>
+
+                        <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
+                          <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
+                            {{ 'mainApplyServiceResourceName.taksis' | translate }}
+                          </button>
+                        </div>
+
+                        <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
+                          <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
+                            {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
+                          </button>
+                        </div>
+
+                        <div *ngIf="!hasActionButtons" class="d-flex flex-wrap gap-2 justify-content-center">
+                        </div>
+
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -633,13 +725,16 @@
           <div class="mb-3">
             <label for="commentText" class="form-label mb-2">{{ 'COMMON.COMMENT' | translate }}</label>
             <textarea class="form-control" id="commentText" rows="4" [(ngModel)]="newCommentText"
-              [ngModelOptions]="{standalone: true}" placeholder="{{ 'COMMON.ENTER_COMMENT' | translate }}"
-              required></textarea>
+                      [ngModelOptions]="{standalone: true}" placeholder="{{ 'COMMON.ENTER_COMMENT' | translate }}"
+                      required></textarea>
           </div>
 
           <div class="mb-3">
-            <label class="form-label mb-2">{{ 'COMMON.ATTACHMENTS' | translate }} ({{ 'COMMON.OPTIONAL' | translate
-              }})</label>
+            <label class="form-label mb-2">
+              {{ 'COMMON.ATTACHMENTS' | translate }} ({{
+ 'COMMON.OPTIONAL' | translate
+              }})
+            </label>
 
             <!-- Comment Attachment Configurations -->
             <div *ngIf="commentAttachmentConfigs.length > 0" class="">
@@ -647,12 +742,12 @@
                 <div *ngFor="let config of commentAttachmentConfigs">
 
                   <div *ngIf="!commentSelectedFiles[config.id!] && !commentFilePreviews[config.id!]" class="upload-area"
-                    (dragover)="onCommentDragOver($event)" (dragleave)="onCommentDragLeave($event)"
-                    (drop)="onCommentDrop($event, config.id!)" [class.drag-over]="isCommentDragOver"
-                    [class.border-danger]="isCommentAttachmentMandatory(config.id!) && !commentSelectedFiles[config.id!] && !commentFilePreviews[config.id!] && commentValidationSubmitted"
-                    [class.border-success]="commentSelectedFiles[config.id!] || commentFilePreviews[config.id!]">
+                       (dragover)="onCommentDragOver($event)" (dragleave)="onCommentDragLeave($event)"
+                       (drop)="onCommentDrop($event, config.id!)" [class.drag-over]="isCommentDragOver"
+                       [class.border-danger]="isCommentAttachmentMandatory(config.id!) && !commentSelectedFiles[config.id!] && !commentFilePreviews[config.id!] && commentValidationSubmitted"
+                       [class.border-success]="commentSelectedFiles[config.id!] || commentFilePreviews[config.id!]">
                     <input type="file" class="d-none" [id]="'comment-file-' + config.id"
-                      (change)="onCommentFileSelected($event, config.id!)" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                           (change)="onCommentFileSelected($event, config.id!)" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                     <label [for]="'comment-file-' + config.id" class="upload-label">
                       <i class="fas fa-cloud-upload-alt mb-2"></i>
                       <div>{{ 'ATTACHMENTS.DRAG_DROP_OR_CLICK' | translate }}</div>
@@ -661,30 +756,31 @@
                   </div>
 
                   <div *ngIf="commentSelectedFiles[config.id!] || commentFilePreviews[config.id!]"
-                    class="uploaded-file">
+                       class="uploaded-file">
                     <div class="d-flex align-items-center gap-2">
                       <div *ngIf="commentFilePreviews[config.id!]">
                         <img [src]="commentFilePreviews[config.id!]" class="img-thumbnail uploaded-img"
-                          *ngIf="commentSelectedFiles[config.id!].type?.startsWith('image/')"
-                          [alt]="commentAttachments[config.id!].fileName || 'File'">
+                             *ngIf="commentSelectedFiles[config.id!].type?.startsWith('image/')"
+                             [alt]="commentAttachments[config.id!].fileName || 'File'">
                       </div>
-                      <span class="file-name">{{ commentAttachments[config.id!].fileName || ('FASTING_TENT.FILE' |
-                        translate) }}</span>
+                      <span class="file-name">
+                        {{
+ commentAttachments[config.id!].fileName || ('FASTING_TENT.FILE' |
+                        translate)
+                        }}
+                      </span>
                     </div>
 
                     <button *ngIf="commentSelectedFiles[config.id!] || commentFilePreviews[config.id!]" type="button"
-                      class="btn-remove-uploaded-file" (click)="removeCommentFile(config.id!)">
+                            class="btn-remove-uploaded-file" (click)="removeCommentFile(config.id!)">
 
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path
-                          d="M21 4H17.9C17.6679 2.87141 17.0538 1.85735 16.1613 1.12872C15.2687 0.40009 14.1522 0.00145452 13 0L11 0C9.8478 0.00145452 8.73132 0.40009 7.83875 1.12872C6.94618 1.85735 6.3321 2.87141 6.1 4H3C2.73478 4 2.48043 4.10536 2.29289 4.29289C2.10536 4.48043 2 4.73478 2 5C2 5.26522 2.10536 5.51957 2.29289 5.70711C2.48043 5.89464 2.73478 6 3 6H4V19C4.00159 20.3256 4.52888 21.5964 5.46622 22.5338C6.40356 23.4711 7.67441 23.9984 9 24H15C16.3256 23.9984 17.5964 23.4711 18.5338 22.5338C19.4711 21.5964 19.9984 20.3256 20 19V6H21C21.2652 6 21.5196 5.89464 21.7071 5.70711C21.8946 5.51957 22 5.26522 22 5C22 4.73478 21.8946 4.48043 21.7071 4.29289C21.5196 4.10536 21.2652 4 21 4ZM11 2H13C13.6203 2.00076 14.2251 2.19338 14.7316 2.55144C15.2381 2.90951 15.6214 3.41549 15.829 4H8.171C8.37858 3.41549 8.7619 2.90951 9.26839 2.55144C9.77487 2.19338 10.3797 2.00076 11 2ZM18 19C18 19.7956 17.6839 20.5587 17.1213 21.1213C16.5587 21.6839 15.7956 22 15 22H9C8.20435 22 7.44129 21.6839 6.87868 21.1213C6.31607 20.5587 6 19.7956 6 19V6H18V19Z"
-                          fill="#5B5B5B" />
-                        <path
-                          d="M10 18C10.2652 18 10.5196 17.8946 10.7071 17.7071C10.8946 17.5196 11 17.2652 11 17V11C11 10.7348 10.8946 10.4804 10.7071 10.2929C10.5196 10.1054 10.2652 10 10 10C9.73478 10 9.48043 10.1054 9.29289 10.2929C9.10536 10.4804 9 10.7348 9 11V17C9 17.2652 9.10536 17.5196 9.29289 17.7071C9.48043 17.8946 9.73478 18 10 18Z"
-                          fill="#5B5B5B" />
-                        <path
-                          d="M14 18C14.2652 18 14.5196 17.8946 14.7071 17.7071C14.8947 17.5196 15 17.2652 15 17V11C15 10.7348 14.8947 10.4804 14.7071 10.2929C14.5196 10.1054 14.2652 10 14 10C13.7348 10 13.4804 10.1054 13.2929 10.2929C13.1054 10.4804 13 10.7348 13 11V17C13 17.2652 13.1054 17.5196 13.2929 17.7071C13.4804 17.8946 13.7348 18 14 18Z"
-                          fill="#5B5B5B" />
+                        <path d="M21 4H17.9C17.6679 2.87141 17.0538 1.85735 16.1613 1.12872C15.2687 0.40009 14.1522 0.00145452 13 0L11 0C9.8478 0.00145452 8.73132 0.40009 7.83875 1.12872C6.94618 1.85735 6.3321 2.87141 6.1 4H3C2.73478 4 2.48043 4.10536 2.29289 4.29289C2.10536 4.48043 2 4.73478 2 5C2 5.26522 2.10536 5.51957 2.29289 5.70711C2.48043 5.89464 2.73478 6 3 6H4V19C4.00159 20.3256 4.52888 21.5964 5.46622 22.5338C6.40356 23.4711 7.67441 23.9984 9 24H15C16.3256 23.9984 17.5964 23.4711 18.5338 22.5338C19.4711 21.5964 19.9984 20.3256 20 19V6H21C21.2652 6 21.5196 5.89464 21.7071 5.70711C21.8946 5.51957 22 5.26522 22 5C22 4.73478 21.8946 4.48043 21.7071 4.29289C21.5196 4.10536 21.2652 4 21 4ZM11 2H13C13.6203 2.00076 14.2251 2.19338 14.7316 2.55144C15.2381 2.90951 15.6214 3.41549 15.829 4H8.171C8.37858 3.41549 8.7619 2.90951 9.26839 2.55144C9.77487 2.19338 10.3797 2.00076 11 2ZM18 19C18 19.7956 17.6839 20.5587 17.1213 21.1213C16.5587 21.6839 15.7956 22 15 22H9C8.20435 22 7.44129 21.6839 6.87868 21.1213C6.31607 20.5587 6 19.7956 6 19V6H18V19Z"
+                              fill="#5B5B5B" />
+                        <path d="M10 18C10.2652 18 10.5196 17.8946 10.7071 17.7071C10.8946 17.5196 11 17.2652 11 17V11C11 10.7348 10.8946 10.4804 10.7071 10.2929C10.5196 10.1054 10.2652 10 10 10C9.73478 10 9.48043 10.1054 9.29289 10.2929C9.10536 10.4804 9 10.7348 9 11V17C9 17.2652 9.10536 17.5196 9.29289 17.7071C9.48043 17.8946 9.73478 18 10 18Z"
+                              fill="#5B5B5B" />
+                        <path d="M14 18C14.2652 18 14.5196 17.8946 14.7071 17.7071C14.8947 17.5196 15 17.2652 15 17V11C15 10.7348 14.8947 10.4804 14.7071 10.2929C14.5196 10.1054 14.2652 10 14 10C13.7348 10 13.4804 10.1054 13.2929 10.2929C13.1054 10.4804 13 10.7348 13 11V17C13 17.2652 13.1054 17.5196 13.2929 17.7071C13.4804 17.8946 13.7348 18 14 18Z"
+                              fill="#5B5B5B" />
                       </svg>
                     </button>
 
@@ -715,10 +811,56 @@
           {{ 'COMMON.CANCEL' | translate }}
         </button>
         <button type="button" class="btn btn-gold" (click)="addWorkFlowComment()"
-          [disabled]="!newCommentText.trim() || isSavingComment">
+                [disabled]="!newCommentText.trim() || isSavingComment">
           <span *ngIf="isSavingComment" class="spinner-border spinner-border-sm me-2" role="status"></span>
           {{ 'COMMON.ADD_COMMENT' | translate }}
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="addcommentsModal" tabindex="-1" aria-labelledby="addcommentsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl custom-modal-width">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addcommentsModalLabel">{{ 'COMMON.ADD_COMMENT' | translate }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="">
+          <form [formGroup]="userForm">
+            <div class="row">
+              <div class="col-xl-12 mb-3">
+                <label for="comment" class="form-label">{{ 'mainApplyServiceResourceName.Comments' | translate }}</label>
+                <textarea id="comment" class="form-control" rows="3"
+                          [ngClass]="{'is-invalid': userForm.get('comment')?.invalid && (userForm.get('comment')?.touched || submitted)}"
+                          formControlName="comment"
+                          placeholder="{{ 'comment' | translate }}"></textarea>
+                <div *ngIf="userForm.get('comment')?.invalid && (userForm.get('comment')?.touched || submitted)"
+                     class="invalid-feedback">
+                </div>
+              </div>
+
+              <div class="col-xl-6 mb-3">
+                <label for="commentTypeId" class="form-label">{{ 'mainApplyServiceResourceName.commentType' | translate }}</label>
+                <select id="commentTypeId" class="form-select"
+                        [ngClass]="{'is-invalid': userForm.get('commentTypeId')?.invalid && (userForm.get('commentTypeId')?.touched || submitted)}"
+                        formControlName="commentTypeId">
+                  <option [ngValue]="null">{{ 'SELECT' | translate }}</option>
+                  <option [ngValue]=1>{{ 'Internal' | translate }}</option>
+                  <option [ngValue]=2>{{ 'External' | translate }}</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer mt-3">
+        <button type="button" class="btn btn-gold" (click)="submitComment()">{{ 'Common.save' | translate }}</button>
+        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
       </div>
     </div>
   </div>
@@ -746,7 +888,7 @@
 
         <!-- No Attachments State -->
         <div *ngIf="!isLoadingAttachments && selectedCommentAttachments.length === 0"
-          class="text-center text-muted py-4">
+             class="text-center text-muted py-4">
           <i class="fas fa-file-alt fa-3x mb-3 text-muted"></i>
           <p>{{ 'COMMON.NO_ATTACHMENTS' | translate }}</p>
         </div>
@@ -759,8 +901,12 @@
                 <div class="mb-3">
                   <i class="fas fa-file-alt fa-2x text-primary"></i>
                 </div>
-                <h6 class="card-title small mb-2">{{ attachment.attachmentTitle || ('FASTING_TENT.ATTACHMENT' |
-                  translate) }}</h6>
+                <h6 class="card-title small mb-2">
+                  {{
+ attachment.attachmentTitle || ('FASTING_TENT.ATTACHMENT' |
+                  translate)
+                  }}
+                </h6>
                 <div class="d-grid gap-2">
                   <button class="btn btn-download-style" (click)="downloadAttachment(attachment)">
                     <i class="fas fa-download me-1"></i>
@@ -787,7 +933,7 @@
 
 <!-- Partner Attachment Preview Modal -->
 <div class="modal fade" id="partnerAttachmentModal" tabindex="-1" aria-labelledby="partnerAttachmentModalLabel"
-  aria-hidden="true">
+     aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -809,7 +955,7 @@
 
         <!-- No Attachments State -->
         <div *ngIf="!isLoadingPartnerAttachments && selectedPartnerAttachments.length === 0"
-          class="text-center text-muted py-4">
+             class="text-center text-muted py-4">
           <i class="fas fa-file-alt fa-3x mb-3 text-muted"></i>
           <p>{{ 'COMMON.NO_ATTACHMENTS' | translate }}</p>
         </div>
@@ -822,8 +968,12 @@
                 <div class="mb-3">
                   <i class="fas fa-file-alt fa-2x text-success"></i>
                 </div>
-                <h6 class="card-title small mb-2">{{ attachment.attachmentTitle || ('FASTING_TENT.ATTACHMENT' |
-                  translate) }}</h6>
+                <h6 class="card-title small mb-2">
+                  {{
+ attachment.attachmentTitle || ('FASTING_TENT.ATTACHMENT' |
+                  translate)
+                  }}
+                </h6>
                 <div class="d-grid gap-2">
                   <button class="btn btn-download-style" (click)="downloadAttachment(attachment)">
                     <i class="fas fa-download me-1"></i>

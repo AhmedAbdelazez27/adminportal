@@ -9,29 +9,34 @@ import { StatisticsOfBeneficiaryFamiliesComponents } from '../../socialcases/cha
 export const chartsRoutes: Routes = [
   {
     path: 'revenue-expenses/:chartType',
-    component: RevenueGeneralComponent
+    component: RevenueGeneralComponent,
+    // canActivate: [authGuard]
   },// sub routing  : /General , /Period-Dapartment , /Period-Branches , /Branches-Accounts
 
   {
     path: 'receipt-payment/:chartType',
-    component: ReceiptsPaymentChartsComponent
+    component: ReceiptsPaymentChartsComponent,
+    // canActivate: [authGuard]
   },
 
   {
     path: 'comparisons-revenue-expenses/:chartType',
-    component: ComparisonsRevenueseExpensesComponent
+    component: ComparisonsRevenueseExpensesComponent,
+    // canActivate: [authGuard]
   }, // sub routing  :  /revenueByEntit  /revenueByDepartment /revenueByBranch   /revenueByAccount
        // sub routing  :  /expensesByEntit  /expensesByBranch  /expensesByDepartment   /expensesByAccount
 
 
   {
     path: 'receipts-payments-comparission/:chartType',
-    component: ReceiptsPaymentsComparissionComponent
+    component: ReceiptsPaymentsComparissionComponent,
+    // canActivate: [authGuard]
   },
 
 
   {
     path: 'statistics-benf-families/:chartType',
-    component: StatisticsOfBeneficiaryFamiliesComponents
+    component: StatisticsOfBeneficiaryFamiliesComponents,
+    // canActivate: [authGuard]
   },
 ];

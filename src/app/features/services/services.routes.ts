@@ -40,42 +40,42 @@ export const servicesRoutes: Routes = [
   {
     path: 'services/view-fasting-tent-request/:id', component: ViewFastingTentRequestComponent,
     canActivate: [authGuard],
-    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
-  },
-
-  {
-    path: 'services/view-distribution-site-permit/:id', component: ViewDistributionSitePermitComponent,
-    canActivate: [authGuard],
-    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View  //serviceId = 1
   },
 
   {
     path: 'services/charity-event-permit/:id', component: ViewCharityEventPermitComponent,
     canActivate: [authGuard],
-    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
-  },
-
-  {
-    path: 'services/request-event-permit/:id', component: ViewRequesteventpermitComponent,
-    canActivate: [authGuard],
-    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
-  },
-
-  {
-    path: 'services/plaint-request/:id', component: ViewRequestplaintComponent,
-    canActivate: [authGuard],
-    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
-  },
-
-  {
-    path: 'services/complaint-request/:id', component: ViewComplaintrequestComponent,
-    canActivate: [authGuard],
-    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View  //serviceId = 2
   },
 
   {
     path: 'services/advertisement/:id', component: ViewAdvertisementComponent,
     canActivate: [authGuard],
-    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View  //serviceId = 5
+  },
+
+  {
+    path: 'services/request-event-permit/:id', component: ViewRequesteventpermitComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View  //serviceId = 6
+  },
+
+  {
+    path: 'services/plaint-request/:id', component: ViewRequestplaintComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View  //serviceId = 7
+  },
+
+  {
+    path: 'services/view-distribution-site-permit/:id', component: ViewDistributionSitePermitComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View  //serviceId = 1001
+  },
+
+  {
+    path: 'services/complaint-request/:id', component: ViewComplaintrequestComponent,
+    canActivate: [authGuard],
+    data: { pagePermission: 'MainApplyRequestService' } // MainApplyRequestService  ,   MainApplyRequestService.View  //serviceId = 1002
   },
 ];

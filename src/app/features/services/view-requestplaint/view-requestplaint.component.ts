@@ -12,7 +12,7 @@ import { ColDef } from 'ag-grid-community';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GenericDataTableComponent } from '../../../../shared/generic-data-table/generic-data-table.component';
-import { Observable, tap, catchError, throwError, EMPTY } from 'rxjs';
+import { Observable, tap, catchError, throwError, EMPTY, Subscription } from 'rxjs';
 import { SpinnerService } from '../../../core/services/spinner.service';
 
 declare var bootstrap: any;
@@ -98,7 +98,8 @@ export class ViewRequestplaintComponent implements OnInit {
   firstLevel: boolean = false;
   screenMode: 'edit' | 'view' = 'view';
   isEditMode: boolean = false;
-  serviceDepartmentActions: number = 0;
+  serviceDepartmentActions: number[] = [];
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -148,9 +149,69 @@ export class ViewRequestplaintComponent implements OnInit {
         this.workFlowSteps = resp.workFlowSteps || [];
         this.partners = resp.partners || [];
         this.attachments = resp.attachments || [];
-        this.serviceDepartmentActions = this.mainApplyService?.workFlowSteps?.[0]?.serviceDepartmentActions!;
-        this.originalworkFlowId = this.mainApplyService?.workFlowSteps?.[0]?.id;
 
+        let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+
+        const storedDeptIds = storeddepartmentId
+          .replace(/"/g, '')
+          .split(',')
+          .map(x => x.trim())
+          .filter(x => x !== '');
+
+        storeddepartmentId = storeddepartmentId.replace(/"/g, '').trim();
+
+        this.workFlowSteps = this.workFlowSteps.map((step: any) => ({
+          ...step,
+          isMatched: storedDeptIds.includes(String(step?.deptId).trim())
+        }));
+
+        const matchedIndices = this.workFlowSteps
+          .map((s, i) => (storedDeptIds.includes(String(s?.deptId).trim()) ? i : -1))
+          .filter(i => i !== -1);
+
+        let selectedStep: any = null;
+
+        for (let idx of matchedIndices) {
+          if (idx > 0) {
+            const prevStep = this.workFlowSteps[idx - 1];
+            if (
+              String(prevStep?.deptId).trim() !== storeddepartmentId &&
+              prevStep?.serviceStatus !== 1
+            ) {
+              selectedStep = null;
+              break;
+            }
+          }
+          if (this.workFlowSteps[idx].serviceStatus !== 1) {
+            selectedStep = this.workFlowSteps[idx];
+            break;
+          }
+        }
+
+        for (let idx of matchedIndices) {
+          if (idx > 0) {
+            const prevStep = this.workFlowSteps[idx - 1];
+            if (
+              !storedDeptIds.includes(String(prevStep?.deptId).trim()) &&
+              prevStep?.serviceStatus !== 1
+            ) {
+              selectedStep = null;
+              break;
+            }
+          }
+          if (this.workFlowSteps[idx].serviceStatus !== 1) {
+            selectedStep = this.workFlowSteps[idx];
+            break;
+          }
+        }
+
+        this.workFlowQuery = selectedStep ? [selectedStep] : [];
+
+        this.serviceDepartmentActions = (this.workFlowQuery ?? [])
+          .map((s: any) => s.serviceDepartmentActions)
+          .filter((x: any): x is number => typeof x === 'number');
+
+        this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;
         this.findTargetWorkFlowStep();
         if (this.targetWorkFlowStep) {
           this.loadWorkFlowComments();
@@ -163,7 +224,11 @@ export class ViewRequestplaintComponent implements OnInit {
         this.router.navigate(['/']);
       }
     });
-    // this.subscriptions.push(sub);
+    this.subscriptions.push(sub);
+  }
+
+  get hasActionButtons(): boolean {
+    return this.serviceDepartmentActions?.some(x => [1, 2, 3].includes(x)) ?? false;
   }
 
   private findTargetWorkFlowStep(): void {
