@@ -142,23 +142,23 @@ export class SpCasesComponent {
     
     // Main grid actions (includes Show More)
     this.rowActions = [
-      { label: this.translate.instant('Common.ShowMore'), icon: 'icon-frame-view', action: 'onShowMore' }
+      { label: this.translate.instant('Common.Show'), icon: 'icon-frame-view', action: 'onShowMore' }
     ];
 
     // Aid Requests grid actions - completely separate array (only Show Details and Study Details)
     this.aidRequestsRowActions = [
-      { label: 'Show Details', icon: 'icon-frame-view', action: 'onViewInfo' },
+      { label: 'Show', icon: 'icon-frame-view', action: 'onViewInfo' },
       { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
     ];
     
     // Create completely separate arrays to ensure no reference issues
     this.filteredAidRequestsRowActions = [
-      { label: 'Show Details', icon: 'icon-frame-view', action: 'onViewInfo' },
+      { label: 'Show', icon: 'icon-frame-view', action: 'onViewInfo' },
       { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
     ];
     
     this.aidRequestsModalActions = [
-      { label: 'Show Details', icon: 'icon-frame-view', action: 'onViewInfo' },
+      { label: 'Show', icon: 'icon-frame-view', action: 'onViewInfo' },
       { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
     ];
 
@@ -616,17 +616,17 @@ export class SpCasesComponent {
   // Method to explicitly set Aid Requests actions
   private setAidRequestsActions(): void {
     this.aidRequestsRowActions = [
-      { label: 'Show Details', icon: 'icon-frame-view', action: 'onViewInfo' },
+      { label: 'Show ', icon: 'icon-frame-view', action: 'onViewInfo' },
       { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
     ];
     
     this.filteredAidRequestsRowActions = [
-      { label: 'Show Details', icon: 'icon-frame-view', action: 'onViewInfo' },
+      { label: 'Show ', icon: 'icon-frame-view', action: 'onViewInfo' },
       { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
     ];
     
     this.aidRequestsModalActions = [
-      { label: 'Show Details', icon: 'icon-frame-view', action: 'onViewInfo' },
+      { label: 'Show ', icon: 'icon-frame-view', action: 'onViewInfo' },
       { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
     ];
   }
@@ -721,7 +721,7 @@ export class SpCasesComponent {
   // Column Definitions
   public buildColumnDefs(): void {
     this.translate.get([
-      'SpCasesResourceName.entityName',
+      // 'SpCasesResourceName.entityName',
       'SpCasesResourceName.caseName',
       'SpCasesResourceName.caseNo',
       'SpCasesResourceName.nationalityDesc',
@@ -729,17 +729,17 @@ export class SpCasesComponent {
       'SpCasesResourceName.birthLocation',
       'SpCasesResourceName.city',
       'SpCasesResourceName.phone',
-      'SpCasesResourceName.appDate',
+      // 'SpCasesResourceName.appDate',
       'SpCasesResourceName.branchDesc',
       'SpCasesResourceName.appTypeDesc',
       'SpCasesResourceName.wifeName',
       'SpCasesResourceName.maritalStatusDesc',
       'SpCasesResourceName.healthStatusDesc',
-      'SpCasesResourceName.jobDesc',
-      'SpCasesResourceName.requestStatusDesc'
+      // 'SpCasesResourceName.jobDesc',
+      // 'SpCasesResourceName.requestStatusDesc'
     ]).subscribe(translations => {
       this.columnDefs = [
-        { headerName: translations['SpCasesResourceName.entityName'], field: 'entityId', width: 200 },
+        // { headerName: translations['SpCasesResourceName.entityName'], field: 'entityId', width: 200 },
         { headerName: translations['SpCasesResourceName.caseName'], field: 'nameAr', width: 200 },
         { headerName: translations['SpCasesResourceName.caseNo'], field: 'caseNo', width: 150 },
         { headerName: translations['SpCasesResourceName.nationalityDesc'], field: 'nationalityDesc', width: 150 },
@@ -747,14 +747,14 @@ export class SpCasesComponent {
         { headerName: translations['SpCasesResourceName.birthLocation'], field: 'regionName', width: 150 },
         { headerName: translations['SpCasesResourceName.city'], field: 'cityDesc', width: 150 },
         { headerName: translations['SpCasesResourceName.phone'], field: 'htel', width: 150 },
-        { headerName: translations['SpCasesResourceName.appDate'], field: 'appDatestr', width: 150 },
+        // { headerName: translations['SpCasesResourceName.appDate'], field: 'appDatestr', width: 150 },
         { headerName: translations['SpCasesResourceName.branchDesc'], field: 'branchDesc', width: 150 },
         { headerName: translations['SpCasesResourceName.appTypeDesc'], field: 'appTypeDesc', width: 150 },
         { headerName: translations['SpCasesResourceName.wifeName'], field: 'wifeName', width: 150 },
         { headerName: translations['SpCasesResourceName.maritalStatusDesc'], field: 'maritalStatusDesc', width: 150 },
         { headerName: translations['SpCasesResourceName.healthStatusDesc'], field: 'healthStatusDesc', width: 150 },
-        { headerName: translations['SpCasesResourceName.jobDesc'], field: 'jobDesc', width: 150 },
-        { headerName: translations['SpCasesResourceName.requestStatusDesc'], field: 'requestStatusDesc', width: 150 },
+        // { headerName: translations['SpCasesResourceName.jobDesc'], field: 'jobDesc', width: 150 },
+        // { headerName: translations['SpCasesResourceName.requestStatusDesc'], field: 'requestStatusDesc', width: 150 },
       ];
     });
   }
@@ -775,7 +775,7 @@ export class SpCasesComponent {
 
   public buildAidRequestsColumnDefs(): void {
     this.translate.get([
-      'AidRequestsResourceName.entitY_NAME',
+      // 'AidRequestsResourceName.entitY_NAME',
       'AidRequestsResourceName.namE_AR',
       'AidRequestsResourceName.source',
       'AidRequestsResourceName.aiD_TYPE',
@@ -786,7 +786,7 @@ export class SpCasesComponent {
       'AidRequestsResourceName.amount'
     ]).subscribe(translations => {
       this.aidRequestsColumnDefs = [
-        { headerName: translations['AidRequestsResourceName.entitY_NAME'], field: 'entitY_NAME', width: 200 },
+        // { headerName: translations['AidRequestsResourceName.entitY_NAME'], field: 'entitY_NAME', width: 200 },
         { headerName: translations['AidRequestsResourceName.namE_AR'], field: 'namE_AR', width: 200 },
         { headerName: translations['AidRequestsResourceName.source'], field: 'sourcE_DESC', width: 200 },
         { headerName: translations['AidRequestsResourceName.aiD_TYPE'], field: 'aiD_TYPE', width: 200 },
@@ -965,7 +965,7 @@ export class SpCasesComponent {
                   reportTitle: this.translate.instant('SpCasesResourceName.Title'),
                   fileName: `${this.translate.instant('SpCasesResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
-                    { label: this.translate.instant('SpCasesResourceName.entityId'), value: this.searchParams.entityId },
+                    // { label: this.translate.instant('SpCasesResourceName.entityId'), value: this.searchParams.entityId },
                     { label: this.translate.instant('SpCasesResourceName.caseId'), value: this.searchParams.caseId },
                     { label: this.translate.instant('SpCasesResourceName.caseNo'), value: this.searchParams.caseNo },
                     { label: this.translate.instant('SpCasesResourceName.nationality'), value: this.searchParams.nationality },
@@ -980,7 +980,7 @@ export class SpCasesComponent {
                   ],
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },
-                    { label: this.translate.instant('SpCasesResourceName.entityName'), key: 'entityId' },
+                    // { label: this.translate.instant('SpCasesResourceName.entityName'), key: 'entityId' },
                     { label: this.translate.instant('SpCasesResourceName.caseName'), key: 'nameAr' },
                     { label: this.translate.instant('SpCasesResourceName.caseNo'), key: 'caseNo' },
                     { label: this.translate.instant('SpCasesResourceName.nationalityDesc'), key: 'nationalityDesc' },
@@ -988,14 +988,14 @@ export class SpCasesComponent {
                     { label: this.translate.instant('SpCasesResourceName.birthLocation'), key: 'regionName' },
                     { label: this.translate.instant('SpCasesResourceName.city'), key: 'cityDesc' },
                     { label: this.translate.instant('SpCasesResourceName.phone'), key: 'htel' },
-                    { label: this.translate.instant('SpCasesResourceName.appDate'), key: 'appDatestr' },
+                    // { label: this.translate.instant('SpCasesResourceName.appDate'), key: 'appDatestr' },
                     { label: this.translate.instant('SpCasesResourceName.branchDesc'), key: 'branchDesc' },
                     { label: this.translate.instant('SpCasesResourceName.appTypeDesc'), key: 'appTypeDesc' },
                     { label: this.translate.instant('SpCasesResourceName.wifeName'), key: 'wifeName' },
                     { label: this.translate.instant('SpCasesResourceName.maritalStatusDesc'), key: 'maritalStatusDesc' },
                     { label: this.translate.instant('SpCasesResourceName.healthStatusDesc'), key: 'healthStatusDesc' },
-                    { label: this.translate.instant('SpCasesResourceName.jobDesc'), key: 'jobDesc' },
-                    { label: this.translate.instant('SpCasesResourceName.requestStatusDesc'), key: 'requestStatusDesc' },
+                    // { label: this.translate.instant('SpCasesResourceName.jobDesc'), key: 'jobDesc' },
+                    // { label: this.translate.instant('SpCasesResourceName.requestStatusDesc'), key: 'requestStatusDesc' },
                   ],
                   data: data.map((item: any, index: number) => ({
                     ...item,

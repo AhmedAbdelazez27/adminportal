@@ -14,6 +14,9 @@ export interface EntityDto {
   Active?: boolean;
   MasterId: number; // Changed to long type to match backend
   Attachment?: AttachmentDto; // Single attachment object from API response
+  licenseNumber?: string | null;
+  licenseEndDate?: string | null;
+  foundationType?: number | string | null;
 }
 
 // Backend response structure (for mapping purposes)
@@ -49,6 +52,9 @@ export interface CreateEntityDto {
   IsDonation?: boolean;
   Active?: boolean;
   Attachment?: AttachmentBase64Dto;
+  licenseNumber?: string | null;
+  licenseEndDate?: string | null;
+  foundationType?: number | string | null;
 }
 
 export interface UpdateEntityDto {
@@ -65,6 +71,9 @@ export interface UpdateEntityDto {
   IsShowInPortal: boolean; // Changed from optional to required boolean
   IsDonation?: boolean;
   Active?: boolean;
+  licenseNumber?: string | null;
+  licenseEndDate?: string | null;
+  foundationType?: number | string | null;
 }
 
 export interface GetEntityByIdDto {

@@ -192,6 +192,9 @@ export class EntityComponent implements OnInit, OnDestroy {
             IsShowInPortal: [false],
             IsDonation: [false],
             Active: [true],
+            licenseNumber: ['', [Validators.maxLength(100), this.noWhitespaceValidator]],
+            licenseEndDate: [null],
+            foundationType: [null],
         });
     }
 
@@ -214,10 +217,10 @@ export class EntityComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         // Clean up modal instances
         this.disposeAllModals();
-        
+
         // Clear any remaining modal backdrops
         this.clearModalBackdrops();
-        
+
         // Restore body scroll if locked
         this.restoreBodyScroll();
     }
@@ -459,11 +462,14 @@ export class EntityComponent implements OnInit, OnDestroy {
                 Active: item.active !== undefined ? item.active : (item as any).Active,
                 MasterId: item.masterId || (item as any).MasterId,
                 // Handle single attachment object
-                Attachment: item.attachment || (item as any).attachment
+                Attachment: item.attachment || (item as any).attachment,
+                licenseNumber: (item as any).licenseNumber ?? (item as any).LicenseNumber ?? (item as any).LICENSE_NUMBER,
+                licenseEndDate: (item as any).licenseEndDate ?? (item as any).LicenseEndDate ?? (item as any).LICENSE_END_DATE,
+                foundationType: (item as any).foundationType ?? (item as any).FoundationType ?? (item as any).FOUNDATION_TYPE,
             };
             return transformedItem;
         });
-        
+
         return transformed;
     }
 
@@ -481,7 +487,7 @@ export class EntityComponent implements OnInit, OnDestroy {
         this.spinnerService.show();
         this.entityService.getAllEntities(cleanedFilters).subscribe(
             (data: any) => {
-                
+
                 // Handle different response formats
                 let allData: EntityDto[] = [];
                 let totalCount: number = 0;
@@ -544,7 +550,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                 // Update component properties
                 this.loadgridData = allData;
                 this.pagination.totalCount = totalCount;
-                
+
                 this.spinnerService.hide();
             },
             (error) => {
@@ -712,7 +718,7 @@ export class EntityComponent implements OnInit, OnDestroy {
         }
 
         const formData = this.entityForm.value;
-        
+
         // Attachment validation (similar to locations component)
         const entityImageConfig = this.getEntityImageConfig();
         const hasExistingAttachment = !!this.existingAttachment;
@@ -763,6 +769,9 @@ export class EntityComponent implements OnInit, OnDestroy {
                     IsDonation: formData.IsDonation || false,
                     Active: formData.Active !== undefined ? formData.Active : true,
                     Attachment: attachmentDto || undefined,
+                    licenseNumber: formData.licenseNumber?.trim() || null,
+                    licenseEndDate: this.toIsoOrNull(formData.licenseEndDate), // أو ابعتها كما هي لو الـ API عايز YYYY-MM-DD
+                    foundationType: formData.foundationType ?? null,
                 };
 
                 this.entityService.createEntity(createData).subscribe({
@@ -792,6 +801,10 @@ export class EntityComponent implements OnInit, OnDestroy {
                     IsShowInPortal: formData.IsShowInPortal || false,
                     IsDonation: formData.IsDonation || false,
                     Active: formData.Active !== undefined ? formData.Active : true,
+                    licenseNumber: formData.licenseNumber?.trim() || null,
+                    licenseEndDate: this.toIsoOrNull(formData.licenseEndDate),
+                    foundationType: formData.foundationType ?? null,
+
                 };
 
                 this.entityService.updateEntity(updateData).subscribe({
@@ -822,6 +835,20 @@ export class EntityComponent implements OnInit, OnDestroy {
             this.toastr.error(this.translate.instant('FILE.ERROR_PROCESSING_FILE'));
             this.spinnerService.hide();
         }
+    }
+
+
+    private toIsoOrNull(d: string | Date | null | undefined): string | null {
+        if (!d) return null;
+
+        if (typeof d === 'string') {
+            const [y, m, day] = d.split('-').map(Number);
+            if (!y || !m || !day) return null;
+            const date = new Date(y, m - 1, day);
+            return isNaN(date.getTime()) ? null : date.toISOString();
+        }
+
+        return isNaN(d.getTime()) ? null : d.toISOString();
     }
 
     // Helper method to get the first validation error
@@ -881,7 +908,12 @@ export class EntityComponent implements OnInit, OnDestroy {
             },
         });
     }
-
+    private toDateInputValue(d: string | Date | null | undefined): string | null {
+        if (!d) return null;
+        const date = typeof d === 'string' ? new Date(d) : d;
+        if (isNaN(date.getTime())) return null;
+        return date.toISOString().slice(0, 10); // YYYY-MM-DD
+    }
     openViewModal(entity: EntityDto): void {
         this.entityService.getEntityById(entity.ENTITY_ID).subscribe({
             next: async (fullEntity: any) => {
@@ -923,6 +955,9 @@ export class EntityComponent implements OnInit, OnDestroy {
             IsShowInPortal: entity.IsShowInPortal,
             IsDonation: entity.IsDonation,
             Active: entity.Active,
+            licenseNumber: entity.licenseNumber || null,
+            licenseEndDate: this.toDateInputValue(entity.licenseEndDate),
+            foundationType: entity.foundationType || null,
         });
     }
 
@@ -945,9 +980,12 @@ export class EntityComponent implements OnInit, OnDestroy {
             IsDonation: apiResponse.isDonation || apiResponse.IsDonation,
             Active: apiResponse.active !== undefined ? apiResponse.active : apiResponse.Active,
             MasterId: apiResponse.masterId || apiResponse.MasterId,
-            Attachment: apiResponse.attachment || apiResponse.Attachment
+            Attachment: apiResponse.attachment || apiResponse.Attachment,
+            licenseNumber: apiResponse.licenseNumber ?? apiResponse.LicenseNumber ?? apiResponse.LICENSE_NUMBER,
+            licenseEndDate: apiResponse.licenseEndDate ?? apiResponse.LicenseEndDate ?? apiResponse.LICENSE_END_DATE,
+            foundationType: apiResponse.foundationType ?? apiResponse.FoundationType ?? apiResponse.FOUNDATION_TYPE,
         };
-        
+
         return transformed;
     }
 
@@ -958,17 +996,17 @@ export class EntityComponent implements OnInit, OnDestroy {
             if (this.mainModalInstance) {
                 this.mainModalInstance.dispose();
             }
-            
+
             this.mainModalInstance = new (window as any).bootstrap.Modal(modal, {
                 backdrop: 'static',
                 keyboard: false
             });
-            
+
             // Add proper event listeners for cleanup
             modal.addEventListener('hidden.bs.modal', () => {
                 this.onModalHidden();
             });
-            
+
             this.mainModalInstance.show();
         }
     }
@@ -976,7 +1014,7 @@ export class EntityComponent implements OnInit, OnDestroy {
     closeModal(): void {
         this.resetModalState('add').then(() => {
             this.entityForm.enable();
-            
+
             // Properly close the modal using Bootstrap API
             if (this.mainModalInstance) {
                 this.mainModalInstance.hide();
@@ -1002,20 +1040,20 @@ export class EntityComponent implements OnInit, OnDestroy {
     deleteEntity(): void {
         if (this.selectedEntityToDelete) {
             this.spinnerService.show();
-                            this.entityService.deleteEntity(this.selectedEntityToDelete).subscribe({
-                    next: (response) => {
-                        this.selectedEntityToDelete = null;
-                        this.selectedEntityObject = null;
-                        this.spinnerService.hide();
-                        this.toastr.success(this.translate.instant('TOAST.ENTITY_DELETED'));
-                        
-                        // Properly close the delete modal
-                        if (this.deleteModalInstance) {
-                            this.deleteModalInstance.hide();
-                        }
-                        
-                        this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
-                    },
+            this.entityService.deleteEntity(this.selectedEntityToDelete).subscribe({
+                next: (response) => {
+                    this.selectedEntityToDelete = null;
+                    this.selectedEntityObject = null;
+                    this.spinnerService.hide();
+                    this.toastr.success(this.translate.instant('TOAST.ENTITY_DELETED'));
+
+                    // Properly close the delete modal
+                    if (this.deleteModalInstance) {
+                        this.deleteModalInstance.hide();
+                    }
+
+                    this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
+                },
                 error: (error) => {
                     this.spinnerService.hide();
                     this.toastr.error(this.translate.instant('TOAST.ENTITY_DELETE_ERROR'));
@@ -1195,12 +1233,12 @@ export class EntityComponent implements OnInit, OnDestroy {
                     this.existingAttachment = null;
                     this.existingImageUrl = null;
                     this.selectedAttachmentToDelete = null;
-                    
+
                     // Properly close the delete attachment modal
                     if (this.deleteAttachmentModalInstance) {
                         this.deleteAttachmentModalInstance.hide();
                     }
-                    
+
                     this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
                     this.spinnerService.hide();
                 },
@@ -1393,7 +1431,11 @@ export class EntityComponent implements OnInit, OnDestroy {
         this.fileValidationSuccess = false;
 
         if (mode === 'add') {
-            this.entityForm.reset({ IsShowInPortal: false, IsDonation: false, Active: true });
+            this.entityForm.reset({
+                IsShowInPortal: false, IsDonation: false, Active: true, licenseNumber: '',
+                licenseEndDate: null,
+                foundationType: null,
+            });
             this.selectedEntityObject = null;
         }
 
@@ -1474,7 +1516,7 @@ export class EntityComponent implements OnInit, OnDestroy {
         if (this.mode === 'edit' && this.selectedEntityObject?.MasterId) {
             attachmentDto.masterId = this.selectedEntityObject.MasterId;
         }
-        
+
         this.attachmentService.saveAttachmentFileBase64(attachmentDto).subscribe({
             next: (response) => {
                 this.toastr.success(this.translate.instant('FILE.IMAGE_UPLOADED_SUCCESS'));
@@ -1588,17 +1630,17 @@ export class EntityComponent implements OnInit, OnDestroy {
             if (this.deleteModalInstance) {
                 this.deleteModalInstance.dispose();
             }
-            
+
             this.deleteModalInstance = new (window as any).bootstrap.Modal(modal, {
                 backdrop: 'static',
                 keyboard: false
             });
-            
+
             // Add proper event listeners for cleanup
             modal.addEventListener('hidden.bs.modal', () => {
                 this.onDeleteModalHidden();
             });
-            
+
             this.deleteModalInstance.show();
         }
     }
@@ -1610,17 +1652,17 @@ export class EntityComponent implements OnInit, OnDestroy {
             if (this.deleteAttachmentModalInstance) {
                 this.deleteAttachmentModalInstance.dispose();
             }
-            
+
             this.deleteAttachmentModalInstance = new (window as any).bootstrap.Modal(modal, {
                 backdrop: 'static',
                 keyboard: false
             });
-            
+
             // Add proper event listeners for cleanup
             modal.addEventListener('hidden.bs.modal', () => {
                 this.onDeleteAttachmentModalHidden();
             });
-            
+
             this.deleteAttachmentModalInstance.show();
         }
     }
@@ -1631,10 +1673,10 @@ export class EntityComponent implements OnInit, OnDestroy {
             this.mainModalInstance.dispose();
             this.mainModalInstance = null;
         }
-        
+
         // Clean up any remaining backdrops
         this.clearModalBackdrops();
-        
+
         // Restore body scroll
         this.restoreBodyScroll();
     }
@@ -1645,10 +1687,10 @@ export class EntityComponent implements OnInit, OnDestroy {
             this.deleteModalInstance.dispose();
             this.deleteModalInstance = null;
         }
-        
+
         // Clean up any remaining backdrops
         this.clearModalBackdrops();
-        
+
         // Restore body scroll
         this.restoreBodyScroll();
     }
@@ -1659,10 +1701,10 @@ export class EntityComponent implements OnInit, OnDestroy {
             this.deleteAttachmentModalInstance.dispose();
             this.deleteAttachmentModalInstance = null;
         }
-        
+
         // Clean up any remaining backdrops
         this.clearModalBackdrops();
-        
+
         // Restore body scroll
         this.restoreBodyScroll();
     }
@@ -1673,13 +1715,13 @@ export class EntityComponent implements OnInit, OnDestroy {
             this.mainModalInstance.dispose();
             this.mainModalInstance = null;
         }
-        
+
         // Dispose delete modal
         if (this.deleteModalInstance) {
             this.deleteModalInstance.dispose();
             this.deleteModalInstance = null;
         }
-        
+
         // Dispose delete attachment modal
         if (this.deleteAttachmentModalInstance) {
             this.deleteAttachmentModalInstance.dispose();
@@ -1693,7 +1735,7 @@ export class EntityComponent implements OnInit, OnDestroy {
         backdrops.forEach((backdrop) => {
             backdrop.remove();
         });
-        
+
         // Also remove any fade backdrops
         const fadeBackdrops = document.querySelectorAll('.modal-backdrop.fade');
         fadeBackdrops.forEach((backdrop) => {
@@ -1704,11 +1746,11 @@ export class EntityComponent implements OnInit, OnDestroy {
     private restoreBodyScroll(): void {
         // Remove modal-open class from body
         document.body.classList.remove('modal-open');
-        
+
         // Remove any inline styles that might lock scrolling
         document.body.style.removeProperty('overflow');
         document.body.style.removeProperty('padding-right');
-        
+
         // Ensure the html element is also not locked
         document.documentElement.style.removeProperty('overflow');
         document.documentElement.style.removeProperty('padding-right');

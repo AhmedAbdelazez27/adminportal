@@ -369,7 +369,12 @@
     "DELETE_CONFIRMATION": "Are you sure you want to delete this entity? This action cannot be undone.",
     "IMAGE": "Entity Image",
     "NO_IMAGE": "No image available",
-    "STATUS": "Status"
+    "STATUS": "Status",
+     "LICENSE_NUMBER": "License Number",
+    "ENTER_LICENSE_NUMBER": "Enter license number",
+    "LICENSE_END_DATE": "License Expiry Date",
+    "FOUNDATION_TYPE": "Foundation Type",
+    "ENTER_FOUNDATION_TYPE": "Enter foundation type"
   },
 
   "INITIATIVE": {
