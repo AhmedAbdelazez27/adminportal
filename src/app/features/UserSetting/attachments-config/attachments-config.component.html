@@ -108,8 +108,8 @@
 <!-- Add/Edit/View Modal -->
 <div class="modal fade" id="AttachmentsConfigModal" tabindex="-1" aria-labelledby="AttachmentsConfigModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content "style="height:70vh;">
       <div class="modal-header">
         <h5 class="modal-title" id="AttachmentsConfigModalLabel">
           {{ mode === 'add' ? ('ATTACHMENTS_CONFIG.ADD_NEW' | translate) : mode === 'edit' ? ('ATTACHMENTS_CONFIG.EDIT'
@@ -120,7 +120,7 @@
       <div class="modal-body">
         <form [formGroup]="attachmentsConfigForm" (ngSubmit)="submit()" id="attachmentsConfigForm">
           <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-12 mb-3">
               <label for="name" class="form-label">{{ 'ATTACHMENTS_CONFIG.ARABIC_NAME' | translate }} <span
                   class="text-danger">*</span></label>
               <input type="text" class="form-control" id="name" formControlName="name"
@@ -131,7 +131,7 @@
               </div>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-12 mb-3">
               <label for="nameEn" class="form-label">{{ 'ATTACHMENTS_CONFIG.ENGLISH_NAME' | translate }}</label>
               <input type="text" class="form-control" id="nameEn" formControlName="nameEn"
                 [class.is-invalid]="isFieldInvalid('nameEn')" [class.is-valid]="isFieldValid('nameEn')"
@@ -141,7 +141,7 @@
               </div>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-12 mb-3">
               <label for="attachmentsConfigType" class="form-label">{{ 'ATTACHMENTS_CONFIG.ATTACHMENTS_CONFIG_TYPE' |
                 translate }} <span class="text-danger">*</span></label>
               <ng-select [items]="attachmentsConfigTypeOptions" bindLabel="text" bindValue="id" [multiple]="false"
@@ -166,7 +166,7 @@
                 <label class="form-check-label" for="active">{{ 'ATTACHMENTS_CONFIG.ACTIVE' | translate }}</label>
               </div>
             </div>
-
+            <br/>
             <div class="col-md-3 mb-3">
               <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" id="mendatory" formControlName="mendatory"
