@@ -10,11 +10,13 @@
   <div class="preview-backdrop" *ngIf="isPreviewOpen" (click)="closePreview()">
     <div class="preview-container" (click)="$event.stopPropagation()">
       <button type="button" class="close-btn" (click)="closePreview()">×</button>
-      <highcharts-chart
-        [Highcharts]="Highcharts"
-        [options]="chartOptionsPie"
-        (chartInstance)="addPreviewComponentRef($event)"
-      ></highcharts-chart>
+      <div class="preview-header">
+        {{ pageTitle | translate }}
+      </div>
+      <highcharts-chart [Highcharts]="Highcharts"
+                        [options]="chartOptionsPie"
+                        (chartInstance)="addPreviewComponentRef($event)">
+      </highcharts-chart>
     </div>
   </div>
 </ng-container>

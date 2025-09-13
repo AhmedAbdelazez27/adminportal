@@ -10,6 +10,7 @@ import { BarChartComponent } from "../../../../shared/charts/bar-chart/bar-chart
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { HomeTotalRequestSummaryDto, HomeRequestSummaryDto } from '../../../core/dtos/home/home-request-summary.dto';
+import { ChartUtilsService } from '../../../../shared/services/chart-utils.service';
 
 interface ChartDataItem {
   chartTitle: string;
@@ -33,9 +34,9 @@ interface ChartDataItem {
 export class HomeComponent implements OnInit {
   kpiItems: HomeKpiApiItem[] = [];
   charts: any[] = [];
-  chartData: any[] = [];
-  chartsRawData: ChartDataItem[] = [];
-  processedCharts: any[] = [];
+  chartData: any[] = [];   
+  chartsRawData: ChartDataItem[] = [];  
+  processedCharts: any[] = [];  
 
   // Shortcuts properties
   shortcuts: ShortcutDto[] = [];
@@ -60,13 +61,13 @@ export class HomeComponent implements OnInit {
     bottomValueStr?: string | null;
     bottomValueNum?: number | null;
     progressPercent: number;
-    color: 'purple' | 'blue' | 'red' | 'teal';
-  }> = [];
+    color: 'purple'|'blue'|'red'|'teal';
+  }>=[];
   currentYear: number = new Date().getFullYear();
   currentLang: string = 'en';
   totalRequests: number = 0;
   completedPercentage: number = 0;
-
+  
   // Request summary properties
   requestSummaryData: HomeTotalRequestSummaryDto | null = null;
   requestSummaryList: HomeRequestSummaryDto[] = [];
@@ -75,11 +76,12 @@ export class HomeComponent implements OnInit {
   @ViewChild('kpiScroll', { static: false }) kpiScroll?: ElementRef<HTMLDivElement>;
 
   constructor(
-    private homeService: HomeService,
+    private homeService: HomeService, 
     public translate: TranslateService,
     private shortcutService: ShortcutService,
     private router: Router,
-    private routeValidator: RouteMappingValidatorService
+    private routeValidator: RouteMappingValidatorService,
+    private chartUtils: ChartUtilsService
   ) { }
 
   ngOnInit(): void {
@@ -110,7 +112,7 @@ export class HomeComponent implements OnInit {
         this.availableShortcuts = shortcuts;
         this.shortcuts = shortcuts.filter(s => s.isSelected);
         this.isLoadingShortcuts = false;
-
+        
         // Generate route mapping validation report in development
         if (!environment.production) {
           this.routeValidator.generateUnmappedReport(shortcuts);
@@ -136,7 +138,7 @@ export class HomeComponent implements OnInit {
   onShortcutSelectionChange(pageName: string, event: Event): void {
     const target = event.target as HTMLInputElement;
     const isChecked = target.checked;
-
+    
     if (isChecked) {
       // Add to selected shortcuts if not already present
       if (!this.selectedShortcuts.includes(pageName)) {
@@ -146,7 +148,7 @@ export class HomeComponent implements OnInit {
       // Remove from selected shortcuts
       this.selectedShortcuts = this.selectedShortcuts.filter(name => name !== pageName);
     }
-
+    
     // Clear validation message when user makes a selection
     if (this.showValidationMessage) {
       this.showValidationMessage = false;
@@ -161,7 +163,7 @@ export class HomeComponent implements OnInit {
       // Add to selected shortcuts
       this.selectedShortcuts.push(pageName);
     }
-
+    
     // Clear validation message when user makes a selection
     if (this.showValidationMessage) {
       this.showValidationMessage = false;
@@ -181,7 +183,7 @@ export class HomeComponent implements OnInit {
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
     this.showValidationMessage = false;
-
+    
     const shortcutsToCreate: CreateShortcutDto[] = this.selectedShortcuts.map(pageName => ({
       pageName
     }));
@@ -214,12 +216,12 @@ export class HomeComponent implements OnInit {
       this.isDeletingShortcut = true;
       this.showSuccessMessage = false;
       this.showErrorMessage = false;
-
+      
       this.shortcutService.delete(shortcut.id).subscribe({
         next: () => {
           this.shortcuts = this.shortcuts.filter(s => s.id !== shortcut.id);
           // Also update available shortcuts to reflect the change
-          this.availableShortcuts = this.availableShortcuts.map(s =>
+          this.availableShortcuts = this.availableShortcuts.map(s => 
             s.id === shortcut.id ? { ...s, isSelected: false } : s
           );
           this.isDeletingShortcut = false;
@@ -302,13 +304,13 @@ export class HomeComponent implements OnInit {
   }
 
   get isAllSelected(): boolean {
-    return this.availableShortcuts.length > 0 &&
-      this.selectedShortcuts.length === this.availableShortcuts.length;
+    return this.availableShortcuts.length > 0 && 
+           this.selectedShortcuts.length === this.availableShortcuts.length;
   }
 
   get isSomeSelected(): boolean {
-    return this.selectedShortcuts.length > 0 &&
-      this.selectedShortcuts.length < this.availableShortcuts.length;
+    return this.selectedShortcuts.length > 0 && 
+           this.selectedShortcuts.length < this.availableShortcuts.length;
   }
 
   private loadKpis(): void {
@@ -317,12 +319,12 @@ export class HomeComponent implements OnInit {
         this.kpiItems = Array.isArray(arr) ? arr : [];
         this.buildKpiCards();
       },
-      error: () => { }
+      error: () => {}
     });
   }
 
   private buildKpiCards(): void {
-    const colors: Array<'purple' | 'blue' | 'red' | 'teal'> = ['purple', 'blue', 'red', 'teal'];
+    const colors: Array<'purple'|'blue'|'red'|'teal'> = ['purple','blue','red','teal'];
     const cards: typeof this.kpiCards = [];
     this.kpiItems.forEach((item, index) => {
       const color = colors[index % colors.length];
@@ -370,14 +372,14 @@ export class HomeComponent implements OnInit {
         this.requestSummaryData = data;
         this.requestSummaryList = data.requestSummary || [];
         this.totalRequests = data.totalRequests;
-
+        
         // Calculate completed percentage using language-aware status comparison
         this.calculateCompletedPercentage();
-
+        
         this.isLoadingRequestSummary = false;
       },
       error: (error) => {
-
+        
         this.isLoadingRequestSummary = false;
       }
     });
@@ -393,59 +395,49 @@ export class HomeComponent implements OnInit {
         completed: ['موافق', 'مقبول', 'مكتمل', 'معتمد']
       }
     };
-
+    
     // Get current language statuses
     const currentLangStatuses = statusMappings[this.currentLang as keyof typeof statusMappings] || statusMappings.en;
-
+    
     // Also include the translated status from the translation service
     const translatedAcceptedStatus = this.translate.instant('WORKFLOW.STATUS_ACCEPT');
     const allCompletedStatuses = [...currentLangStatuses.completed, translatedAcceptedStatus];
-
+    
     const completedCount = this.requestSummaryList
-      .filter(item => allCompletedStatuses.some(status =>
+      .filter(item => allCompletedStatuses.some(status => 
         item.status.toLowerCase().includes(status.toLowerCase())
       ))
       .reduce((sum, item) => sum + item.totalRequest, 0);
-
-    this.completedPercentage = this.totalRequests > 0
-      ? Math.round((completedCount / this.totalRequests) * 100)
+    
+    this.completedPercentage = this.totalRequests > 0 
+      ? Math.round((completedCount / this.totalRequests) * 100) 
       : 0;
   }
 
   private processChartsData(): void {
     this.processedCharts = this.chartsRawData.map(chart => {
-      if (!chart.data || !Array.isArray(chart.data) || chart.data.length === 0) {
-        return null;
+       if (!chart.data || !Array.isArray(chart.data) || chart.data.length === 0) {
+        return null;  
       }
 
-      const categories = chart.data.map(item =>
-        this.currentLang === 'ar' ? item.nameAr : (item.nameEn || item.nameAr)
-      );
-
-      const seriesData = [
-        {
-          data: chart.data.map(item => item.value1),
-          color: '#8D734D'
-        },
-        {
-          data: chart.data.map(item => item.value2),
-          color: '#4D678D'
-        }
-      ];
+      const result = this.chartUtils.parseChartData({ data: chart.data }, this.currentLang, {
+        useIndividualSeries: false,
+        valueFields: ['value1', 'value2']
+      });
 
       return {
         title: chart.chartTitle,
         chartType: chart.chartType,
         module: chart.module,
-        categories: categories,
-        seriesData: seriesData,
+        categories: result.categories,
+        seriesData: result.seriesData,
         originalData: chart.data
       };
-    }).filter(chart => chart !== null);
+    }).filter(chart => chart !== null);  
   }
 
-  trackByChart(index: number, chart: any): any {
-    return chart?.title || index;
+    trackByChart(index: number, chart: any): any {
+     return chart?.title || index;
   }
 
   trackByRequestSummary(index: number, item: HomeRequestSummaryDto): string {
@@ -453,15 +445,15 @@ export class HomeComponent implements OnInit {
   }
 
   getChartType(chart: any): 'bar' | 'pie' {
-    return chart.categories.length <= 5 ? 'pie' : 'bar';
+     return chart.categories.length <= 5 ? 'pie' : 'bar';
   }
 
   getPieChartData(chart: any): any[] {
     if (!chart.originalData) return [];
-
+    
     return chart.originalData.map((item: any) => ({
       name: this.currentLang === 'ar' ? item.nameAr : (item.nameEn || item.nameAr),
-      y: item.value1 + item.value2
+      y: item.value1 + item.value2 
     }));
   }
 }

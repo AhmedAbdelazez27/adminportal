@@ -133,7 +133,7 @@ export class ReceiptsPaymentChartsComponent implements OnInit {
       parameters: {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
-        entityId: this.selectedEntity,
+        entityId: this.selectedEntity ? this.selectedEntity.toString() : null,
         periodId: null,
         departmentId: null,
         countryId: null,
@@ -170,7 +170,7 @@ export class ReceiptsPaymentChartsComponent implements OnInit {
       parameters: {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
-        entityId: this.selectedEntity,
+        entityId: this.selectedEntity ? this.selectedEntity.toString() : null,
         periodId: null,
         departmentId: null,
         countryId: null,
@@ -193,20 +193,29 @@ export class ReceiptsPaymentChartsComponent implements OnInit {
   }
 
   parseChartData(res: any, categoriesName: string, seriesDataName: string) {
-    const result = this.chartUtils.parseChartData(res, this.currentLang, {
-      useIndividualSeries: false, // Use traditional series approach for this component
-      valueFields: ['value1', 'value2', 'value3', 'value4']
-    });
+    const data = res?.data || [];
+    console.log("data", data);
 
-    this[categoriesName] = result.categories;
-    this[seriesDataName] = result.seriesData;
+    if (data.length > 0) {
+      const result = this.chartUtils.parseChartData(res, this.currentLang, {
+        useIndividualSeries: true,
+        valueFields: ['value1', 'value2', 'value3', 'value4']
+      });
+
+      this[categoriesName] = result.categories;
+      this[seriesDataName] = result.seriesData;
+    } else {
+      this[categoriesName] = [];
+      this[seriesDataName] = [];
+    }
   }
 
 
   setDefaultValues(categoriesName: string, seriesDataName: string) {
-    const result = this.chartUtils.parseChartData(null, this.currentLang);
+ const result = this.chartUtils.parseChartData(null, this.currentLang);
     this[categoriesName] = result.categories;
     this[seriesDataName] = result.seriesData;
+
   }
 
 }

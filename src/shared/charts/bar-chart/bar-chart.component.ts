@@ -3,11 +3,12 @@ import { Component, Input, OnChanges, SimpleChanges, inject } from '@angular/cor
 import { HighchartsChartModule } from 'highcharts-angular';
 import Highcharts, { Options, SeriesOptionsType } from 'highcharts';
 import { ChartUtilsService } from '../../services/chart-utils.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-bar-chart',
   standalone: true,
-  imports: [CommonModule, HighchartsChartModule],
+  imports: [CommonModule, HighchartsChartModule, TranslateModule],
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.scss']
 })
@@ -17,7 +18,8 @@ export class BarChartComponent implements OnChanges {
   chart: Highcharts.Chart | undefined;
   previewChart: Highcharts.Chart | undefined;
   isPreviewOpen = false;
-  
+  currentLang: string = "en";
+
   private chartUtils = inject(ChartUtilsService);
 
   @Input() categories: string[] = [];
@@ -29,6 +31,14 @@ export class BarChartComponent implements OnChanges {
   @Input() seriesColor: string = '#dc3545';
   @Input() valueColor: string = '#dc3545';
   @Input() useDynamicColors: boolean = false;
+  @Input() pageTitle: string = '';
+
+  constructor(private translate: TranslateService)
+  {
+    this.translate.onLangChange.subscribe(lang => {
+      this.currentLang = lang.lang;
+    });
+  }
 
   ngOnChanges(_: SimpleChanges): void {
     // console.log("categories ", this.categories);
@@ -248,131 +258,131 @@ function escapeHtml(text: string): string {
 }
 
 
- /* private buildChartOptions() {
-  const isRtl = this.direction === 'rtl';
-  const H = Highcharts;
+/* private buildChartOptions() {
+ const isRtl = this.direction === 'rtl';
+ const H = Highcharts;
 
-  const NULL_TEXT = null as unknown as string;
-
-  
-  const baseCats = this.categories ?? [];
- 
-  const shouldCatsBeOnYAxis = this.chartType === 'bar';
-  const catAxisReversed = isRtl; 
-  const cats = catAxisReversed ? [...baseCats].reverse() : baseCats;
+ const NULL_TEXT = null as unknown as string;
 
 
-  const xAxis: Highcharts.XAxisOptions = shouldCatsBeOnYAxis
-    ? {
-        //bar
-        title: { text: NULL_TEXT },
-        gridLineWidth: 1,
-        gridLineColor: '#ccc',
-        labels: {
-          formatter() { return H.numberFormat(Number(this.value), 0, '.', ','); },
-          style: { fontSize: '12px', color: '#777' }
-        }
-      }
-    : {
-        //other types
-        categories: cats,
-        reversed: catAxisReversed,
-        title: { text: NULL_TEXT },
-        labels: {
-          style: { fontSize: '14px', color: '#333333', textAlign: isRtl ? 'right' : 'left' }
-        }
-      };
+ const baseCats = this.categories ?? [];
 
-  const yAxis: Highcharts.YAxisOptions = shouldCatsBeOnYAxis
-    ? {
-        // bar
-        categories: cats,
-        reversed: false, 
-        title: { text: NULL_TEXT },
-        gridLineWidth: 1,
-        gridLineColor: '#eee',
-        labels: {
-          useHTML: true,
-          align: isRtl ? 'right' : 'left',
-          x: isRtl ? -10 : 10,
-          formatter() {
-            const value = String(this.value ?? '');
-            return `<span style="display:inline-block;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;color:#333;${isRtl ? 'text-align:right;' : 'text-align:left;'}">${escapeHtml(value)}</span>`;
-          }
-        }
-      }
-    : {
-        // other types
-        min: 0,
-        title: { text: NULL_TEXT },
-        gridLineWidth: 1,
-        gridLineColor: '#ccc',
-        labels: {
-          formatter() { return H.numberFormat(Number(this.value), 0, '.', ','); },
-          style: { fontSize: '12px', color: '#777' }
-        }
-      };
+ const shouldCatsBeOnYAxis = this.chartType === 'bar';
+ const catAxisReversed = isRtl;
+ const cats = catAxisReversed ? [...baseCats].reverse() : baseCats;
 
-  
-  const series = this.seriesData.map<SeriesOptionsType>(s => ({
-    name: s.name,
-    type: this.chartType,
-    data: catAxisReversed ? [...s.data].reverse() as any : (s.data as any),
-    color: s.color,
-    dataLabels: { enabled: false, style: { fontSize: '12px', fontWeight: 'bold' } }
-  }));
 
-  this.chartOptionsBar = {
-    chart: {
-      type: this.chartType,
-      style: { direction: isRtl ? 'rtl' : 'ltr' },
-      
-      marginLeft: shouldCatsBeOnYAxis && !isRtl ? 120 : undefined,
-      marginRight: shouldCatsBeOnYAxis && isRtl ? 120 : undefined
-    },
+ const xAxis: Highcharts.XAxisOptions = shouldCatsBeOnYAxis
+   ? {
+       //bar
+       title: { text: NULL_TEXT },
+       gridLineWidth: 1,
+       gridLineColor: '#ccc',
+       labels: {
+         formatter() { return H.numberFormat(Number(this.value), 0, '.', ','); },
+         style: { fontSize: '12px', color: '#777' }
+       }
+     }
+   : {
+       //other types
+       categories: cats,
+       reversed: catAxisReversed,
+       title: { text: NULL_TEXT },
+       labels: {
+         style: { fontSize: '14px', color: '#333333', textAlign: isRtl ? 'right' : 'left' }
+       }
+     };
 
+ const yAxis: Highcharts.YAxisOptions = shouldCatsBeOnYAxis
+   ? {
+       // bar
+       categories: cats,
+       reversed: false,
+       title: { text: NULL_TEXT },
+       gridLineWidth: 1,
+       gridLineColor: '#eee',
+       labels: {
+         useHTML: true,
+         align: isRtl ? 'right' : 'left',
+         x: isRtl ? -10 : 10,
+         formatter() {
+           const value = String(this.value ?? '');
+           return `<span style="display:inline-block;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;color:#333;${isRtl ? 'text-align:right;' : 'text-align:left;'}">${escapeHtml(value)}</span>`;
+         }
+       }
+     }
+   : {
+       // other types
+       min: 0,
+       title: { text: NULL_TEXT },
+       gridLineWidth: 1,
+       gridLineColor: '#ccc',
+       labels: {
+         formatter() { return H.numberFormat(Number(this.value), 0, '.', ','); },
+         style: { fontSize: '12px', color: '#777' }
+       }
+     };
+
+
+ const series = this.seriesData.map<SeriesOptionsType>(s => ({
+   name: s.name,
+   type: this.chartType,
+   data: catAxisReversed ? [...s.data].reverse() as any : (s.data as any),
+   color: s.color,
+   dataLabels: { enabled: false, style: { fontSize: '12px', fontWeight: 'bold' } }
+ }));
+
+ this.chartOptionsBar = {
+   chart: {
+     type: this.chartType,
+     style: { direction: isRtl ? 'rtl' : 'ltr' },
     
-    title: { text: NULL_TEXT },
-    subtitle: { text: NULL_TEXT },
+     marginLeft: shouldCatsBeOnYAxis && !isRtl ? 120 : undefined,
+     marginRight: shouldCatsBeOnYAxis && isRtl ? 120 : undefined
+   },
 
-    xAxis,
-    yAxis,
+  
+   title: { text: NULL_TEXT },
+   subtitle: { text: NULL_TEXT },
 
-    series,
+   xAxis,
+   yAxis,
 
-    tooltip: {
-      headerFormat: '<span style="font-size:10px">{point.key}</span><br>',
-      pointFormatter() {
-        return `<span style="color:${this.color}">●</span> ${this.series.name}: <b>${H.numberFormat(Number(this.y), 0, '.', ',')}</b><br>`;
-      },
-      shared: true,
-      useHTML: true
-    },
+   series,
 
-    plotOptions: {
-      column: { groupPadding: 0.05, pointPadding: 0, borderWidth: 0 },
-      bar:    { groupPadding: 0.05, pointPadding: 0, borderWidth: 0 },
-      line:   { marker: { enabled: true, symbol: 'circle' } },
-      series: { cursor: 'pointer' }
-    },
+   tooltip: {
+     headerFormat: '<span style="font-size:10px">{point.key}</span><br>',
+     pointFormatter() {
+       return `<span style="color:${this.color}">●</span> ${this.series.name}: <b>${H.numberFormat(Number(this.y), 0, '.', ',')}</b><br>`;
+     },
+     shared: true,
+     useHTML: true
+   },
 
-    legend: {
-      enabled: true,
-      layout: 'horizontal',
-      verticalAlign: 'bottom',
-      align: 'center',
-      itemMarginTop: 6,
-      itemMarginBottom: 6,
-      itemDistance: 24,
-      symbolRadius: 6,
-      useHTML: true,
-      labelFormatter() {
-        return `<span style="font-size:14px;color:#1f2d3d;${isRtl ? 'direction:rtl;' : ''}">${escapeHtml(this.name)}</span>`;
-      }
-    },
+   plotOptions: {
+     column: { groupPadding: 0.05, pointPadding: 0, borderWidth: 0 },
+     bar:    { groupPadding: 0.05, pointPadding: 0, borderWidth: 0 },
+     line:   { marker: { enabled: true, symbol: 'circle' } },
+     series: { cursor: 'pointer' }
+   },
 
-    credits: { enabled: false }
-  };
+   legend: {
+     enabled: true,
+     layout: 'horizontal',
+     verticalAlign: 'bottom',
+     align: 'center',
+     itemMarginTop: 6,
+     itemMarginBottom: 6,
+     itemDistance: 24,
+     symbolRadius: 6,
+     useHTML: true,
+     labelFormatter() {
+       return `<span style="font-size:14px;color:#1f2d3d;${isRtl ? 'direction:rtl;' : ''}">${escapeHtml(this.name)}</span>`;
+     }
+   },
+
+   credits: { enabled: false }
+ };
 } */
 
 /*
@@ -382,17 +392,17 @@ private buildChartOptions() {
 
   const NULL_TEXT = null as unknown as string;
 
-  
-  const baseCats = this.categories ?? [];
  
+  const baseCats = this.categories ?? [];
+
   const shouldCatsBeOnYAxis = this.chartType === 'bar';
-  const catAxisReversed = isRtl; 
+  const catAxisReversed = isRtl;
   const cats = catAxisReversed ? [...baseCats].reverse() : baseCats;
 
- 
+
   const xAxis: Highcharts.XAxisOptions = shouldCatsBeOnYAxis
     ? {
-       
+      
         title: { text: NULL_TEXT },
         gridLineWidth: 1,
         gridLineColor: '#ccc',
@@ -402,7 +412,7 @@ private buildChartOptions() {
         }
       }
     : {
-       
+      
         categories: cats,
         reversed: catAxisReversed,
         title: { text: NULL_TEXT },
@@ -413,9 +423,9 @@ private buildChartOptions() {
 
   const yAxis: Highcharts.YAxisOptions = shouldCatsBeOnYAxis
     ? {
-      type: 'category',            
-      categories: cats,           
-      tickInterval: 1,              
+      type: 'category',
+      categories: cats,
+      tickInterval: 1,
       reversed: false,
       // title: { text: NULL_TEXT },
       gridLineWidth: 1,
@@ -425,7 +435,7 @@ private buildChartOptions() {
         align: isRtl ? 'right' : 'left',
         x: isRtl ? -10 : 10,
         formatter: function () {
-        
+       
           const axis = this.axis as Highcharts.Axis & { categories?: (string | number)[] };
           const idx =
             typeof this.value === 'number'
@@ -433,10 +443,10 @@ private buildChartOptions() {
               : (this as unknown as { pos?: number }).pos ?? 0;
           const label = axis.categories?.[idx] ?? this.value;
           console.log("label ",label);
-          
+         
           console.log("axis.categories?.[idx]",axis.categories?.[idx]);
           console.log( this.value);
-          
+         
           return `<span style="display:inline-block;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;color:#333;${isRtl ? 'text-align:right;' : 'text-align:left;'}">
             ${escapeHtml(String(label ?? ''))}
           </span>`;
@@ -444,7 +454,7 @@ private buildChartOptions() {
       }
     }
     : {
-      
+     
         min: 0,
         title: { text: NULL_TEXT },
         gridLineWidth: 1,
@@ -455,7 +465,7 @@ private buildChartOptions() {
         }
       };
 
- 
+
   const series = this.seriesData.map<SeriesOptionsType>(s => ({
     name: s.name,
     type: this.chartType,
@@ -468,12 +478,12 @@ private buildChartOptions() {
     chart: {
       type: this.chartType,
       style: { direction: isRtl ? 'rtl' : 'ltr' },
-     
+    
       marginLeft: shouldCatsBeOnYAxis && !isRtl ? 120 : undefined,
       marginRight: shouldCatsBeOnYAxis && isRtl ? 120 : undefined
     },
 
-    
+   
     title: { text: NULL_TEXT },
     // subtitle: { text: NULL_TEXT },
 
@@ -517,8 +527,8 @@ private buildChartOptions() {
   };
 } */
 
-  // pure column chart
-  // import { CommonModule } from '@angular/common';
+// pure column chart
+// import { CommonModule } from '@angular/common';
 // import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 // import { HighchartsChartModule } from 'highcharts-angular';
 // import Highcharts, { Options, SeriesColumnOptions } from 'highcharts';
@@ -555,13 +565,13 @@ private buildChartOptions() {
 //       chart: {
 //         type: 'column',
 //         style: {
-//           direction: isRtl ? 'rtl' : 'ltr' 
+//           direction: isRtl ? 'rtl' : 'ltr'
 //         }
 //       },
 //       title: { text: '' },
 //       xAxis: {
 //         categories: isRtl ? [...this.categories].reverse() : this.categories,
-//         reversed: isRtl, 
+//         reversed: isRtl,
 //         labels: {
 //           style: {
 //             fontSize: '14px',
@@ -585,7 +595,7 @@ private buildChartOptions() {
 //       series: this.seriesData.map(s => ({
 //         name: s.name,
 //         type: 'column',
-//         data: isRtl ? [...s.data].reverse() : s.data, 
+//         data: isRtl ? [...s.data].reverse() : s.data,
 //         color: s.color,
 //         dataLabels: {
 //           enabled: false,

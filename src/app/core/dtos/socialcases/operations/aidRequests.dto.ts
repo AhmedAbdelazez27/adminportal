@@ -26,6 +26,10 @@ export class filteraidRequestsDto {
   source: string | null = null;
   sourcestr: string | null = null;
   take: number = 10;
+  wifeIdNo: string | null = null;
+  wifeIdNostr: string | null = null;
+  dateFrom: Date | null = null;
+  dateTo: Date | null = null;
 }
 
 export class aidRequestsDto {

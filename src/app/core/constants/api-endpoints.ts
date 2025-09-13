@@ -236,6 +236,12 @@ export class ApiEndpoints {
     GetQuotationHeaderDetailById: (headerId: string, entityId: string) => `/GetQuotationHeader/${headerId}/${entityId}`,
   };
 
+  static readonly SpCases = {
+    Base: '/SpCases',
+    GetAllGridData: '/GetAllGridData',
+    GetCaseDetails: (caseId: string, entityId: string) => `/Get/${caseId}/${entityId}`,
+  };
+
   static readonly SocialCasesReports = {
     Base: '/SocialCasesReports',
     GetOrdersListRptEndPoint: '/GetOrdersListRpt',

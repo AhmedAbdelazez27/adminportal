@@ -49,13 +49,13 @@ export class EnhancedRouteMappingService {
     'GuaranteesComparisonChartTypeChart': { path: '/financial/charts/guarantees-comparison', permission: 'GuaranteesComparisonChartTypeChart' },
     
     // Social Cases Operations
-    'AidRequest': { path: '/SocialCases/operations/AidRequests', permission: 'AidRequest' },
-    'SpCases': { path: '/SocialCases/operations/cases', permission: 'SpCases' },
-    'SpBeneficents': { path: '/SocialCases/operations/beneficiaries', permission: 'SpBeneficents' },
-    'SpContracts': { path: '/SocialCases/operations/contracts', permission: 'SpContracts' },
-    'SpContractCases': { path: '/SocialCases/operations/contract-cases', permission: 'SpContractCases' },
-    'SpCasesPaymentHdr': { path: '/SocialCases/operations/cases-payments', permission: 'SpCasesPaymentHdr' },
-    'SpCasesHistory': { path: '/SocialCases/operations/cases-history', permission: 'SpCasesHistory' },
+    'AidRequest': { path: '/socialcases/operations/AidRequests', permission: 'AidRequest' },
+    'SpCases': { path: '/socialcases/operations/cases', permission: 'SpCases' },
+    'SpBeneficents': { path: '/socialcases/operations/beneficiaries', permission: 'SpBeneficents' },
+    'SpContracts': { path: '/socialcases/operations/contracts', permission: 'SpContracts' },
+    'SpContractCases': { path: '/socialcases/operations/contract-cases', permission: 'SpContractCases' },
+    'SpCasesPaymentHdr': { path: '/socialcases/operations/cases-payments', permission: 'SpCasesPaymentHdr' },
+    'SpCasesHistory': { path: '/socialcases/operations/cases-history', permission: 'SpCasesHistory' },
     
     // Social Cases Reports
     'BeneficentsRpt': { path: '/SocialCases/reports/beneficiaries', permission: 'BeneficentsRpt' },
@@ -128,7 +128,7 @@ export class EnhancedRouteMappingService {
     'HeroSectionSetting': { path: '/settings/regions', tab: 'hero-section-setting', permission: 'Settings.View' },
     
     // Data Management
-    'DataTransLogs': { path: '/system/data-trans-logs', permission: 'DataTransLogs.View' },
+    'DataTransLogs': { path: '/authentication/datatranslogs', permission: 'DataTransLogs.View' },
     'Partner': { path: '/system/partner', permission: 'Partner.View' },
     
     // Event Permits

@@ -697,7 +697,8 @@
     "benifcientTotlarptTitle": "Total No of Beneficiaries",
     "getCaseAIDEntitiesrptTitle": "Guaranteed in More Than One Entity",
     "caseSearchListRptTitle": "Case Search List",
-    "aidRequestsTitle": "Cases",
+    "aidRequestsTitle": "Requests",
+    "spCasesTitle": "SP Cases",
     "branchOrdersListrptTitle": "List of Application By Branch",
     "emiratesOrdersListrptTitle": "List of Application By Emirates",
     "casesEntitiesrptTitle": "Received Assistance in More Than One Entity",
@@ -741,9 +742,10 @@
     "Action": "Action",
     "ViewInfo": "Show Details",
     "ShowInfo": "Show Details",
+    "ShowMore": "Show More",
     "StudyDetails": "Study Details",
     "Clear": "Clear",
-    "Search": "Apply",
+    "Search": "Search",
     "Data": " Search Result",
     "Close": "Close",
     "NoData": "No data available to display",
@@ -828,8 +830,11 @@
     "Show": "Show",
     "Entries": "entries",
     "Cancel": "Cancel",
-    "DASHBOARD_PERMISSIONS": "Dashboard Permissions"
+    "DASHBOARD_PERMISSIONS": "Dashboard Permissions",
+    "BasicInformation": "Basic Information",
     
+    
+    "ALREADY_MAPPED": "Account Already Mapped"
   },
 
   "AuthenticationResorceName": {
@@ -1256,7 +1261,7 @@
   },
 
   "AidRequestsResourceName": {
-    "Title": "Aid Request",
+    "Title": "Requests",
     "aiD_REQUEST_DATE": "Request Date",
     "aiD_TYPE": "Aid Desc",
     "amount": "Value",
@@ -1271,7 +1276,7 @@
     "casE_SIGNATURE_DESC": "Status",
     "caseName": "Case Name",
     "caseNo": "Case No",
-    "caseIdNo": "Emirates Id",
+    "caseIdNo": "Emirates ID",
     "categorY_DESC": "Category",
     "city": "Emirate",
     "comitY_DATE": "Aid Date",
@@ -1316,7 +1321,56 @@
     "vendoR_NAME": "Vendor",
     "wifE_ID": "Spouse Emirates ID",
     "wifE_NAME": "Spouse Name",
-    "wifeiD_END_DATE": "Spouse emirates ID expiry date"
+    "wifeiD_END_DATE": "Spouse emirates ID expiry date",
+    "wifeIdNo": "Wife Emirates ID",
+    "dateFrom": "Date From",
+    "dateTo": "Date To"
+  },
+
+  "SpCasesResourceName": {
+    "Title": "SP Cases",
+    "CaseDetails": "Case Details",
+    "AidRequests": "Aid Requests",
+    "BasicInformation": "Basic Information",
+    "entityId": "Entity",
+    "caseId": "Case ID",
+    "entityName": "Entity Name",
+    "caseName": "Case Name",
+    "caseNo": "Case No",
+    "nationalityDesc": "Nationality",
+    "nationality": "Nationality",
+    "genderDesc": "Gender",
+    "gender": "Gender",
+    "birthLocation": "Birth Location",
+    "birthDate": "Birth Date",
+    "city": "City",
+    "region": "Region",
+    "phone": "Phone",
+    "idNumber": "ID Number",
+    "caseStatus": "Case Status",
+    "beneficentNo": "Beneficent No",
+    "beneficentName": "Beneficent Name",
+    "sponcerCategory": "Sponsor Category",
+    "startDate": "Start Date",
+    "caseAmount": "Case Amount",
+    "procuratorName": "Procurator Name",
+    "procuratorRel": "Procurator Relation",
+    "motherName": "Mother Name",
+    "totalGiftAmount": "Total Gift Amount",
+    "totalAmountAed": "Total Amount AED",
+    "caseIdNo": "Emirates ID",
+    "wifeIdNo": "Wife Emirates ID",
+    "branch": "Branch",
+    "aidType": "Aid Type",
+    "source": "Source",
+    "appDate": "Application Date",
+    "branchDesc": "Branch",
+    "appTypeDesc": "Application Type",
+    "wifeName": "Wife Name",
+    "maritalStatusDesc": "Marital Status",
+    "healthStatusDesc": "Health Status",
+    "jobDesc": "Job",
+    "requestStatusDesc": "Request Status"
   },
 
   "SponsorshipReportResourceName": {
@@ -2414,6 +2468,7 @@
     "licenseEndDate": "License End date",
     "serviceName": "Service Name",
     "NoPermission": "No Permission",
+    "navigateService": "Service",
 
     "WORKFLOW": {
       "PROCESS_STEPS": "Workflow Process Steps",

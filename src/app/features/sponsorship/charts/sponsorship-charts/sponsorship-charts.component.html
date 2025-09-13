@@ -2,28 +2,19 @@
     {{pageTitle|translate}}
 </div> 
 <div class="container-fluid mt-3">
-
     <div class="row">
         <div class="col-xl-6 mb-3">
             <div class="main-container h-100">
                 <ng-container *ngIf="!isComparission">
-
-                    <div class="row ">
-                        <div class="col-xl-6 mb-4">
-                            <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
-                                [closeOnSelect]="true" class="ng-select-custom" (change)="onYearChange('changeEntit')" placeholder="{{'sponsorshipchart.entity'|translate}}">
-                            </ng-select>
-                        </div>
+                  <div class="row ">
+                    <div class="col-xl-12 mb-4">
+                      <ng-select [items]="yearsList" bindLabel="text" bindValue="id" [(ngModel)]="selectedYearId"
+                                 [closeOnSelect]="true" class="ng-select-custom" (change)="onYearChange()" placeholder="{{'sponsorshipchart.year'|translate}}">
+                      </ng-select>
                     </div>
-                  
+                  </div>
                 </ng-container>
                 <ng-container *ngIf="isComparission">
-                    <!--<div class="mb-4  ">
-                      <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
-                                [multiple]="true" [closeOnSelect]="true" class="ng-select-custom" [maxSelectedItems]="4"
-                                (change)="onEntityChange(4,'selectedEntity')" placeholder="{{ 'FinancialCharts.entity' | translate }}">
-                            </ng-select>
-                    </div>-->
                     <div class="d-flex gap-3 mb-4">
                         <ng-select [items]="yearsList" bindLabel="text" bindValue="id" [(ngModel)]="selectedYearId"
                                 [multiple]="true" [closeOnSelect]="true" class="ng-select-custom" [maxSelectedItems]="2"
@@ -33,33 +24,9 @@
                             [disabled]="!(selectedYearId.length&&selectedEntity.length)"
                             (click)="onYearChange('', 13)">{{ 'FinancialCharts.start' | translate }}</button>
                     </div>
-                     <!--<div class=" mb-3" *ngIf="defaultChartType == 'comparisonofCasesbytypeofsponsorship'">
-                             <ng-select [items]="officesList" bindLabel="text" bindValue="id"
-                                [(ngModel)]="selectedsponsorshipCategory" [closeOnSelect]="true"
-                                class="ng-select-custom" placeholder=" {{ 'sponsorshipchart.byTypeOfSponsorship' | translate }}">
-                            </ng-select>
-                    </div>
-                    <div class=" mb-3" *ngIf="defaultChartType == 'comparisonofCasesbyofficeoftheEntity'">
-                             <ng-select [items]="officesList" bindLabel="text" bindValue="id"
-                                [(ngModel)]="selectedSponsorOffice" [closeOnSelect]="true" class="ng-select-custom" placeholder="{{ 'sponsorshipchart.byEntityOffice' | translate }}">
-                            </ng-select>
-
-                    </div>
-                    <div class=" mb-3" *ngIf="defaultChartType == 'comparisonofCasesaccordingtonationality'">
-
-
-                        <ng-select class="ng-select-custom" name="nationalitySelect2"
-                            [(ngModel)]="selectednationalitySelect2Obj" [items]="nationalitySelect2" bindLabel="text"
-                            bindValue="id" [typeahead]="nationalitySearchInput$" [loading]="loadingnationality"
-                            [virtualScroll]="true" (scrollToEnd)="loadMorenationality()"
-                            (change)="onnationalitySelect2Change($event)" (search)="onnationalitySearch($event)" placeholder="{{ 'AidRequestsResourceName.nationality' | translate }}">
-                        </ng-select>
-                    </div>-->
-
-
                 </ng-container>
                 <ng-container *ngIf="seriesData.length">
-                    <app-bar-chart [categories]="categories" [seriesData]="seriesData" [useDynamicColors]="true">
+                    <app-bar-chart [categories]="categories" [seriesData]="seriesData" [useDynamicColors]="true" [pageTitle]="pageTitle">
                     </app-bar-chart>
                 </ng-container>
             </div>
@@ -142,7 +109,7 @@
 
 
                 <ng-container *ngIf="seriesData2.length">
-                    <app-bar-chart [categories]="categories2" [seriesData]="seriesData2" [useDynamicColors]="true">
+                    <app-bar-chart [categories]="categories2" [seriesData]="seriesData2" [useDynamicColors]="true" [pageTitle]="pageTitle">
                     </app-bar-chart>
                 </ng-container>
             </div>
@@ -150,17 +117,8 @@
 
         <div class="col-xl-6 mb-3 h-100" *ngIf="seriesData3.length || defaultChartType == 'General'">
             <div class="main-container">
-                <!-- <div class="row mb-3">
-                    <div class="col-xl-8 mb-3" *ngIf="defaultChartType == 'General'">
-                        <label class="form-label">Type</label>
-                        <ng-select [items]="chartTypes" bindLabel="text" bindValue="id" [(ngModel)]="selectedChart2"
-                            [closeOnSelect]="true" class="ng-select-custom"
-                            (change)='onTypeChange(selectedChart2, "categories3", "seriesData3")'>
-                        </ng-select>
-                    </div>
-                </div> -->
                 <ng-container *ngIf="seriesData3.length">
-                    <app-bar-chart [categories]="categories3" [seriesData]="seriesData3" [chartType]="'line'" [useDynamicColors]="true">
+                    <app-bar-chart [categories]="categories3" [seriesData]="seriesData3" [chartType]="'line'" [useDynamicColors]="true" [pageTitle]="pageTitle">
                     </app-bar-chart>
                 </ng-container>
             </div>

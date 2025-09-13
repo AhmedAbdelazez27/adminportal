@@ -41,6 +41,7 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
   chartTypes: any = [];
   selectedChart1: number | null = null;
   selectedChart2: number | null = null;
+  selectedChart3: number | null = null;
 
   categories: string[] = [];
   seriesData: any[] = [];
@@ -127,35 +128,53 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
           this.selectedChart1 = 4;
           this.selectedChart2 = 1;
 
-        } else if (this.defaultChartType == 'byperiodandtypeofsponsorship') {
+        }
+        else if (this.defaultChartType == 'CasesNumberBySponsorShip') {
+          this.pageTitle = "sponsorshipchart.numbersOfSponsorsheader";
+          this.selectedChart1 = 4;
+          this.selectedChart2 = 1;
+          chartTypeBased = 7
+
+        }
+        else if (this.defaultChartType == 'byperiodandtypeofsponsorship') {
           this.pageTitle = "sponsorshipchart.numbersByPeriodAndTypeheader";
           this.selectedChart1 = 4;
           this.selectedChart2 = 1;
-        } else if (this.defaultChartType == 'bytypeofsponsorshipandnationality') {
+          this.selectedChart3 = 5;
+          chartTypeBased = 7
+
+        }
+        else if (this.defaultChartType == 'bytypeofsponsorshipandnationality') {
           this.pageTitle = "sponsorshipchart.numbersByTypeAndNationalityheader";
           this.selectedChart1 = 1;
           this.selectedChart2 = 3;
-        } else if (this.defaultChartType == 'Totaldonationsbytypeofsponsorship') {
+          chartTypeBased = 7
+        }
+        else if (this.defaultChartType == 'Totaldonationsbytypeofsponsorship') {
           this.pageTitle = "sponsorshipchart.totalDonationsByTypeheader";
           this.selectedChart1 = 9;
           this.selectedChart2 = null;
           chartTypeBased = 8
-        } else if (this.defaultChartType == 'Contractstatisticsbypaymentmethod') {
+        }
+        else if (this.defaultChartType == 'Contractstatisticsbypaymentmethod') {
           this.pageTitle = "sponsorshipchart.contractStatsByPaymentMethodheader";
           this.selectedChart1 = 11;
           this.selectedChart2 = null;
           chartTypeBased = 10
-        }else if (this.defaultChartType == 'noofsponsorsbyentityandtypeofsponsorship') {
+        }
+        else if (this.defaultChartType == 'noofsponsorsbyentityandtypeofsponsorship') {
           this.pageTitle = "sponsorshipchart.numbersByEntityAndTypeheader";
           this.selectedChart1 = 5;
           this.selectedChart2 = 1;
           chartTypeBased = 7
-        } else if (this.defaultChartType == 'nofsponsorsinoutcountry') {
+        }
+        else if (this.defaultChartType == 'nofsponsorsinoutcountry') {
           this.pageTitle = "sponsorshipchart.numbersInOutCountryheader";
           this.selectedChart1 = 6;
           this.selectedChart2 = 1;
           chartTypeBased = 7
-        } else if (this.defaultChartType == 'comparisonofCasesbytypeofsponsorship') {
+        }
+        else if (this.defaultChartType == 'comparisonofCasesbytypeofsponsorship') {
           this.pageTitle = `${this.translate.instant('sponsorshipchart.comparisonOfCasesheader')} ${this.translate.instant('sponsorshipchart.byTypeOfSponsorshipheader')}`;
           this.selectedChart1 = 13;
           chartTypeBased = 13
@@ -163,21 +182,24 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
           this.comparisonType = 1;
           return;
 
-        } else if (this.defaultChartType == 'comparisonofCasesaccordingtonationality') {
+        }
+        else if (this.defaultChartType == 'comparisonofCasesaccordingtonationality') {
           this.pageTitle = `${this.translate.instant('sponsorshipchart.byTypeOfSponsorshipheader')} ${this.translate.instant('sponsorshipchart.byNationalityheader')}`;
           this.selectedChart1 = 13;
           chartTypeBased = 13
           this.isComparission = true;
           this.comparisonType = 2;
           return;
-        }else if (this.defaultChartType == 'comparisonofCasesbyofficeoftheEntity') {
+        }
+        else if (this.defaultChartType == 'comparisonofCasesbyofficeoftheEntity') {
           this.pageTitle = `${this.translate.instant('sponsorshipchart.byTypeOfSponsorshipheader')} ${this.translate.instant('sponsorshipchart.byEntityOfficeheader')}`;
           this.selectedChart1 = 13;
           chartTypeBased = 13
           this.isComparission = true;
           this.comparisonType = 3;
           return;
-        } else if (this.defaultChartType == 'casesavailableforsponsorship') {
+        }
+        else if (this.defaultChartType == 'casesavailableforsponsorship') {
           this.pageTitle = "sponsorshipchart.casesAvailableForSponsorshipheader";
           this.selectedChart1 = 12;
           this.selectedChart2 = null;
@@ -294,7 +316,7 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
         periodYearId: !Array.isArray(this.selectedYearId) ? this.selectedYearId.toString() : null,
         caseStatus: null,
         userId: null,
-        entityId: this.selectedEntity.toString(),
+        entityId: this.selectedEntity ? this.selectedEntity.toString() : null,
         sponcerCategory: this.selectedsponsorshipCategory ? this.selectedsponsorshipCategory : null,
         nationality: null,
         periodId: this.selectedmonthId.length > 0 ? this.selectedmonthId.toString() : null,
@@ -317,14 +339,21 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
     });
   }
 
-  parseChartData(res: any, categoriesName: string, seriesDataName: string) {
-    const result = this.chartUtils.parseChartData(res, this.currentLang, {
-      useIndividualSeries: true,
-      valueFields: ['value1', 'value2', 'value3', 'value4']
-    });
 
-    this[categoriesName] = result.categories;
-    this[seriesDataName] = result.seriesData;
+  parseChartData(res: any, categoriesName: string, seriesDataName: string) {
+    const data = res?.data || [];
+    if (data.length > 0) {
+      const result = this.chartUtils.parseChartData(res, this.currentLang, {
+        useIndividualSeries: true,
+        valueFields: ['value1', 'value2', 'value3', 'value4']
+      });
+
+      this[categoriesName] = result.categories;
+      this[seriesDataName] = result.seriesData;
+    } else {
+      this[categoriesName] = [];
+      this[seriesDataName] = [];
+    }
   }
 
 

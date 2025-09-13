@@ -34,8 +34,8 @@
     </ag-grid-angular>
 
     <!-- Custom context menu for row actions -->
-    <div *ngIf="openMenuRowId !== null"
-         [ngStyle]="{ position: 'absolute', left: menuX + 'px', top: menuY + 'px', zIndex: 20000, minWidth: '10px', borderRadius: '1rem', boxShadow: '0 8px 32px rgba(0,0,0,0.12)', background: '#fff', padding: '0.5rem 0', border: 'none' }">
+   <div *ngIf="openMenuRowId !== null"
+      [ngStyle]="{ position: 'absolute', left: menuX + 'px', top: menuY + 'px', zIndex: 20000, minWidth: '10px', borderRadius: '1rem', boxShadow: '0 8px 32px rgba(0,0,0,0.12)', background: '#fff', padding: '0.5rem 0', border: 'none' }">
       <button *ngFor="let a of rowActions"
               class="dropdown-item d-flex align-items-center gap-2"
               style="border-radius:0.5rem; color:#495057; font-size:1rem; padding:0.5rem 1.2rem; background:none; border:none; width:100%; text-align:left;"

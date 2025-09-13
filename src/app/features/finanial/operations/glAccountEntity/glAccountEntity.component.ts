@@ -781,6 +781,17 @@ openAddNew(): void {
       this.toastr.warning(this.translate.instant('COMMON.REQUIRED_FIELDS'));
       return;
     }
+
+    const alreadyExists = this.pendingItems.some(item =>
+      item.accountCode === value.accountCode ||
+      item.parentCode === value.parentCode
+    );
+
+    if (alreadyExists) {
+      this.toastr.warning(this.translate.instant('COMMON.ALREADY_MAPPED'));
+      return;
+    }
+
     const entityIdText = this.selectedentityIdSelect2ObjNew?.text || null;
     const accountCodeText = this.glAccountparentTextPath || null;
     const parentCodeText = this.glAccountEntityparentTextPath || null;
@@ -794,13 +805,19 @@ openAddNew(): void {
       parentCodeText,
       glAccountEntityId: value.glAccountEntityId
     });
-    // Clear selected paths for next add while keeping entityId
+
+    const accountTree = $('#glAccountjstreeForm').jstree(true);
+    const entityTree = $('#glAccountEntityjstreeForm').jstree(true);
+
     this.glAccountForm.patchValue({
       accountCode: null,
       parentCode: null
     });
     this.glAccountparentTextPath = '';
     this.glAccountEntityparentTextPath = '';
+
+    accountTree?.uncheck_all();
+    entityTree?.uncheck_all();
   }
 
   removeItem(index: number): void {

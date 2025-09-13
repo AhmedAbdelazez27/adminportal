@@ -77,7 +77,6 @@ export class ChartUtilsService {
     });
 
     let seriesData: ChartSeriesData[] = [];
-
     if (useIndividualSeries) {
       seriesData = res.data.map((item: any, index: number) => {
         const seriesName = currentLang === 'ar' ? 

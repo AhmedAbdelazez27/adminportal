@@ -12,6 +12,7 @@ import { Select2Service } from '../../../../core/services/Select2.service';
 import { EntityService } from '../../../../core/services/entit.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { PieChartComponent } from '../../../../../shared/charts/pie-chart/pie-chart.component';
+import { ChartUtilsService } from '../../../../../shared/services/chart-utils.service';
 
 @Component({
   selector: 'app-project-receipts',
@@ -50,7 +51,8 @@ export class ProjectReceiptsComponents implements OnInit {
     private toastr: ToastrService,
     private translate: TranslateService,
     private entityService: EntityService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private chartUtils: ChartUtilsService
   ) { }
 
   ngOnInit(): void {
@@ -113,7 +115,7 @@ export class ProjectReceiptsComponents implements OnInit {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
         type: 1,
-        entityId: this.selectedEntity,
+        entityId: this.selectedEntity ? this.selectedEntity.toString() : null,
         userId: null,
         countryCode: null,
       }
@@ -146,7 +148,7 @@ export class ProjectReceiptsComponents implements OnInit {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
         type: 1,
-        entityId: this.selectedEntity,
+        entityId: this.selectedEntity ? this.selectedEntity.toString() : null,
         userId: null,
         countryCode: null,
       }
@@ -164,32 +166,27 @@ export class ProjectReceiptsComponents implements OnInit {
     });
   }
 
+
   parseChartData(res: any, categoriesName: string, seriesDataName: string) {
-    if (!res || !res.data || res.data.length === 0) {
-      this.setDefaultValues(categoriesName, seriesDataName);
+    const data = res?.data || [];
+    if (data.length > 0) {
+      const result = this.chartUtils.parseChartData(res, this.translate.currentLang || 'en', {
+        useIndividualSeries: true,
+        valueFields: ['value1', 'value2', 'value3', 'value4']
+      });
+
+      this[categoriesName] = result.categories;
+      this[seriesDataName] = result.seriesData;
     } else {
-
-      this[categoriesName] = res.data.map((item: any) => item.nameEn);
-
-
-      const seriesAData = res.data.map((item: any) => item.value1);
-      const seriesBData = res.data.map((item: any) => item.value2);
-
-
-      this[seriesDataName] = [
-        { name: 'Series A', data: seriesAData, color: '#72C5C2' },
-        { name: 'Series B', data: seriesBData, color: '#114D7D' }
-      ];
+      this[categoriesName] = [];
+      this[seriesDataName] = [];
     }
   }
 
-
   setDefaultValues(categoriesName: string, seriesDataName: string) {
-    this[categoriesName] = ['Category 1', 'Category 2', 'Category 3'];
-    this[seriesDataName] = [
-      { name: 'Series A', data: this.generateRandomValues(3), color: '#72C5C2' },
-      { name: 'Series B', data: this.generateRandomValues(3), color: '#114D7D' }
-    ];
+    const result = this.chartUtils.parseChartData(null, this.translate.currentLang || 'en');
+    this[categoriesName] = result.categories;
+    this[seriesDataName] = result.seriesData;
   }
 
   generateRandomValues(count: number): number[] {

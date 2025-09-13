@@ -1,6 +1,6 @@
-  <div class="container-fluid">
+<div class="container-fluid">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="title">{{ 'AidRequestsResourceName.Title' | translate }}</h1>
+    <h1 class="title">{{ 'SpCasesResourceName.Title' | translate }}</h1>
   </div>
 
   <div class="filter mb-3">
@@ -23,7 +23,7 @@
         <form #filterForm="ngForm">
           <div class="row mb-3">
             <div class="col-xl-4 mb-3">
-              <label class="form-label">{{ 'AidRequestsResourceName.entityId' | translate }}</label>
+              <label class="form-label">{{ 'SpCasesResourceName.entityId' | translate }}</label>
               <ng-select class="ng-select-custom"
                          name="entitySelect2"
                          [(ngModel)]="selectedentitySelect2Obj"
@@ -41,7 +41,22 @@
             </div>
 
             <div class="col-xl-4 mb-3">
-              <label class="form-label">{{ 'AidRequestsResourceName.caseName' | translate }}</label>
+              <label for="caseId" class="form-label">{{ 'SpCasesResourceName.caseId' | translate }}</label>
+              <input type="text" name="caseId" class="form-control" [(ngModel)]="searchParams.caseId" placeholder="{{ 'Common.Search' | translate }}">
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label for="caseIdNo" class="form-label">{{ 'SpCasesResourceName.caseIdNo' | translate }}</label>
+              <input type="text" name="caseIdNo" class="form-control" [(ngModel)]="searchParams.caseIdNo" placeholder="{{ 'Common.Search' | translate }}">
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label for="caseNo" class="form-label">{{ 'SpCasesResourceName.caseNo' | translate }}</label>
+              <input type="text" name="caseNo" class="form-control" [(ngModel)]="searchParams.caseNo" placeholder="{{ 'Common.Search' | translate }}">
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'SpCasesResourceName.caseName' | translate }}</label>
               <ng-select class="ng-select-custom"
                          name="caseNameSelect2"
                          [(ngModel)]="selectedcaseNameSelect2Obj"
@@ -59,43 +74,7 @@
             </div>
 
             <div class="col-xl-4 mb-3">
-              <label class="form-label">{{ 'AidRequestsResourceName.branch' | translate }}</label>
-              <ng-select class="ng-select-custom"
-                         name="branchSelect2"
-                         [(ngModel)]="selectedbranchSelect2Obj"
-                         [items]="branchSelect2"
-                         bindLabel="text"
-                         bindValue="id"
-                         [typeahead]="branchSearchInput$"
-                         [loading]="loadingbranch"
-                         [virtualScroll]="true"
-                         (scrollToEnd)="loadMorebranch()"
-                         (change)="onbranchSelect2Change($event)"
-                         (search)="onbranchSearch($event)"
-                         placeholder="{{ 'Common.Select' | translate }}">
-              </ng-select>
-            </div>
-
-            <div class="col-xl-4 mb-3">
-              <label class="form-label">{{ 'AidRequestsResourceName.aiD_TYPE' | translate }}</label>
-              <ng-select class="ng-select-custom"
-                         name="aidTypeSelect2"
-                         [(ngModel)]="selectedaidTypeSelect2Obj"
-                         [items]="aidTypeSelect2"
-                         bindLabel="text"
-                         bindValue="id"
-                         [typeahead]="aidTypeSearchInput$"
-                         [loading]="loadingaidType"
-                         [virtualScroll]="true"
-                         (scrollToEnd)="loadMoreaidType()"
-                         (change)="onaidTypeSelect2Change($event)"
-                         (search)="onaidTypeSearch($event)"
-                         placeholder="{{ 'Common.Select' | translate }}">
-              </ng-select>
-            </div>
-
-            <div class="col-xl-4 mb-3">
-              <label class="form-label">{{ 'AidRequestsResourceName.nationality' | translate }}</label>
+              <label class="form-label">{{ 'SpCasesResourceName.nationality' | translate }}</label>
               <ng-select class="ng-select-custom"
                          name="nationalitySelect2"
                          [(ngModel)]="selectednationalitySelect2Obj"
@@ -113,25 +92,7 @@
             </div>
 
             <div class="col-xl-4 mb-3">
-              <label class="form-label">{{ 'AidRequestsResourceName.city' | translate }}</label>
-              <ng-select class="ng-select-custom"
-                         name="citySelect2"
-                         [(ngModel)]="selectedcitySelect2Obj"
-                         [items]="citySelect2"
-                         bindLabel="text"
-                         bindValue="id"
-                         [typeahead]="citySearchInput$"
-                         [loading]="loadingcity"
-                         [virtualScroll]="true"
-                         (scrollToEnd)="loadMorecity()"
-                         (change)="oncitySelect2Change($event)"
-                         (search)="oncitySearch($event)"
-                         placeholder="{{ 'Common.Select' | translate }}">
-              </ng-select>
-            </div>
-
-            <div class="col-xl-4 mb-3">
-              <label class="form-label">{{ 'AidRequestsResourceName.gender' | translate }}</label>
+              <label class="form-label">{{ 'SpCasesResourceName.gender' | translate }}</label>
               <ng-select class="ng-select-custom"
                          name="genderSelect2"
                          [(ngModel)]="selectedgenderSelect2Obj"
@@ -149,32 +110,71 @@
             </div>
 
             <div class="col-xl-4 mb-3">
-              <label for="caseIdNo" class="form-label">{{ 'AidRequestsResourceName.caseIdNo' | translate}}</label>
-              <input type="text" name="caseIdNo" class="form-control" [(ngModel)]="searchParams.caseIdNo" placeholder="Search">
+              <label for="phone" class="form-label">{{ 'SpCasesResourceName.phone' | translate }}</label>
+              <input type="text" name="phone" class="form-control" [(ngModel)]="searchParams.phone" placeholder="{{ 'Common.Search' | translate }}">
             </div>
 
             <div class="col-xl-4 mb-3">
-              <label for="wifeIdNo" class="form-label">{{ 'AidRequestsResourceName.wifeIdNo' | translate}}</label>
-              <input type="text" name="wifeIdNo" class="form-control" [(ngModel)]="searchParams.wifeIdNo" placeholder="Search">
+              <label class="form-label">{{ 'SpCasesResourceName.city' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="citySelect2"
+                         [(ngModel)]="selectedcitySelect2Obj"
+                         [items]="citySelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="citySearchInput$"
+                         [loading]="loadingcity"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMorecity()"
+                         (change)="oncitySelect2Change($event)"
+                         (search)="oncitySearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
             </div>
 
             <div class="col-xl-4 mb-3">
-              <label for="phone" class="form-label">{{ 'AidRequestsResourceName.phone' | translate }}</label>
-              <input type="text" name="phone" class="form-control" [(ngModel)]="searchParams.phone" placeholder="Search">
+              <label for="wifeIdNo" class="form-label">{{ 'SpCasesResourceName.wifeIdNo' | translate }}</label>
+              <input type="text" name="wifeIdNo" class="form-control" [(ngModel)]="searchParams.wifeIdNo" placeholder="{{ 'Common.Search' | translate }}">
             </div>
 
             <div class="col-xl-4 mb-3">
-              <label for="dateFrom" class="form-label">{{ 'AidRequestsResourceName.dateFrom' | translate }}</label>
-              <input type="date" class="form-control" id="dateFrom" [(ngModel)]="searchParams.dateFrom">
+              <label class="form-label">{{ 'SpCasesResourceName.branch' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="branchSelect2"
+                         [(ngModel)]="selectedbranchSelect2Obj"
+                         [items]="branchSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="branchSearchInput$"
+                         [loading]="loadingbranch"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMorebranch()"
+                         (change)="onbranchSelect2Change($event)"
+                         (search)="onbranchSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
             </div>
 
             <div class="col-xl-4 mb-3">
-              <label for="dateTo" class="form-label">{{ 'AidRequestsResourceName.dateTo' | translate }}</label>
-              <input type="date" class="form-control" id="dateTo" [(ngModel)]="searchParams.dateTo">
+              <label class="form-label">{{ 'SpCasesResourceName.aidType' | translate }}</label>
+              <ng-select class="ng-select-custom"
+                         name="aidTypeSelect2"
+                         [(ngModel)]="selectedaidTypeSelect2Obj"
+                         [items]="aidTypeSelect2"
+                         bindLabel="text"
+                         bindValue="id"
+                         [typeahead]="aidTypeSearchInput$"
+                         [loading]="loadingaidType"
+                         [virtualScroll]="true"
+                         (scrollToEnd)="loadMoreaidType()"
+                         (change)="onaidTypeSelect2Change($event)"
+                         (search)="onaidTypeSearch($event)"
+                         placeholder="{{ 'Common.Select' | translate }}">
+              </ng-select>
             </div>
 
             <div class="col-xl-4 mb-3">
-              <label class="form-label">{{ 'AidRequestsResourceName.source' | translate }}</label>
+              <label class="form-label">{{ 'SpCasesResourceName.source' | translate }}</label>
               <ng-select class="ng-select-custom"
                          name="sourceSelect2"
                          [(ngModel)]="selectedsourceSelect2Obj"
@@ -207,42 +207,191 @@
             {{ 'Common.Search' | translate }}
           </button>
           <button class="btn btn-success" (click)="printExcel()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <path d="M7.75 2V7.8H2C2 4.19 4.15 2.02 7.75 2Z" fill="white"/>
-  <path d="M22 7.8H16.25V2C19.85 2.02 22 4.19 22 7.8Z" fill="white"/>
-  <path d="M22 16.2998C21.96 19.8498 19.82 21.9798 16.25 21.9998V16.2998H22Z" fill="white"/>
-  <path d="M7.75 16.2998V21.9998C4.18 21.9798 2.04 19.8498 2 16.2998H7.75Z" fill="white"/>
-  <path d="M7.75 9.2998H2V14.7998H7.75V9.2998Z" fill="white"/>
-  <path d="M22 9.2998H16.25V14.7998H22V9.2998Z" fill="white"/>
-  <path d="M14.75 9.2998H9.25V14.7998H14.75V9.2998Z" fill="white"/>
-  <path d="M14.75 2H9.25V7.8H14.75V2Z" fill="white"/>
-  <path d="M14.75 16.2998H9.25V21.9998H14.75V16.2998Z" fill="white"/>
-</svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M7.75 2V7.8H2C2 4.19 4.15 2.02 7.75 2Z" fill="white"/>
+              <path d="M22 7.8H16.25V2C19.85 2.02 22 4.19 22 7.8Z" fill="white"/>
+              <path d="M22 16.2998C21.96 19.8498 19.82 21.9798 16.25 21.9998V16.2998H22Z" fill="white"/>
+              <path d="M7.75 16.2998V21.9998C4.18 21.9798 2.04 19.8498 2 16.2998H7.75Z" fill="white"/>
+              <path d="M7.75 9.2998H2V14.7998H7.75V9.2998Z" fill="white"/>
+              <path d="M22 9.2998H16.25V14.7998H22V9.2998Z" fill="white"/>
+              <path d="M14.75 9.2998H9.25V14.7998H14.75V9.2998Z" fill="white"/>
+              <path d="M14.75 2H9.25V7.8H14.75V2Z" fill="white"/>
+              <path d="M14.75 16.2998H9.25V21.9998H14.75V16.2998Z" fill="white"/>
+            </svg>
             {{ 'Common.PrintExcel' | translate }}
           </button>
         </div>
       </div>
     </div>
-
-   
   </div>
 
- <app-generic-data-table [columnDefs]="columnDefs"
-                            [rowData]="loadgridData"
-                            [totalCount]="pagination.totalCount"
-                            [pageSize]="pagination.take"
-                            [currentPage]="pagination.currentPage - 1"
-                            [columnHeaderMap]="columnHeaderMap"
-                            [rowActions]="rowActions"
-                            (actionClick)="onTableAction($event)"
-                            (pageChange)="onPageChange($event)"
-                            [showActionColumn]="true"
-                            (search)="onTableSearch($event)"
-                            (languageChanged)="buildColumnDefs()">
-    </app-generic-data-table>
-    
+  <app-generic-data-table [columnDefs]="columnDefs"
+                          [rowData]="loadgridData"
+                          [totalCount]="pagination.totalCount"
+                          [pageSize]="pagination.take"
+                          [currentPage]="pagination.currentPage - 1"
+                          [columnHeaderMap]="columnHeaderMap"
+                          [rowActions]="rowActions"
+                          (actionClick)="onTableAction($event)"
+                          (pageChange)="onPageChange($event)"
+                          [showActionColumn]="true"
+                          (search)="onTableSearch($event)"
+                          (languageChanged)="buildColumnDefs()">
+  </app-generic-data-table>
 
+  <!-- Case Details Modal -->
+  <div class="modal fade" id="viewCaseDetails" tabindex="-1" aria-labelledby="viewCaseDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen custom-modal-width">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="viewCaseDetailsLabel">{{ 'SpCasesResourceName.CaseDetails' | translate }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
 
+        <div class="modal-body">
+          <!-- Basic Information Section -->
+          <div class="border-bottom mb-4">
+            <h4 class="gold bold">{{ 'Common.BasicInformation' | translate }}</h4>
+
+            <div class="row">
+              <div class="col-xxl-4 col-xl-6">
+                <label for="caseNo" class="black bold">{{ 'SpCasesResourceName.caseNo' | translate }}</label>
+                <p id="caseNo">{{ loadCaseDetailsData.casE_NO }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="caseName" class="black bold">{{ 'SpCasesResourceName.caseName' | translate }}</label>
+                <p id="caseName">{{ loadCaseDetailsData.casename }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="birthDate" class="black bold">{{ 'SpCasesResourceName.birthDate' | translate }}</label>
+                <p id="birthDate">{{ loadCaseDetailsData.birthdatEstr }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="gender" class="black bold">{{ 'SpCasesResourceName.gender' | translate }}</label>
+                <p id="gender">{{ loadCaseDetailsData.gendeR_DESC }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="nationality" class="black bold">{{ 'SpCasesResourceName.nationality' | translate }}</label>
+                <p id="nationality">{{ loadCaseDetailsData.nationalitY_DESC }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="caseStatus" class="black bold">{{ 'SpCasesResourceName.caseStatus' | translate }}</label>
+                <p id="caseStatus">{{ loadCaseDetailsData.casE_STATUS_DESC }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="beneficentNo" class="black bold">{{ 'SpCasesResourceName.beneficentNo' | translate }}</label>
+                <p id="beneficentNo">{{ loadCaseDetailsData.beneficenT_NO }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="beneficentName" class="black bold">{{ 'SpCasesResourceName.beneficentName' | translate }}</label>
+                <p id="beneficentName">{{ loadCaseDetailsData.beneficentname }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="sponcerCategory" class="black bold">{{ 'SpCasesResourceName.sponcerCategory' | translate }}</label>
+                <p id="sponcerCategory">{{ loadCaseDetailsData.sponceR_CATEGORY_DESC }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="startDate" class="black bold">{{ 'SpCasesResourceName.startDate' | translate }}</label>
+                <p id="startDate">{{ loadCaseDetailsData.startdatEstr }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="caseAmount" class="black bold">{{ 'SpCasesResourceName.caseAmount' | translate }}</label>
+                <p id="caseAmount">{{ loadCaseDetailsData.caseamounTstr }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="entityName" class="black bold">{{ 'SpCasesResourceName.entityName' | translate }}</label>
+                <p id="entityName">{{ loadCaseDetailsData.entitY_NAME }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="idNumber" class="black bold">{{ 'SpCasesResourceName.idNumber' | translate }}</label>
+                <p id="idNumber">{{ loadCaseDetailsData.iD_NUMBER }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="birthLocation" class="black bold">{{ 'SpCasesResourceName.birthLocation' | translate }}</label>
+                <p id="birthLocation">{{ loadCaseDetailsData.birthlocation }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="city" class="black bold">{{ 'SpCasesResourceName.city' | translate }}</label>
+                <p id="city">{{ loadCaseDetailsData.city }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="region" class="black bold">{{ 'SpCasesResourceName.region' | translate }}</label>
+                <p id="region">{{ loadCaseDetailsData.region }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="procuratorName" class="black bold">{{ 'SpCasesResourceName.procuratorName' | translate }}</label>
+                <p id="procuratorName">{{ loadCaseDetailsData.procuratoR_NAME }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="procuratorRel" class="black bold">{{ 'SpCasesResourceName.procuratorRel' | translate }}</label>
+                <p id="procuratorRel">{{ loadCaseDetailsData.procuratoR_REL_DESC }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="motherName" class="black bold">{{ 'SpCasesResourceName.motherName' | translate }}</label>
+                <p id="motherName">{{ loadCaseDetailsData.motheR_NAME }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="phone" class="black bold">{{ 'SpCasesResourceName.phone' | translate }}</label>
+                <p id="phone">{{ loadCaseDetailsData.phone }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="totalGiftAmount" class="black bold">{{ 'SpCasesResourceName.totalGiftAmount' | translate }}</label>
+                <p id="totalGiftAmount">{{ loadCaseDetailsData.total_GIFT_AMOUNTstr }}</p>
+              </div>
+
+              <div class="col-xxl-4 col-xl-6">
+                <label for="totalAmountAed" class="black bold">{{ 'SpCasesResourceName.totalAmountAed' | translate }}</label>
+                <p id="totalAmountAed">{{ loadCaseDetailsData.total_AMOUNT_AEDstr }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aid Requests Grid Section -->
+          <div class="border-bottom mb-4">
+            <h4 class="gold bold">{{ 'SpCasesResourceName.AidRequests' | translate }}</h4>
+            
+            <app-generic-data-table [columnDefs]="aidRequestsColumnDefs"
+                                    [rowData]="aidRequestsGridData"
+                                    [totalCount]="aidRequestsPagination.totalCount"
+                                    [pageSize]="aidRequestsPagination.take"
+                                    [currentPage]="aidRequestsPagination.currentPage - 1"
+                                    [rowActions]="aidRequestsModalActions"
+                                    (actionClick)="onAidRequestsTableAction($event)"
+                                    (pageChange)="onAidRequestsPageChange($event)"
+                                    [showActionColumn]="true"
+                                    (languageChanged)="buildAidRequestsColumnDefs()">
+            </app-generic-data-table>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aid Requests Detail Modals (copied from aidRequests component) -->
   <div class="modal fade" id="viewdetails" tabindex="-1" aria-labelledby="viewLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl custom-modal-width">
       <div class="modal-content">
@@ -386,9 +535,6 @@
     </div>
   </div>
 
-
-
-
   <div class="modal fade" id="viewstudydetails" tabindex="-1" aria-labelledby="viewLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl custom-modal-width">
       <div class="modal-content">
@@ -455,7 +601,6 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" (click)="printExcel()" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Print' | translate }}</button>
           <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
         </div>
       </div>

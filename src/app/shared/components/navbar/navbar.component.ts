@@ -116,6 +116,7 @@ export class NavbarComponent {
 
   hasAnySocialCasesPermission(): boolean {
     return this.hasPermission('AidRequest.View') ||
+           this.hasPermission('SpCases.View') ||
            this.hasPermission('OrdersListRpt.View') ||
            this.hasPermission('CasesEntitiesRpt.View') ||
            this.hasPermission('CaseAidEntitiesRpt.View');

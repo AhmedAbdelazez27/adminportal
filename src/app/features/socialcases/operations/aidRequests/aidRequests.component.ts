@@ -690,7 +690,7 @@ export class aidRequestsComponent {
     this.translate.get([
       'AidRequestsResourceName.entitY_NAME',
       'AidRequestsResourceName.namE_AR',
-      'AidRequestsResourceName.gender',
+      'AidRequestsResourceName.source',
       'AidRequestsResourceName.aiD_TYPE',
       'AidRequestsResourceName.comitY_DATE',
       'AidRequestsResourceName.requesT_TYPE_DESC',
@@ -701,7 +701,7 @@ export class aidRequestsComponent {
       this.columnDefs = [
         { headerName: translations['AidRequestsResourceName.entitY_NAME'], field: 'entitY_NAME', width: 200 },
         { headerName: translations['AidRequestsResourceName.namE_AR'], field: 'namE_AR', width: 200 },
-        { headerName: translations['AidRequestsResourceName.gender'], field: 'sourcE_DESC', width: 200 },
+        { headerName: translations['AidRequestsResourceName.source'], field: 'sourcE_DESC', width: 200 },
         { headerName: translations['AidRequestsResourceName.aiD_TYPE'], field: 'aiD_TYPE', width: 200 },
         { headerName: translations['AidRequestsResourceName.comitY_DATE'], field: 'comitY_DATEstr', width: 200 },
         { headerName: translations['AidRequestsResourceName.requesT_TYPE_DESC'], field: 'requesT_TYPE_DESC', width: 200 },
@@ -767,7 +767,10 @@ export class aidRequestsComponent {
                     { label: this.translate.instant('AidRequestsResourceName.gender'), value: this.searchParams.genderstr },
                     { label: this.translate.instant('AidRequestsResourceName.source'), value: this.searchParams.sourcestr },
                     { label: this.translate.instant('AidRequestsResourceName.caseIdNo'), value: this.searchParams.caseIdNo },
+                    { label: this.translate.instant('AidRequestsResourceName.wifeIdNo'), value: this.searchParams.wifeIdNo },
                     { label: this.translate.instant('AidRequestsResourceName.phone'), value: this.searchParams.phone },
+                    { label: this.translate.instant('AidRequestsResourceName.dateFrom'), value: this.searchParams.dateFrom ? new Date(this.searchParams.dateFrom).toLocaleDateString() : '' },
+                    { label: this.translate.instant('AidRequestsResourceName.dateTo'), value: this.searchParams.dateTo ? new Date(this.searchParams.dateTo).toLocaleDateString() : '' },
                   ],
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },

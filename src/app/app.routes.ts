@@ -171,7 +171,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'SocialCases',
+        path: 'socialcases',
         children: [
           {
             path: 'operations',

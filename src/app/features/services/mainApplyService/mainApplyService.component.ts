@@ -1151,8 +1151,6 @@ export class MainApplyServiceComponent {
         sessionStorage.setItem("screenmode",'edit');
         window.open(`/mainServices/services/charity-event-permit/${event.row.id}`, '_blank');
       }
-
-
       else if (event.row.serviceId == serviceIdEnum.serviceId6) {
         sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
         sessionStorage.setItem("screenmode", 'edit');

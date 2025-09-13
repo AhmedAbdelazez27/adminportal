@@ -38,7 +38,7 @@
                 </div>
                 <!-- *ngIf="seriesData.length" -->
                 <ng-container *ngIf="seriesData.length">
-                    <app-bar-chart [categories]="categoriees" [seriesData]="seriesData" [useDynamicColors]="true">
+                    <app-bar-chart [categories]="categoriees" [seriesData]="seriesData" [useDynamicColors]="true" [pageTitle]="pageTitle">
                     </app-bar-chart>
                 </ng-container>
             </div>
@@ -67,7 +67,7 @@
           </button>
                 </div>
                 <ng-container *ngIf="seriesData2.length">
-                    <app-bar-chart [categories]="categoriees2" [seriesData]="seriesData2" [useDynamicColors]="true">
+                    <app-bar-chart [categories]="categoriees2" [seriesData]="seriesData2" [useDynamicColors]="true" [pageTitle]="pageTitle">
                     </app-bar-chart>
                 </ng-container>
             </div>

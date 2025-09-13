@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { HighchartsChartModule } from 'highcharts-angular';
 import Highcharts, { Options, SeriesOptionsType } from 'highcharts';
 import HC_exporting from 'highcharts/modules/exporting';
 import HC_accessibility from 'highcharts/modules/accessibility';
+import { ChartUtilsService } from '../../services/chart-utils.service';
+import { TranslateModule } from '@ngx-translate/core';
 const initExporting = (typeof HC_exporting === 'function' ? HC_exporting : (HC_exporting as any)?.default);
 if (typeof initExporting === 'function') {
   initExporting(Highcharts);
@@ -16,7 +18,7 @@ if (typeof initAccessibility === 'function') {
 @Component({
   selector: 'app-pie-chart',
   standalone: true,
-  imports: [CommonModule, HighchartsChartModule],
+  imports: [CommonModule, HighchartsChartModule, TranslateModule],
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.scss']
 })
@@ -26,6 +28,8 @@ export class PieChartComponent implements OnChanges {
   chart: Highcharts.Chart | undefined;
   previewChart: Highcharts.Chart | undefined;
   isPreviewOpen = false;
+  
+  private chartUtils = inject(ChartUtilsService);
 
   @Input() categories: string[] = [];
   @Input() seriesData: { name: string; data: number[]; color?: string }[] = [];
@@ -39,6 +43,8 @@ export class PieChartComponent implements OnChanges {
   @Input() enableExport: boolean = true;
   @Input() theme: 'light' | 'dark' = 'light';
   @Input() useGradient: boolean = true;
+  @Input() useDynamicColors: boolean = false;
+  @Input() pageTitle: string = '';
 
   ngOnChanges(_: SimpleChanges): void {
     console.log("categories ", this.categories);
@@ -89,13 +95,37 @@ export class PieChartComponent implements OnChanges {
 
       let pieData: { name: string; y: number; color?: string }[] = [];
       if (this.piePoints && this.piePoints.length) {
-        pieData = this.piePoints.map(p => ({ name: p.name, y: Number(p.y ?? 0), color: p.color }));
+        pieData = this.piePoints.map((p, index) => {
+          let color = p.color;
+          if (this.useDynamicColors && !p.color) {
+            color = this.chartUtils.generateDynamicColor(index, this.piePoints.length);
+          }
+          return { name: p.name, y: Number(p.y ?? 0), color: color };
+        });
       } else if (categories.length) {
-        pieData = categories.map((label, i) => ({ name: label, y: Number(values[i] ?? 0) }));
+        pieData = categories.map((label, i) => {
+          let color: string | undefined;
+          if (this.useDynamicColors) {
+            color = this.chartUtils.generateDynamicColor(i, categories.length);
+          }
+          return { name: label, y: Number(values[i] ?? 0), color: color };
+        });
       } else if (this.seriesData && this.seriesData.length) {
-        pieData = this.seriesData.map(s => ({ name: s.name, y: Number((s.data?.[0]) ?? 0), color: s.color }));
+        pieData = this.seriesData.map((s, index) => {
+          let color = s.color;
+          if (this.useDynamicColors && !s.color) {
+            color = this.chartUtils.generateDynamicColor(index, this.seriesData.length);
+          }
+          return { name: s.name, y: Number((s.data?.[0]) ?? 0), color: color };
+        });
       } else if (values && values.length) {
-        pieData = values.map((v, i) => ({ name: `Slice ${i + 1}` , y: Number(v ?? 0) }));
+        pieData = values.map((v, i) => {
+          let color: string | undefined;
+          if (this.useDynamicColors) {
+            color = this.chartUtils.generateDynamicColor(i, values.length);
+          }
+          return { name: `Slice ${i + 1}` , y: Number(v ?? 0), color: color };
+        });
       }
 
       this.chartOptionsPie = {
@@ -167,13 +197,21 @@ export class PieChartComponent implements OnChanges {
 
     const categories = isRtl ? [...this.categories].reverse() : this.categories;
     const mapSeries = (arr: typeof this.seriesData): SeriesOptionsType[] =>
-      arr.map<SeriesOptionsType>(s => ({
-        name: s.name,
-        type: this.chartType,
-        data: (isRtl ? [...s.data].reverse() : s.data) as any,
-        color: s.color,
-        dataLabels: { enabled: false, style: { fontSize: '14px', fontWeight: 'bold' } }
-      }));
+      arr.map<SeriesOptionsType>((s, index) => {
+        let color = s.color;
+        
+        if (this.useDynamicColors && !s.color) {
+          color = this.chartUtils.generateDynamicColor(index, arr.length);
+        }
+        
+        return {
+          name: s.name,
+          type: this.chartType,
+          data: (isRtl ? [...s.data].reverse() : s.data) as any,
+          color: color,
+          dataLabels: { enabled: false, style: { fontSize: '14px', fontWeight: 'bold' } }
+        };
+      });
 
     this.chartOptionsPie = {
       chart: { type: this.chartType, style: { direction: isRtl ? 'rtl' : 'ltr' }, backgroundColor: bgColor, spacingBottom: 60 },

@@ -12,6 +12,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EntityService } from '../../../../../core/services/entit.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SelectdropdownResult } from '../../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { ChartUtilsService } from '../../../../../../shared/services/chart-utils.service';
 
 @Component({
   selector: 'app-comparisons-revenuese-expenses',
@@ -71,17 +72,16 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
     private translate: TranslateService,
     private entityService: EntityService,
     private route: ActivatedRoute,
+   private chartUtils: ChartUtilsService
+    
   ) {
     this.translate.onLangChange.subscribe(lang => {
       this.currentLang = lang.lang;
-
-      console.log("ddd ", this.currentLang);
     });
   }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      
       this.defaultChartType = params['chartType'] || 'revenueByEntit';
       this.dynamicPageTitle();
       this.getYearAndChartTypesList();
@@ -179,15 +179,29 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
   }
 
 
+  parseChartData(res: any, categoriesName: string, seriesDataName: string) {
+    const data = res?.data || [];
+    console.log("data", data);
 
-  setDefaultValues(categorieesName: string, seriesDataName: string) {
-    this[categorieesName] = ['Category 1', 'Category 2', 'Category 3'];
-    this[seriesDataName] = [
-      { name: 'Series A', data: this.generateRandomValues(3), color: '#72C5C2' },
-      { name: 'Series B', data: this.generateRandomValues(3), color: '#114D7D' }
-    ];
+    if (data.length > 0) {
+      const result = this.chartUtils.parseChartData(res, this.currentLang, {
+        useIndividualSeries: true,
+        valueFields: ['value1', 'value2', 'value3', 'value4']
+      });
+
+      this[categoriesName] = result.categories;
+      this[seriesDataName] = result.seriesData;
+    } else {
+      this[categoriesName] = [];
+      this[seriesDataName] = [];
+    }
   }
+  setDefaultValues(categoriesName: string, seriesDataName: string) {
+ const result = this.chartUtils.parseChartData(null, this.currentLang);
+    this[categoriesName] = result.categories;
+    this[seriesDataName] = result.seriesData;
 
+  }
   generateRandomValues(count: number): number[] {
     const randomValues: number[] = [];
     for (let i = 0; i < count; i++) {

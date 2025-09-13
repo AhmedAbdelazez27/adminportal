@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EntityService } from '../../../../../core/services/entit.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ChartUtilsService } from '../../../../../../shared/services/chart-utils.service';
 
 @Component({
   selector: 'app-revenue-general',
@@ -28,7 +29,8 @@ export class RevenueGeneralComponent implements OnInit {
   selectedEntity: any;
   defaultChartType: string = '';
   pageTitle: string ="";
-
+  currentLang: string = "en";
+  lang: string | null = null;
   chartTypes: any = [];
   selectedChart1: string | null = null;
   selectedChart2: string | null = null;
@@ -47,7 +49,9 @@ export class RevenueGeneralComponent implements OnInit {
     private toastr: ToastrService,
     private translate: TranslateService,
     private entityService: EntityService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private chartUtils: ChartUtilsService
+    
   ) {
 
   }
@@ -59,6 +63,9 @@ export class RevenueGeneralComponent implements OnInit {
       this.getYearAndChartTypesList();
     });
     this.getYearAndChartTypesList();
+  this.translate.onLangChange.subscribe(lang => {
+      this.currentLang = lang.lang;
+    });
   }
 
 
@@ -152,7 +159,6 @@ export class RevenueGeneralComponent implements OnInit {
 
 
 
-
   onYearChange(typeChange?: string) {
     if (!this.selectedYearId) return;
     this.spinnerService.show();
@@ -161,7 +167,7 @@ export class RevenueGeneralComponent implements OnInit {
       parameters: {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
-        entityId: this.selectedEntity,
+        entityId: this.selectedEntity ? this.selectedEntity.toString() : null,
         periodId: null,
         departmentId: null,
         countryId: null,
@@ -197,7 +203,7 @@ export class RevenueGeneralComponent implements OnInit {
       parameters: {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
-        entityId: this.selectedEntity,
+        entityId: this.selectedEntity ? this.selectedEntity.toString() : null,
         periodId: null,
         departmentId: null,
         countryId: null,
@@ -206,8 +212,8 @@ export class RevenueGeneralComponent implements OnInit {
         level: null
       }
     };
-
     this._ChartsService.getRevenueAndExpensesChart(payload).subscribe({
+   
       next: (res) => {
         this.parseChartData(res, categoriesName, seriesDataName);
         this.spinnerService.forceHide();
@@ -219,32 +225,33 @@ export class RevenueGeneralComponent implements OnInit {
     });
   }
 
+
   parseChartData(res: any, categoriesName: string, seriesDataName: string) {
-    if (!res || !res.data || res.data.length === 0) {
-      this.setDefaultValues(categoriesName, seriesDataName);
+    const data = res?.data || [];
+    if (data.length > 0) {
+      const result = this.chartUtils.parseChartData(res, this.currentLang, {
+        useIndividualSeries: true,
+        valueFields: ['value1', 'value2', 'value3', 'value4']
+      });
+
+      this[categoriesName] = result.categories;
+      this[seriesDataName] = result.seriesData;
     } else {
-
-      this[categoriesName] = res.data.map((item: any) => item.nameEn);
-
-
-      const seriesAData = res.data.map((item: any) => item.value1);
-      const seriesBData = res.data.map((item: any) => item.value2);
-
-
-      this[seriesDataName] = [
-        { name: 'Series A', data: seriesAData, color: '#72C5C2' },
-        { name: 'Series B', data: seriesBData, color: '#114D7D' }
-      ];
+      this[categoriesName] = [];
+      this[seriesDataName] = [];
     }
   }
 
 
+
+
   setDefaultValues(categoriesName: string, seriesDataName: string) {
-    this[categoriesName] = ['Category 1', 'Category 2', 'Category 3'];
-    this[seriesDataName] = [
-      { name: 'Series A', data: this.generateRandomValues(3), color: '#72C5C2' },
-      { name: 'Series B', data: this.generateRandomValues(3), color: '#114D7D' }
-    ];
+ const result = this.chartUtils.parseChartData(null, this.currentLang, {
+      categoryField: this.currentLang === 'ar' ? 'nameAr' : 'nameEn'
+    });
+    this[categoriesName] = result.categories;
+    this[seriesDataName] = result.seriesData;
+
   }
 
   generateRandomValues(count: number): number[] {

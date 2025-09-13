@@ -366,34 +366,30 @@
  
 
 
+<div class="row" *ngIf="processedCharts.length > 0">
+    <div class="col-xl-6 mb-3" *ngFor="let chart of processedCharts; trackBy: trackByChart">
+        <div class="main-container h-100">
+            <div class="card-header" *ngIf="chart.title">
+                <h5 class="card-title">{{ chart.title }}</h5>
+            </div>
+
+            <div class="card-body">
+                <ng-container>
+                    <app-bar-chart [categories]="chart.categories" [seriesData]="chart.seriesData"
+                        [useDynamicColors]="true">
+                    </app-bar-chart>
+                </ng-container>
 
 
- <div class="row" *ngIf="processedCharts.length > 0">
-  <div class="col-xl-6 mb-3" *ngFor="let chart of processedCharts; trackBy: trackByChart">
-    <div class="main-container h-100">
-       <div class="card-header" *ngIf="chart.title">
-        <h5 class="card-title">{{ chart.title }}</h5>
-      </div>
-
-       <div class="card-body">
-         <ng-container  >
-              <app-bar-chart 
-            [categories]="chart.categories" 
-            [seriesData]="chart.seriesData"
-            [useDynamicColors]="true">
-          </app-bar-chart  >
-        </ng-container>
-
-     
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
- <div class="row" *ngIf="processedCharts.length === 0">
-  <div class="col-6">
-    <div class="alert alert-info text-center">
-      <i class="fas fa-chart-bar fa-2x mb-3"></i>
-     </div>
-  </div>
+<div class="row" *ngIf="processedCharts.length === 0">
+    <div class="col-6">
+        <div class="alert alert-info text-center">
+            <i class="fas fa-chart-bar fa-2x mb-3"></i>
+        </div>
+    </div>
 </div>

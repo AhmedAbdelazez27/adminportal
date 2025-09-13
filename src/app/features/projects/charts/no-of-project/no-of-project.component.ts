@@ -12,6 +12,7 @@ import { Select2Service } from '../../../../core/services/Select2.service';
 import { EntityService } from '../../../../core/services/entit.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { PieChartComponent } from '../../../../../shared/charts/pie-chart/pie-chart.component';
+import { ChartUtilsService } from '../../../../../shared/services/chart-utils.service';
  
 @Component({
   selector: 'app-no-of-project',
@@ -50,7 +51,8 @@ export class NumberOfProjectComponents implements OnInit {
     private toastr: ToastrService,
     private translate: TranslateService,
     private entityService: EntityService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private chartUtils: ChartUtilsService
   ) { }
 
   ngOnInit(): void {
@@ -112,10 +114,13 @@ export class NumberOfProjectComponents implements OnInit {
       parameters: {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
-        type: 1,
-        entityId: this.selectedEntity,
+        entityId: this.selectedEntity ? this.selectedEntity.toString() : null,
+        periodId: null,
+        departmentId: null,
+        countryId: null,
+        branchId: null,
         userId: null,
-        countryCode: null,
+        level: null
       }
     };
 
@@ -124,7 +129,7 @@ export class NumberOfProjectComponents implements OnInit {
       this.onTypeChange(this.selectedChart1, "categories2", "seriesData2");
       this.onTypeChange(this.selectedChart2, "categories3", "seriesData3");
     } else {
-      this._ChartsService.getProjectChart(payload).subscribe({
+      this._ChartsService.getSocialCasesChart(payload).subscribe({
         next: (res) => {
           this.parseChartData(res, 'categories', 'seriesData');
           this.onTypeChange(this.selectedChart1, "categories2", "seriesData2");
@@ -136,7 +141,6 @@ export class NumberOfProjectComponents implements OnInit {
     }
   }
 
-
   onTypeChange(chartType: any, categoriesName: string, seriesDataName: string) {
     if (!this.selectedYearId) return;
 
@@ -146,7 +150,7 @@ export class NumberOfProjectComponents implements OnInit {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
         type: 1,
-        entityId: this.selectedEntity,
+        entityId: this.selectedEntity ? this.selectedEntity.toString() : null,
         userId: null,
         countryCode: null,
       }
@@ -164,32 +168,27 @@ export class NumberOfProjectComponents implements OnInit {
     });
   }
 
+
   parseChartData(res: any, categoriesName: string, seriesDataName: string) {
-    if (!res || !res.data || res.data.length === 0) {
-      this.setDefaultValues(categoriesName, seriesDataName);
+    const data = res?.data || [];
+    if (data.length > 0) {
+      const result = this.chartUtils.parseChartData(res, this.translate.currentLang || 'en', {
+        useIndividualSeries: true,
+        valueFields: ['value1', 'value2', 'value3', 'value4']
+      });
+
+      this[categoriesName] = result.categories;
+      this[seriesDataName] = result.seriesData;
     } else {
-
-      this[categoriesName] = res.data.map((item: any) => item.nameEn);
-
-
-      const seriesAData = res.data.map((item: any) => item.value1);
-      const seriesBData = res.data.map((item: any) => item.value2);
-
-
-      this[seriesDataName] = [
-        { name: 'Series A', data: seriesAData, color: '#72C5C2' },
-        { name: 'Series B', data: seriesBData, color: '#114D7D' }
-      ];
+      this[categoriesName] = [];
+      this[seriesDataName] = [];
     }
   }
 
-
   setDefaultValues(categoriesName: string, seriesDataName: string) {
-    this[categoriesName] = ['Category 1', 'Category 2', 'Category 3'];
-    this[seriesDataName] = [
-      { name: 'Series A', data: this.generateRandomValues(3), color: '#72C5C2' },
-      { name: 'Series B', data: this.generateRandomValues(3), color: '#114D7D' }
-    ];
+    const result = this.chartUtils.parseChartData(null, this.translate.currentLang || 'en');
+    this[categoriesName] = result.categories;
+    this[seriesDataName] = result.seriesData;
   }
 
   generateRandomValues(count: number): number[] {
