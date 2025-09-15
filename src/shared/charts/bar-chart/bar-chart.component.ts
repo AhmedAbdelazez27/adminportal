@@ -1,14 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, inject, ChangeDetectorRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { HighchartsChartModule } from 'highcharts-angular';
 import Highcharts, { Options, SeriesOptionsType } from 'highcharts';
 import { ChartUtilsService } from '../../services/chart-utils.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationService } from '../../../app/core/services/translation.service';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-bar-chart',
   standalone: true,
-  imports: [CommonModule, HighchartsChartModule, TranslateModule],
+  imports: [CommonModule, FormsModule, HighchartsChartModule, TranslateModule],
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.scss']
 })
@@ -17,7 +21,7 @@ export class BarChartComponent implements OnChanges {
   chartOptionsBar: Options = {};
   chart: Highcharts.Chart | undefined;
   previewChart: Highcharts.Chart | undefined;
-  isPreviewOpen = false;
+  isPreviewOpen = false; 
   currentLang: string = "en";
 
   private chartUtils = inject(ChartUtilsService);
@@ -25,38 +29,102 @@ export class BarChartComponent implements OnChanges {
   @Input() categories: string[] = [];
   @Input() seriesData: { name: string; data: number[]; color?: string }[] = [];
   @Input() direction: 'rtl' | 'ltr' = 'rtl';
-  @Input() chartType: 'column' | 'line' | 'bar' = 'column';
+  @Input() chartType: 'column' | 'line' | 'bar' | 'area' | 'pie' | 'table' = 'column';
   @Input() showValues: boolean = true;
   @Input() enablePreview: boolean = true;
   @Input() seriesColor: string = '#dc3545';
   @Input() valueColor: string = '#dc3545';
   @Input() useDynamicColors: boolean = false;
   @Input() pageTitle: string = '';
+  @Input() enableChartTypeSelection: boolean = true;
 
-  constructor(private translate: TranslateService)
-  {
-    this.translate.onLangChange.subscribe(lang => {
-      this.currentLang = lang.lang;
+  selectedChartType: 'column' | 'line' | 'bar' | 'area' | 'pie' | 'table' = this.chartType;
+  availableChartTypes: { value: string; label: string }[] = [];
+
+  constructor(
+    private translate: TranslateService,
+    private translationService: TranslationService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.translate.onLangChange.subscribe(() => {
+      setTimeout(() => {
+        this.updateChartTypes();
+      }, 500);
     });
-  }
-
-  ngOnChanges(_: SimpleChanges): void {
-    // console.log("categories ", this.categories);
-    // console.log("seriesData ", this.seriesData);
+    this.selectedChartType = this.chartType;
+    this.updateChartTypes();
     this.buildChartOptions();
   }
 
+  private updateChartTypes() {
+    this.currentLang = this.translationService.currentLang;
+    
+    const chartTypes = [
+      { 
+        value: 'column', 
+        en: 'Column Chart', 
+        ar: 'رسم بياني عمودي' 
+      },
+      { 
+        value: 'bar', 
+        en: 'Bar Chart', 
+        ar: 'رسم بياني أفقي' 
+      },
+      { 
+        value: 'line', 
+        en: 'Line Chart', 
+        ar: 'رسم بياني خطي' 
+      },
+      { 
+        value: 'area', 
+        en: 'Area Chart', 
+        ar: 'رسم بياني مساحي' 
+      },
+      { 
+        value: 'pie', 
+        en: 'Pie Chart', 
+        ar: 'رسم بياني دائري' 
+      },
+      { 
+        value: 'table', 
+        en: 'Table View', 
+        ar: 'عرض جدولي' 
+      }
+    ];
+
+    this.availableChartTypes = chartTypes.map(type => ({
+      value: type.value,
+      label: this.currentLang === 'ar' ? type.ar : type.en
+    }));
+    
+  }
+
+  ngOnChanges(_: SimpleChanges): void {
+    this.selectedChartType = this.chartType;
+    this.buildChartOptions();
+  }
+
+  onChartTypeChange(newType: 'column' | 'line' | 'bar' | 'area' | 'pie' | 'table') {
+    if (newType && this.availableChartTypes.some(type => type.value === newType)) {
+      this.selectedChartType = newType;
+      this.buildChartOptions();
+    }
+  }
+
   addComponentRef(chart: Highcharts.Chart) {
-    this.chart = chart;
+    if (chart) {
+      this.chart = chart;
+    }
   }
 
   addPreviewComponentRef(chart: Highcharts.Chart) {
-    this.previewChart = chart;
+    if (chart) {
+      this.previewChart = chart;
+    }
   }
 
   onChartClick(event: MouseEvent) {
     if (!this.enablePreview) return;
-    // avoid triggering when clicking legend items, etc.
     const target = event.target as HTMLElement | null;
     if (target && target.closest('.highcharts-legend')) return;
     this.isPreviewOpen = true;
@@ -68,181 +136,142 @@ export class BarChartComponent implements OnChanges {
   }
 
   private buildChartOptions() {
-    const isRtl = this.direction === 'rtl';
-    const H = Highcharts;
-    const NULL_TEXT = null as unknown as string;
+    try {
+      const isRtl = this.direction === 'rtl';
+      const H = Highcharts;
+      const NULL_TEXT = null as unknown as string;
+
+    // ✅ Handle Table separately
+    if (this.selectedChartType === 'table') {
+      this.chartOptionsBar = {
+        chart: { type: 'line' }, // placeholder, won't render
+        title: { text: NULL_TEXT },
+        credits: { enabled: false }
+      };
+      return;
+    }
 
     const baseCategories = this.categories ?? [];
-    const shouldUseHorizontalBars = this.chartType === 'bar';
-    const areCategoriesReversed = isRtl; // reverse for RTL to keep visual order
+    const areCategoriesReversed = isRtl;
     const categories = areCategoriesReversed ? [...baseCategories].reverse() : baseCategories;
 
-    const xAxis = shouldUseHorizontalBars
-      ? ({
-          title: { text: NULL_TEXT },
-          gridLineWidth: 0,
-          gridLineColor: '#fffefeff',
-          labels: {
-            formatter() { return H.numberFormat(Number(this.value), 0, '.', ','); },
-            style: { fontSize: '10px', color: '#777' }
-          }
-        } as Highcharts.XAxisOptions)
-      : ({
-          categories,
-          reversed: areCategoriesReversed,
-          title: { text: NULL_TEXT },
-          labels: {
-            style: { fontSize: '10px', color: '#333333', textAlign: isRtl ? 'right' : 'left' }
-          }
-        } as Highcharts.XAxisOptions);
+    // ✅ Build series differently for pie vs others
+    const series: SeriesOptionsType[] =
+      this.selectedChartType === 'pie'
+        ? [
+          {
+            type: 'pie',
+            innerSize: '50%', // donut
+            data: this.seriesData.flatMap((seriesItem, seriesIndex) => {
+              const color = seriesItem.color ?? this.seriesColor;
 
-    const yAxis = shouldUseHorizontalBars
-      ? ({
-          categories,
-          reversed: false,
-          title: { text: NULL_TEXT },
-          gridLineWidth: 0,
-             gridLineColor: '#fffefeff',
-        labels: {
-            useHTML: true,
-            align: isRtl ? 'right' : 'left',
-            x: isRtl ? -10 : 10,
-            formatter() {
-              const value = String(this.value ?? '');
-              return `<span style="display:inline-block;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:#333;${isRtl ? 'text-align:right;' : 'text-align:left;'}">${escapeHtml(value)}</span>`;
+              return seriesItem.data.map((value, i) => {
+                if (value <= 0) return null; // skip 0/negative
+
+                return {
+                  name: `${this.categories[i]} - ${seriesItem.name}`, // category + series name
+                  y: value,
+                  color: color
+                } as Highcharts.PointOptionsObject;
+              }).filter(Boolean);
+            }),
+            showInLegend: true,
+            dataLabels: {
+              enabled: this.showValues,
+              formatter(this: any) {
+                const v = Number(this.y);
+                if (isNaN(v) || v === 0) return '';
+                return `<b>${this.key}</b>: ${Highcharts.numberFormat(v, 0, '.', ',')}`;
+              }
             }
+          } as Highcharts.SeriesPieOptions
+        ]
+        : this.seriesData.map(
+          (seriesItem, index): Highcharts.SeriesColumnOptions | Highcharts.SeriesLineOptions | Highcharts.SeriesBarOptions | Highcharts.SeriesAreaOptions => {
+            let color = seriesItem.color ?? this.seriesColor;
+            if (this.useDynamicColors && !seriesItem.color) {
+              const baseColor = this.chartUtils.generateDynamicColor(
+                index,
+                this.seriesData.length
+              );
+              const hasNegativeValues = seriesItem.data.some(v => v < 0);
+              color = hasNegativeValues
+                ? this.chartUtils.adjustColorForNegative(baseColor)
+                : baseColor;
+            }
+
+            return {
+              name: seriesItem.name,
+              type: this.selectedChartType as 'column' | 'line' | 'bar' | 'area',
+              data: areCategoriesReversed
+                ? [...seriesItem.data].reverse()
+                : seriesItem.data,
+              color
+            };
           }
-        } as Highcharts.YAxisOptions)
-      : ({
-        title: { text: NULL_TEXT },
-        gridLineWidth: 0,
-         gridLineColor: '#fffefeff',
-        labels: {
-            formatter() { return H.numberFormat(Number(this.value), 0, '.', ','); },
-          style: { fontSize: '0px', color: '#ffffff' }
-        },
-        plotLines: [{
-          value: 0,
-          width: 1,
-          color: '#808080',
-          zIndex: 4
-        }]
-        } as Highcharts.YAxisOptions);
+        );
 
-    const series = this.seriesData.map<SeriesOptionsType>((seriesItem, index) => {
-      let color = seriesItem.color ?? this.seriesColor;
-      
-      if (this.useDynamicColors && !seriesItem.color) {
-        const baseColor = this.chartUtils.generateDynamicColor(index, this.seriesData.length);
-        const hasNegativeValues = seriesItem.data.some(value => value < 0);
-        color = hasNegativeValues ? this.chartUtils.adjustColorForNegative(baseColor) : baseColor;
-      }
-      
-      return {
-        name: seriesItem.name,
-        type: this.chartType,
-        data: areCategoriesReversed ? ([...seriesItem.data].reverse() as unknown as Highcharts.Series['data']) : (seriesItem.data as unknown as Highcharts.Series['data']),
-        color: color
-      };
-    });
 
+    // ✅ Base chart options
     this.chartOptionsBar = {
-      chart: {
-        type: this.chartType,
-        style: { direction: isRtl ? 'rtl' : 'ltr' },
-        marginLeft: shouldUseHorizontalBars && !isRtl ? 140 : undefined,
-        marginRight: shouldUseHorizontalBars && isRtl ? 140 : undefined,
-        spacingTop: 12
-      },
+      chart: { type: this.selectedChartType === 'pie' ? undefined : this.selectedChartType }, // <-- important fix
       title: { text: NULL_TEXT },
-      subtitle: { text: NULL_TEXT },
-      xAxis,
-      yAxis,
+      xAxis: this.selectedChartType === 'pie' ? undefined : {
+        categories,
+        reversed: areCategoriesReversed,
+        title: { text: NULL_TEXT }
+      },
+      yAxis: this.selectedChartType === 'pie' ? undefined : {
+        title: { text: NULL_TEXT },
+        gridLineWidth: 1,
+        labels: { enabled: false },
+        //labels: {
+        //  formatter() {
+        //    return H.numberFormat(Number(this.value), 0, '.', ',');
+        //  }
+        //}
+      },
       series,
-      tooltip: {
-        headerFormat: '<span style="font-size:10px">{point.key}</span><br>',
-        pointFormatter() {
-          return `<span style="color:${this.color}">●</span> ${this.series.name}: <b>${H.numberFormat(Number(this.y), 0, '.', ',')}</b><br>`;
+      tooltip: { shared: true, useHTML: true },
+      plotOptions: {
+        column: {
+          borderWidth: 0,
+          dataLabels: { enabled: true, format: '{point.y}' }
         },
-        shared: true,
-        useHTML: true
-      },
-    plotOptions: {
-  column: {
-    pointWidth: 40,           
-     pointPadding: 0,         
-    borderRadius: '10%',   
-     borderWidth: 0,
-    dataLabels: {
-      enabled: this.showValues,
-      formatter() {
-        const v = Number(this.y);
-        if (isNaN(v) || v === 0) return '';
-        return H.numberFormat(v, 0, '.', ',');
-      },
-      inside: false,
-      y: -6,
-      filter: { property: 'y', operator: '!=', value: 0 },
-      style: {
-        fontSize: '12px',
-        fontWeight: 'normal',
-        color: this.valueColor
-      }
-    }
-   
-},
-
         bar: {
-          groupPadding: 0.05,
-            grouping: true, 
-          pointPadding: 0,
-           borderWidth: 0,
-          dataLabels: {
-            enabled: this.showValues,
-            formatter() {
-              const v = Number(this.y);
-              if (isNaN(v) || v === 0) return '';
-              return H.numberFormat(v, 0, '.', ',');
-            },
-            inside: false,
-            align: 'left',
-            x: 4,
-            filter: { property: 'y', operator: '!=', value: 0 },
-            style: { fontSize: '12px', fontWeight: 'normal', color: this.valueColor }
-          }
+          borderWidth: 0,
+          dataLabels: { enabled: true, format: '{point.y}' }
         },
         line: {
-          marker: { enabled: true, symbol: 'circle' },
-          dataLabels: {
-            enabled: this.showValues,
-            formatter() {
-              const v = Number(this.y);
-              if (isNaN(v) || v === 0) return '';
-              return H.numberFormat(v, 0, '.', ',');
-            },
-            filter: { property: 'y', operator: '!=', value: 0 },
-            style: { fontSize: '12px', fontWeight: 'normal', color: this.valueColor }
-          }
+          marker: { enabled: true },
+          dataLabels: { enabled: true, format: '{point.y}' }
         },
-        series: { cursor: 'pointer' }
-      },
-      legend: {
-        enabled: true,
-        layout: 'horizontal',
-        verticalAlign: 'bottom',
-        align: 'center',
-        itemMarginTop: 6,
-        itemMarginBottom: 6,
-        itemDistance: 24,
-        symbolRadius: 6,
-        useHTML: true,
-        labelFormatter() {
-          return `<span style=\"font-size:14px;color:#1f2d3d;${isRtl ? 'direction:rtl;' : ''}\">${escapeHtml(this.name)}</span>`;
+        area: {
+          marker: { enabled: true },
+          dataLabels: { enabled: true, format: '{point.y}' }
+        },
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.y}' // value instead of only %
+          }
         }
       },
+      legend: { enabled: true },
       credits: { enabled: false }
     };
+    } catch (error) {
+      console.error('Error building chart options:', error);
+      this.chartOptionsBar = {
+        chart: { type: 'column' },
+        title: { text: '' },
+        credits: { enabled: false }
+      };
+    }
   }
+
 }
 
 // Helper function to escape HTML special characters

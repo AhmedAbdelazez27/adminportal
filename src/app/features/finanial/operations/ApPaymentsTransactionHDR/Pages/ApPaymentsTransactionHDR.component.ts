@@ -1,6 +1,12 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  NgForm,
+  Validators,
+} from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, Subject } from 'rxjs';
@@ -10,26 +16,42 @@ import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../../shared/generic-data-table/generic-data-table.component';
 import { SpinnerService } from '../../../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../../../core/services/openStandardReportService.service';
-import { FndLookUpValuesSelect2RequestDto, Pagination, Select2RequestDto, SelectdropdownResult, SelectdropdownResultResults, reportPrintConfig } from '../../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import {
+  FndLookUpValuesSelect2RequestDto,
+  Pagination,
+  Select2RequestDto,
+  SelectdropdownResult,
+  SelectdropdownResultResults,
+  reportPrintConfig,
+} from '../../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2Service } from '../../../../../core/services/Select2.service';
-import { FilterApPaymentsTransactionHDRDto, FilterApPaymentsTransactionHDRByIdDto, ApPaymentsTransactionHDRDto } from '../../../../../core/dtos/FinancialDtos/OperationDtos/ApPaymentsTransactionHDR.dto';
+import {
+  FilterApPaymentsTransactionHDRDto,
+  FilterApPaymentsTransactionHDRByIdDto,
+  ApPaymentsTransactionHDRDto,
+} from '../../../../../core/dtos/FinancialDtos/OperationDtos/ApPaymentsTransactionHDR.dto';
 import { ApPaymentsTransactionHDRService } from '../../../../../core/services/Financial/Operation/ApPaymentsTransactionHDR.service';
 import { formatNumericCell } from '../../../../../shared/utils/value-formatters';
 
 declare var bootstrap: any;
 
-
 @Component({
   selector: 'app-ApPaymentsTransactionHDR',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    NgSelectComponent,
+    GenericDataTableComponent,
+  ],
   templateUrl: './ApPaymentsTransactionHDR.component.html',
-  styleUrls: ['./ApPaymentsTransactionHDR.component.scss']
+  styleUrls: ['./ApPaymentsTransactionHDR.component.scss'],
 })
-
 export class ApPaymentsTransactionHDRComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
-  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
+  @ViewChild(GenericDataTableComponent)
+  genericTable!: GenericDataTableComponent;
   public formatNumericCell = formatNumericCell;
 
   private destroy$ = new Subject<void>();
@@ -42,8 +64,7 @@ export class ApPaymentsTransactionHDRComponent {
   gridOptions: GridOptions = { pagination: false };
   searchText: string = '';
   columnHeaderMap: { [key: string]: string } = {};
-  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
-
+  rowActions: Array<{ label: string; icon?: string; action: string }> = [];
 
   searchParams = new FilterApPaymentsTransactionHDRDto();
   searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
@@ -79,16 +100,19 @@ export class ApPaymentsTransactionHDRComponent {
     private Select2Service: Select2Service,
     private fb: FormBuilder
   ) {
-
     this.userEntityForm = this.fb.group({
-      entityIds: [[], Validators.required]
+      entityIds: [[], Validators.required],
     });
   }
 
   ngOnInit(): void {
     this.buildColumnDefs();
     this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
+      {
+        label: this.translate.instant('Common.ViewInfo'),
+        icon: 'icon-frame-view',
+        action: 'onViewInfo',
+      },
     ];
 
     this.vendorSearchInput$
@@ -141,7 +165,7 @@ export class ApPaymentsTransactionHDRComponent {
           this.vendorSelect2 = [...this.vendorSelect2, ...newItems];
           this.loadingvendors = false;
         },
-        error: () => this.loadingvendors = false
+        error: () => (this.loadingvendors = false),
       });
   }
 
@@ -176,13 +200,14 @@ export class ApPaymentsTransactionHDRComponent {
     this.searchSelect2Params.take = this.entitysearchParams.take;
 
     this.Select2Service.getEntitySelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.entitySelect2 = [...this.entitySelect2, ...newItems];
           this.loadingentity = false;
         },
-        error: () => this.loadingentity = false
+        error: () => (this.loadingentity = false),
       });
   }
 
@@ -195,7 +220,6 @@ export class ApPaymentsTransactionHDRComponent {
       this.searchParams.entityIdstr = null;
     }
   }
-
 
   onpaymentTypeSearch(event: { term: string; items: any[] }): void {
     const search = event.term;
@@ -217,13 +241,14 @@ export class ApPaymentsTransactionHDRComponent {
     this.searchSelect2Params.skip = this.paymentTypesearchParams.skip;
     this.searchSelect2Params.take = this.paymentTypesearchParams.take;
     this.Select2Service.getPaymentTypeSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.paymentTypeSelect2 = [...this.paymentTypeSelect2, ...newItems];
           this.loadingpaymentType = false;
         },
-        error: () => this.loadingpaymentType = false
+        error: () => (this.loadingpaymentType = false),
       });
   }
 
@@ -244,7 +269,10 @@ export class ApPaymentsTransactionHDRComponent {
   onPageChange(event: { pageNumber: number; pageSize: number }): void {
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
-    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+    this.getLoadDataGrid({
+      pageNumber: event.pageNumber,
+      pageSize: event.pageSize,
+    });
   }
 
   onTableSearch(text: string): void {
@@ -271,17 +299,6 @@ export class ApPaymentsTransactionHDRComponent {
   }
 
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
-    if (!this.searchParams.entityId) {
-      this.translate
-        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
-        .subscribe(translations => {
-          this.toastr.warning(
-            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
-            'Warning'
-          );
-        });
-      return;
-    }
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;
@@ -289,8 +306,10 @@ export class ApPaymentsTransactionHDRComponent {
     this.searchParams.take = event.pageSize;
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
     this.spinnerService.show();
-    this.apPaymentsTransactionHDRService.getAll(cleanedFilters)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+    this.apPaymentsTransactionHDRService
+      .getAll(cleanedFilters)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: any) => {
           this.loadgridData = response || [];
           this.pagination.totalCount = response[0]?.rowsCount || 0;
@@ -298,57 +317,92 @@ export class ApPaymentsTransactionHDRComponent {
         },
         error: () => {
           this.spinnerService.hide();
-        }
+        },
       });
   }
 
   getFormDatabyId(tr_Id: string, entitY_ID: string): void {
     const params: FilterApPaymentsTransactionHDRByIdDto = {
       entityId: entitY_ID,
-      paymentId: tr_Id
+      paymentId: tr_Id,
     };
     this.spinnerService.show();
     forkJoin({
-      mischeaderdata: this.apPaymentsTransactionHDRService.getDetailById(params) as Observable<
-        ApPaymentsTransactionHDRDto | ApPaymentsTransactionHDRDto[]>,
+      mischeaderdata: this.apPaymentsTransactionHDRService.getDetailById(
+        params
+      ) as Observable<
+        ApPaymentsTransactionHDRDto | ApPaymentsTransactionHDRDto[]
+      >,
     })
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (result) => {
           this.loadformData = Array.isArray(result.mischeaderdata)
             ? result.mischeaderdata[0] ?? ({} as ApPaymentsTransactionHDRDto)
             : result.mischeaderdata;
-          const modalElement = document.getElementById('viewdetails');;
+          const modalElement = document.getElementById('viewdetails');
           if (modalElement) {
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
-          };
+          }
 
           this.spinnerService.hide();
         },
         error: (err) => {
           this.spinnerService.hide();
-        }
+        },
       });
   }
 
   public buildColumnDefs(): void {
     this.columnDefs = [
- 
-      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentNumber'), field: 'paymenT_NUMBER', width: 200 },
-      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentDate'), field: 'paymenT_DATEstr', width: 200 },
-      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentTypeDesc'), field: 'paymenT_TYPE_DESC', width: 200 },
-      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.VendorNumber'), field: 'vendoR_NUMBER', width: 200 },
-      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.VendorName'), field: 'vendoR_NAME', width: 200 },
-      { headerName: this.translate.instant('ApPaymentsTransactionHDRResourceName.Amount'), field: 'paymenT_AMOUNTstr', width: 200,
-     valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US')
-       },
-       
-  
-     
+      {
+        headerName: this.translate.instant(
+          'ApPaymentsTransactionHDRResourceName.PaymentNumber'
+        ),
+        field: 'paymenT_NUMBER',
+        width: 200,
+      },
+      {
+        headerName: this.translate.instant(
+          'ApPaymentsTransactionHDRResourceName.PaymentDate'
+        ),
+        field: 'paymenT_DATEstr',
+        width: 200,
+      },
+      {
+        headerName: this.translate.instant(
+          'ApPaymentsTransactionHDRResourceName.PaymentTypeDesc'
+        ),
+        field: 'paymenT_TYPE_DESC',
+        width: 200,
+      },
+      {
+        headerName: this.translate.instant(
+          'ApPaymentsTransactionHDRResourceName.VendorNumber'
+        ),
+        field: 'vendoR_NUMBER',
+        width: 200,
+      },
+      {
+        headerName: this.translate.instant(
+          'ApPaymentsTransactionHDRResourceName.VendorName'
+        ),
+        field: 'vendoR_NAME',
+        width: 200,
+      },
+      {
+        headerName: this.translate.instant(
+          'ApPaymentsTransactionHDRResourceName.Amount'
+        ),
+        field: 'paymenT_AMOUNTstr',
+        width: 200,
+        valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US'),
+      },
     ];
   }
 
-  onTableAction(event: { action: string, row: any }) {
+  onTableAction(event: { action: string; row: any }) {
     if (event.action === 'onViewInfo') {
       this.getFormDatabyId(event.row.paymenT_ID, event.row.entitY_ID);
     }
@@ -356,71 +410,133 @@ export class ApPaymentsTransactionHDRComponent {
     }
   }
 
-
   printExcel(): void {
-    if (!this.searchParams.entityId) {
-      this.translate.get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
-        .subscribe(translations => {
-          this.toastr.warning(`${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`, 'Warning');
-        });
-      return;
-    }
     this.spinnerService.show();
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
 
-    this.apPaymentsTransactionHDRService.getAll({ ...cleanedFilters, skip: 0, take: 1 })
+    this.apPaymentsTransactionHDRService
+      .getAll({ ...cleanedFilters, skip: 0, take: 1 })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse[0]?.rowsCount || initialResponse?.data?.length || 0;
+          const totalCount =
+            initialResponse[0]?.rowsCount || initialResponse?.data?.length || 0;
 
-          this.apPaymentsTransactionHDRService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
+          this.apPaymentsTransactionHDRService
+            .getAll({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
                 const data = response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('ApPaymentsTransactionHDRResourceName.Title'),
-                  reportTitle: this.translate.instant('ApPaymentsTransactionHDRResourceName.Title'),
-                  fileName: `${this.translate.instant('ApPaymentsTransactionHDRResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant(
+                    'ApPaymentsTransactionHDRResourceName.Title'
+                  ),
+                  reportTitle: this.translate.instant(
+                    'ApPaymentsTransactionHDRResourceName.Title'
+                  ),
+                  fileName: `${this.translate.instant(
+                    'ApPaymentsTransactionHDRResourceName.Title'
+                  )}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.EntityId'), value: this.searchParams.entityIdstr },
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentNumber'), value: this.searchParams.paymentNumber },
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentDate'), value: this.searchParams.paymentDate },
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.VendorNumber'), value: this.searchParams.vendorNumber },
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.VendorName'), value: this.searchParams.vendorNamestr },
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentTypeDesc'), value: this.searchParams.paymentTypeDescstr },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.EntityId'
+                      ),
+                      value: this.searchParams.entityIdstr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.PaymentNumber'
+                      ),
+                      value: this.searchParams.paymentNumber,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.PaymentDate'
+                      ),
+                      value: this.searchParams.paymentDate,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.VendorNumber'
+                      ),
+                      value: this.searchParams.vendorNumber,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.VendorName'
+                      ),
+                      value: this.searchParams.vendorNamestr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.PaymentTypeDesc'
+                      ),
+                      value: this.searchParams.paymentTypeDescstr,
+                    },
                   ],
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentNumber'), key: 'paymenT_NUMBER' },
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentDate'), key: 'paymenT_DATEstr' },
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.PaymentTypeDesc'), key: 'paymenT_TYPE_DESC' },
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.VendorNumber'), key: 'vendoR_NUMBER' },
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.VendorName'), key: 'vendoR_NAME' },
-                    { label: this.translate.instant('ApPaymentsTransactionHDRResourceName.Amount'), key: 'paymenT_AMOUNTstr' },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.PaymentNumber'
+                      ),
+                      key: 'paymenT_NUMBER',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.PaymentDate'
+                      ),
+                      key: 'paymenT_DATEstr',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.PaymentTypeDesc'
+                      ),
+                      key: 'paymenT_TYPE_DESC',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.VendorNumber'
+                      ),
+                      key: 'vendoR_NUMBER',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.VendorName'
+                      ),
+                      key: 'vendoR_NAME',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'ApPaymentsTransactionHDRResourceName.Amount'
+                      ),
+                      key: 'paymenT_AMOUNTstr',
+                    },
                   ],
                   data: data.map((item: any, index: number) => ({
                     ...item,
-                    rowNo: index + 1
+                    rowNo: index + 1,
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['paymenT_AMOUNTstr']
+                  totalKeys: ['paymenT_AMOUNTstr'],
                 };
 
-                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.openStandardReportService.openStandardReportExcel(
+                  reportConfig
+                );
                 this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();
-              }
+              },
             });
         },
         error: () => {
           this.spinnerService.hide();
-        }
+        },
       });
   }
 }
-

@@ -184,9 +184,9 @@
     "VIEW": "View",
     "EDIT": "Edit",
     "DELETE": "Delete",
-    
+
     "dept": "Department",
-    "entities": "Entities", 
+    "entities": "Entities",
     "permissions": "Permissions",
     "edit": "Edit",
     "role": "Roles",
@@ -370,7 +370,7 @@
     "IMAGE": "Entity Image",
     "NO_IMAGE": "No image available",
     "STATUS": "Status",
-     "LICENSE_NUMBER": "License Number",
+    "LICENSE_NUMBER": "License Number",
     "ENTER_LICENSE_NUMBER": "Enter license number",
     "LICENSE_END_DATE": "License Expiry Date",
     "FOUNDATION_TYPE": "Foundation Type",
@@ -493,7 +493,7 @@
     }
   },
 
- 
+
 
   "FILE": {
     "CURRENT_IMAGE": "Current Image",
@@ -598,8 +598,20 @@
   "CORECT_EMAIL": "Please enter a valid email address",
 
   "OTP": {
-    "VERIFY_SUCCESS": "OTP Verified Successfully!",
-    "VERIFY_FAILED": "Invalid OTP. Please try again."
+    "TITLE": "Verify OTP",
+    "EXPIRES_IN": "OTP will expire in",
+    "SECONDS_SHORT": "s",
+    "VERIFY": "Verify OTP",
+    "DIDNT_RECEIVE": "Didn't receive OTP?",
+    "RESEND": "Resend OTP",
+    "VERIFY_SUCCESS": "OTP verified successfully",
+    "VERIFY_FAILED": "Failed to verify OTP",
+    "RESEND_SUCCESS": "A new OTP was sent",
+    "RESEND_FAILED": "Couldn't send OTP, please try again later",
+    "EMAIL_REQUIRED": "Please enter a valid email",
+    "FILL_ALL_DIGITS": "Please fill all OTP digits",
+    "HEADING": "OTP",
+    "SENT_HINT": "A one-time password will be sent to your email"
   },
 
   "RESET_PASSWORD": "Reset Password",
@@ -718,7 +730,7 @@
     "mainServices": "Main Services",
     "glAccountTitle": "GlAccounts",
     "glAccountEntityTitle": "GlAccounts Entity",
-    "generalSetting":" General Setting"
+    "generalSetting": " General Setting"
   },
 
   "dataTransLogs": {
@@ -837,8 +849,8 @@
     "Cancel": "Cancel",
     "DASHBOARD_PERMISSIONS": "Dashboard Permissions",
     "BasicInformation": "Basic Information",
-    
-    
+
+
     "ALREADY_MAPPED": "Account Already Mapped"
   },
 
@@ -909,7 +921,15 @@
     "optionThree": "Option 3",
     "entities": "Entities",
     "Departments": "Departments",
-    "Dashboard": "Dashboard"
+    "Dashboard": "Dashboard",
+    "notVerifieduserMessage": "You are not eligible to access this service. Your account is either not upgraded or you have a visitor account. Please contact Admin to access the services.",
+    "home": "Home",
+    "loginuserName": "User Name",
+    "passWord": "PassWord",
+    "login": "Login",
+    "forgetpassWord": "Forget Password?",
+    "uaePassLogin": "UAEPass Login",
+    "UAE_PASS_LOGIN": "Login with UAE Pass"
   },
 
   "ArMiscReceiptHeaderResourceName": {
@@ -3834,22 +3854,7 @@
     "PRIVACY": "Privacy Policy",
     "COPYRIGHT_NAME": "Charitable Work Coordination Council"
   },
-  "OTP": {
-    "TITLE": "Verify OTP",
-    "EXPIRES_IN": "OTP will expire in",
-    "SECONDS_SHORT": "s",
-    "VERIFY": "Verify OTP",
-    "DIDNT_RECEIVE": "Didn't receive OTP?",
-    "RESEND": "Resend OTP",
-    "VERIFY_SUCCESS": "OTP verified successfully",
-    "VERIFY_FAILED": "Failed to verify OTP",
-    "RESEND_SUCCESS": "A new OTP was sent",
-    "RESEND_FAILED": "Couldn't send OTP, please try again later",
-    "EMAIL_REQUIRED": "Please enter a valid email",
-    "FILL_ALL_DIGITS": "Please fill all OTP digits",
-    "HEADING": "OTP",
-    "SENT_HINT": "A one-time password will be sent to your email"
-  },
+
   "FORGOT": {
     "HEADING": "Forgot Password",
     "SENT_HINT": "OTP will be sent to your email. Please enter your email.",

@@ -3,63 +3,135 @@
 </div>
 <div class="container-fluid mt-3">
 
-    <div class="row">
-        <div class="col-xl-6 mb-3">
-            <div class="main-container h-100">
-                <div class="row mb-4">
-                    <div class="col-xl-12">
-                        <ng-select [items]="yearsList" bindLabel="text" bindValue="id" [(ngModel)]="selectedYearId"
-                            [closeOnSelect]="true" class="ng-select-custom" (change)="onYearChange()" placeholder="{{ 'FinancialCharts.year' | translate }}">
-                        </ng-select>
-                    </div>
-                 
-                </div>           
-                <ng-container *ngIf="seriesData.length">
-                    <app-bar-chart [categories]="categories" [seriesData]="seriesData" [useDynamicColors]="true" [pageTitle]="pageTitle">
-                    </app-bar-chart>
-                </ng-container>
-            </div>
-        </div>
+  <div class="row">
+    <div class="col-xl-6 mb-3">
+      <div class="main-container h-100">
+        <div class="row mb-4">
+          <div class="col-xl-12">
+            <ng-select [items]="yearsList" bindLabel="text" bindValue="id" [(ngModel)]="selectedYearId"
+                       [closeOnSelect]="true" class="ng-select-custom" (change)="onYearChange()" placeholder="{{ 'FinancialCharts.year' | translate }}">
+            </ng-select>
+          </div>
 
-        <div class="col-xl-6 mb-3">
-            <div class="main-container h-100">
-                <div class="row mb-4"  *ngIf="defaultChartType == 'General'">
-                        <div class="col-xl-6">
-                        <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
-                            [closeOnSelect]="true" class="ng-select-custom" (change)="onYearChange('changeEntit')" placeholder="{{ 'FinancialCharts.entity' | translate }}">
-                        </ng-select>
-                    </div>
-                    <div class="col-xl-6">
-                         <ng-select [items]="chartTypes" bindLabel="text" bindValue="id" [(ngModel)]="selectedChart1"
-                            [closeOnSelect]="true" class="ng-select-custom"
-                            (change)='onTypeChange(selectedChart1, "categories2", "seriesData2")' placeholder="Type">
-                        </ng-select>
-                      
-                    </div>
-                </div>
-                <ng-container *ngIf="seriesData2.length > 0">
-                    <app-bar-chart [categories]="categories2" [seriesData]="seriesData2" [useDynamicColors]="true" [pageTitle]="pageTitle">
-                    </app-bar-chart>
-                </ng-container>
-            </div>
         </div>
-
-        <div class="col-xl-6 mb-3">
-            <div class="main-container  h-100">
-                <div class="row mb-4">
-                    <div class="col-xl-12" *ngIf="defaultChartType == 'General'">
-                        <ng-select [items]="chartTypes" bindLabel="text" bindValue="id" [(ngModel)]="selectedChart2"
-                            [closeOnSelect]="true" class="ng-select-custom"
-                            (change)='onTypeChange(selectedChart2, "categories3", "seriesData3")' placeholder="Type">
-                        </ng-select>
-                       
-                    </div>
-                </div>
-                <ng-container *ngIf="seriesData3.length">
-                    <app-bar-chart [categories]="categories3" [seriesData]="seriesData3" [chartType]="'line'" [useDynamicColors]="true" [pageTitle]="pageTitle">
-                    </app-bar-chart>
-                </ng-container>
-            </div>
-        </div>
+        <ng-container *ngIf="seriesData.length">
+          <app-bar-chart [categories]="categories" [seriesData]="seriesData" [useDynamicColors]="true" [pageTitle]="pageTitle">
+          </app-bar-chart>
+        </ng-container>
+      </div>
     </div>
+
+    <div class="col-xl-6 mb-3">
+      <div class="main-container h-100">
+        <div class="row mb-4" *ngIf="defaultChartType == 'General'">
+          <div class="col-xl-6">
+            <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
+                       [closeOnSelect]="true" class="ng-select-custom" (change)="onYearChange('changeEntit')" placeholder="{{ 'FinancialCharts.entity' | translate }}">
+            </ng-select>
+          </div>
+          <div class="col-xl-6">
+            <ng-select [items]="chartTypes" bindLabel="text" bindValue="id" [(ngModel)]="selectedChart1"
+                       [closeOnSelect]="true" class="ng-select-custom"
+                       (change)='onTypeChange(selectedChart1, "categories2", "seriesData2")' placeholder="Type">
+            </ng-select>
+
+          </div>
+        </div>
+        <ng-container *ngIf="seriesData2.length > 0">
+          <app-bar-chart [categories]="categories2" [seriesData]="seriesData2" [useDynamicColors]="true" [pageTitle]="pageTitle">
+          </app-bar-chart>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="col-xl-6 mb-3">
+      <div class="main-container  h-100">
+        <div class="row mb-4">
+          <div class="col-xl-12" *ngIf="defaultChartType == 'General'">
+            <ng-select [items]="chartTypes" bindLabel="text" bindValue="id" [(ngModel)]="selectedChart2"
+                       [closeOnSelect]="true" class="ng-select-custom"
+                       (change)='onTypeChange(selectedChart2, "categories3", "seriesData3")' placeholder="Type">
+            </ng-select>
+
+          </div>
+        </div>
+        <ng-container *ngIf="seriesData3.length">
+          <app-bar-chart [categories]="categories3" [seriesData]="seriesData3" [chartType]="'bar'" [useDynamicColors]="true" [pageTitle]="pageTitle">
+          </app-bar-chart>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="col-xl-6 mb-3">
+      <div class="main-container  h-100">
+        <div class="row mb-4">
+          <div class="col-xl-12" *ngIf="defaultChartType == 'General'">
+            <ng-select [items]="chartTypes" bindLabel="text" bindValue="id" [(ngModel)]="selectedChart2"
+                       [closeOnSelect]="true" class="ng-select-custom"
+                       (change)='onTypeChange(selectedChart2, "categories3", "seriesData3")' placeholder="Type">
+            </ng-select>
+
+          </div>
+        </div>
+        <ng-container *ngIf="seriesData3.length">
+          <app-bar-chart [categories]="categories3" [seriesData]="seriesData3" [chartType]="'pie'" [useDynamicColors]="true" [pageTitle]="pageTitle">
+          </app-bar-chart>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- <div class="col-xl-6 mb-3">
+      <div class="main-container  h-100">
+        <div class="row mb-4">
+          <div class="col-xl-12" *ngIf="defaultChartType == 'General'">
+            <ng-select [items]="chartTypes" bindLabel="text" bindValue="id" [(ngModel)]="selectedChart2"
+                       [closeOnSelect]="true" class="ng-select-custom"
+                       (change)='onTypeChange(selectedChart2, "categories3", "seriesData3")' placeholder="Type">
+            </ng-select>
+
+          </div>
+        </div>
+        <ng-container *ngIf="seriesData3.length">
+          <app-bar-chart [categories]="categories3" [seriesData]="seriesData3" [chartType]="'line'" [useDynamicColors]="true" [pageTitle]="pageTitle">
+          </app-bar-chart>
+        </ng-container>
+      </div>
+    </div> -->
+
+    <!-- <div class="col-xl-6 mb-3">
+      <div class="main-container  h-100">
+        <div class="row mb-4">
+          <div class="col-xl-12" *ngIf="defaultChartType == 'General'">
+            <ng-select [items]="chartTypes" bindLabel="text" bindValue="id" [(ngModel)]="selectedChart2"
+                       [closeOnSelect]="true" class="ng-select-custom"
+                       (change)='onTypeChange(selectedChart2, "categories3", "seriesData3")' placeholder="Type">
+            </ng-select>
+
+          </div>
+        </div>
+        <ng-container *ngIf="seriesData3.length">
+          <app-bar-chart [categories]="categories3" [seriesData]="seriesData3" [chartType]="'area'" [useDynamicColors]="true" [pageTitle]="pageTitle">
+          </app-bar-chart>
+        </ng-container>
+      </div>
+    </div> -->
+
+    <!-- <div class="col-xl-6 mb-3">
+      <div class="main-container  h-100">
+        <div class="row mb-4">
+          <div class="col-xl-12" *ngIf="defaultChartType == 'General'">
+            <ng-select [items]="chartTypes" bindLabel="text" bindValue="id" [(ngModel)]="selectedChart2"
+                       [closeOnSelect]="true" class="ng-select-custom"
+                       (change)='onTypeChange(selectedChart2, "categories3", "seriesData3")' placeholder="Type">
+            </ng-select>
+
+          </div>
+        </div>
+        <ng-container *ngIf="seriesData3.length">
+          <app-bar-chart [categories]="categories3" [seriesData]="seriesData3" [chartType]="'table'" [useDynamicColors]="true" [pageTitle]="pageTitle">
+          </app-bar-chart>
+        </ng-container>
+      </div>
+    </div> -->
+  </div>
 </div>

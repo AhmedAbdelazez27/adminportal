@@ -129,8 +129,8 @@ type RequestAdvertisement = {
   provider: string;
   adTitle: string;
   adLang: string;
-  startDate: string;
-  endDate: string;
+  startDate?: string;
+  endDate?: string;
   mobile: string;
   supervisorName: string;
   fax: string;

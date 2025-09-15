@@ -663,18 +663,31 @@ getFormDatabyId(id: string, mode: 'edit' | 'view'): void {
       // Preserve original fields for later access
       accountCode: item.accountCode,
       numericId: item.id,
+      //state: {
+      //  disabled: item.accountStatus !== 1
+      //},
+      //a_attr: {
+      //  style: item.accountStatus === 1 ? 'color: darkgreen; font-weight: 600;' : 'color: gray;'
+      //},
       children: item.children ? this.mapToJsTreeDataByAccountCode(item.children) : []
     }));
   }
 
   // ✅ Mapping function for jsTree - GL Account Entity tree uses numeric id
   private mapToJsTreeDataByNumericId(data: any[]): any[] {
+    console.log("data", data);
     return data.map(item => ({
       id: String(item.id),
       text: `${item.accountCode} / ${item.arabicDescription}`,
       // Preserve original fields for later access
       accountCode: item.accountCode,
       numericId: item.id,
+      state: {
+        disabled: item.accountStatus !== 1
+      },
+      a_attr: {
+        style: item.accountStatus !== 1 ? 'color: red; font-weight: 600;' : 'color: gray;'
+      },
       children: item.children ? this.mapToJsTreeDataByNumericId(item.children) : []
     }));
   }

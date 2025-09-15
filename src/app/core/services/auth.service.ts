@@ -6,11 +6,13 @@ import { environment } from '../../../environments/environment';
 import { jwtDecode } from "jwt-decode";
 import { Router } from '@angular/router';
 import { ApiEndpoints } from '../constants/api-endpoints';
+import { LoginUAEPassDto } from '../dtos/uaepass.dto';
 
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly BASE_URL = `${environment.apiBaseUrl}/Login`;
+  private readonly UAEPassBASE_URL = `${environment.apiBaseUrl}${ApiEndpoints.User.UAEPassBaseURL}`;
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -30,9 +32,10 @@ export class AuthService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('permissions');
     localStorage.removeItem('pages');
-    this.router.navigate(['/login']);
-
+    const logoutUrl = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(window.location.origin + '/login');
+    window.location.href = logoutUrl;
   }
+
   isLoggedIn(): boolean {
     const token = localStorage.getItem('access_token');
     return token ? true : false;
@@ -141,5 +144,14 @@ export class AuthService {
     }
 
     return null;
+  }
+
+  UAEPasslogin(params: LoginUAEPassDto): Observable<any> {
+    const code = params.code ?? '';
+    const state = params.state ?? '';
+    const lang = params.lang ?? '';
+
+    const apiUrl = `${this.UAEPassBASE_URL}${ApiEndpoints.User.GetUAEPAssInfo}`;
+    return this.http.post<any>(apiUrl, params);
   }
 }

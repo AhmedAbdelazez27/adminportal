@@ -826,9 +826,18 @@
     "optionOne": "الخيار الأول",
     "optionTwo": "الخيار الثاني",
     "optionThree": "الخيار الثالث",
+    "notVerifieduserMessage": "You are not eligible to access this service. Your account is either not upgraded or you have a visitor account. Please contact Admin to access the services.",
+    "home": "القائمة الرئيسية",
+    "loginuserName": "اسم المستخدم",
+    "passWord": "كلمة المرور",
+    "login": "تسجيل الدخول",
+    "forgetpassWord": "هل نسيت كلمة المرور؟",
+    "uaePassLogin": "تسجيل الدخول عبر الهوية الرقمية الإماراتية",
+    "UAE_PASS_LOGIN": "تسجيل الدخول بـ UAE Pass",
     "entities": "الجمعيات",
     "Dashboard": "الشاشة الرئيسية"
   },
+
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "اسم الجمعية",
     "DocumentNumber": "رقم السند",

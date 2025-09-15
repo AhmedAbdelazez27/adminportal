@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EntityService } from '../../../../../core/services/entit.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { ChartUtilsService } from '../../../../../../shared/services/chart-utils.service';
+import { ChartSeriesData, ChartUtilsService } from '../../../../../../shared/services/chart-utils.service';
 
 @Component({
   selector: 'app-revenue-general',
@@ -124,9 +124,6 @@ export class RevenueGeneralComponent implements OnInit {
           this.pageTitle= "finanial_charts_branch_account";
           const bybranchtItem = this.chartTypes.find((item: any) => item.value === "ByBranch");
           const byAccountItem = this.chartTypes.find((item: any) => item.value === "ByAccount");
-          console.log(bybranchtItem);
-          console.log(byAccountItem);
-          
           if (bybranchtItem) {
             this.selectedChart1 = bybranchtItem?.id;
           }
@@ -163,11 +160,11 @@ export class RevenueGeneralComponent implements OnInit {
     if (!this.selectedYearId) return;
     this.spinnerService.show();
     const payload = {
-      chartType: 5,
+      chartType: 6,
       parameters: {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
-        entityId: this.selectedEntity ? this.selectedEntity.toString() : null,
+        entityId: this.selectedEntity ? this.selectedEntity.toString() : "-1",
         periodId: null,
         departmentId: null,
         countryId: null,
@@ -203,7 +200,7 @@ export class RevenueGeneralComponent implements OnInit {
       parameters: {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
-        entityId: this.selectedEntity ? this.selectedEntity.toString() : null,
+        entityId: this.selectedEntity ? this.selectedEntity.toString() : "-1",
         periodId: null,
         departmentId: null,
         countryId: null,
@@ -228,14 +225,27 @@ export class RevenueGeneralComponent implements OnInit {
 
   parseChartData(res: any, categoriesName: string, seriesDataName: string) {
     const data = res?.data || [];
+    if (data.length === 0) {
+      this[categoriesName] = [];
+      this[seriesDataName] = [];
+      return;
+    }
     if (data.length > 0) {
       const result = this.chartUtils.parseChartData(res, this.currentLang, {
         useIndividualSeries: true,
         valueFields: ['value1', 'value2', 'value3', 'value4']
       });
 
+      const mappedSeriesData: ChartSeriesData[] = [];
+      result.seriesData.forEach((series, index) => {
+        if (index === 0) { 
+          mappedSeriesData.push({ ...series, name: 'Revenue' });
+        } else if (index === 1) {
+          mappedSeriesData.push({ ...series, name: 'Expense' });
+        }
+      });
       this[categoriesName] = result.categories;
-      this[seriesDataName] = result.seriesData;
+      this[seriesDataName] = mappedSeriesData;
     } else {
       this[categoriesName] = [];
       this[seriesDataName] = [];

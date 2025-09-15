@@ -16,8 +16,11 @@ export class ApiEndpoints {
     ResetPassword: '/ResetPassword',
     UpdateUserStatus: '/UpdateUserStatus',
     GetDashboardPermissionList: (id: string) => `/Permission/GetAllDashboardPermissions/${id}`,
-
-
+    UAEPassBaseURL: '/UAEPass',
+   //GetUAEPAssInfo: (code: string, state: string, lang: string) => `/Login/${code}/${state}/${lang}`,
+    GetUAEPAssInfo: '/Login',
+    UAEPassLogOutBaseURL: 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=?',
+    UAEPassLogInBaseURL: 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:4200&acr_values=urn:safelayer:tws:policies:authentication:level:low',
   };
 
   static readonly Roles = {

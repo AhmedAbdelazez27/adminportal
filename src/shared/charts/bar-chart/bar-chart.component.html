@@ -1,12 +1,48 @@
-<ng-container *ngIf="chartOptionsBar">
+<!-- Chart Type Selector -->
+<div class="chart-type-selector" 
+     *ngIf="enableChartTypeSelection"
+     [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
+  <label for="chartTypeSelect">{{ currentLang === 'ar' ? 'نوع الرسم البياني'   : 'Chart Type :' }}</label>
+  <select id="chartTypeSelect" 
+          [(ngModel)]="selectedChartType" 
+          (change)="onChartTypeChange($any($event.target).value)"
+          class="form-select">
+    <option *ngFor="let type of availableChartTypes" [value]="type.value">
+      {{ type.label }}
+    </option>
+  </select>
+</div>
+
+<ng-container *ngIf="selectedChartType === 'table'; else chartBlock">
+  <!-- Table View -->
+  <div class="table-responsive" [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>{{ currentLang === 'ar' ? 'الفئة' : 'Category' }}</th>
+          <th *ngFor="let s of seriesData">{{ s.name }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cat of categories; let i = index">
+          <td>{{ cat }}</td>
+          <td *ngFor="let s of seriesData">{{ s.data[i] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+
+<!-- Chart Block (all chart types except table) -->
+<ng-template #chartBlock>
   <div class="chart-wrapper" (click)="onChartClick($event)">
-    <highcharts-chart
-      [Highcharts]="Highcharts"
-      [options]="chartOptionsBar"
-      (chartInstance)="addComponentRef($event)"
-    ></highcharts-chart>
+    <highcharts-chart [Highcharts]="Highcharts"
+                      [options]="chartOptionsBar"
+                      (chartInstance)="addComponentRef($event)">
+    </highcharts-chart>
   </div>
 
+  <!-- Fullscreen Preview -->
   <div class="preview-backdrop" *ngIf="isPreviewOpen" (click)="closePreview()">
     <div class="preview-container" (click)="$event.stopPropagation()">
       <button type="button" class="close-btn" (click)="closePreview()">×</button>
@@ -19,4 +55,4 @@
       </highcharts-chart>
     </div>
   </div>
-</ng-container>
+</ng-template>

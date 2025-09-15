@@ -12,7 +12,7 @@ import { Select2Service } from '../../../../core/services/Select2.service';
 import { EntityService } from '../../../../core/services/entit.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { MonthConstants } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { ChartUtilsService } from '../../../../../shared/services/chart-utils.service';
+import { ChartSeriesData, ChartUtilsService } from '../../../../../shared/services/chart-utils.service';
 
 @Component({
   selector: 'app-receipts-payments-comparission',
@@ -144,10 +144,11 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
     this._ChartsService.getReceiptsandPaymentsComparison(payload, this.typeService).subscribe({
       next: (res) => {
          if (typeChange == 1) {
-          this.transformToChartData(res?.data, 'categoriees', 'seriesData');
-           this.onYearChange(2);
-        }else if (typeChange == 2){
-          this.transformToChartData(res?.data, 'categoriees2', 'seriesData2');
+           this.parseChartData(res?.data, 'categoriees', 'seriesData');
+          // this.onYearChange(2);
+         }
+         else if (typeChange == 2) {
+           this.parseChartData(res?.data, 'categoriees2', 'seriesData2');
         }
 
         this.spinnerService.forceHide();
@@ -185,7 +186,37 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
     this[seriesData] = data
   }
 
+  parseChartData(res: any, categoriesName: string, seriesDataName: string) {
 
+    const data = res || [];
+    if (data.length === 0) {
+      this[categoriesName] = [];
+      this[seriesDataName] = [];
+      return;
+    }
+    if (data.length > 0) {
+      const result = this.chartUtils.parseChartData1(res, this.currentLang, {
+        useIndividualSeries: true,
+        valueFields: ['value1', 'value2', 'value3', 'value4']
+      });
+      console.log("seriesItem", result);
+      console.log("result.categories", result.categories);
+      const mappedSeriesData: ChartSeriesData[] = [];
+      result.seriesData.forEach((series, index) => {
+        if (index === 0) { // value1
+          mappedSeriesData.push({ ...series, name: 'Revenue' });
+        } else if (index === 1) { // value2
+          mappedSeriesData.push({ ...series, name: 'Expense' });
+        }
+      });
+
+      this[categoriesName] = result.categories;
+      this[seriesDataName] = mappedSeriesData;
+    } else {
+      this[categoriesName] = [];
+      this[seriesDataName] = [];
+    }
+  }
 
   setDefaultValues(categoriesName: string, seriesDataName: string) {
 

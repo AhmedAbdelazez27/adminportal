@@ -905,7 +905,7 @@
                                   <td class="text-center">
                                     <button *ngIf="partner.attachments?.length" class="btn btn-next-style"
                                             (click)="viewPartnerAttachments(partner)">
-                                      <i class="fas fa-eye me-1"></i>{{ 'COMMON.VIEW' | translate }} ({{ partner.attachments?.length }})
+                                      <i class="fas fa-eye me-1"></i>{{ 'COMMON.VIEW' | translate }} ({{ partner.attachments.length }})
                                     </button>
                                     <button *ngIf="!partner.attachments?.length" class="btn btn-next-style"
                                             (click)="viewPartnerAttachments(partner)">

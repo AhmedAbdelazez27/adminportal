@@ -17,3 +17,77 @@
 @media (max-width: 576px) {
   .btn-lang { inset-block-start: 12px; inset-inline-end: 12px; padding: 4px 10px; }
 }
+.image-container {
+  margin-right: 9%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.image-container img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+}
+
+.btn-uae-pass {
+  display: flex;
+  height: 64px;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 10px;
+  border: 1px solid var(--Color-16, #000);
+  background: var(--ffffff, #FFF);
+  color: var(--Color-16, #000);
+  font-family: "Expo Arabic Book";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.btn-uae-pass:hover {
+  border: 1px solid #8D734D;
+  color: #8D734D;
+}
+
+.black {
+  color: var(--Color-16, #000);
+}
+
+.gold {
+  color: #8D734D;
+}
+
+.gray {
+  color: #A6A6A6;
+}
+
+.form-label {
+  font-family: 'Expo Arabic Book';
+  font-weight: 400;
+  color: var(--Color-16, #000);
+  margin-bottom: 8px;
+}
+
+.form-check-label {
+  font-family: 'Expo Arabic Book';
+  font-size: 14px;
+  color: var(--Color-16, #000);
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .login-box {
+    padding: 24px;
+  }
+
+  .btn-login, .btn-uae-pass {
+    height: 56px;
+    font-size: 14px;
+  }
+}

@@ -77,31 +77,35 @@ export class ChartUtilsService {
     });
 
     let seriesData: ChartSeriesData[] = [];
+
     if (useIndividualSeries) {
-      seriesData = res.data.map((item: any, index: number) => {
-        const seriesName = currentLang === 'ar' ? 
-          (item.nameAr || item.nameEn || `المنظمة ${index + 1}`) : 
-          (item.nameEn || item.nameAr || `Organization ${index + 1}`);
-        
-        const data = res.data.map((dataItem: any, dataIndex: number) => {
-          if (dataIndex === index) {
-            const value = dataItem.value1 || 0;
-            return value;
-          }
-          return 0;
+      const valueFields = ['value1', 'value2', 'value3', 'value4'];
+      console.log("result.xzczxc", res.data);
+
+      valueFields.forEach((field, fieldIndex) => {
+        const seriesName = currentLang === 'ar'
+          ? this.getSeriesName(field, 'ar')  // optional helper
+          : this.getSeriesName(field, 'en');
+
+        const colorForField = this.generateDynamicColor(fieldIndex, valueFields.length);
+
+        const data = res.data.map((item: any) => {
+          const value = item[field] || 0;
+          console.log("value", value);
+          return value <= 0 ? null : value; 
         });
 
-        const baseColor = this.generateDynamicColor(index, res.data.length);
-        const itemValue = item.value1 || 0;
-        const color = itemValue < 0 ? this.adjustColorForNegative(baseColor) : baseColor;
-
-        return {
+        seriesData.push({
           name: seriesName,
           data: data,
-          color: color
-        };
+          color: colorForField
+        });
       });
-    } else {
+    }
+
+
+
+    else {
       valueFields.forEach((valueField, fieldIndex) => {
         const hasValue = res.data.some((item: any) => 
           item[valueField] != null && item[valueField] !== 0
@@ -135,6 +139,101 @@ export class ChartUtilsService {
 
     return { categories, seriesData };
   }
+
+
+
+  parseChartData1(
+    res: any,
+    currentLang: string = 'en',
+    options: {
+      useIndividualSeries?: boolean;
+      valueFields?: string[];
+      categoryField?: string;
+    } = {}
+  ): { categories: string[], seriesData: ChartSeriesData[] } {
+
+    const {
+      useIndividualSeries = true,
+      valueFields = ['value1', 'value2', 'value3', 'value4'],
+      categoryField = 'nameAr'
+    } = options;
+
+    if (!res || !res || res.length === 0) {
+      return this.getDefaultChartData(currentLang);
+    }
+
+    const categories = res.map((item: any) => {
+      if (currentLang === 'ar') {
+        return item.nameAr || item.nameEn || 'غير محدد';
+      } else {
+        return item.nameEn || item.nameAr || 'Unknown';
+      }
+    });
+
+    let seriesData: ChartSeriesData[] = [];
+
+    if (useIndividualSeries) {
+      const valueFields = ['value1', 'value2', 'value3', 'value4'];
+      console.log("result.xzczxc", res);
+
+      valueFields.forEach((field, fieldIndex) => {
+        const seriesName = currentLang === 'ar'
+          ? this.getSeriesName(field, 'ar')  // optional helper
+          : this.getSeriesName(field, 'en');
+
+        const colorForField = this.generateDynamicColor(fieldIndex, valueFields.length);
+
+        const data = res.map((item: any) => {
+          const value = item[field] || 0;
+          console.log("value", value);
+          return value <= 0 ? null : value;
+        });
+
+        seriesData.push({
+          name: seriesName,
+          data: data,
+          color: colorForField
+        });
+      });
+    }
+
+
+
+    else {
+      valueFields.forEach((valueField, fieldIndex) => {
+        const hasValue = res.some((item: any) =>
+          item[valueField] != null && item[valueField] !== 0
+        );
+
+        if (hasValue) {
+          const seriesName = this.getSeriesName(valueField, currentLang);
+          const data = res.map((item: any) => item[valueField] || 0);
+          const color = this.generateDynamicColor(fieldIndex, valueFields.length);
+
+          seriesData.push({
+            name: seriesName,
+            data: data,
+            color: color
+          });
+        }
+      });
+
+      if (seriesData.length === 0) {
+        const seriesName = currentLang === 'ar' ? 'القيمة الأولى' : 'Value 1';
+        const data = res.map((item: any) => item.value1 || 0);
+        const color = this.generateDynamicColor(0, 1);
+
+        seriesData.push({
+          name: seriesName,
+          data: data,
+          color: color
+        });
+      }
+    }
+
+    return { categories, seriesData };
+  }
+
 
 
   private getSeriesName(valueField: string, currentLang: string): string {

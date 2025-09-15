@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { HomeService, HomeKpiApiItem } from '../../../core/services/home.service';
@@ -7,10 +7,15 @@ import { RouteMappingValidatorService } from '../../../core/services/shortcut/ro
 import { ShortcutDto, CreateShortcutDto } from '../../../core/dtos/shortcut/shortcut.dto';
 import { PieChartComponent } from "../../../../shared/charts/pie-chart/pie-chart.component";
 import { BarChartComponent } from "../../../../shared/charts/bar-chart/bar-chart.component";
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { HomeTotalRequestSummaryDto, HomeRequestSummaryDto } from '../../../core/dtos/home/home-request-summary.dto';
-import { ChartUtilsService } from '../../../../shared/services/chart-utils.service';
+import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
+import { LoginUAEPassDto } from '../../../core/dtos/uaepass.dto';
+import { AuthService } from '../../../core/services/auth.service';
+import { SpinnerService } from '../../../core/services/spinner.service';
+import { ChartSeriesData, ChartUtilsService } from '../../../../shared/services/chart-utils.service';
 
 interface ChartDataItem {
   chartTitle: string;
@@ -73,6 +78,10 @@ export class HomeComponent implements OnInit {
   requestSummaryList: HomeRequestSummaryDto[] = [];
   isLoadingRequestSummary = false;
 
+  code: string | null = null;
+  state: string | null = null;
+  destroy$ = new Subject<boolean>();
+
   @ViewChild('kpiScroll', { static: false }) kpiScroll?: ElementRef<HTMLDivElement>;
 
   constructor(
@@ -81,10 +90,27 @@ export class HomeComponent implements OnInit {
     private shortcutService: ShortcutService,
     private router: Router,
     private routeValidator: RouteMappingValidatorService,
+    private auth: AuthService,
+    private spinnerService: SpinnerService,
+    private toastr: ToastrService,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
     private chartUtils: ChartUtilsService
   ) { }
 
   ngOnInit(): void {
+
+    this.route.queryParams.subscribe(params => {
+      this.code = params['code'];
+      this.state = params['state'];
+      debugger;
+
+      if (this.isValidCodeState(this.code, this.state)) {
+        this.uaepassCheckCode(this.code!, this.state!);
+      } else {
+        console.log('Code or state is invalid. API call not made.');
+      }
+    });
     this.loadKpis();
     this.loadCharts();
     this.loadShortcuts();
@@ -424,18 +450,25 @@ export class HomeComponent implements OnInit {
         useIndividualSeries: false,
         valueFields: ['value1', 'value2']
       });
-
+      const mappedSeriesData: ChartSeriesData[] = [];
+      result.seriesData.forEach((series, index) => {
+        if (index === 0) {
+          mappedSeriesData.push({ ...series, name: 'Revenue' });
+        } else if (index === 1) {
+          mappedSeriesData.push({ ...series, name: 'Expense' });
+        }
+      });
       return {
         title: chart.chartTitle,
         chartType: chart.chartType,
         module: chart.module,
         categories: result.categories,
-        seriesData: result.seriesData,
+        seriesData: mappedSeriesData,
         originalData: chart.data
       };
     }).filter(chart => chart !== null);  
   }
-
+ 
     trackByChart(index: number, chart: any): any {
      return chart?.title || index;
   }
@@ -456,4 +489,66 @@ export class HomeComponent implements OnInit {
       y: item.value1 + item.value2 
     }));
   }
+
+
+  isValidCodeState(code: string | null, state: string | null): boolean {
+    return !!(code && state && code.trim() !== '' && state.trim() !== '');
+  }
+
+  uaepassCheckCode(code: string, state: string) {
+    const params: LoginUAEPassDto =
+    {
+      code: code,
+      state: state,
+      lang: localStorage.getItem('lang')
+    }
+    debugger;
+    this.spinnerService.show();
+
+    this.auth.UAEPasslogin(params)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+
+          this.auth.saveToken(res?.token);
+          const decodedData = this.auth.decodeToken();
+
+          if (decodedData && decodedData.Permissions) {
+            const permissions = decodedData.Permissions;
+            localStorage.setItem('permissions', JSON.stringify(permissions));
+            localStorage.setItem('pages', JSON.stringify(decodedData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']));
+            localStorage.setItem('userId', decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']);
+          }
+
+          this.toastr.success(this.translate.instant('LOGIN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
+          this.spinnerService.hide();
+          this.router.navigate(['/home']);
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.log("ere",err)
+    
+          this.toastr.error(
+            this.translate.instant('LOGIN.FAILED'),
+            this.translate.instant('TOAST.TITLE.ERROR')
+          );
+          this.toastr.info(this.translate.instant(err.error.reason));
+
+          const redirectUri = window.location.origin + '/login';
+
+          const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
+
+          window.location.href = logoutURL; // perform logout and redirect
+
+          window.location.href = `${logoutURL}`;
+          this.spinnerService.hide();
+        },
+
+        complete: () => {
+          this.spinnerService.hide();
+        }
+      });
+  }
+
+
 }

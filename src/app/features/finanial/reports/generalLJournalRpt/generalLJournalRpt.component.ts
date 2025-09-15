@@ -5,8 +5,15 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { Pagination, SelectdropdownResultResults, FndLookUpValuesSelect2RequestDto, SelectdropdownResult, reportPrintConfig, Select2RequestDto } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { openStandardReportService } from '../../../../core/services/openStandardReportService.service'
+import {
+  Pagination,
+  SelectdropdownResultResults,
+  FndLookUpValuesSelect2RequestDto,
+  SelectdropdownResult,
+  reportPrintConfig,
+  Select2RequestDto,
+} from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import { openStandardReportService } from '../../../../core/services/openStandardReportService.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { Select2Service } from '../../../../core/services/Select2.service';
 import { generalLJournalRptInputDto } from '../../../../core/dtos/FinancialDtos/Reports/FinancialReportsInput.dto';
@@ -20,15 +27,20 @@ import { formatNumericCell } from '../../../../shared/utils/value-formatters';
 @Component({
   selector: 'app-generalLJournalRpt',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, GenericDataTableComponent, NgSelectComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    GenericDataTableComponent,
+    NgSelectComponent,
+  ],
   templateUrl: './generalLJournalRpt.component.html',
-  styleUrls: ['./generalLJournalRpt.component.scss']
+  styleUrls: ['./generalLJournalRpt.component.scss'],
 })
-
 export class generalLJournalRptComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
-  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
-
+  @ViewChild(GenericDataTableComponent)
+  genericTable!: GenericDataTableComponent;
 
   private destroy$ = new Subject<void>();
   userEntityForm!: FormGroup;
@@ -40,7 +52,7 @@ export class generalLJournalRptComponent {
   gridOptions: GridOptions = { pagination: false };
   searchText: string = '';
   columnHeaderMap: { [key: string]: string } = {};
-  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
+  rowActions: Array<{ label: string; icon?: string; action: string }> = [];
 
   searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
   searchParams = new generalLJournalRptInputDto();
@@ -91,14 +103,11 @@ export class generalLJournalRptComponent {
     private openStandardReportService: openStandardReportService,
     private spinnerService: SpinnerService,
     private Select2Service: Select2Service
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildColumnDefs();
     this.rowActions = [];
-
 
     this.entitySearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -123,7 +132,6 @@ export class generalLJournalRptComponent {
     this.toAccSearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
       .subscribe(() => this.fetchtoAccSelect2());
-
 
     this.fetchentitySelect2();
     this.fetchcountrySelect2();
@@ -159,13 +167,14 @@ export class generalLJournalRptComponent {
     this.searchSelect2Params.take = this.entitysearchParams.take;
 
     this.Select2Service.getEntitySelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.entitySelect2 = [...this.entitySelect2, ...newItems];
           this.loadingentity = false;
         },
-        error: () => this.loadingentity = false
+        error: () => (this.loadingentity = false),
       });
   }
 
@@ -178,7 +187,6 @@ export class generalLJournalRptComponent {
       this.searchParams.entityIdstr = null;
     }
   }
-
 
   ondeptSearch(event: { term: string; items: any[] }): void {
     const search = event.term;
@@ -201,13 +209,14 @@ export class generalLJournalRptComponent {
     this.searchSelect2Params.take = this.deptsearchParams.take;
 
     this.Select2Service.getDeptSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.deptSelect2 = [...this.deptSelect2, ...newItems];
           this.loadingdept = false;
         },
-        error: () => this.loadingdept = false
+        error: () => (this.loadingdept = false),
       });
   }
 
@@ -220,7 +229,6 @@ export class generalLJournalRptComponent {
       this.searchParams.att3str = null;
     }
   }
-
 
   onbranchSearch(event: { term: string; items: any[] }): void {
     const search = event.term;
@@ -243,13 +251,14 @@ export class generalLJournalRptComponent {
     this.searchSelect2Params.take = this.branchsearchParams.take;
 
     this.Select2Service.getBranchSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.branchSelect2 = [...this.branchSelect2, ...newItems];
           this.loadingbranch = false;
         },
-        error: () => this.loadingbranch = false
+        error: () => (this.loadingbranch = false),
       });
   }
 
@@ -262,7 +271,6 @@ export class generalLJournalRptComponent {
       this.searchParams.att2str = null;
     }
   }
-
 
   oncountrySearch(event: { term: string; items: any[] }): void {
     const search = event.term;
@@ -285,13 +293,14 @@ export class generalLJournalRptComponent {
     this.searchSelect2Params.take = this.countrysearchParams.take;
 
     this.Select2Service.getCountrySelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.countrySelect2 = [...this.countrySelect2, ...newItems];
           this.loadingcountry = false;
         },
-        error: () => this.loadingcountry = false
+        error: () => (this.loadingcountry = false),
       });
   }
 
@@ -304,7 +313,6 @@ export class generalLJournalRptComponent {
       this.searchParams.att1str = null;
     }
   }
-
 
   onfromAccSearch(event: { term: string; items: any[] }): void {
     const search = event.term;
@@ -327,13 +335,14 @@ export class generalLJournalRptComponent {
     this.searchSelect2Params.take = this.fromAccsearchParams.take;
 
     this.Select2Service.getAccountSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.fromAccSelect2 = [...this.fromAccSelect2, ...newItems];
           this.loadingfromAcc = false;
         },
-        error: () => this.loadingfromAcc = false
+        error: () => (this.loadingfromAcc = false),
       });
   }
 
@@ -346,7 +355,6 @@ export class generalLJournalRptComponent {
       this.searchParams.att5Fromstr = null;
     }
   }
-
 
   ontoAccSearch(event: { term: string; items: any[] }): void {
     const search = event.term;
@@ -369,13 +377,14 @@ export class generalLJournalRptComponent {
     this.searchSelect2Params.take = this.toAccsearchParams.take;
 
     this.Select2Service.getAccountSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.toAccSelect2 = [...this.toAccSelect2, ...newItems];
           this.loadingtoAcc = false;
         },
-        error: () => this.loadingtoAcc = false
+        error: () => (this.loadingtoAcc = false),
       });
   }
 
@@ -389,19 +398,7 @@ export class generalLJournalRptComponent {
     }
   }
 
-
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
-    if (!this.searchParams.entityId) {
-      this.translate
-        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
-        .subscribe(translations => {
-          this.toastr.warning(
-            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
-            'Warning'
-          );
-        });
-      return;
-    }
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;
@@ -409,8 +406,10 @@ export class generalLJournalRptComponent {
     this.searchParams.take = event.pageSize;
     this.spinnerService.show();
 
-    this.financialReportService.getgeneralLJournalRptData(this.searchParams)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+    this.financialReportService
+      .getgeneralLJournalRptData(this.searchParams)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: any) => {
           this.getAllDataForReports = response?.data || [];
           this.pagination.totalCount = response?.totalCount || 0;
@@ -418,10 +417,9 @@ export class generalLJournalRptComponent {
         },
         error: (error) => {
           this.spinnerService.hide();
-        }
+        },
       });
   }
-
 
   onSearch(): void {
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
@@ -430,7 +428,10 @@ export class generalLJournalRptComponent {
   onPageChange(event: { pageNumber: number; pageSize: number }): void {
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
-    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+    this.getLoadDataGrid({
+      pageNumber: event.pageNumber,
+      pageSize: event.pageSize,
+    });
   }
 
   onTableSearch(text: string): void {
@@ -458,170 +459,390 @@ export class generalLJournalRptComponent {
 
   public buildColumnDefs(): void {
     this.columnDefs = [
-
-      { headerName: this.translate.instant('FinancialReportResourceName.accountT_CODE'), field: 'accountT_CODE', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.accounT_NAME'), field: 'accounT_NAME', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.jE_NAME'), field: 'jE_NAME', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.jE_DATE'), field: 'jE_DATEstr', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.jE_SOURCE_DESC'), field: 'jE_SOURCE_DESC', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.notes'), field: 'notes', width: 200 },
-      { headerName: this.translate.instant('FinancialReportResourceName.debiT_AMOUNT'), field: 'debiT_AMOUNTstr', width: 200,   
-     valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US') },
-      { headerName: this.translate.instant('FinancialReportResourceName.crediT_AMOUNT'), field: 'crediT_AMOUNTstr', width: 200, 
-     valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US')},
+      {
+        headerName: this.translate.instant(
+          'FinancialReportResourceName.accountT_CODE'
+        ),
+        field: 'accountT_CODE',
+        width: 200,
+      },
+      {
+        headerName: this.translate.instant(
+          'FinancialReportResourceName.accounT_NAME'
+        ),
+        field: 'accounT_NAME',
+        width: 200,
+      },
+      {
+        headerName: this.translate.instant(
+          'FinancialReportResourceName.jE_NAME'
+        ),
+        field: 'jE_NAME',
+        width: 200,
+      },
+      {
+        headerName: this.translate.instant(
+          'FinancialReportResourceName.jE_DATE'
+        ),
+        field: 'jE_DATEstr',
+        width: 200,
+      },
+      {
+        headerName: this.translate.instant(
+          'FinancialReportResourceName.jE_SOURCE_DESC'
+        ),
+        field: 'jE_SOURCE_DESC',
+        width: 200,
+      },
+      {
+        headerName: this.translate.instant('FinancialReportResourceName.notes'),
+        field: 'notes',
+        width: 200,
+      },
+      {
+        headerName: this.translate.instant(
+          'FinancialReportResourceName.debiT_AMOUNT'
+        ),
+        field: 'debiT_AMOUNTstr',
+        width: 200,
+        valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US'),
+      },
+      {
+        headerName: this.translate.instant(
+          'FinancialReportResourceName.crediT_AMOUNT'
+        ),
+        field: 'crediT_AMOUNTstr',
+        width: 200,
+        valueFormatter: (params) => formatNumericCell(params.value, 2, 'en-US'),
+      },
     ];
   }
 
-  onTableAction(event: { action: string, row: any }) { }
+  onTableAction(event: { action: string; row: any }) {}
 
   printExcel(): void {
-    if (!this.searchParams.entityId) {
-      this.translate
-        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
-        .subscribe(translations => {
-          this.toastr.warning(
-            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
-            'Warning'
-          );
-        });
-      return;
-    }
     this.spinnerService.show();
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
-    this.financialReportService.getgeneralLJournalRptData({ ...cleanedFilters })
+    this.financialReportService
+      .getgeneralLJournalRptData({ ...cleanedFilters })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+          const totalCount =
+            initialResponse?.totalCount || initialResponse?.data?.length || 0;
 
-          this.financialReportService.getgeneralLJournalRptData({ ...cleanedFilters, skip: 0, take: totalCount })
+          this.financialReportService
+            .getgeneralLJournalRptData({
+              ...cleanedFilters,
+              skip: 0,
+              take: totalCount,
+            })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.generalLJournalRpt_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.generalLJournalRpt_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.generalLJournalRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant(
+                    'FinancialReportResourceName.generalLJournalRpt_Title'
+                  ),
+                  reportTitle: this.translate.instant(
+                    'FinancialReportResourceName.generalLJournalRpt_Title'
+                  ),
+                  fileName: `${this.translate.instant(
+                    'FinancialReportResourceName.generalLJournalRpt_Title'
+                  )}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
-                    { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
-                    { label: this.translate.instant('FinancialReportResourceName.country'), value: this.searchParams.att1str },
-                    { label: this.translate.instant('FinancialReportResourceName.branch'), value: this.searchParams.att2str },
-                    { label: this.translate.instant('FinancialReportResourceName.department'), value: this.searchParams.att3str },
-                    { label: this.translate.instant('FinancialReportResourceName.fromAccNo'), value: this.searchParams.att5Fromstr },
-                    { label: this.translate.instant('FinancialReportResourceName.toAccNo'), value: this.searchParams.att5Tostr },
-                    { label: this.translate.instant('FinancialReportResourceName.fromDate'), value: this.searchParams.fromDate },
-                    { label: this.translate.instant('FinancialReportResourceName.toDate'), value: this.searchParams.toDate },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.entityId'
+                      ),
+                      value: this.searchParams.entityIdstr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.country'
+                      ),
+                      value: this.searchParams.att1str,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.branch'
+                      ),
+                      value: this.searchParams.att2str,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.department'
+                      ),
+                      value: this.searchParams.att3str,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.fromAccNo'
+                      ),
+                      value: this.searchParams.att5Fromstr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.toAccNo'
+                      ),
+                      value: this.searchParams.att5Tostr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.fromDate'
+                      ),
+                      value: this.searchParams.fromDate,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.toDate'
+                      ),
+                      value: this.searchParams.toDate,
+                    },
                   ],
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },
-                    { label: this.translate.instant('FinancialReportResourceName.accountT_CODE'), key: 'accountT_CODE' },
-                    { label: this.translate.instant('FinancialReportResourceName.accounT_NAME'), key: 'accounT_NAME' },
-                    { label: this.translate.instant('FinancialReportResourceName.jE_NAME'), key: 'jE_NAME' },
-                    { label: this.translate.instant('FinancialReportResourceName.jE_DATE'), key: 'jE_DATE' },
-                    { label: this.translate.instant('FinancialReportResourceName.jE_DATEstr'), key: 'jE_DATEstr' },
-                    { label: this.translate.instant('FinancialReportResourceName.jE_SOURCE_DESC'), key: 'jE_SOURCE_DESC' },
-                    { label: this.translate.instant('FinancialReportResourceName.notes'), key: 'notes' },
-                    { label: this.translate.instant('FinancialReportResourceName.debiT_AMOUNT'), key: 'debiT_AMOUNTstr' },
-                    { label: this.translate.instant('FinancialReportResourceName.crediT_AMOUNT'), key: 'crediT_AMOUNTstr' },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.accountT_CODE'
+                      ),
+                      key: 'accountT_CODE',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.accounT_NAME'
+                      ),
+                      key: 'accounT_NAME',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.jE_NAME'
+                      ),
+                      key: 'jE_NAME',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.jE_DATE'
+                      ),
+                      key: 'jE_DATE',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.jE_DATEstr'
+                      ),
+                      key: 'jE_DATEstr',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.jE_SOURCE_DESC'
+                      ),
+                      key: 'jE_SOURCE_DESC',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.notes'
+                      ),
+                      key: 'notes',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.debiT_AMOUNT'
+                      ),
+                      key: 'debiT_AMOUNTstr',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.crediT_AMOUNT'
+                      ),
+                      key: 'crediT_AMOUNTstr',
+                    },
                   ],
                   data: data.map((item: any, index: number) => ({
                     ...item,
-                    rowNo: index + 1
+                    rowNo: index + 1,
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['debiT_AMOUNTstr', 'crediT_AMOUNTstr']
+                  totalKeys: ['debiT_AMOUNTstr', 'crediT_AMOUNTstr'],
                 };
 
-                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.openStandardReportService.openStandardReportExcel(
+                  reportConfig
+                );
                 this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();
-              }
+              },
             });
         },
         error: () => {
           this.spinnerService.hide();
         },
-
       });
   }
 
   printPDF(): void {
-    if (!this.searchParams.entityId) {
-      this.translate
-        .get(['ApPaymentsTransactionHDRResourceName.EntityId', 'Common.Required'])
-        .subscribe(translations => {
-          this.toastr.warning(
-            `${translations['ApPaymentsTransactionHDRResourceName.EntityId']} ${translations['Common.Required']}`,
-            'Warning'
-          );
-        });
-      return;
-    }
     this.spinnerService.show();
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
-    this.financialReportService.getgeneralLJournalRptData({ ...cleanedFilters })
+    this.financialReportService
+      .getgeneralLJournalRptData({ ...cleanedFilters })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse?.totalCount || initialResponse?.data?.length || 0;
+          const totalCount =
+            initialResponse?.totalCount || initialResponse?.data?.length || 0;
 
-          this.financialReportService.getgeneralLJournalRptData({ ...cleanedFilters, skip: 0, take: totalCount })
+          this.financialReportService
+            .getgeneralLJournalRptData({
+              ...cleanedFilters,
+              skip: 0,
+              take: totalCount,
+            })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
                 const data = response?.data || response || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('FinancialReportResourceName.generalLJournalRpt_Title'),
-                  reportTitle: this.translate.instant('FinancialReportResourceName.generalLJournalRpt_Title'),
-                  fileName: `${this.translate.instant('FinancialReportResourceName.generalLJournalRpt_Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant(
+                    'FinancialReportResourceName.generalLJournalRpt_Title'
+                  ),
+                  reportTitle: this.translate.instant(
+                    'FinancialReportResourceName.generalLJournalRpt_Title'
+                  ),
+                  fileName: `${this.translate.instant(
+                    'FinancialReportResourceName.generalLJournalRpt_Title'
+                  )}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
-                    { label: this.translate.instant('FinancialReportResourceName.entityId'), value: this.searchParams.entityIdstr },
-                    { label: this.translate.instant('FinancialReportResourceName.country'), value: this.searchParams.att1str },
-                    { label: this.translate.instant('FinancialReportResourceName.branch'), value: this.searchParams.att2str },
-                    { label: this.translate.instant('FinancialReportResourceName.department'), value: this.searchParams.att3str },
-                    { label: this.translate.instant('FinancialReportResourceName.fromAccNo'), value: this.searchParams.att5Fromstr },
-                    { label: this.translate.instant('FinancialReportResourceName.toAccNo'), value: this.searchParams.att5Tostr },
-                    { label: this.translate.instant('FinancialReportResourceName.fromDate'), value: this.searchParams.fromDate },
-                    { label: this.translate.instant('FinancialReportResourceName.toDate'), value: this.searchParams.toDate },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.entityId'
+                      ),
+                      value: this.searchParams.entityIdstr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.country'
+                      ),
+                      value: this.searchParams.att1str,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.branch'
+                      ),
+                      value: this.searchParams.att2str,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.department'
+                      ),
+                      value: this.searchParams.att3str,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.fromAccNo'
+                      ),
+                      value: this.searchParams.att5Fromstr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.toAccNo'
+                      ),
+                      value: this.searchParams.att5Tostr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.fromDate'
+                      ),
+                      value: this.searchParams.fromDate,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.toDate'
+                      ),
+                      value: this.searchParams.toDate,
+                    },
                   ],
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },
-                    { label: this.translate.instant('FinancialReportResourceName.accountT_CODE'), key: 'accountT_CODE' },
-                    { label: this.translate.instant('FinancialReportResourceName.accounT_NAME'), key: 'accounT_NAME' },
-                    { label: this.translate.instant('FinancialReportResourceName.jE_NAME'), key: 'jE_NAME' },
-                    { label: this.translate.instant('FinancialReportResourceName.jE_DATE'), key: 'jE_DATE' },
-                    { label: this.translate.instant('FinancialReportResourceName.jE_DATEstr'), key: 'jE_DATEstr' },
-                    { label: this.translate.instant('FinancialReportResourceName.jE_SOURCE_DESC'), key: 'jE_SOURCE_DESC' },
-                    { label: this.translate.instant('FinancialReportResourceName.notes'), key: 'notes' },
-                    { label: this.translate.instant('FinancialReportResourceName.debiT_AMOUNT'), key: 'debiT_AMOUNTstr' },
-                    { label: this.translate.instant('FinancialReportResourceName.crediT_AMOUNT'), key: 'crediT_AMOUNTstr' },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.accountT_CODE'
+                      ),
+                      key: 'accountT_CODE',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.accounT_NAME'
+                      ),
+                      key: 'accounT_NAME',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.jE_NAME'
+                      ),
+                      key: 'jE_NAME',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.jE_DATE'
+                      ),
+                      key: 'jE_DATE',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.jE_DATEstr'
+                      ),
+                      key: 'jE_DATEstr',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.jE_SOURCE_DESC'
+                      ),
+                      key: 'jE_SOURCE_DESC',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.notes'
+                      ),
+                      key: 'notes',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.debiT_AMOUNT'
+                      ),
+                      key: 'debiT_AMOUNTstr',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'FinancialReportResourceName.crediT_AMOUNT'
+                      ),
+                      key: 'crediT_AMOUNTstr',
+                    },
                   ],
                   data: data.map((item: any, index: number) => ({
                     ...item,
-                    rowNo: index + 1
+                    rowNo: index + 1,
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['debiT_AMOUNTstr', 'crediT_AMOUNTstr']
+                  totalKeys: ['debiT_AMOUNTstr', 'crediT_AMOUNTstr'],
                 };
 
-                this.openStandardReportService.openStandardReportPDF(reportConfig);
+                this.openStandardReportService.openStandardReportPDF(
+                  reportConfig
+                );
                 this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();
-              }
+              },
             });
         },
         error: () => {
           this.spinnerService.hide();
         },
-
       });
   }
 }
-

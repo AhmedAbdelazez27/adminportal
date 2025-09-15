@@ -12,7 +12,7 @@ import { Select2Service } from '../../../../core/services/Select2.service';
 import { EntityService } from '../../../../core/services/entit.service';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { PieChartComponent } from '../../../../../shared/charts/pie-chart/pie-chart.component';
-import { ChartUtilsService } from '../../../../../shared/services/chart-utils.service';
+import { ChartSeriesData, ChartUtilsService } from '../../../../../shared/services/chart-utils.service';
 
 @Component({
   selector: 'app-statistics-Benf-Families',
@@ -191,19 +191,33 @@ export class StatisticsOfBeneficiaryFamiliesComponents implements OnInit {
 
   parseChartData(res: any, categoriesName: string, seriesDataName: string) {
     const data = res?.data || [];
+    if (data.length === 0) {
+      this[categoriesName] = [];
+      this[seriesDataName] = [];
+      return;
+    }
     if (data.length > 0) {
       const result = this.chartUtils.parseChartData(res, this.currentLang, {
         useIndividualSeries: true,
         valueFields: ['value1', 'value2', 'value3', 'value4']
       });
 
+      const mappedSeriesData: ChartSeriesData[] = [];
+      result.seriesData.forEach((series, index) => {
+        if (index === 0) {
+          mappedSeriesData.push({ ...series, name: 'Revenue' });
+        } else if (index === 1) {
+          mappedSeriesData.push({ ...series, name: 'Expense' });
+        }
+      });
       this[categoriesName] = result.categories;
-      this[seriesDataName] = result.seriesData;
+      this[seriesDataName] = mappedSeriesData;
     } else {
       this[categoriesName] = [];
       this[seriesDataName] = [];
     }
   }
+
 
 
   setDefaultValues(categoriesName: string, seriesDataName: string) {

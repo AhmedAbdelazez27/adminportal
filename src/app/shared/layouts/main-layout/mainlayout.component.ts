@@ -7,7 +7,7 @@ import { ExportToolbarComponent } from '../../../../shared/export-toolbar/export
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, ExportToolbarComponent],
+  imports: [RouterOutlet, NavbarComponent],
   templateUrl: 'main-layout.component.html',
   styleUrls: ['./main-layout.component.scss']
 })

@@ -47,7 +47,6 @@ export class ContactInformationComponent implements OnInit, OnDestroy {
   editingContactInformationId: number | null = null;
   selectedContactInformationToDelete: ContactInformationDto | null = null;
   isLoading: boolean = false;
-
   // Modals
   private contactInformationModal: any = null;
   private deleteModal: any = null;
