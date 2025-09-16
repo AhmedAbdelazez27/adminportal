@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       this.code = params['code'];
       this.state = params['state'];
-      debugger;
+      // debugger;
 
       if (this.isValidCodeState(this.code, this.state)) {
         this.uaepassCheckCode(this.code!, this.state!);
@@ -128,7 +128,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
  
   uaepassCheckCode(code: string, state: string) {
-    debugger;
+    // debugger;
 
     const params: LoginUAEPassDto =
     {

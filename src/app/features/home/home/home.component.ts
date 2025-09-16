@@ -103,7 +103,7 @@ export class HomeComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.code = params['code'];
       this.state = params['state'];
-      debugger;
+      // debugger;
 
       if (this.isValidCodeState(this.code, this.state)) {
         this.uaepassCheckCode(this.code!, this.state!);
@@ -125,7 +125,7 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-  leftExpanded = false;
+  leftExpanded = true;
 
   toggleLeftPanel() {
     this.leftExpanded = !this.leftExpanded;
@@ -502,7 +502,7 @@ export class HomeComponent implements OnInit {
       state: state,
       lang: localStorage.getItem('lang')
     }
-    debugger;
+    // debugger;
     this.spinnerService.show();
 
     this.auth.UAEPasslogin(params)

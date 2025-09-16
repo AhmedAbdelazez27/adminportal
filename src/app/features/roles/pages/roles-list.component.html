@@ -1,27 +1,34 @@
 <div class="container-fluid">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="title">{{ 'AuthenticationResorceName.titleRole' | translate }}</h1>
-    <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#newRole">{{ 'Common.addNew' | translate }}</button>
+    <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#newRole">{{ 'Common.addNew' | translate
+      }}</button>
   </div>
 
   <div class="filter mb-3">
     <div class="d-flex justify-content-between align-items-center">
       <h4 class="filter-title mb-0">{{ 'Common.SearchTitle' | translate }}</h4>
       <button class="btn btn-filter" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-              aria-expanded="false" aria-controls="collapseExample">
+        aria-expanded="false" aria-controls="collapseExample">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z"
-                fill="" />
-          <path d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z"
-                fill="" />
-          <path d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z"
-                fill="" />
-          <path d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z"
-                fill="" />
-          <path d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z"
-                fill="" />
-          <path d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z"
-                fill="" />
+          <path
+            d="M17.7499 6.31657H13.0999C12.7749 6.31657 12.5166 6.05824 12.5166 5.73324C12.5166 5.40824 12.7749 5.1499 13.0999 5.1499H17.7499C18.0749 5.1499 18.3333 5.40824 18.3333 5.73324C18.3333 6.05824 18.0749 6.31657 17.7499 6.31657Z"
+            fill="" />
+          <path
+            d="M5.35033 6.31657H2.25033C1.92533 6.31657 1.66699 6.05824 1.66699 5.73324C1.66699 5.40824 1.92533 5.1499 2.25033 5.1499H5.35033C5.67533 5.1499 5.93366 5.40824 5.93366 5.73324C5.93366 6.05824 5.66699 6.31657 5.35033 6.31657Z"
+            fill="" />
+          <path
+            d="M8.44987 9.02523C10.2678 9.02523 11.7415 7.5515 11.7415 5.73356C11.7415 3.91562 10.2678 2.44189 8.44987 2.44189C6.63193 2.44189 5.1582 3.91562 5.1582 5.73356C5.1582 7.5515 6.63193 9.02523 8.44987 9.02523Z"
+            fill="" />
+          <path
+            d="M17.7497 14.8415H14.6497C14.3247 14.8415 14.0664 14.5831 14.0664 14.2581C14.0664 13.9331 14.3247 13.6748 14.6497 13.6748H17.7497C18.0747 13.6748 18.3331 13.9331 18.3331 14.2581C18.3331 14.5831 18.0747 14.8415 17.7497 14.8415Z"
+            fill="" />
+          <path
+            d="M6.90033 14.8415H2.25033C1.92533 14.8415 1.66699 14.5831 1.66699 14.2581C1.66699 13.9331 1.92533 13.6748 2.25033 13.6748H6.90033C7.22533 13.6748 7.48366 13.9331 7.48366 14.2581C7.48366 14.5831 7.21699 14.8415 6.90033 14.8415Z"
+            fill="" />
+          <path
+            d="M11.5505 17.5584C13.3684 17.5584 14.8421 16.0847 14.8421 14.2668C14.8421 12.4488 13.3684 10.9751 11.5505 10.9751C9.73252 10.9751 8.25879 12.4488 8.25879 14.2668C8.25879 16.0847 9.73252 17.5584 11.5505 17.5584Z"
+            fill="" />
         </svg>
       </button>
     </div>
@@ -29,23 +36,26 @@
     <div class="collapse" id="collapseExample">
       <div class="card card-body">
         <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">{{ 'AuthenticationResorceName.searchRle' | translate }}</label>
-          <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ 'Common.Search' | translate }}"
-                 [(ngModel)]="searchValue">
+          <label for="exampleFormControlInput1" class="form-label">{{ 'AuthenticationResorceName.searchRle' | translate
+            }}</label>
+          <input type="email" class="form-control" id="exampleFormControlInput1"
+            placeholder="{{ 'Common.Search' | translate }}" [(ngModel)]="searchValue">
         </div>
 
         <div class="d-flex gap-2 justify-content-center">
           <button class="btn btn-outline" (click)="clear()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
-                    fill="#5B5B5B" />
+              <path
+                d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
+                fill="#5B5B5B" />
             </svg>
             {{ 'Common.Clear' | translate }}
           </button>
           <button class="btn btn-gold" (click)="onSearch()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-                    fill="white" />
+              <path
+                d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+                fill="white" />
             </svg>
             {{ 'Common.Search' | translate }}
           </button>
@@ -53,18 +63,11 @@
       </div>
     </div>
   </div>
- 
-  <app-generic-data-table [columnDefs]="columnDefs"
-                          [rowData]="loadgridData"
-                          [totalCount]="pagination.totalCount"
-                          [pageSize]="pagination.take"
-                          [currentPage]="pagination.currentPage - 1"
-                          [columnHeaderMap]="columnHeaderMap"
-                          [rowActions]="rowActions"
-                          (actionClick)="onTableAction($event)"
-                          (pageChange)="onPageChange($event)"
-                          [showActionColumn]="true"
-                          (search)="onTableSearch($event)">
+
+  <app-generic-data-table [columnDefs]="columnDefs" [rowData]="loadgridData" [totalCount]="pagination.totalCount"
+    [pageSize]="pagination.take" [currentPage]="pagination.currentPage - 1" [columnHeaderMap]="columnHeaderMap"
+    [rowActions]="rowActions" (actionClick)="onTableAction($event)" (pageChange)="onPageChange($event)"
+    [showActionColumn]="true" (search)="onTableSearch($event)">
   </app-generic-data-table>
 
   <!-- Modal -->
@@ -77,15 +80,17 @@
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">{{ 'AuthenticationResorceName.name' | translate }}</label>
+            <label for="exampleFormControlInput1" class="form-label">{{ 'AuthenticationResorceName.name' | translate
+              }}</label>
             <input type="email" class="form-control" id="exampleFormControlInput1"
-                   placeholder="{{ 'AuthenticationResorceName.enterRoleName' | translate }}" [(ngModel)]="newRole.name">
+              placeholder="{{ 'AuthenticationResorceName.enterRoleName' | translate }}" [(ngModel)]="newRole.name">
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate
+            }}</button>
           <button type="button" class="btn btn-gold" [disabled]="!newRole.name" (click)="saveRole()"
-                  data-bs-dismiss="modal">
+            data-bs-dismiss="modal">
             {{ 'Common.save' | translate }}
           </button>
         </div>
@@ -98,7 +103,7 @@
 
   <!-- Modal -->
   <div class="modal fade" id="users" tabindex="-1" aria-labelledby="usersLabel" aria-hidden="true"
-       data-bs-backdrop="static" data-bs-keyboard="false" #usersModal>
+    data-bs-backdrop="static" data-bs-keyboard="false" #usersModal>
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -115,18 +120,17 @@
                     class="ng-select-custom">
                 </ng-select> -->
                 <label class="form-label">{{ 'AuthenticationResorceName.selectUser' | translate }}</label>
-                <ng-select [items]="userList" bindLabel="text" bindValue="id"
-                           [multiple]="true" [closeOnSelect]="true" formControlName="userIds"
-                           class="ng-select-custom">
+                <ng-select [items]="userList" bindLabel="text" bindValue="id" [multiple]="true" [closeOnSelect]="true"
+                  formControlName="userIds" class="ng-select-custom">
                 </ng-select>
               </div>
             </form>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
-          <button type="button" class="btn btn-gold" data-bs-dismiss="modal"
-                  (click)="assignRole()">
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate
+            }}</button>
+          <button type="button" class="btn btn-gold" data-bs-dismiss="modal" (click)="assignRole()">
             {{ 'Common.save' | translate }}
           </button>
         </div>
@@ -141,44 +145,54 @@
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="screensLabel">{{ 'AuthenticationResorceName.screens' | translate }}</h1>
-          <button type="button" class="btn-screen btn-close" data-bs-dismiss="modal"
-                  aria-label="Close"></button>
+          <button type="button" class="btn-screen btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="row mb-3">
             <div class="col-xl-5">
               <ng-select [items]="moduleOptions" bindLabel="text" bindValue="id" [multiple]="false"
-                         [closeOnSelect]="true" [(ngModel)]="selectedModuleFilter" class="ng-select-custom mb-3">
+                [closeOnSelect]="true" [(ngModel)]="selectedModuleFilter" class="ng-select-custom mb-3">
               </ng-select>
             </div>
             <div class="col-xl-5">
               <div class="mb-3">
-                <input type="text" class="form-control" placeholder="{{ 'AuthenticationResorceName.searchScreen' | translate }}"
-                       [(ngModel)]="searchKeyword" (input)="applyFilter()" />
+                <input type="text" class="form-control"
+                  placeholder="{{ 'AuthenticationResorceName.searchScreen' | translate }}" [(ngModel)]="searchKeyword"
+                  (input)="applyFilter()" />
 
               </div>
             </div>
             <div class="col-xl-2">
               <div class="d-flex gap-2">
                 <button type="button" class="btn btn-outline flex-fill" style="height:48px;"
-                        (click)="clearScreenFilter()">
+                  (click)="clearScreenFilter()">
                   {{ 'Common.Clear' | translate }}
                 </button>
-                <button type="button" class="btn btn-gold w-100" style="height:48px;"
-                        (click)="applyFilter()">
+                <button type="button" class="btn btn-gold w-100" style="height:48px;" (click)="applyFilter()">
                   {{ 'AuthenticationResorceName.applyFilter' | translate }}
                 </button>
               </div>
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-12 d-flex justify-content-end">
+            <!-- <div class="col-12 d-flex justify-content-end">
               <button type="button" 
                       [class]="allScreensSelected ? 'btn btn-outline' : 'btn btn-gold'"
                       (click)="selectAllScreens()">
                 {{ allScreensSelected ? ('Common.deselectAll' | translate) : ('Common.selectAll' | translate) }}
               </button>
+            </div> -->
+            <div class="col-12 d-flex justify-content-end">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="toggle-all-screens" [checked]="allScreensSelected"
+                  (change)="selectAllScreens($any($event.target).checked)" />
+
+                <label class="form-check-label" for="toggle-all-screens">
+                  {{ allScreensSelected ? ('Common.deselectAll' | translate) : ('Common.selectAll' | translate) }}
+                </label>
+              </div>
             </div>
+
           </div>
           <div class="row mb-3" *ngFor="let module of modules">
             <div class="col-12">
@@ -188,8 +202,8 @@
             <ng-container *ngFor="let screen of module.screens">
               <div class="col-xl-4 col-lg-6 mb-3">
                 <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" [id]="screen.name"
-                         [(ngModel)]="screen.selected" (change)="onScreenToggle(screen)" />
+                  <input class="form-check-input" type="checkbox" [id]="screen.name" [(ngModel)]="screen.selected"
+                    (change)="onScreenToggle(screen)" />
                   <label class="form-check-label" [for]="screen.localizedName">
                     {{ screen.localizedName }}
                   </label>
@@ -199,7 +213,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate
+            }}</button>
           <button type="button" class="btn btn-gold" (click)="saveScreensPermissions()">
             {{ 'SAVE' | translate }}
           </button>
@@ -217,23 +232,24 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="EntitiesLabel">{{ 'AuthenticationResorceName.entitiesTitle' | translate }}</h1>
-          <button type="button" class="closeEntity btn-close" data-bs-dismiss="modal"
-                  aria-label="Close"></button>
+          <h1 class="modal-title fs-5" id="EntitiesLabel">{{ 'AuthenticationResorceName.entitiesTitle' | translate }}
+          </h1>
+          <button type="button" class="closeEntity btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="userEntityForm">
             <div class="mb-3 relative-select">
-              <label for="departments" class="form-label">{{ 'AuthenticationResorceName.addEntities' | translate }}</label>
-              <ng-select [items]="entities" bindLabel="text" bindValue="id"
-                         [multiple]="true" [closeOnSelect]="true" formControlName="entityIds"
-                         class="ng-select-custom">
+              <label for="departments" class="form-label">{{ 'AuthenticationResorceName.addEntities' | translate
+                }}</label>
+              <ng-select [items]="entities" bindLabel="text" bindValue="id" [multiple]="true" [closeOnSelect]="true"
+                formControlName="entityIds" class="ng-select-custom">
               </ng-select>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate
+            }}</button>
           <button type="button" class="btn btn-gold" (click)="assignIntities()">{{ 'Common.save' | translate }}</button>
         </div>
       </div>
@@ -248,18 +264,19 @@
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="RoleLabel">{{ 'AuthenticationResorceName.roleTitle' | translate }}</h1>
-          <button type="button" class="closeUpdate btn-close" data-bs-dismiss="modal"
-                  aria-label="Close"></button>
+          <button type="button" class="closeUpdate btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">{{ 'AuthenticationResorceName.name' | translate }}</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1"
-                   [(ngModel)]="selectedRole.name" placeholder="{{ 'AuthenticationResorceName.enterRoleName' | translate }}">
+            <label for="exampleFormControlInput1" class="form-label">{{ 'AuthenticationResorceName.name' | translate
+              }}</label>
+            <input type="email" class="form-control" id="exampleFormControlInput1" [(ngModel)]="selectedRole.name"
+              placeholder="{{ 'AuthenticationResorceName.enterRoleName' | translate }}">
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.cancel' | translate
+            }}</button>
           <button type="button" class="btn btn-gold" (click)="updateRole()">{{ 'Common.save' | translate }}</button>
         </div>
       </div>
@@ -267,19 +284,20 @@
   </div>
 
   <!-- Modal for Delete Confirmation -->
-  <div class="modal fade" id="deleteRoleModal" tabindex="-1" aria-labelledby="deleteRoleModalLabel"
-       aria-hidden="true">
+  <div class="modal fade" id="deleteRoleModal" tabindex="-1" aria-labelledby="deleteRoleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteRoleModalLabel">{{ 'AuthenticationResorceName.deletetitle' | translate }}</h5>
+          <h5 class="modal-title" id="deleteRoleModalLabel">{{ 'AuthenticationResorceName.deletetitle' | translate }}
+          </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <p>{{ 'AuthenticationResorceName.deleteWarning' | translate }} <strong>{{roleToSelected?.name}}</strong>?</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'Common.cancel' | translate
+            }}</button>
           <button type="button" class="btn btn-danger d-flex align-items-center" (click)="deleteRole()">
             <span class="ms-2">{{ 'Common.deletd' | translate }}</span>
           </button>

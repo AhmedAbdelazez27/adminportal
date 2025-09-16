@@ -17,6 +17,14 @@ import { MainApplyService } from '../../../core/services/mainApplyService/mainAp
 import { ServiceDataType, serviceIdEnum } from '../../../core/enum/user-type.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EntityService } from '../../../core/services/entit.service';
+enum ServiceStatus {
+  Accept = 1,
+  Reject = 2,
+  New = 3,
+  Wait = 4,
+  Draft = 5,
+  ReturnForModifications = 7
+}
 
 declare var bootstrap: any;
 
@@ -37,7 +45,7 @@ export class MainApplyServiceComponent {
   firstLevel: boolean = false;
   hasServicePermission: boolean = false;
   lang: any;
-  modalMode : 'addNew' | 'returnModificationReasontext' | 'reasontext' = 'addNew';
+  modalMode: 'addNew' | 'returnModificationReasontext' | 'reasontext' = 'addNew';
   private destroy$ = new Subject<void>();
   rejectResonsForm: FormGroup;
   returnModificationForm: FormGroup;
@@ -151,7 +159,7 @@ export class MainApplyServiceComponent {
       //{ label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceInqueryData' },
       { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-edit', action: 'oneditServiceData' },
       { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceData' },
-  ];
+    ];
 
     this.serviceSearchInput$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
@@ -962,7 +970,7 @@ export class MainApplyServiceComponent {
   }
 
 
- 
+
 
 
 
@@ -972,24 +980,43 @@ export class MainApplyServiceComponent {
     return d.toLocaleString();
   }
 
+  // getStatusClassForGrid(serviceStatus: any): string {
+  //   switch (serviceStatus) {
+  //     case 1: // Accept
+  //       return 'status-approved';
+  //     case 2: // Reject
+  //       return 'status-rejected';
+  //     case 3: // Reject For Reason
+  //       return 'status-new';
+  //     case 4: // Waiting
+  //       return 'status-waiting';
+  //     case 5: // Received
+  //       return 'status-received';
+  //     case 7: // Return For Modifications
+  //       return 'status-return-for-modification';
+  //     default:
+  //       return 'status-waiting';
+  //   }
+  // }
   getStatusClassForGrid(serviceStatus: any): string {
     switch (serviceStatus) {
-      case 1: // Accept
+      case ServiceStatus.Accept: 
         return 'status-approved';
-      case 2: // Reject
+      case ServiceStatus.Reject: 
         return 'status-rejected';
-      case 3: // Reject For Reason
-        return 'status-reject-for-reason';
-      case 4: // Waiting
+      case ServiceStatus.New: 
+        return 'status-new';
+      case ServiceStatus.Wait: 
         return 'status-waiting';
-      case 5: // Received
-        return 'status-received';
-      case 7: // Return For Modifications
+      case ServiceStatus.Draft:
+        return 'status-draft';
+      case ServiceStatus.ReturnForModifications: 
         return 'status-return-for-modification';
       default:
-        return 'status-waiting';
+        return 'status-inactive'; 
     }
   }
+
 
   public buildColumnDefs(): void {
     this.columnDefs = [
@@ -1004,7 +1031,8 @@ export class MainApplyServiceComponent {
         width: 200,
         cellRenderer: (params: any) => {
           const statusClass = this.getStatusClassForGrid(params.data.serviceStatus);
-          return `<div class="${statusClass}">${params.value || ''}</div>`;
+          // console.log(params)
+          return `<div class="${statusClass}">${params.data.serviceStatusName || ''}</div>`;
         }
       },
       { headerName: this.translate.instant('mainApplyServiceResourceName.desc'), field: 'description', width: 200 },
@@ -1121,21 +1149,21 @@ export class MainApplyServiceComponent {
 
   onTableAction(event: { action: string, row: any }) {
 
-      if (event.action === 'onViewApplicantData') {
-        this.getuserFormDatabyId(event.row.userId);
-      }
+    if (event.action === 'onViewApplicantData') {
+      this.getuserFormDatabyId(event.row.userId);
+    }
 
-      if (event.action === 'onViewServiceConfirmationData') {
-        window.open(`/mainServices/services/serviceconfirmation/${event.row.id}`, '_blank');
-      }
+    if (event.action === 'onViewServiceConfirmationData') {
+      window.open(`/mainServices/services/serviceconfirmation/${event.row.id}`, '_blank');
+    }
 
-      if (event.action === 'onViewServiceInqueryData') {
-        window.open(`/mainServices/services/serviceinquery/${event.row.id}`, '_blank');
-      }
+    if (event.action === 'onViewServiceInqueryData') {
+      window.open(`/mainServices/services/serviceinquery/${event.row.id}`, '_blank');
+    }
 
-      if (event.action === 'onViewFastingServiceInqueryData') {
-        window.open(`/mainServices/services/fastingserviceinquery/${event.row.id}`, '_blank');
-      }
+    if (event.action === 'onViewFastingServiceInqueryData') {
+      window.open(`/mainServices/services/fastingserviceinquery/${event.row.id}`, '_blank');
+    }
 
     if (event.action === 'oneditServiceData') {
       if (event.row.serviceId === 1) {
@@ -1148,7 +1176,7 @@ export class MainApplyServiceComponent {
       }
       else if (event.row.serviceId == serviceIdEnum.serviceId2) {
         sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
-        sessionStorage.setItem("screenmode",'edit');
+        sessionStorage.setItem("screenmode", 'edit');
         window.open(`/mainServices/services/charity-event-permit/${event.row.id}`, '_blank');
       }
       else if (event.row.serviceId == serviceIdEnum.serviceId6) {
@@ -1184,8 +1212,7 @@ export class MainApplyServiceComponent {
     }
 
 
-    if (event.action === 'onViewServiceData')
-    {
+    if (event.action === 'onViewServiceData') {
       if (event.row.serviceId === 1) {
         sessionStorage.setItem("screenmode", 'view');
         window.open(`/mainServices/services/view-fasting-tent-request/${event.row.id}`, '_blank');
@@ -1326,7 +1353,7 @@ export class MainApplyServiceComponent {
   }
 
   custombtn(): void {
-    this.updateStatus("5",'');
+    this.updateStatus("5", '');
   }
 
   rejectWithReasonbtn(): void {
@@ -1509,7 +1536,7 @@ export class MainApplyServiceComponent {
   }
 
   private handleStatus5(): void {
-   
+
   }
 
 
@@ -1570,7 +1597,7 @@ export class MainApplyServiceComponent {
                     { label: this.translate.instant('mainApplyServiceResourceName.sevicet'), key: this.lang == 'ar' ? 'service.serviceName' : 'service.serviceNameEn' },
                     { label: this.translate.instant('mainApplyServiceResourceName.username'), key: this.lang == 'ar' ? 'user.nameEn' : 'user.name' },
                     { label: this.translate.instant('mainApplyServiceResourceName.userName'), key: 'entityName' },
-                    { label: this.translate.instant('mainApplyServiceResourceName.statues'), key: this.lang == 'ar' ? 'lastStatus' : 'lastStatusEN'},
+                    { label: this.translate.instant('mainApplyServiceResourceName.statues'), key: this.lang == 'ar' ? 'lastStatus' : 'lastStatusEN' },
                     { label: this.translate.instant('mainApplyServiceResourceName.desc'), key: 'description' },
                   ],
                   data: this.loadexcelData.map((item: any, index: number) => ({

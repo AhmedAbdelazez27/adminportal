@@ -13,8 +13,8 @@ import { environment } from '../../../../environments/environment';
 import { MainApplyService } from '../../../core/services/mainApplyService/mainApplyService.service';
 import { AttachmentService } from '../../../core/services/attachments/attachment.service';
 
-import { 
-  mainApplyServiceDto, 
+import {
+  mainApplyServiceDto,
   FastingTentServiceDto,
   WorkFlowStepDto,
   WorkFlowCommentDto,
@@ -55,7 +55,7 @@ export enum ServiceStatus {
     TranslateModule,
     NgSelectModule,
     RouterLink
-    
+
   ],
   templateUrl: './view-fasting-tent-request.component.html',
   styleUrl: './view-fasting-tent-request.component.scss',
@@ -73,12 +73,12 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   attachments: any[] = []; // Keep as any[] for main service attachments
   targetWorkFlowStep: WorkFlowStepDto | null = null;
   workFlowComments: WorkFlowCommentDto[] = [];
-  
+
   // Generic table properties for workflow comments
   allWorkFlowComments: any[] = [];
   commentsColumnDefs: ColDef[] = [];
   commentsColumnHeaderMap: { [key: string]: string } = {};
-  
+
   // Modal properties (using Bootstrap modals now)
   selectedCommentAttachments: AttachmentDto[] = [];
   isLoadingAttachments: boolean = false;
@@ -159,10 +159,10 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadMainApplyServiceData();
     this.loadCommentAttachmentConfigs();
-    
+
     // Add window resize listener for map responsiveness
     window.addEventListener('resize', this.onWindowResize.bind(this));
-    
+
     // Add window focus listener to refresh map when tab becomes active
     window.addEventListener('focus', this.onWindowFocus.bind(this));
   }
@@ -172,10 +172,10 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     if (this.map) {
       this.map.remove();
     }
-    
+
     // Remove window resize listener
     window.removeEventListener('resize', this.onWindowResize.bind(this));
-    
+
     // Remove window focus listener
     window.removeEventListener('focus', this.onWindowFocus.bind(this));
   }
@@ -229,7 +229,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   }
 
   private initializeCommentsTable(): void {
-    
+
     this.commentsColumnDefs = [
       {
         headerName: this.translate.instant('COMMON.COMMENT'),
@@ -273,7 +273,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         minWidth: 100,
         cellRenderer: (params: any) => {
           const commentId = params.value;
-          
+
           if (commentId) {
             return `<button class="btn btn-next-style attachment-btn" data-comment-id="${commentId}" data-row-index="${params.node.rowIndex}">
                       <i class="fas fa-eye me-1"></i>
@@ -285,7 +285,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         cellClass: 'text-center'
       }
     ];
-    
+
     this.commentsColumnHeaderMap = {
       'comment': this.translate.instant('COMMON.COMMENT'),
       'stepDepartmentName': this.translate.instant('COMMON.DEPARTMENT'),
@@ -322,7 +322,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
           .filter(x => x !== '');
 
         storeddepartmentId = storeddepartmentId.replace(/"/g, '').trim();
-      
+
         this.workFlowSteps = this.workFlowSteps.map((step: any) => ({
           ...step,
           isMatched: storedDeptIds.includes(String(step?.deptId).trim())
@@ -380,11 +380,11 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         if (this.targetWorkFlowStep) {
           this.loadWorkFlowComments();
         }
-        
+
         if (this.fastingTentService?.location?.locationCoordinates) {
           setTimeout(() => this.initializeMap(), 500);
         }
-        
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -407,7 +407,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       const sortedSteps = this.workFlowSteps
         .filter(step => step.stepOrder !== null)
         .sort((a, b) => (a.stepOrder || 0) - (b.stepOrder || 0));
-      
+
       this.targetWorkFlowStep = sortedSteps.find(step => step.serviceStatus === 4) || null;
     }
   }
@@ -415,7 +415,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   private loadWorkFlowComments(): void {
     // Collect all comments from all workflow steps
     this.allWorkFlowComments = [];
-    
+
     if (this.workFlowSteps && Array.isArray(this.workFlowSteps)) {
       this.workFlowSteps.forEach(step => {
         if (step.workFlowComments && Array.isArray(step.workFlowComments)) {
@@ -429,23 +429,23 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         }
       });
     }
-    
+
     // Sort comments by lastModified date (newest first)
     this.allWorkFlowComments.sort((a, b) => {
       const dateA = new Date(a.lastModified || 0);
       const dateB = new Date(b.lastModified || 0);
       return dateB.getTime() - dateA.getTime();
     });
-    
 
-    
+
+
     // Legacy: Use comments from targetWorkFlowStep for add comment functionality
     if (this.targetWorkFlowStep && Array.isArray(this.targetWorkFlowStep.workFlowComments)) {
       this.workFlowComments = this.targetWorkFlowStep.workFlowComments;
     } else {
       this.workFlowComments = [];
     }
-    
+
     this.initializeCommentsTable(); // Initialize table after data is loaded
     this.isLoadingComments = false;
   }
@@ -457,9 +457,9 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       window.open(fileUrl, '_blank');
     }
   }
-// NOTE: For map to display, ensure Leaflet CSS is loaded in angular.json or styles.scss:
-// In angular.json: "styles": [ "node_modules/leaflet/dist/leaflet.css", ... ]
-// Or in styles.scss: @import '~leaflet/dist/leaflet.css';
+  // NOTE: For map to display, ensure Leaflet CSS is loaded in angular.json or styles.scss:
+  // In angular.json: "styles": [ "node_modules/leaflet/dist/leaflet.css", ... ]
+  // Or in styles.scss: @import '~leaflet/dist/leaflet.css';
 
   // Tab navigation methods
   goToTab(tabNumber: number): void {
@@ -481,12 +481,12 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         }
       });
       this.markers = [];
-      
+
       // Remove map
       this.map.remove();
       this.map = null;
     }
-    
+
     // Reset error flag
     this.mapLoadError = false;
   }
@@ -497,7 +497,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
   // Map initialization for location display
   private initializeMap(): void {
-   
+
     if (!this.fastingTentService?.location?.locationCoordinates) {
       this.toastr.warning('No location coordinates available to display on map');
       return;
@@ -506,11 +506,11 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     // Use a longer timeout and multiple checks to ensure DOM is ready
     let attempts = 0;
     const maxAttempts = 20; // Increased max attempts
-    
+
     const checkAndInitialize = () => {
       const mapElement = document.getElementById('viewMap');
       attempts++;
-      
+
       if (mapElement) {
         // Check if map container has proper dimensions
         if (mapElement.offsetWidth === 0 || mapElement.offsetHeight === 0) {
@@ -521,7 +521,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
           }
           return;
         }
-        
+
         this.setupViewMap();
       } else if (attempts < maxAttempts) {
         setTimeout(checkAndInitialize, 200);
@@ -529,7 +529,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         this.toastr.error('Failed to initialize map: map container not found');
       }
     };
-    
+
     setTimeout(checkAndInitialize, 100);
   }
 
@@ -537,7 +537,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     try {
       // Double-check that the map container exists and has dimensions
       const mapElement = document.getElementById('viewMap');
-     
+
       if (mapElement) {
         const computedStyle = window.getComputedStyle(mapElement);
       }
@@ -546,58 +546,58 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         this.mapLoadError = true;
         return;
       }
-      
+
       if (mapElement.offsetWidth === 0 || mapElement.offsetHeight === 0) {
-        
+
         // Check if element is actually in the document
         if (!document.contains(mapElement)) {
           setTimeout(() => this.setupViewMap(), 1000);
           return;
         }
-        
+
         // Check if element is visible
         const computedStyle = window.getComputedStyle(mapElement);
         if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
           setTimeout(() => this.setupViewMap(), 1000);
           return;
         }
-        
+
         // Check if element is in viewport
         const rect = mapElement.getBoundingClientRect();
         if (rect.bottom < 0 || rect.top > window.innerHeight || rect.right < 0 || rect.left > window.innerWidth) {
           setTimeout(() => this.setupViewMap(), 1000);
           return;
         }
-        
+
         // Check if element has content or is empty
         if (mapElement.children.length === 0 && mapElement.innerHTML.trim() === '') {
         } else {
           mapElement.innerHTML = '';
         }
-        
+
         // Ensure the map container has proper CSS properties
         mapElement.style.height = '400px';
         mapElement.style.width = '100%';
         mapElement.style.display = 'block';
         mapElement.style.visibility = 'visible';
         mapElement.style.position = 'relative';
-        
+
         // Force layout recalculation
         mapElement.offsetHeight; // Force reflow
-        
+
         // Check again after ensuring proper CSS
         if (mapElement.offsetWidth === 0 || mapElement.offsetHeight === 0) {
-          
+
           // Check if element is in viewport
           const rect = mapElement.getBoundingClientRect();
-          
+
           if (rect.width === 0 || rect.height === 0) {
             setTimeout(() => this.setupViewMap(), 1000);
             return;
           }
         }
       }
-      
+
       if (this.map) {
         this.map.remove();
         this.map = null;
@@ -612,7 +612,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       // Enhanced coordinate parsing with multiple format support
       let coordinates: string[] = [];
       const coordString = this.fastingTentService.location.locationCoordinates;
-      
+
       // Try to parse as JSON first (most common format)
       try {
         const jsonCoords = JSON.parse(coordString);
@@ -628,7 +628,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       } catch (jsonError) {
         // Continue with other parsing methods
       }
-      
+
       // If JSON parsing failed, try different separators
       if (coordinates.length === 0) {
         if (coordString.includes(',')) {
@@ -650,7 +650,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
           return;
         }
       }
-      
+
       if (coordinates.length !== 2) {
         this.toastr.error(this.translate.instant('FASTING_TENT.INVALID_COORDINATES_COUNT', { 0: coordinates.length }));
         this.mapLoadError = true;
@@ -659,7 +659,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
       const lat = parseFloat(coordinates[0].trim());
       const lng = parseFloat(coordinates[1].trim());
-      
+
 
 
       // Check if coordinates are valid numbers
@@ -686,7 +686,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
       // Validate coordinate ranges (roughly UAE bounds)
       if (lat < 22 || lat > 27 || lng < 51 || lng > 57) {
-       
+
         this.toastr.warning(this.translate.instant('FASTING_TENT.INVALID_COORDINATES_UAE'));
       }
 
@@ -706,13 +706,13 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
           minZoom: 5,
           crossOrigin: true,
         });
-        
+
         // Add error handler for tile loading issues
         tileLayer.on('tileerror', (error) => {
           // Fallback to alternative tile server
           this.addFallbackTileLayer();
         });
-        
+
         tileLayer.addTo(this.map);
       } catch (tileError) {
         this.toastr.error(this.translate.instant('FASTING_TENT.MAP_TILES_FAILED'));
@@ -738,7 +738,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         if (this.map) {
           this.map.invalidateSize();
-          
+
           // Check if tiles are loaded
           const tileLayersLoaded = this.checkTileLayersLoaded();
           if (!tileLayersLoaded) {
@@ -769,7 +769,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       maxZoom: 19,
       minZoom: 5,
     }).addTo(this.map);
-    
+
     this.toastr.info('Using fallback map tiles');
   }
 
@@ -777,11 +777,11 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     try {
       const mapContainer = document.getElementById('viewMap');
       if (!mapContainer) return false;
-      
+
       const leafletTiles = mapContainer.querySelectorAll('.leaflet-tile');
       const loadedTiles = mapContainer.querySelectorAll('.leaflet-tile-loaded');
-      
-    
+
+
       // If we have some tiles and at least 50% are loaded, consider it successful
       return leafletTiles.length > 0 && (loadedTiles.length / leafletTiles.length) >= 0.5;
     } catch (error) {
@@ -811,7 +811,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     this.commentAttachments = {};
     this.commentSelectedFiles = {};
     this.commentFilePreviews = {};
-    
+
     this.commentAttachmentConfigs.forEach(config => {
       if (config.id) {
         this.commentAttachments[config.id] = {
@@ -835,7 +835,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
     // Check if required attachments are uploaded
     const requiredAttachments = this.commentAttachmentConfigs.filter(config => config.mendatory);
-    const missingRequiredAttachments = requiredAttachments.filter(config => 
+    const missingRequiredAttachments = requiredAttachments.filter(config =>
       !this.commentSelectedFiles[config.id!] && !this.commentFilePreviews[config.id!]
     );
 
@@ -845,10 +845,10 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     }
 
     this.isSavingComment = true;
-    
+
     // Prepare attachments for the comment
     const attachments: AttachmentBase64Dto[] = [];
-    
+
     // Process attachments from attachment configs
     Object.values(this.commentAttachments).forEach(attachment => {
       if (attachment.fileBase64 && attachment.fileName) {
@@ -859,7 +859,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         });
       }
     });
-    
+
     const createDto: CreateWorkFlowCommentDto = {
       empId: null,
       workFlowStepsId: this.targetWorkFlowStep.id,
@@ -928,7 +928,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   onCommentDrop(event: DragEvent, configId: number): void {
     event.preventDefault();
     this.isCommentDragOver = false;
-    
+
     const files = event.dataTransfer?.files;
     if (files?.[0]) {
       this.handleCommentFileUpload(files[0], configId);
@@ -941,11 +941,11 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     }
 
     this.commentSelectedFiles[configId] = file;
-    
+
     const reader = new FileReader();
     reader.onload = (e) => {
       this.commentFilePreviews[configId] = e.target?.result as string;
-      
+
       // Ensure the attachment object exists
       if (!this.commentAttachments[configId]) {
         this.commentAttachments[configId] = {
@@ -954,14 +954,14 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
           attConfigID: configId
         };
       }
-      
+
       const base64String = (e.target?.result as string).split(',')[1];
       this.commentAttachments[configId] = {
         ...this.commentAttachments[configId],
         fileBase64: base64String,
         fileName: file.name
       };
-      
+
       this.cdr.detectChanges();
     };
     reader.readAsDataURL(file);
@@ -970,24 +970,24 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   validateCommentFile(file: File): boolean {
     const maxSize = 5 * 1024 * 1024; // 5MB
     const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    
+
     if (file.size > maxSize) {
       this.toastr.error(this.translate.instant('VALIDATION.FILE_TOO_LARGE'));
       return false;
     }
-    
+
     if (!allowedTypes.includes(file.type)) {
       this.toastr.error(this.translate.instant('VALIDATION.INVALID_FILE_TYPE'));
       return false;
     }
-    
+
     return true;
   }
 
   removeCommentFile(configId: number): void {
     delete this.commentSelectedFiles[configId];
     delete this.commentFilePreviews[configId];
-    
+
     if (this.commentAttachments[configId]) {
       this.commentAttachments[configId] = {
         ...this.commentAttachments[configId],
@@ -995,7 +995,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         fileName: ''
       };
     }
-    
+
     this.cdr.detectChanges();
   }
 
@@ -1017,10 +1017,10 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     this.isLoadingAttachments = true;
     this.selectedCommentAttachments = [];
     this.openAttachmentModal();
-    
+
     // Master type for comments is 1003
     const masterType = 1003;
-    
+
     // Prepare parameters for getList method
     const parameters: GetAllAttachmentsParamters = {
       skip: 0,
@@ -1028,13 +1028,13 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       masterIds: [commentId], // Array of master IDs
       masterType: masterType
     };
-    
+
     const subscription = this.attachmentService.getList(parameters).subscribe({
       next: (result: any) => {
         // Handle different response structures
         this.selectedCommentAttachments = result.data || result.items || [];
         this.isLoadingAttachments = false;
-        
+
         if (this.selectedCommentAttachments.length === 0) {
           this.toastr.info(this.translate.instant('COMMON.NO_ATTACHMENTS_FOUND'));
         }
@@ -1045,7 +1045,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         this.selectedCommentAttachments = [];
       }
     });
-    
+
     this.subscriptions.push(subscription);
   }
 
@@ -1090,13 +1090,13 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   }
 
   // Handle table cell clicks for attachment viewing
-  onTableCellClick(event: any,id:any) {
+  onTableCellClick(event: any, id: any) {
     // const btn = event.event?.target?.closest?.('.attachment-btn');
     // if (btn) {
     //   const id = parseInt(btn.getAttribute('data-comment-id'), 10);
     //   if (id) this.fetchAndViewCommentAttachments(id);
     // }
-     if (id) this.fetchAndViewCommentAttachments(id);
+    if (id) this.fetchAndViewCommentAttachments(id);
   }
 
   // Legacy file handling methods (keeping for backward compatibility)
@@ -1117,13 +1117,13 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
       return imgPath;
     }
-    
+
     // If imgPath is a relative path, construct the full URL
     // Remove leading slash if present
     const cleanPath = imgPath.startsWith('/') ? imgPath.substring(1) : imgPath;
-    
+
     // Try different URL patterns - uncomment the one that works for your API:
-    
+
     // For regular file paths, use the files endpoint
     return `${environment.apiBaseUrl}/files/${cleanPath}`;
   }
@@ -1155,7 +1155,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     if (attachment.imgPath) {
       // Construct the full URL for the file
       const fileUrl = this.getAttachmentUrl(attachment.imgPath);
-      
+
       // Create a temporary link to download the file
       const link = document.createElement('a');
       link.href = fileUrl;
@@ -1188,11 +1188,11 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     this.isLoadingPartnerAttachments = true;
     this.selectedPartnerAttachments = [];
     // Modal will be opened by Bootstrap data-bs-* attributes
-    
+
     // Master type for partners - need to determine the correct master type
     // This might be different, check with your API documentation
     const masterType = 1004; // Assuming 1004 is for partners, adjust as needed
-    
+
     // Prepare parameters for getList method
     const parameters: GetAllAttachmentsParamters = {
       skip: 0,
@@ -1200,11 +1200,11 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       masterIds: [partner.id], // Array of master IDs
       masterType: masterType
     };
-    
+
     const subscription = this.attachmentService.getList(parameters).subscribe({
       next: (result: any) => {
 
-        
+
         // Handle different response structures and convert to PartnerAttachmentDto
         const attachments = result.data || result.items || [];
         this.selectedPartnerAttachments = attachments.map((attachment: any) => ({
@@ -1216,23 +1216,23 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
           lastModified: attachment.lastModified,
           attConfigID: attachment.attConfigID
         } as PartnerAttachmentDto));
-        
+
         this.isLoadingPartnerAttachments = false;
-        
-        
-        
+
+
+
         if (this.selectedPartnerAttachments.length === 0) {
           this.toastr.info(this.translate.instant('COMMON.NO_ATTACHMENTS_FOUND'));
         }
       },
       error: (error) => {
-       
+
         this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_ATTACHMENTS'));
         this.isLoadingPartnerAttachments = false;
         this.selectedPartnerAttachments = [];
       }
     });
-    
+
     this.subscriptions.push(subscription);
   }
 
@@ -1262,7 +1262,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   // Workflow Steps Helper Methods
   getStatusColor(statusId: number | null): string {
     if (statusId === null) return '#6c757d';
-    
+
     switch (statusId) {
       case ServiceStatus.Accept:
         return '#28a745'; // Green
@@ -1283,7 +1283,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
   getStatusIcon(statusId: number | null): string {
     if (statusId === null) return 'fas fa-question-circle';
-    
+
     switch (statusId) {
       case ServiceStatus.Accept:
         return 'fas fa-check-circle';
@@ -1304,7 +1304,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
   getStatusLabel(statusId: number | null): string {
     if (statusId === null) return 'WORKFLOW.STATUS_UNKNOWN';
-    
+
     switch (statusId) {
       case ServiceStatus.Accept:
         return 'WORKFLOW.STATUS_ACCEPT';
@@ -1643,6 +1643,43 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       },
       complete: () => this.spinnerService.hide(),
     });
+  }
+
+
+  // step flow history start
+  historyForModal: any[] = [];
+  private historyModalInstance: any = null;
+
+  openHistoryModal(history: any[] = []): void {
+    this.historyForModal = (history || []).slice().sort((a, b) =>
+      new Date(b.historyDate).getTime() - new Date(a.historyDate).getTime()
+    );
+
+    const el = document.getElementById('historyModal');
+    if (el) {
+      if (this.historyModalInstance) {
+        this.historyModalInstance.dispose();
+      }
+      this.historyModalInstance = new (window as any).bootstrap.Modal(el, {
+        backdrop: 'static',
+        keyboard: false
+      });
+      this.historyModalInstance.show();
+    }
+  }
+
+  closeHistoryModal(): void {
+    if (this.historyModalInstance) {
+      this.historyModalInstance.hide();
+    }
+  }
+
+  getHistoryNote(h: any): string {
+    const lang = (this.translate?.currentLang || localStorage.getItem('lang') || 'ar').toLowerCase();
+    if (lang.startsWith('ar')) {
+      return h?.noteAr || h?.serviceStatusName || '';
+    }
+    return h?.noteEn || h?.serviceStatusName || '';
   }
 
 }

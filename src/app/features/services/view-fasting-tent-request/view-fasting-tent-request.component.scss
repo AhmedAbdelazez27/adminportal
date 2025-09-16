@@ -1,0 +1,39 @@
+.history-timeline {
+  position: relative;
+  margin-inline-start: 12px;   
+  padding-inline-start: 18px; 
+}
+
+.history-timeline::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 6px;   
+  inset-block-start: 0;      
+  inset-block-end: 0;        
+  inline-size: 2px;          
+  background: #e9ecef;
+}
+
+.history-item {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.history-item .dot {
+  position: absolute;
+  inset-inline-start: -2px;  
+  inset-block-start: 6px;    
+  inline-size: 10px;         
+  block-size: 10px;          
+  background: #cdad5f;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.history-item .content {
+  background: #fff;
+  border: 1px solid #f1f1f1;
+  border-radius: .5rem;
+  padding: .75rem .9rem;
+}

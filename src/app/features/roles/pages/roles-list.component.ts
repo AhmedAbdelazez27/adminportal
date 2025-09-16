@@ -98,7 +98,7 @@ export class RolesListComponent {
         // Initialize search parameters
         this.searchParams.searchValue = '';
         this.searchText = '';
-        
+
         this.getRoles(this.currentPage, this.searchValue);
         this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
         this.getUsersList();
@@ -279,10 +279,10 @@ export class RolesListComponent {
                         const modal = bootstrap.Modal.getInstance(modalElement);
                         modal?.hide();
                     }
-                    
+
                     // Refresh the table data
                     this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
-                    
+
                     this.roleToSelected = null;
                     this.toastr.success(
                         this.translate.instant('ROLE.DELETED.SUCCESS'),
@@ -480,7 +480,7 @@ export class RolesListComponent {
             next: (res) => {
                 this.originalModules = res?.data || [];
                 this.modules = [...this.originalModules];
-                
+
                 // Create module options for ng-select
                 this.moduleOptions = [
                     { id: 'all', text: this.translate.instant('AuthenticationResorceName.allModule') },
@@ -489,7 +489,7 @@ export class RolesListComponent {
                         text: module.moduleName
                     }))
                 ];
-                
+
                 this.updateAllScreensSelectedState();
                 const modalElement = document.getElementById('screens');
                 if (modalElement) {
@@ -525,11 +525,11 @@ export class RolesListComponent {
 
                 const filteredScreens = module.screens.filter((screen: any) => {
                     if (!normalizedKeyword) return true; // Show all if no search term
-                    
+
                     // Search in both name and localizedName
                     const nameMatch = normalizeText(screen.name || '').includes(normalizedKeyword);
                     const localizedNameMatch = normalizeText(screen.localizedName || '').includes(normalizedKeyword);
-                    
+
                     return nameMatch || localizedNameMatch;
                 });
 
@@ -538,11 +538,11 @@ export class RolesListComponent {
             .map((module) => {
                 const filteredScreens = module.screens.filter((screen: any) => {
                     if (!normalizedKeyword) return true; // Show all if no search term
-                    
+
                     // Search in both name and localizedName
                     const nameMatch = normalizeText(screen.name || '').includes(normalizedKeyword);
                     const localizedNameMatch = normalizeText(screen.localizedName || '').includes(normalizedKeyword);
-                    
+
                     return nameMatch || localizedNameMatch;
                 });
                 return {
@@ -550,7 +550,7 @@ export class RolesListComponent {
                     screens: filteredScreens,
                 };
             });
-        
+
         this.updateAllScreensSelectedState();
     }
 
@@ -565,17 +565,30 @@ export class RolesListComponent {
         this.updateAllScreensSelectedState();
     }
 
-    selectAllScreens(): void {
-        const shouldSelectAll = !this.allScreensSelected;
-        
+    // selectAllScreens(): void {
+    //     const shouldSelectAll = !this.allScreensSelected;
+
+    //     this.modules.forEach(module => {
+    //         module.screens.forEach((screen: any) => {
+    //             screen.selected = shouldSelectAll;
+    //         });
+    //     });
+
+    //     this.allScreensSelected = shouldSelectAll;
+    // }
+    selectAllScreens(forceValue?: boolean): void {
+        const shouldSelectAll =
+            typeof forceValue === 'boolean' ? forceValue : !this.allScreensSelected;
+
         this.modules.forEach(module => {
             module.screens.forEach((screen: any) => {
                 screen.selected = shouldSelectAll;
             });
         });
-        
+
         this.allScreensSelected = shouldSelectAll;
     }
+
 
     updateAllScreensSelectedState(): void {
         const allScreens = this.modules.flatMap(module => module.screens);
@@ -642,13 +655,13 @@ export class RolesListComponent {
             this.getScreensList(event.row?.id);
         }
         if (event.action === 'onEntitiesInfo') {
-            this.openAssignIntitiesModal(event.row);  
+            this.openAssignIntitiesModal(event.row);
         }
         if (event.action === 'onEditInfo') {
-            this.openEditModal(event.row); 
+            this.openEditModal(event.row);
         }
         if (event.action === 'onDeletdInfo') {
-            this.selectCurrentRole(event.row);  
+            this.selectCurrentRole(event.row);
         }
     }
 

@@ -78,6 +78,8 @@ type WorkFlowStepDto = {
   serviceDepartmentActions?: number | null;
   serviceDepartmentActionName?: string | null;
   workFlowComments?: WorkFlowCommentDto[] | null;
+  stepName ?:any | null;
+  workFlowHistories?: any ;
 };
 
 type PartnerDto = {
@@ -1585,6 +1587,43 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
       },
       complete: () => this.spinnerService.hide(),
     });
+  }
+
+
+  // step flow history start
+  historyForModal: any[] = [];
+  private historyModalInstance: any = null;
+
+  openHistoryModal(history: any[] = []): void {
+    this.historyForModal = (history || []).slice().sort((a, b) =>
+      new Date(b.historyDate).getTime() - new Date(a.historyDate).getTime()
+    );
+
+    const el = document.getElementById('historyModal');
+    if (el) {
+      if (this.historyModalInstance) {
+        this.historyModalInstance.dispose();
+      }
+      this.historyModalInstance = new (window as any).bootstrap.Modal(el, {
+        backdrop: 'static',
+        keyboard: false
+      });
+      this.historyModalInstance.show();
+    }
+  }
+
+  closeHistoryModal(): void {
+    if (this.historyModalInstance) {
+      this.historyModalInstance.hide();
+    }
+  }
+
+  getHistoryNote(h: any): string {
+    const lang = (this.translate?.currentLang || localStorage.getItem('lang') || 'ar').toLowerCase();
+    if (lang.startsWith('ar')) {
+      return h?.noteAr || h?.serviceStatusName || '';
+    }
+    return h?.noteEn || h?.serviceStatusName || '';
   }
 
 }

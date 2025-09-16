@@ -201,6 +201,8 @@ export class WorkFlowStepDto {
   serviceDepartmentActions?: number | null = null;
   serviceDepartmentActionName?: string | null = null;
   workFlowComments?: WorkFlowCommentDto[] = [];
+  stepName ?: any | null ;
+  workFlowHistories ?:any | null ;
 }
 
 export class WorkFlowCommentDto {

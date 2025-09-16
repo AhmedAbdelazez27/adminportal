@@ -68,7 +68,7 @@ export class UsersListComponent implements OnInit {
   userDepartmentForm: FormGroup;
   userEntityForm: FormGroup;
   selectedUserIdForDepartments: any;
-    
+
   // // // // // 
   userPermissions: any[] = [];
   permissionTypes: string[] = [
@@ -87,7 +87,7 @@ export class UsersListComponent implements OnInit {
     'Post',
     'UnPost',
   ];
-    availableDashboardPermissionActions: string[] = [
+  availableDashboardPermissionActions: string[] = [
     'Dashboard'
   ];
   originalPermissions: string[] = [];
@@ -719,7 +719,7 @@ export class UsersListComponent implements OnInit {
           );
         this.filteredPermissions = [...this.userPermissions];
         // this.populateModuleAndScreenOptions();
-        this.populateModuleAndScreenOptions('userPermissions','moduleOptions')
+        this.populateModuleAndScreenOptions('userPermissions', 'moduleOptions')
         this.updateAllScreensSelectedState();
         const modalElement = document.getElementById('permissions');
         if (modalElement) {
@@ -729,7 +729,7 @@ export class UsersListComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Error loading permissions:', error);
-        
+
         // Check if it's a 400 error with the specific business error response
         if (error.status === 400 && error.error) {
           const errorResponse = error.error;
@@ -746,7 +746,7 @@ export class UsersListComponent implements OnInit {
   }
 
 
-    getDashboardPermissions(userId: string): void {
+  getDashboardPermissions(userId: string): void {
     this.selectedUserIdForDepartments = userId;
 
     this.userService.getDashboardPermission(userId).subscribe({
@@ -762,7 +762,7 @@ export class UsersListComponent implements OnInit {
           );
         this.filteredDashboardPermissions = [...this.dashboardPermissions];
         // this.populateModuleAndScreenOptions();
-        this.populateModuleAndScreenOptions('dashboardPermissions','moduleDashboardOptions','screenDashboardOptions')
+        this.populateModuleAndScreenOptions('dashboardPermissions', 'moduleDashboardOptions', 'screenDashboardOptions')
         this.updateAllDashboardScreensSelectedState();
         const modalElement = document.getElementById('permissionsdashboard');
         if (modalElement) {
@@ -772,7 +772,7 @@ export class UsersListComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Error loading dashboard permissions:', error);
-        
+
         // Check if it's a 400 error with the specific business error response
         if (error.status === 400 && error.error) {
           const errorResponse = error.error;
@@ -796,7 +796,7 @@ export class UsersListComponent implements OnInit {
     );
   }
   onTogglePermission(event: any, screenName: string, permission: string,
-    permissionsType:string = 'userPermissions'
+    permissionsType: string = 'userPermissions'
   ): void {
     const isChecked = event.target.checked;
 
@@ -813,7 +813,7 @@ export class UsersListComponent implements OnInit {
         }
       }
     }
-    
+
     if (permissionsType === 'dashboardPermissions') {
       this.updateAllDashboardScreensSelectedState();
     } else {
@@ -821,9 +821,23 @@ export class UsersListComponent implements OnInit {
     }
   }
 
-  selectAllScreens(): void {
-    const shouldSelectAll = !this.allScreensSelected;
-    
+  // selectAllScreens(): void {
+  //   const shouldSelectAll = !this.allScreensSelected;
+
+  //   this.filteredPermissions.forEach(module => {
+  //     module.screenPermissions.forEach((screen: any) => {
+  //       screen.permissionValues.forEach((permission: any) => {
+  //         permission.isAllowed = shouldSelectAll;
+  //       });
+  //     });
+  //   });
+
+  //   this.allScreensSelected = shouldSelectAll;
+  // }
+  selectAllScreens(forceValue?: boolean): void {
+    const shouldSelectAll =
+      typeof forceValue === 'boolean' ? forceValue : !this.allScreensSelected;
+
     this.filteredPermissions.forEach(module => {
       module.screenPermissions.forEach((screen: any) => {
         screen.permissionValues.forEach((permission: any) => {
@@ -831,37 +845,53 @@ export class UsersListComponent implements OnInit {
         });
       });
     });
-    
+
     this.allScreensSelected = shouldSelectAll;
   }
+
 
   updateAllScreensSelectedState(): void {
     const allPermissions = this.filteredPermissions
       .flatMap(module => module.screenPermissions)
       .flatMap(screen => screen.permissionValues);
-    
+
     this.allScreensSelected = allPermissions.length > 0 && allPermissions.every(permission => permission.isAllowed);
   }
 
-  selectAllDashboardScreens(): void {
-    const shouldSelectAll = !this.allDashboardScreensSelected;
-    
-    this.filteredDashboardPermissions.forEach(module => {
-      module.screenPermissions.forEach((screen: any) => {
-        screen.permissionValues.forEach((permission: any) => {
-          permission.isAllowed = shouldSelectAll;
-        });
+  // selectAllDashboardScreens(): void {
+  //   const shouldSelectAll = !this.allDashboardScreensSelected;
+
+  //   this.filteredDashboardPermissions.forEach(module => {
+  //     module.screenPermissions.forEach((screen: any) => {
+  //       screen.permissionValues.forEach((permission: any) => {
+  //         permission.isAllowed = shouldSelectAll;
+  //       });
+  //     });
+  //   });
+
+  //   this.allDashboardScreensSelected = shouldSelectAll;
+  // }
+  selectAllDashboardScreens(forceValue?: boolean): void {
+  const shouldSelectAll =
+    typeof forceValue === 'boolean' ? forceValue : !this.allDashboardScreensSelected;
+
+  this.filteredDashboardPermissions.forEach(module => {
+    module.screenPermissions.forEach((screen: any) => {
+      screen.permissionValues.forEach((permission: any) => {
+        permission.isAllowed = shouldSelectAll;
       });
     });
-    
-    this.allDashboardScreensSelected = shouldSelectAll;
-  }
+  });
+
+  this.allDashboardScreensSelected = shouldSelectAll;
+}
+
 
   updateAllDashboardScreensSelectedState(): void {
     const allPermissions = this.filteredDashboardPermissions
       .flatMap(module => module.screenPermissions)
       .flatMap(screen => screen.permissionValues);
-    
+
     this.allDashboardScreensSelected = allPermissions.length > 0 && allPermissions.every(permission => permission.isAllowed);
   }
 
@@ -871,18 +901,18 @@ export class UsersListComponent implements OnInit {
     );
   }
 
-  saveUserPermissions(userPermissions:string='userPermissions',
-    originalPermissions:string='originalPermissions',modal_id:string ='.btn-close-user-permissions'
+  saveUserPermissions(userPermissions: string = 'userPermissions',
+    originalPermissions: string = 'originalPermissions', modal_id: string = '.btn-close-user-permissions'
   ): void {
     console.log("this.userPermissions ", this.userPermissions);
     const seen = new Set();
     const currentPermissions: any[] = (this as any)[userPermissions]
-      .flatMap((m:any) => m?.screenPermissions ?? [])
-      .flatMap((s:any) => s?.permissionValues ?? [])
-      .filter((p:any) => p?.isAllowed === true)
-      .map((ittem:any) => ({ value:ittem.value, type :ittem.type}))
+      .flatMap((m: any) => m?.screenPermissions ?? [])
+      .flatMap((s: any) => s?.permissionValues ?? [])
+      .filter((p: any) => p?.isAllowed === true)
+      .map((ittem: any) => ({ value: ittem.value, type: ittem.type }))
       // remove doublicated items 
-      .filter((item:any) => {
+      .filter((item: any) => {
         const key = `${item.value}|${item.type}`;
         if (seen.has(key)) return false;
         seen.add(key);
@@ -890,13 +920,13 @@ export class UsersListComponent implements OnInit {
       });
     console.log("currentPermissions = ", currentPermissions);
     console.log("this.originalPermissions = ", (this as any)[originalPermissions]);
-    
+
     // Debug: Check if there are any permissions for ApVendor or CaseSearchListRpt
     const vendorPermissions = currentPermissions.filter(p => p.value && p.value.includes('ApVendor'));
     const caseSearchPermissions = currentPermissions.filter(p => p.value && p.value.includes('CaseSearchListRpt'));
     console.log("Vendor permissions found:", vendorPermissions);
     console.log("CaseSearchListRpt permissions found:", caseSearchPermissions);
-    
+
     const result = this.diffPermissions((this as any)[originalPermissions], currentPermissions);
 
 
@@ -938,12 +968,12 @@ export class UsersListComponent implements OnInit {
     });
   }
 
-  populateModuleAndScreenOptions(typePermission: string = 'userPermissions',moduleOptions : string ='moduleOptions',
-    filteredScreens : string ='filteredScreens',screenOptions:string ='screenOptions'
+  populateModuleAndScreenOptions(typePermission: string = 'userPermissions', moduleOptions: string = 'moduleOptions',
+    filteredScreens: string = 'filteredScreens', screenOptions: string = 'screenOptions'
   ): void {
     const allModulesSet = new Set<string>();
 
-    (this as any)[typePermission].forEach((module:any) => {
+    (this as any)[typePermission].forEach((module: any) => {
       allModulesSet.add(module.moduleName);
 
       module.screenPermissions.forEach((screen: any) => {
@@ -989,26 +1019,26 @@ export class UsersListComponent implements OnInit {
       .map((v) => ({ value: v, type: typeFromValue(v) }));
 
     return { added, removed };
-  } 
+  }
 
 
-  applySearch(formName:string = 'filterForm',filteredPermissions:string ='filteredPermissions',
-    permission:string = 'userPermissions'
+  applySearch(formName: string = 'filterForm', filteredPermissions: string = 'filteredPermissions',
+    permission: string = 'userPermissions'
   ): void {
     const selectedModules = (this as any)[formName].get('selectedModules')?.value || [];
     const selectedScreens = (this as any)[formName].get('selectedScreens')?.value || [];
 
 
     (this as any)[filteredPermissions] = (this as any)[permission]
-      .filter((m:any) => selectedModules.length === 0 || selectedModules.includes(m.moduleName))
-      .map((m:any) => ({
+      .filter((m: any) => selectedModules.length === 0 || selectedModules.includes(m.moduleName))
+      .map((m: any) => ({
         ...m,
         screenPermissions: m.screenPermissions.filter((s: any) =>
           selectedScreens.length === 0 || selectedScreens.includes(s.screenName)
         )
       }))
-      .filter((m:any) => m.screenPermissions.length > 0);
-    
+      .filter((m: any) => m.screenPermissions.length > 0);
+
     if (permission === 'dashboardPermissions') {
       this.updateAllDashboardScreensSelectedState();
     } else {
@@ -1153,19 +1183,19 @@ export class UsersListComponent implements OnInit {
       { headerName: this.translate.instant('AuthenticationResorceName.name'), field: 'nameEn', width: 200 },
       { headerName: this.translate.instant('AuthenticationResorceName.userName'), field: 'userName', width: 200 },
       { headerName: this.translate.instant('AuthenticationResorceName.userTypeName'), field: 'userTypeName', width: 200 },
-      { 
-        headerName: this.translate.instant('AuthenticationResorceName.userStatusName'), 
-        field: 'userStatusName', 
+      {
+        headerName: this.translate.instant('AuthenticationResorceName.userStatusName'),
+        field: 'userStatusName',
         width: 200,
         cellRenderer: (params: any) => {
           const status = params.data?.userStatus;
           const statusName = params.data?.userStatusName;
-          
+
           // Return empty string if status is null/undefined or statusName is null/undefined
           if (!status || !statusName || statusName === 'null') {
             return '';
           }
-          
+
           const statusClass = this.getStatusClass(status);
           return `<span class="${statusClass}">${statusName}</span>`;
         }
@@ -1178,7 +1208,7 @@ export class UsersListComponent implements OnInit {
     if (!status) {
       return '';
     }
-    
+
     switch (status) {
       case 1: // New
         return 'badge status-waiting';
