@@ -2,7 +2,7 @@
 <div class="chart-type-selector" 
      *ngIf="enableChartTypeSelection"
      [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
-  <label for="chartTypeSelect">{{ currentLang === 'ar' ? 'نوع الرسم البياني'   : 'Chart Type :' }}</label>
+  <!-- <label for="chartTypeSelect">{{ currentLang === 'ar' ? 'نوع الرسم البياني'   : 'Chart Type :' }}</label> -->
   <select id="chartTypeSelect" 
           [(ngModel)]="selectedChartType" 
           (change)="onChartTypeChange($any($event.target).value)"

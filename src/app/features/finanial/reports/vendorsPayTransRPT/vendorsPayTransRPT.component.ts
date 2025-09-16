@@ -479,36 +479,9 @@ export class vendorsPayTransRPTComponent {
                       ),
                       key: 'vendoR_NAME',
                     },
-                    {
-                      label: this.translate.instant(
-                        'FinancialReportResourceName.address'
-                      ),
-                      key: 'address',
-                    },
-                    {
-                      label: this.translate.instant(
-                        'FinancialReportResourceName.workTel'
-                      ),
-                      key: 'worK_TEL',
-                    },
-                    {
-                      label: this.translate.instant(
-                        'FinancialReportResourceName.fax'
-                      ),
-                      key: 'fax',
-                    },
-                    {
-                      label: this.translate.instant(
-                        'FinancialReportResourceName.trxType'
-                      ),
-                      key: 'trX_TYPE',
-                    },
-                    {
-                      label: this.translate.instant(
-                        'FinancialReportResourceName.hdInno'
-                      ),
-                      key: 'hD_INNO',
-                    },
+                  
+                   
+                  
                     {
                       label: this.translate.instant(
                         'FinancialReportResourceName.hdComm'
@@ -523,7 +496,7 @@ export class vendorsPayTransRPTComponent {
                     },
                     {
                       label: this.translate.instant(
-                        'FinancialReportResourceName.debitAmount'
+                        'FinancialReportResourceName.DebitAmount'
                       ),
                       key: 'debiT_AMOUNTstr',
                     },

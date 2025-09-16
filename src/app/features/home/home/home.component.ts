@@ -32,7 +32,7 @@ interface ChartDataItem {
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, BarChartComponent, TranslateModule],
+  imports: [CommonModule, BarChartComponent, TranslateModule, PieChartComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -538,7 +538,7 @@ export class HomeComponent implements OnInit {
 
           const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
 
-          window.location.href = logoutURL; // perform logout and redirect
+          window.location.href = logoutURL;
 
           window.location.href = `${logoutURL}`;
           this.spinnerService.hide();

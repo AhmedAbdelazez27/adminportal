@@ -630,7 +630,7 @@ private buildChartOptions() {
 //           enabled: false,
 //           color: '#FFFFFF',
 //           style: {
-//             fontSize: '12px',
+//             fontSize: '12px',ث
 //             fontWeight: 'bold'
 //           }
 //         }

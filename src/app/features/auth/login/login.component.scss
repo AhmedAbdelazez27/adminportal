@@ -41,7 +41,7 @@
   border: 1px solid var(--Color-16, #000);
   background: var(--ffffff, #FFF);
   color: var(--Color-16, #000);
-  font-family: "Expo Arabic Book";
+  font-family: "Cairo-semi";
   font-size: 18px;
   font-style: normal;
   font-weight: 400;
@@ -68,14 +68,14 @@
 }
 
 .form-label {
-  font-family: 'Expo Arabic Book';
+  font-family: 'Cairo-semi';
   font-weight: 400;
   color: var(--Color-16, #000);
   margin-bottom: 8px;
 }
 
 .form-check-label {
-  font-family: 'Expo Arabic Book';
+  font-family: 'Cairo-reg';
   font-size: 14px;
   color: var(--Color-16, #000);
 }

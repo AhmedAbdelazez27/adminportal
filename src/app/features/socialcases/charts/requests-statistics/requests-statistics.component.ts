@@ -198,7 +198,7 @@ export class RequestsStatisticsComponents implements OnInit {
       const mappedSeriesData: ChartSeriesData[] = [];
       result.seriesData.forEach((series, index) => {
         if (index === 0) {
-          mappedSeriesData.push({ ...series, name: 'Revenue' });
+          mappedSeriesData.push({ ...series, name: 'No of Cases' });
         } else if (index === 1) {
           mappedSeriesData.push({ ...series, name: 'Expense' });
         }

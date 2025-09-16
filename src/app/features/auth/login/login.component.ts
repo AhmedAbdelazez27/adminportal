@@ -121,7 +121,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     } else {
       this.currentlang = "en";
     }
-    this.UAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:4200/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
+    this.UAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://compassint.ddns.net:2036/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
     window.location.href = `${this.UAEPassURL}&ui_locales=${this.currentlang}`;
   }
 
@@ -159,9 +159,16 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.router.navigate(['/home']);
         },
         error: (err) => {
-          this.toastr.error(this.translate.instant('LOGIN.FAILED'), this.translate.instant('TOAST.TITLE.ERROR'));
+          console.log("ere", err)
+
+          this.toastr.error(
+            this.translate.instant('LOGIN.FAILED'),
+            this.translate.instant('TOAST.TITLE.ERROR')
+          );
           this.toastr.info(this.translate.instant(err.error.reason));
-          const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=http://localhost:4200/login'
+          const redirectUri = window.location.origin + '/login';
+          const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
+          window.location.href = logoutURL; // perform logout and redirect
           window.location.href = `${logoutURL}`;
           this.spinnerService.hide();
         },
