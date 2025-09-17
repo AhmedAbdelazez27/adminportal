@@ -64,9 +64,7 @@ export class ServiceMainComponent implements OnInit, OnDestroy {
   getUserServiceType(){
     this.serviceSettingService.getUserServiceType().subscribe({
       next : (res)=>{
-        this.userTypeService = res ;
-        console.log("Res",res);
-        
+        this.userTypeService = res ;        
       }
     })
   }

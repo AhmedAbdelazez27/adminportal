@@ -1,7 +1,7 @@
 <div class="header mb-2">
   <div class="d-flex align-items-center logo">
     <img src="./../../../../assets/images/logo.png" />
-    <img src="./../../../../assets/images/logo.png" />
+    <img src="./../../../../assets/images/council-logo.png" />
   </div>
 
   <div class="d-flex gap-3 align-items-center">
@@ -958,7 +958,7 @@
                
 
                   <li *ngIf="hasPermission('OrdersListRpt.View')">
-                    <a [routerLink]="['/SocialCases/reports/EmiratesOrdersList']">
+                    <a [routerLink]="['/socialcases/reports/EmiratesOrdersList']">
                       {{ 'navbarMenu.emiratesOrdersListrptTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
                         <path
@@ -970,7 +970,7 @@
 
 
                   <li *ngIf="hasPermission('CasesEntitiesRpt.View')">
-                    <a [routerLink]="['/SocialCases/reports/CasesEntities']">
+                    <a [routerLink]="['/socialcases/reports/CasesEntities']">
                       {{ 'navbarMenu.casesEntitiesrptTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
                         <path
@@ -981,7 +981,7 @@
                   </li>
 
                   <li *ngIf="hasPermission('CaseAidEntitiesRpt.View')">
-                    <a [routerLink]="['/SocialCases/reports/CasesHelp']">
+                    <a [routerLink]="['/socialcases/reports/CasesHelp']">
                       {{ 'navbarMenu.casesHelprptTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
                         <path
@@ -1020,23 +1020,23 @@
                           <li>
                             <!--<a [routerLink]="['/financial/charts/receipt-payment', 'General']"> {{ 'FinancialCharts.menugeneral' | translate }}</a>-->
 
-                            <a [routerLink]="['/SocialCases/charts/statistics-benf-families', 'Nationality']"> {{
+                            <a [routerLink]="['/socialcases/charts/statistics-benf-families', 'Nationality']"> {{
                               'SocialServiceCharts.menubyNationality' | translate }}</a>
                           </li>
                           <li>
-                            <a [routerLink]="['/SocialCases/charts/statistics-benf-families', 'Region']"> {{
+                            <a [routerLink]="['/socialcases/charts/statistics-benf-families', 'Region']"> {{
                               'SocialServiceCharts.menubyRegions' | translate }}</a>
                           </li>
                           <li>
-                            <a [routerLink]="['/SocialCases/charts/statistics-benf-families', 'Branches']"> {{
+                            <a [routerLink]="['/socialcases/charts/statistics-benf-families', 'Branches']"> {{
                               'SocialServiceCharts.menubyBranch' | translate }}</a>
                           </li>
                           <li>
-                            <a [routerLink]="['/SocialCases/charts/statistics-benf-families', 'Emirates-Aids']"> {{
+                            <a [routerLink]="['/socialcases/charts/statistics-benf-families', 'Emirates-Aids']"> {{
                               'SocialServiceCharts.menutotalAidbyEmirates' | translate }}</a>
                           </li>
                           <li>
-                            <a [routerLink]="['/SocialCases/charts/statistics-benf-families', 'Category-Aids']"> {{
+                            <a [routerLink]="['/socialcases/charts/statistics-benf-families', 'Category-Aids']"> {{
                               'SocialServiceCharts.menutotalAidsbyCategory' | translate }}</a>
                           </li>
                         </ul>
@@ -1058,15 +1058,15 @@
                       <div class="card card-body">
                         <ul>
                           <li>
-                            <a [routerLink]="['/SocialCases/charts/requests-statistics', 'Nationality']"> {{
+                            <a [routerLink]="['/socialcases/charts/requests-statistics', 'Nationality']"> {{
                               'SocialServiceCharts.menubyNationality' | translate }}</a>
                           </li>
                           <li>
-                            <a [routerLink]="['/SocialCases/charts/requests-statistics', 'Region']"> {{
+                            <a [routerLink]="['/socialcases/charts/requests-statistics', 'Region']"> {{
                               'SocialServiceCharts.menubyRegions' | translate }}</a>
                           </li>
                           <li>
-                            <a [routerLink]="['/SocialCases/charts/requests-statistics', 'Branches']"> {{
+                            <a [routerLink]="['/socialcases/charts/requests-statistics', 'Branches']"> {{
                               'SocialServiceCharts.menubyBranch' | translate }}</a>
                           </li>
                         </ul>

@@ -17,7 +17,7 @@ import { ChartSeriesData, ChartUtilsService } from '../../../../../shared/servic
 @Component({
   selector: 'app-project-receipts',
   standalone: true,
-  imports: [BarChartComponent, PieChartComponent, CommonModule, FormsModule, NgSelectModule, TranslateModule, RouterModule],
+  imports: [BarChartComponent, CommonModule, FormsModule, NgSelectModule, TranslateModule, RouterModule],
   templateUrl: './project-receipts.component.html',
   styleUrls: ['./project-receipts.component.scss'],
   providers: [Select2Service]
@@ -86,13 +86,13 @@ export class ProjectReceiptsComponents implements OnInit {
         switch (this.defaultChartType) {
           case 'Country':
             this.pageTitle = `${this.translate.instant('ProjectCharts.titleForprojectReceipt')} ${this.translate.instant('ProjectCharts.menubyCountry')}`;
-            this.selectedChart1 = this.findChartTypeId("ByType");
+            this.selectedChart1 = this.findChartTypeId("ByCounrty");
             this.selectedChart2 = this.findChartTypeId("ByType");
             break;
           case 'Type':
             this.pageTitle = `${this.translate.instant('ProjectCharts.titleForprojectReceipt')} ${this.translate.instant('ProjectCharts.menubyCountry')}`;
             this.selectedChart1 = this.findChartTypeId("ByType");
-            this.selectedChart2 = this.findChartTypeId("ByType");
+            this.selectedChart2 = this.findChartTypeId("ByCounrty");
             break;
         }
       },
@@ -110,7 +110,7 @@ export class ProjectReceiptsComponents implements OnInit {
     if (!this.selectedYearId) return;
     this.spinnerService.show();
     const payload = {
-      chartType: 2,
+      chartType: 1,
       parameters: {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
@@ -183,9 +183,7 @@ export class ProjectReceiptsComponents implements OnInit {
       const mappedSeriesData: ChartSeriesData[] = [];
       result.seriesData.forEach((series, index) => {
         if (index === 0) {
-          mappedSeriesData.push({ ...series, name: 'Revenue' });
-        } else if (index === 1) {
-          mappedSeriesData.push({ ...series, name: 'Expense' });
+          mappedSeriesData.push({ ...series, name: this.translate.instant('ProjectCharts.chartvalueNameforProjectReceipts') });
         }
       });
       this[categoriesName] = result.categories;

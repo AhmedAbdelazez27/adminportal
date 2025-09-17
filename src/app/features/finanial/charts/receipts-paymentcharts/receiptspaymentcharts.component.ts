@@ -129,7 +129,7 @@ export class ReceiptsPaymentChartsComponent implements OnInit {
     if (!this.selectedYearId) return;
     this.spinnerService.show();
     const payload = {
-      chartType: 5,
+      chartType: 7,
       parameters: {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
@@ -142,7 +142,6 @@ export class ReceiptsPaymentChartsComponent implements OnInit {
         level: null
       }
     };
-    console.log("payload", payload);
 
     if (typeChange == 'changeEntit') {
       this.spinnerService.show();
@@ -207,14 +206,12 @@ export class ReceiptsPaymentChartsComponent implements OnInit {
 
       const mappedSeriesData: ChartSeriesData[] = [];
       result.seriesData.forEach((series, index) => {
-        if (index === 0) { // value1
-          mappedSeriesData.push({ ...series, name: 'Revenue' });
-        } else if (index === 1) { // value2
-          mappedSeriesData.push({ ...series, name: 'Expense' });
+        if (index === 0) {
+          mappedSeriesData.push({ ...series, name: this.translate.instant('FinancialCharts.chartvalueNameforreceipts') });
+        } else if (index === 1) {
+          mappedSeriesData.push({ ...series, name: this.translate.instant('FinancialCharts.chartvalueNameforpayments') });
         }
       });
-      console.log("seriesItem", mappedSeriesData);
-      console.log("result.categories", result.categories);
 
       this[categoriesName] = result.categories;
       this[seriesDataName] = mappedSeriesData;
@@ -223,7 +220,7 @@ export class ReceiptsPaymentChartsComponent implements OnInit {
       this[seriesDataName] = [];
     }
   }
-
+   
   setDefaultValues(categoriesName: string, seriesDataName: string) {
  const result = this.chartUtils.parseChartData(null, this.currentLang);
     this[categoriesName] = result.categories;

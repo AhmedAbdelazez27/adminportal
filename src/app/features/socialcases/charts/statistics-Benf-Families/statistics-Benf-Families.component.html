@@ -17,7 +17,7 @@
            
 
             <ng-container *ngIf="seriesData.length">
-              <app-bar-chart [categories]="categories" [seriesData]="seriesData" [useDynamicColors]="true" [pageTitle]="pageTitle">
+              <app-bar-chart [categories]="categories" [seriesData]="seriesData" [useDynamicColors]="true" [pageTitle]="pageTitle" [enableChartTypeSelection]="false"> >
               </app-bar-chart>
             </ng-container>
           </div>
@@ -32,11 +32,19 @@
                 </ng-select>
               </div>
             </div>
-            <ng-container *ngIf="seriesData2.length">
-              <app-pie-chart [categories]="categories2" [chartType]="'pie'" [donut]="true" [seriesData]="seriesData2" [useDynamicColors]="true" [pageTitle]="pageTitle">
-              </app-pie-chart>
-            </ng-container>
+            <div *ngIf="['Nationality', 'Region', 'Branches'].includes(defaultChartType)">
+              <ng-container *ngIf="seriesData2.length">
+                <app-bar-chart [categories]="categories2" [chartType]="'piechart'" [seriesData]="seriesData2" [useDynamicColors]="true" [pageTitle]="pageTitle">
+                </app-bar-chart>
+              </ng-container>
+            </div>
+            <div *ngIf="['Emirates-Aids', 'Category-Aids'].includes(defaultChartType)">
+              <ng-container *ngIf="seriesData2.length">
+                <app-bar-chart [categories]="categories2" [chartType]="'column'" [seriesData]="seriesData2" [useDynamicColors]="true" [pageTitle]="pageTitle">
+                </app-bar-chart>
+              </ng-container>
+            </div>
           </div>
         </div>
     </div>
-</div>
+</div> 

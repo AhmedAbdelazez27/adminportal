@@ -49,11 +49,13 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
   selectedMonthId: number | null = null;
 
   selectedYearId: any[] = [];
+  selectedYeartext: string[] = [];
   selectedDepartmentId: any = null;
   selectedBranchId: any = null;
   selectedEntity: any[] = [];
   selectedAccountId: any = null;
   selectedmonthId: any[] = [];
+  selectedmonthtext: any[] = [];
   defaultChartType: string = '';
   pageTitle: string = "";
 
@@ -126,6 +128,24 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
     });
   }
 
+  onChangemonthSelect2(selected: any[]): void {
+    if (selected && selected.length > 0) {
+      this.selectedmonthtext = selected.map(s => this.lang == "ar" ? s.text : s.textEn);
+    } else {
+      this.selectedmonthtext = [];
+    }
+  }
+
+  onChangeYear(selected: any[]) {
+    if (selected && selected.length > 0) {
+      this.selectedYearId = selected.map(s => s.id).sort((a, b) => a - b);
+    } else {
+      this.selectedYearId = [];
+    }
+
+    this.onEntityChange(2, 'selectedYearId', this.selectedYearId);
+  }
+
   onYearChange(typeChange: number) {
     if (!(this.selectedYearId.length && this.selectedEntity.length)) return;
 
@@ -143,12 +163,12 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
     };
     this._ChartsService.getReceiptsandPaymentsComparison(payload, this.typeService).subscribe({
       next: (res) => {
-         if (typeChange == 1) {
-           this.parseChartData(res?.data, 'categoriees', 'seriesData');
+        if (typeChange == 1) {
+          this.parseChartData(res, 'categoriees', 'seriesData', this.selectedYeartext,'',);
           // this.onYearChange(2);
-         }
-         else if (typeChange == 2) {
-           this.parseChartData(res?.data, 'categoriees2', 'seriesData2');
+        }
+        else if (typeChange == 2) {
+          this.parseChartData(res, 'categoriees2', 'seriesData2', this.selectedYeartext, this.selectedmonthtext);
         }
 
         this.spinnerService.forceHide();
@@ -186,28 +206,59 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
     this[seriesData] = data
   }
 
-  parseChartData(res: any, categoriesName: string, seriesDataName: string) {
+  parseChartData(res: any, categoriesName: string, seriesDataName: string, yearName: any, monthName: any) {
 
-    const data = res || [];
+    const data = res.data || [];
+    var chartvalueName : any = null;
+
+    if (
+      this.defaultChartType === "receiptsByEntity" ||
+      this.defaultChartType === "receiptsByDepartment" ||
+      this.defaultChartType === "receiptsByBranch" ||
+      this.defaultChartType === "receiptsByAccount"
+    ) {
+      chartvalueName = this.translate.instant('FinancialCharts.chartvalueNameforreceipts');
+    }
+    else if (
+      this.defaultChartType === "paymentsByEntity" ||
+      this.defaultChartType === "paymentsByDepartment" ||
+      this.defaultChartType === "paymentsByBranch" ||
+      this.defaultChartType === "paymentsByAccount"
+    ) {
+      chartvalueName = this.translate.instant('FinancialCharts.chartvalueNameforpayments');
+    }
+
+    if (this.typeService)
     if (data.length === 0) {
       this[categoriesName] = [];
       this[seriesDataName] = [];
       return;
     }
     if (data.length > 0) {
-      const result = this.chartUtils.parseChartData1(res, this.currentLang, {
+      const result = this.chartUtils.parseChartData(res, this.currentLang, {
         useIndividualSeries: true,
         valueFields: ['value1', 'value2', 'value3', 'value4']
       });
-      console.log("seriesItem", result);
-      console.log("result.categories", result.categories);
       const mappedSeriesData: ChartSeriesData[] = [];
+
       result.seriesData.forEach((series, index) => {
-        if (index === 0) { // value1
-          mappedSeriesData.push({ ...series, name: 'Revenue' });
-        } else if (index === 1) { // value2
-          mappedSeriesData.push({ ...series, name: 'Expense' });
+        const year = Array.isArray(yearName) ? yearName[index] : yearName;
+        const hasValidData = Array.isArray(series.data) && series.data.some(v => v !== null && v !== undefined);
+        if (!hasValidData) {
+          return;
         }
+        if (index === 0) {
+          mappedSeriesData.push({ ...series, name: chartvalueName + " " + monthName + " " + year });
+        }
+        if (index === 1) {
+          mappedSeriesData.push({ ...series, name: chartvalueName + " " + monthName + " " + year });
+        }
+        if (index === 2) {
+          mappedSeriesData.push({ ...series, name: this.translate.instant('FinancialCharts.chartvalueNameforRateofdeviation')});
+        }
+        if (index === 3) {
+          mappedSeriesData.push({ ...series, name: this.translate.instant('FinancialCharts.chartvalueNameforRateofdeviation')});
+        } 
       });
 
       this[categoriesName] = result.categories;
@@ -234,58 +285,69 @@ export class ReceiptsPaymentsComparissionComponent implements OnInit {
   };
 
 
-  onEntityChange(no: number = 2, ddlName: string) {
+  onEntityChange(no: number = 2, ddlName: string, selected: any[]) {
+    if (selected && selected.length > 0) {
+      const sorted = [...selected].sort((a, b) => a.id - b.id);
+
+      this.selectedYearId = selected.map(s => s.id).sort((a, b) => a - b);
+      this.selectedYeartext = sorted.map(s => this.lang === "en" ? s.text : s.textEn);
+    } else {
+      this.selectedYearId = [];
+
+      this.selectedYeartext = [];
+    }
     if (this[ddlName].length >= no) {
       this.toastr.warning(`لا تستطيع اختيار أكثر من ${no} عناصر`);
     }
   }
 
+
   dynamicPageTitle() {
     switch (this.defaultChartType) {
       case 'receiptsByEntity':
-        this.pageTitle = "receiptsByEntit_title";
+        this.pageTitle = "FinancialCharts.receiptsByEntit_title";
         this.typeService = "GetReceiptsComparison"
         this.id = "1";
         break;
 
       case 'receiptsByDepartment':
-        this.pageTitle = "receiptsByDepartment_title";
+        this.pageTitle = "FinancialCharts.receiptsByDepartment_title";
         this.typeService = "GetReceiptsComparison"
         this.id = "4";
         break;
 
       case 'receiptsByBranch':
-        this.pageTitle = "receiptsByBranch_title";
+        this.pageTitle = "FinancialCharts.receiptsByBranch_title";
         this.typeService = "GetReceiptsComparison"
         this.id = "3";
         break;
 
       case 'receiptsByAccount':
-        this.pageTitle = "receiptsByAccount_title";
+        this.pageTitle = "FinancialCharts.receiptsByAccount_title";
         this.typeService = "GetReceiptsComparison"
         this.id = "5";
         break
 
       case 'paymentsByEntity':
-        this.pageTitle = "paymentsByEntit_title";
+        this.pageTitle = "FinancialCharts.paymentsByEntit_title";
         this.typeService = "GetPaymentsComparison"
         this.id = "1";
         break;
 
       case 'paymentsByDepartment':
-        this.pageTitle = "paymentsByDepartment_title";
+        this.pageTitle = "FinancialCharts.paymentsByDepartment_title";
         this.typeService = "GetPaymentsComparison"
         this.id = "4";
         break;
 
       case 'paymentsByBranch':
-        this.pageTitle = "paymentsByBranch_title";
+        this.pageTitle = "FinancialCharts.paymentsByBranch_title";
         this.typeService = "GetPaymentsComparison"
         this.id = "3";
         break;
 
       case 'paymentsByAccount':
-        this.pageTitle = "paymentsByAccount_title";
+        this.pageTitle = "FinancialCharts.paymentsByAccount_title";
         this.typeService = "GetPaymentsComparison"
         this.id = "5";
         break;

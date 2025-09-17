@@ -1,5 +1,5 @@
 <div class="header" *ngIf="pageTitle">
-  {{'FinancialCharts.titleForReceiptPaymentComparission'|translate}}
+  {{pageTitle|translate}}
 </div>
 <div class="container-fluid mt-3">
 
@@ -9,12 +9,12 @@
         <div class="d-flex gap-3 w-100 mb-4">
           <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
                      [multiple]="true" [closeOnSelect]="true" class="ng-select-custom" [maxSelectedItems]="4"
-                     (change)="onEntityChange(4,'selectedEntity')" placeholder="{{'FinancialCharts.entity'|translate}}">
+                     (change)="onEntityChange(4,'selectedEntity',[])" placeholder="{{'FinancialCharts.entity'|translate}}">
           </ng-select>
 
           <ng-select [items]="yearsList" bindLabel="text" bindValue="id" [(ngModel)]="selectedYearId"
                      [multiple]="true" [closeOnSelect]="true" class="ng-select-custom" [maxSelectedItems]="2"
-                     (change)="onEntityChange(2,'selectedYearId')" placeholder="{{'FinancialCharts.year'|translate}}">
+                     (change)="onEntityChange(2,'selectedYearId',$event)" placeholder="{{'FinancialCharts.year'|translate}}">
           </ng-select>
 
 
@@ -47,7 +47,7 @@
         </div>
 
         <ng-container *ngIf="seriesData.length">
-          <app-bar-chart [categories]="categoriees" [seriesData]="seriesData" [useDynamicColors]="true" [pageTitle]="pageTitle">
+          <app-bar-chart [categories]="categoriees" [seriesData]="seriesData" [useDynamicColors]="true" [pageTitle]="pageTitle" [enableChartTypeSelection]="false">
           </app-bar-chart>
         </ng-container>
       </div>
@@ -61,6 +61,7 @@
                      [(ngModel)]="selectedmonthId"
                      [multiple]="true"
                      [closeOnSelect]="true"
+                     (change)="onChangemonthSelect2($event)"
                      class="ng-select-custom w-100">
             <ng-template ng-option-tmp let-item="item">
               {{ lang === 'ar' ? item.text : item.textEn }}
@@ -80,26 +81,7 @@
           </button>
         </div>
         <ng-container *ngIf="seriesData2.length">
-          <app-bar-chart [categories]="categoriees2" [seriesData]="seriesData2"   [chartType]="'bar'"  [useDynamicColors]="true" [pageTitle]="pageTitle">
-          </app-bar-chart>
-        </ng-container>
-      </div>
-    </div>
-
-
-    <div class="col-xl-6 mb-3 ">
-      <div class="main-container h-100">
-        <ng-container *ngIf="seriesData2.length">
-          <app-bar-chart [categories]="categoriees2" [seriesData]="seriesData2" [chartType]="'pie'" [useDynamicColors]="true" [pageTitle]="pageTitle">
-          </app-bar-chart>
-        </ng-container>
-      </div>
-    </div>
-
-    <div class="col-xl-6 mb-3 ">
-      <div class="main-container h-100">
-        <ng-container *ngIf="seriesData2.length">
-          <app-bar-chart [categories]="categoriees2" [seriesData]="seriesData2" [chartType]="'line'" [useDynamicColors]="true" [pageTitle]="pageTitle">
+          <app-bar-chart [categories]="categoriees2" [seriesData]="seriesData2" [useDynamicColors]="true" [pageTitle]="pageTitle">
           </app-bar-chart>
         </ng-container>
       </div>

@@ -63,7 +63,6 @@ export class ChartUtilsService {
       valueFields = ['value1', 'value2', 'value3', 'value4'],
       categoryField = 'nameAr'
     } = options;
-
     if (!res || !res.data || res.data.length === 0) {
       return this.getDefaultChartData(currentLang);
     }
@@ -80,18 +79,16 @@ export class ChartUtilsService {
 
     if (useIndividualSeries) {
       const valueFields = ['value1', 'value2', 'value3', 'value4'];
-      console.log("result.xzczxc", res.data);
 
       valueFields.forEach((field, fieldIndex) => {
         const seriesName = currentLang === 'ar'
-          ? this.getSeriesName(field, 'ar')  // optional helper
+          ? this.getSeriesName(field, 'ar')
           : this.getSeriesName(field, 'en');
 
         const colorForField = this.generateDynamicColor(fieldIndex, valueFields.length);
 
         const data = res.data.map((item: any) => {
           const value = item[field] || 0;
-          console.log("value", value);
           return value <= 0 ? null : value; 
         });
 
@@ -102,9 +99,6 @@ export class ChartUtilsService {
         });
       });
     }
-
-
-
     else {
       valueFields.forEach((valueField, fieldIndex) => {
         const hasValue = res.data.some((item: any) => 
@@ -141,8 +135,7 @@ export class ChartUtilsService {
   }
 
 
-
-  parseChartData1(
+  parseChartDataforSpons(
     res: any,
     currentLang: string = 'en',
     options: {
@@ -151,18 +144,18 @@ export class ChartUtilsService {
       categoryField?: string;
     } = {}
   ): { categories: string[], seriesData: ChartSeriesData[] } {
-
     const {
-      useIndividualSeries = true,
+      useIndividualSeries = false, // Default to false for 4 value series
       valueFields = ['value1', 'value2', 'value3', 'value4'],
       categoryField = 'nameAr'
     } = options;
 
-    if (!res || !res || res.length === 0) {
+    if (!res || !res.data || res.data.length === 0) {
       return this.getDefaultChartData(currentLang);
     }
 
-    const categories = res.map((item: any) => {
+    // Build categories from data items
+    const categories = res.data.map((item: any) => {
       if (currentLang === 'ar') {
         return item.nameAr || item.nameEn || 'غير محدد';
       } else {
@@ -173,60 +166,66 @@ export class ChartUtilsService {
     let seriesData: ChartSeriesData[] = [];
 
     if (useIndividualSeries) {
-      const valueFields = ['value1', 'value2', 'value3', 'value4'];
-      console.log("result.xzczxc", res);
+      // Original individual series logic (one series per data item)
+      seriesData = res.data.map((item: any, index: number) => {
+        const seriesName = currentLang === 'ar' ?
+          (item.nameAr || item.nameEn || `المنظمة ${index + 1}`) :
+          (item.nameEn || item.nameAr || `Organization ${index + 1}`);
 
-      valueFields.forEach((field, fieldIndex) => {
-        const seriesName = currentLang === 'ar'
-          ? this.getSeriesName(field, 'ar')  // optional helper
-          : this.getSeriesName(field, 'en');
-
-        const colorForField = this.generateDynamicColor(fieldIndex, valueFields.length);
-
-        const data = res.map((item: any) => {
-          const value = item[field] || 0;
-          console.log("value", value);
-          return value <= 0 ? null : value;
+        const data = res.data.map((dataItem: any, dataIndex: number) => {
+          if (dataIndex === index) {
+            const value = dataItem.value1 || 0;
+            return value == 0 ? null : value;
+          }
+          return null;
         });
 
-        seriesData.push({
+        const baseColor = this.generateDynamicColor(index, res.data.length);
+        const itemValue = item.value1 || 0;
+        const color = itemValue < 0 ? this.adjustColorForNegative(baseColor) : baseColor;
+
+        return {
           name: seriesName,
           data: data,
-          color: colorForField
-        });
+          color: color
+        };
       });
-    }
+    } else {
+      // New logic: Create 4 series (one for each value field) with fixed colors
+      const fixedColors = ['#DC2626', '#3B82F6', '#10B981', '#F59E0B']; // Red, Blue, Green, Yellow
 
-
-
-    else {
       valueFields.forEach((valueField, fieldIndex) => {
-        const hasValue = res.some((item: any) =>
-          item[valueField] != null && item[valueField] !== 0
-        );
+        // Always create series for all 4 value fields
+        const seriesName = this.getSeriesName(valueField, currentLang, fieldIndex);
+        const data = res.data.map((item: any) => {
+          const value = item[valueField] || 0;
+          return value === 0 ? null : value; // Return null for zero values to hide them
+        });
 
-        if (hasValue) {
-          const seriesName = this.getSeriesName(valueField, currentLang);
-          const data = res.map((item: any) => item[valueField] || 0);
-          const color = this.generateDynamicColor(fieldIndex, valueFields.length);
-
-          seriesData.push({
-            name: seriesName,
-            data: data,
-            color: color
-          });
-        }
-      });
-
-      if (seriesData.length === 0) {
-        const seriesName = currentLang === 'ar' ? 'القيمة الأولى' : 'Value 1';
-        const data = res.map((item: any) => item.value1 || 0);
-        const color = this.generateDynamicColor(0, 1);
+        // Use fixed color for each value field
+        const color = fixedColors[fieldIndex % fixedColors.length];
 
         seriesData.push({
           name: seriesName,
           data: data,
           color: color
+        });
+      });
+
+      // Remove series that have no data at all
+      seriesData = seriesData.filter(series =>
+        series.data.some(value => value !== null && value !== 0)
+      );
+
+      // Fallback: if no series have data, create at least one with value1
+      if (seriesData.length === 0) {
+        const seriesName = currentLang === 'ar' ? 'القيمة الأولى' : 'Value 1';
+        const data = res.data.map((item: any) => item.value1 || 0);
+
+        seriesData.push({
+          name: seriesName,
+          data: data,
+          color: fixedColors[0] // Red for fallback
         });
       }
     }
@@ -234,23 +233,23 @@ export class ChartUtilsService {
     return { categories, seriesData };
   }
 
-
-
-  private getSeriesName(valueField: string, currentLang: string): string {
-    const seriesNames: { [key: string]: { ar: string, en: string } } = {
-      'value1': { ar: 'القيمة الأولى', en: 'Value 1' },
-      'value2': { ar: 'القيمة الثانية', en: 'Value 2' },
-      'value3': { ar: 'القيمة الثالثة', en: 'Value 3' },
-      'value4': { ar: 'القيمة الرابعة', en: 'Value 4' }
+  private getSeriesName(valueField: string, currentLang: string, index?: number): string {
+    const seriesNames = {
+      en: ['Value 1', 'Value 2', 'Value 3', 'Value 4'],
+      ar: ['القيمة الأولى', 'القيمة الثانية', 'القيمة الثالثة', 'القيمة الرابعة']
     };
 
-    const names = seriesNames[valueField];
-    if (names) {
-      return currentLang === 'ar' ? names.ar : names.en;
-    }
+    // If index is provided, use it; otherwise parse from valueField
+    const fieldIndex = index !== undefined ? index : parseInt(valueField.replace('value', '')) - 1;
 
-    return valueField;
+    if (currentLang === 'ar') {
+      return seriesNames.ar[fieldIndex] || `القيمة ${fieldIndex + 1}`;
+    } else {
+      return seriesNames.en[fieldIndex] || `Value ${fieldIndex + 1}`;
+    }
   }
+
+
 
 
   private getDefaultChartData(currentLang: string): { categories: string[], seriesData: ChartSeriesData[] } {

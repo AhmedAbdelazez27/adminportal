@@ -795,7 +795,6 @@ export class BalanceReviewRptComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
-          console.log("response", response);
 
           if (response === 'Processed Ok') {  // check the success flag from API
             this.getAllDataForReports = response?.data || [];

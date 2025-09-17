@@ -30,7 +30,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   state: string | null = null;
   destroy$ = new Subject<boolean>();
   currentlang: any;
-  UAEPassURL: any;
   lang: string | null = null;
   constructor(
     private fb: FormBuilder,
@@ -59,8 +58,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       this.code = params['code'];
       this.state = params['state'];
-      // debugger;
-
       if (this.isValidCodeState(this.code, this.state)) {
         this.uaepassCheckCode(this.code!, this.state!);
       } else {
@@ -121,15 +118,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     } else {
       this.currentlang = "en";
     }
-    this.UAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://compassint.ddns.net:2036/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-    window.location.href = `${this.UAEPassURL}&ui_locales=${this.currentlang}`;
+    var UAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://compassint.ddns.net:2036/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
+    var ProdUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=ccc_web_stg&scope=urn:uae:digitalid:profile:general&state=Q9pOTvlchYARcSFL&redirect_uri=https://192.168.51.130:2002/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
+    window.location.href = `${UAEPassURL}&ui_locales=${this.currentlang}`;
   }
 
 
  
   uaepassCheckCode(code: string, state: string) {
-    // debugger;
-
     const params: LoginUAEPassDto =
     {
       code : code,
@@ -159,18 +155,25 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.router.navigate(['/home']);
         },
         error: (err) => {
-          console.log("ere", err)
-
           this.toastr.error(
             this.translate.instant('LOGIN.FAILED'),
             this.translate.instant('TOAST.TITLE.ERROR')
           );
-          this.toastr.info(this.translate.instant(err.error.reason));
-          const redirectUri = window.location.origin + '/login';
-          const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
-          window.location.href = logoutURL; // perform logout and redirect
-          window.location.href = `${logoutURL}`;
-          this.spinnerService.hide();
+          if (err.error.message != undefined) {
+            this.toastr.info(this.translate.instant(err.error.message));
+            const redirectUri = window.location.origin + '/login';
+            const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
+            window.location.href = logoutURL;
+            this.spinnerService.hide();
+          }
+          else {
+            this.toastr.info(this.translate.instant(err.error.reason));
+            const redirectUri = window.location.origin + '/login';
+            const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
+            window.location.href = logoutURL;
+            this.spinnerService.hide();
+          }
+        
         },
 
         complete: () => {

@@ -1849,13 +1849,26 @@
     "menupaymentsbyDept": "المالية / مدفوعات حسب الاقسام",
     "menupaymentsbyBranch": "المالية / مدفوعات حسب الفروع",
     "menupaymentsbyAcc": " المالية /  مدفوعات حسب الحسابات",
+    "receiptsByEntit_title": "مقارنة المقبوضات حسب الجمعية",
+    "receiptsByDepartment_title": "مقارنة المقبوضات حسب الاقسام",
+    "receiptsByBranch_title": "مقارنة المقبوضات حسب الفروع",
+    "receiptsByAccount_title": "مقارنة المقبوضات حسب الحسابات",
+    "paymentsByEntit_title": "مقارنة المدفوعات حسب الجمعية",
+    "paymentsByDepartment_title": "مقارنة المدفوعات حسب الاقسام",
+    "paymentsByBranch_title": "مقارنة المدفوعات حسب الفروع",
+    "paymentsByAccount_title": "مقارنة المدفوعات حسب الحسابات",
     "entity": "الجمعيه",
     "year": "سنة",
     "department": "مجموعة المستخدمين",
     "branch": "فرع",
     "account": "حساب",
     "month": "شهر",
-    "start": "يبدأ"
+    "start": "يبدأ",
+    "chartvalueNameforpayments": "المدفوعات",
+    "chartvalueNameforreceipts": "المقبوضات",
+    "chartvalueNameforrevenue": "الايرادات",
+    "chartvalueNameforexpenses": "المصاريف",
+    "chartvalueNameforRateofdeviation": "معدل الانحراف"
   },
   "SocialServiceCharts": {
     "charts": "التقارير التفاعلية",
@@ -1866,7 +1879,11 @@
     "menutotalAidbyEmirates": "  الحالات الإجتماعية / اجمالى المساعدات حسب الاماره",
     "menutotalAidsbyCategory": " الحالات الإجتماعية / اجمالى المساعدات حسب فئه المتقدم",
     "titleForRequeststatistics": " احصائيات الطلبات",
-    "menugeneral_title": " المالية/ التقارير التفاعلية للمقبوضات والمدفوعات"
+    "menugeneral_title": " المالية/ التقارير التفاعلية للمقبوضات والمدفوعات",
+    "chartvalueNameforstatisticsforbenf": "اجمالى الحالات",
+    "chartvalueNameforRequestStatistics": "اجمالى الطلبات",
+    "chartvalueNameforFinancialAssistance": "اجمالى المساعدات الماليه",
+    "chartvalueNameforAid": "اجمالي المساعدات"
   },
   "ProjectCharts": {
     "charts": "التقارير",
@@ -1874,7 +1891,10 @@
     "titleFornumofProject": "عدد المشاريع",
     "titleForprojectReceipt": "مقبوضات المشاريع",
     "menubyCountry": "  المشاريع / حسب الدوله",
-    "menubyType": "المشاريع / حسب النوع"
+    "menubyType": "المشاريع / حسب النوع",
+    "chartvalueNameforCostsofProject": "تكلفه المشاريع",
+    "chartvalueNameforNumberofProject": "اجمالى الطلبات",
+    "chartvalueNameforProjectReceipts": "مقبوضات المشاريع"
   },
   "sponsorshipchart": {
     "charts": "التقارير التفاعلية",
@@ -1905,7 +1925,12 @@
     "byTypeOfSponsorshipheader": "حسب نوع الكفاله",
     "byNationalityheader": "حسب الجنسيه",
     "byEntityOfficeheader": "حسب مكتب الجمعية",
-    "casesAvailableForSponsorshipheader": "الحالات المتاحه للكفاله"
+    "casesAvailableForSponsorshipheader": "الحالات المتاحه للكفاله",
+    "nameValueforNumberofCases": "عدد الحالات",
+    "nameValueforNumberofDonation": "اجمالي التبرعات",
+    "nameValueforNumberofContracts": "اجمالي العقود",
+    "nameValueforTotalCases": "اجمالي الحالات",
+    "nameValueforGuarantees": "كفالات"
   },
   "mainApplyServiceResourceName": {
     "serviceName": "اسم الخدمة",

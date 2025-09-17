@@ -17,7 +17,7 @@ import { ChartSeriesData, ChartUtilsService } from '../../../../../shared/servic
 @Component({
   selector: 'app-cost-of-project',
   standalone: true,
-  imports: [BarChartComponent,PieChartComponent, CommonModule, FormsModule, NgSelectModule, TranslateModule, RouterModule],
+  imports: [BarChartComponent, CommonModule, FormsModule, NgSelectModule, TranslateModule, RouterModule],
   templateUrl: './cost-of-project.component.html',
   styleUrls: ['./cost-of-project.component.scss'],
   providers: [Select2Service]
@@ -72,7 +72,7 @@ export class CostofProjectComponents implements OnInit {
         this.yearsList = res.years.results;
         this.chartTypes = res.chartTypes;
         this.entities = [{ id: "", text: this.translate.instant('Common.Select') }, ...res.entities?.results];
-        this.selectedEntity = "";
+        this.selectedEntity = this.selectedEntity ? this.selectedEntity.toString() : null;
 
         const maxIdItem = res.years.results.reduce((maxItem: any, currentItem: any) => {
           return (parseInt(currentItem.id) > parseInt(maxItem.id)) ? currentItem : maxItem;
@@ -86,14 +86,14 @@ export class CostofProjectComponents implements OnInit {
         switch (this.defaultChartType) {
           case 'Country':
             this.pageTitle = `${this.translate.instant('ProjectCharts.titleForcostofProject')} ${this.translate.instant('ProjectCharts.menubyCountry')}`;
-            this.selectedChart1 = this.findChartTypeId("ByOrganization");
-            this.selectedChart2 = this.findChartTypeId("ByOrganization");
+            this.selectedChart1 = this.findChartTypeId("ByCounrty");
+            this.selectedChart2 = this.findChartTypeId("ByType");
             break;
 
           case 'Type':
             this.pageTitle = `${this.translate.instant('ProjectCharts.titleForcostofProject')} ${this.translate.instant('ProjectCharts.menubyType')}`;
-            this.selectedChart1 = this.findChartTypeId("ByOrganization");
-            this.selectedChart2 = this.findChartTypeId("ByOrganization");
+            this.selectedChart1 = this.findChartTypeId("ByType");
+            this.selectedChart2 = this.findChartTypeId("ByCounrty");
             break;
         }
       },
@@ -111,7 +111,7 @@ export class CostofProjectComponents implements OnInit {
     if (!this.selectedYearId) return;
     this.spinnerService.show();
     const payload = {
-      chartType: 2,
+      chartType: 1,
       parameters: {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
@@ -186,9 +186,7 @@ export class CostofProjectComponents implements OnInit {
       const mappedSeriesData: ChartSeriesData[] = [];
       result.seriesData.forEach((series, index) => {
         if (index === 0) {
-          mappedSeriesData.push({ ...series, name: 'Revenue' });
-        } else if (index === 1) {
-          mappedSeriesData.push({ ...series, name: 'Expense' });
+          mappedSeriesData.push({ ...series, name: this.translate.instant('ProjectCharts.chartvalueNameforCostsofProject') });
         }
       });
       this[categoriesName] = result.categories;

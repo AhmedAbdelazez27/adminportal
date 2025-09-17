@@ -37,6 +37,8 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
   selectedsponsorshipCategory: any;
   defaultChartType: string = '';
   pageTitle: string = "";
+  selectedYeartext: string[] = [];
+  selectedmonthtext: any[] = [];
 
   chartTypes: any = [];
   selectedChart1: number | null = null;
@@ -152,8 +154,8 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
         }
         else if (this.defaultChartType == 'Totaldonationsbytypeofsponsorship') {
           this.pageTitle = "sponsorshipchart.totalDonationsByTypeheader";
-          this.selectedChart1 = 9;
-          this.selectedChart2 = null;
+          this.selectedChart1 = null;
+          this.selectedChart2 = 9;
           chartTypeBased = 8
         }
         else if (this.defaultChartType == 'Contractstatisticsbypaymentmethod') {
@@ -230,7 +232,7 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
     } else if (this.defaultChartType == 'comparisonofCasesbyofficeoftheEntity') {
       this.comparisonId = this.selectedSponsorOffice;
     }
-
+    console.log(this.selectedYearId)
     if (!this.selectedYearId) return;
  
     if (typeChange == 'changeEntity') {
@@ -274,7 +276,7 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
 
     this._ChartsService.getGuaranteesChart(payload).subscribe({
       next: (res) => {
-        this.parseChartData(res, 'categories', 'seriesData');
+        this.parseChartData(res, 'categories', 'seriesData', this.selectedYeartext, '');
         
         let additionalRequests = 0;
         
@@ -329,7 +331,7 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
 
     this._ChartsService.getGuaranteesChart(payload).subscribe({
       next: (res) => {
-        this.parseChartData(res, categoriesName, seriesDataName);
+        this.parseChartData(res, categoriesName, seriesDataName, this.selectedYeartext, this.selectedmonthtext);
         this.spinnerService.forceHide();
       },
       error: (err) => {
@@ -340,25 +342,63 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
   }
 
 
-  parseChartData(res: any, categoriesName: string, seriesDataName: string) {
-    const data = res?.data || [];
-    if (data.length === 0) {
-      this[categoriesName] = [];
-      this[seriesDataName] = [];
-      return;
+  parseChartData(res: any, categoriesName: string, seriesDataName: string, yearName: any, monthName: any) {
+    var chartvalueName: any = null;
+
+    if (
+      this.defaultChartType === "CasesNumberOrganization" ||
+      this.defaultChartType === "byperiodandtypeofsponsorship" ||
+      this.defaultChartType === "bytypeofsponsorshipandnationality" ||
+      this.defaultChartType === "noofsponsorsbyentityandtypeofsponsorship" ||
+      this.defaultChartType === "bytypeofsponsorshipandnationality" ||
+      this.defaultChartType === "CasesNumberBySponsorShip"
+    ) {
+      chartvalueName = this.translate.instant('sponsorshipchart.nameValueforNumberofCases') + " " + monthName + " " + yearName;
     }
+    else if (this.defaultChartType === "Totaldonationsbytypeofsponsorship")
+    {
+      chartvalueName = this.translate.instant('sponsorshipchart.nameValueforNumberofDonation') + " " + monthName + " " + yearName;
+    }
+    else if (this.defaultChartType === "Contractstatisticsbypaymentmethod")
+    {
+      chartvalueName = this.translate.instant('sponsorshipchart.nameValueforNumberofContracts') + " " + monthName + " " + yearName;
+    }
+    else if (
+      this.defaultChartType === "nofsponsorsinoutcountry" ||
+      this.defaultChartType === "comparisonofCasesbytypeofsponsorship" ||
+      this.defaultChartType === "comparisonofCasesaccordingtonationality" ||
+      this.defaultChartType === "comparisonofCasesbyofficeoftheEntity")
+    {
+      chartvalueName = this.translate.instant('sponsorshipchart.nameValueforGuarantees') + " " + monthName + " " + yearName;
+    }
+    else if (
+      this.defaultChartType === "casesavailableforsponsorship") {
+      chartvalueName = this.translate.instant('sponsorshipchart.nameValueforTotalCases') + " " + monthName + " " + yearName;
+    }
+    const data = res?.data || [];
     if (data.length > 0) {
       const result = this.chartUtils.parseChartData(res, this.currentLang, {
         useIndividualSeries: true,
         valueFields: ['value1', 'value2', 'value3', 'value4']
       });
-
       const mappedSeriesData: ChartSeriesData[] = [];
       result.seriesData.forEach((series, index) => {
+        const year = Array.isArray(yearName) ? yearName[index] : yearName;
+        const hasValidData = Array.isArray(series.data) && series.data.some(v => v !== null && v !== undefined);
+        if (!hasValidData) {
+          return;
+        }
         if (index === 0) {
-          mappedSeriesData.push({ ...series, name: 'Revenue' });
-        } else if (index === 1) {
-          mappedSeriesData.push({ ...series, name: 'Expense' });
+          mappedSeriesData.push({ ...series, name: chartvalueName });
+        }
+        if (index === 1) {
+          mappedSeriesData.push({ ...series, name: chartvalueName });
+        }
+        if (index === 2) {
+          mappedSeriesData.push({ ...series, name: chartvalueName });
+        }
+        if (index === 3) {
+          mappedSeriesData.push({ ...series, name: chartvalueName });
         }
       });
       this[categoriesName] = result.categories;
@@ -369,19 +409,10 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   setDefaultValues(categoriesName: string, seriesDataName: string) {
     const result = this.chartUtils.parseChartData(null, this.currentLang);
     this[categoriesName] = result.categories;
     this[seriesDataName] = result.seriesData;
-  }
-
-
-  onEntityChange(no: number = 2, ddlName: string) {
-    if (this[ddlName].length >= no) {
-      this.toastr.warning(`لا تستطيع اختيار أكثر من ${no} عناصر`);
-    }
   }
 
   fetchnationalitySelect2(): void {
@@ -428,5 +459,30 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+
+  onEntityChange(no: number = 2, ddlName: string, selected: any[]) {
+    if (selected && selected.length > 0) {
+      const sorted = [...selected].sort((a, b) => a.id - b.id);
+
+      this.selectedYearId = selected.map(s => s.id).sort((a, b) => a - b);
+      this.selectedYeartext = sorted.map(s => this.lang === "en" ? s.text : s.textEn);
+    } else {
+      this.selectedYearId = [];
+
+      this.selectedYeartext = [];
+    }
+    if (this[ddlName].length >= no) {
+      this.toastr.warning(`لا تستطيع اختيار أكثر من ${no} عناصر`);
+    }
+  }
+
+  onChangemonthSelect2(selected: any[]): void {
+    if (selected && selected.length > 0) {
+      this.selectedmonthtext = selected.map(s => this.lang == "ar" ? s.text : s.textEn);
+    } else {
+      this.selectedmonthtext = [];
+    }
   }
 }

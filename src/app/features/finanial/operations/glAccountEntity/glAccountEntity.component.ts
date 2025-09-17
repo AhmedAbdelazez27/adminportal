@@ -503,7 +503,6 @@ onentityIdSelect2ChangeNew(selected: any): void {
     this.glAccountEntityService.getAll(cleanedFilters)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
-          console.log("response", response);
           this.loadgridData = response || [];
           this.pagination.totalCount = response[0]?.rowsCount || 0;
           this.spinnerService.hide();
@@ -675,7 +674,6 @@ getFormDatabyId(id: string, mode: 'edit' | 'view'): void {
 
   // ✅ Mapping function for jsTree - GL Account Entity tree uses numeric id
   private mapToJsTreeDataByNumericId(data: any[]): any[] {
-    console.log("data", data);
     return data.map(item => ({
       id: String(item.id),
       text: `${item.accountCode} / ${item.arabicDescription}`,

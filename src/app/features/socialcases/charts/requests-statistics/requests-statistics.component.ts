@@ -17,7 +17,7 @@ import { ChartSeriesData, ChartUtilsService } from '../../../../../shared/servic
 @Component({
   selector: 'app-requests-statistics',
   standalone: true,
-  imports: [BarChartComponent, PieChartComponent, CommonModule, FormsModule, NgSelectModule, TranslateModule, RouterModule],
+  imports: [BarChartComponent, CommonModule, FormsModule, NgSelectModule, TranslateModule, RouterModule],
   templateUrl: './requests-statistics.component.html',
   styleUrls: ['./requests-statistics.component.scss'],
   providers: [Select2Service]
@@ -90,18 +90,15 @@ export class RequestsStatisticsComponents implements OnInit {
         switch (this.defaultChartType) {
           case 'Nationality':
             this.pageTitle = "SocialServiceCharts.menubyNationality";
-            this.selectedChart1 = this.findChartTypeId("TotalCasesByCity");
-            this.selectedChart2 = this.findChartTypeId("TotalCases");
+            this.selectedChart1 = this.findChartTypeId("TotalRequestsByNationality");
             break;
           case 'Region':
             this.pageTitle = "SocialServiceCharts.menubyRegions";
-            this.selectedChart1 = this.findChartTypeId("TotalCasesByCity");
-            this.selectedChart2 = this.findChartTypeId("TotalCasesByCity");
+            this.selectedChart1 = this.findChartTypeId("TotalRequestsByCity");
             break;
           case 'Branches':
             this.pageTitle = "SocialServiceCharts.menubyBranch";
-            this.selectedChart1 = this.findChartTypeId("TotalCasesByCity");
-            this.selectedChart2 = this.findChartTypeId("TotalCasesByBranch");
+            this.selectedChart1 = this.findChartTypeId("TotalRequestsByBranch");
             break;
         }
       },
@@ -136,13 +133,13 @@ export class RequestsStatisticsComponents implements OnInit {
     if (typeChange == 'changeEntit') {
       this.spinnerService.show();
       this.onTypeChange(this.selectedChart1, "categories2", "seriesData2");
-      this.onTypeChange(this.selectedChart2, "categories3", "seriesData3");
+    //  this.onTypeChange(this.selectedChart2, "categories3", "seriesData3");
     } else {
       this._ChartsService.getSocialCasesChart(payload).subscribe({
         next: (res) => {
           this.parseChartData(res, 'categories', 'seriesData');
           this.onTypeChange(this.selectedChart1, "categories2", "seriesData2");
-          this.onTypeChange(this.selectedChart2, "categories3", "seriesData3");
+         // this.onTypeChange(this.selectedChart2, "categories3", "seriesData3");
           this.spinnerService.forceHide();
         },
         error: (err) => console.error(err)
@@ -198,9 +195,7 @@ export class RequestsStatisticsComponents implements OnInit {
       const mappedSeriesData: ChartSeriesData[] = [];
       result.seriesData.forEach((series, index) => {
         if (index === 0) {
-          mappedSeriesData.push({ ...series, name: 'No of Cases' });
-        } else if (index === 1) {
-          mappedSeriesData.push({ ...series, name: 'Expense' });
+          mappedSeriesData.push({ ...series, name: this.translate.instant('SocialServiceCharts.chartvalueNameforRequestStatistics')});
         }
       });
       this[categoriesName] = result.categories;

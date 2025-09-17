@@ -18,7 +18,7 @@
                     <div class="d-flex gap-3 mb-4">
                         <ng-select [items]="yearsList" bindLabel="text" bindValue="id" [(ngModel)]="selectedYearId"
                                 [multiple]="true" [closeOnSelect]="true" class="ng-select-custom" [maxSelectedItems]="2"
-                                (change)="onEntityChange(2,'selectedYearId')" placeholder="{{ 'FinancialCharts.year' | translate }}" style="width: calc(100% - 70px);">
+                                (change)="onEntityChange(2,'selectedYearId',$event)" placeholder="{{ 'FinancialCharts.year' | translate }}" style="width: calc(100% - 70px);">
                             </ng-select>
                         <button class="btn btn-gold btn-chart"
                             [disabled]="!(selectedYearId.length&&selectedEntity.length)"
@@ -26,8 +26,8 @@
                     </div>
                 </ng-container>
                 <ng-container *ngIf="seriesData.length">
-                    <app-bar-chart [categories]="categories" [seriesData]="seriesData" [useDynamicColors]="true" [pageTitle]="pageTitle">
-                    </app-bar-chart>
+                  <app-bar-chart [categories]="categories" [seriesData]="seriesData" [useDynamicColors]="true" [pageTitle]="pageTitle" [enableChartTypeSelection]="false">
+                  </app-bar-chart>
                 </ng-container>
             </div>
         </div>
@@ -52,7 +52,7 @@
                     <div class="mb-4" style="width: calc(100% - 70px);">
                       <ng-select [items]="entities" bindLabel="text" bindValue="id" [(ngModel)]="selectedEntity"
                                  [multiple]="true" [closeOnSelect]="true" class="ng-select-custom" [maxSelectedItems]="4"
-                                 (change)="onEntityChange(4,'selectedEntity')" placeholder="{{ 'FinancialCharts.entity' | translate }}">
+                                 (change)="onEntityChange(4,'selectedEntity',[])" placeholder="{{ 'FinancialCharts.entity' | translate }}">
                       </ng-select>
                     </div>
 
@@ -79,7 +79,7 @@
                     </div>
                   </ng-container>
 
-                  <ng-select [items]="monthsList" bindValue="id" [(ngModel)]="selectedmonthId" [multiple]="true"
+                  <ng-select [items]="monthsList" bindValue="id" [(ngModel)]="selectedmonthId" [multiple]="true" (change)="onChangemonthSelect2($event)"
                              [closeOnSelect]="true" class="ng-select-custom" placeholder="{{'sponsorshipchart.month' |translate}}" style="width: calc(100% - 70px);">
 
                     <ng-template ng-option-tmp let-item="item">
@@ -109,19 +109,67 @@
 
 
                 <ng-container *ngIf="seriesData2.length">
-                    <app-bar-chart [categories]="categories2" [seriesData]="seriesData2" [useDynamicColors]="true" [pageTitle]="pageTitle">
-                    </app-bar-chart>
+                  <app-bar-chart [categories]="categories2"
+                                 [chartType]="defaultChartType === 'Contractstatisticsbypaymentmethod' ? 'piechart' : 'column'"
+                                 [seriesData]="seriesData2"
+                                 [useDynamicColors]="true"
+                                 [pageTitle]="pageTitle">
+                  </app-bar-chart>
                 </ng-container>
             </div>
         </div>
 
-        <div class="col-xl-6 mb-3 h-100" *ngIf="seriesData3.length || defaultChartType == 'General'">
-            <div class="main-container">
-                <ng-container *ngIf="seriesData3.length">
-                    <app-bar-chart [categories]="categories3" [seriesData]="seriesData3" [chartType]="'line'" [useDynamicColors]="true" [pageTitle]="pageTitle">
-                    </app-bar-chart>
-                </ng-container>
+        <div class="col-xl-6 mb-3 h-100" *ngIf="seriesData3.length">
+          <div class="main-container">
+            <div class=" mb-4" *ngIf="defaultChartType == 'CasesNumberBySponsorShip'">
+              <ng-container *ngIf="seriesData3.length">
+                <app-bar-chart [categories]="categories3" [chartType]="'column'" [seriesData]="seriesData3" [useDynamicColors]="true" [pageTitle]="pageTitle">
+                </app-bar-chart>
+              </ng-container>
             </div>
+            <div class=" mb-4" *ngIf="defaultChartType == 'byperiodandtypeofsponsorship'">
+              <ng-container *ngIf="seriesData3.length">
+                <app-bar-chart [categories]="categories3" [chartType]="'table'" [seriesData]="seriesData3" [useDynamicColors]="true" [pageTitle]="pageTitle">
+                </app-bar-chart>
+              </ng-container>
+            </div>
+            <div class=" mb-4" *ngIf="defaultChartType == 'bytypeofsponsorshipandnationality'">
+              <ng-container *ngIf="seriesData3.length">
+                <app-bar-chart [categories]="categories3" [chartType]="'table'" [seriesData]="seriesData3" [useDynamicColors]="true" [pageTitle]="pageTitle">
+                </app-bar-chart>
+              </ng-container>
+            </div>
+            <div class=" mb-4" *ngIf="defaultChartType == 'Totaldonationsbytypeofsponsorship'">
+              <ng-container *ngIf="seriesData3.length">
+                <app-bar-chart [categories]="categories3" [chartType]="'table'" [seriesData]="seriesData3" [useDynamicColors]="true" [pageTitle]="pageTitle">
+                </app-bar-chart>
+              </ng-container>
+            </div>
+            <div class=" mb-4" *ngIf="defaultChartType == 'Contractstatisticsbypaymentmethod'">
+              <ng-container *ngIf="seriesData3.length">
+                <app-bar-chart [categories]="categories3" [chartType]="'table'" [seriesData]="seriesData3" [useDynamicColors]="true" [pageTitle]="pageTitle">
+                </app-bar-chart>
+              </ng-container>
+            </div>
+            <div class=" mb-4" *ngIf="defaultChartType == 'noofsponsorsbyentityandtypeofsponsorship'">
+              <ng-container *ngIf="seriesData3.length">
+                <app-bar-chart [categories]="categories3" [chartType]="'table'" [seriesData]="seriesData3" [useDynamicColors]="true" [pageTitle]="pageTitle">
+                </app-bar-chart>
+              </ng-container>
+            </div>
+            <div class=" mb-4" *ngIf="defaultChartType == 'nofsponsorsinoutcountry'">
+              <ng-container *ngIf="seriesData3.length">
+                <app-bar-chart [categories]="categories3" [chartType]="'table'" [seriesData]="seriesData3" [useDynamicColors]="true" [pageTitle]="pageTitle">
+                </app-bar-chart>
+              </ng-container>
+            </div>
+            <div class=" mb-4" *ngIf="defaultChartType == 'casesavailableforsponsorship'">
+              <ng-container *ngIf="seriesData3.length">
+                <app-bar-chart [categories]="categories3" [chartType]="'table'" [seriesData]="seriesData3" [useDynamicColors]="true" [pageTitle]="pageTitle">
+                </app-bar-chart>
+              </ng-container>
+            </div>
+          </div>
         </div>
     </div>
 </div>

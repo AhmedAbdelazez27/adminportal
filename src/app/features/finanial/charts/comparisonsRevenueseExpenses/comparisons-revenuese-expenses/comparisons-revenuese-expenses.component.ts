@@ -44,11 +44,13 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
     { id: 12, text: 'ديسمبر', textEn: 'December' }
   ];
   selectedYearId: any[] = [];
+  selectedYeartext: string[] = [];
   selectedDepartmentId: any =null;
   selectedBranchId: any=null;
   selectedEntity: any[] = [];
   selectedAccountId: any =null;
   selectedmonthId: any[] = [];
+  selectedmonthtext: any[] = [];
   defaultChartType: string = '';
   pageTitle: string = "";
 
@@ -65,6 +67,7 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
   currentLang: string = "en";
   id:string ="";
   typeService:string ="";
+  lang: string | null = null;
 
   constructor(private _Select2Service: Select2Service, private _ChartsService: ChartsService,
     private spinnerService: SpinnerService,
@@ -87,6 +90,7 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
       this.getYearAndChartTypesList();
     });
     this.getYearAndChartTypesList();
+    this.lang = localStorage.getItem('lang');
   }
 
 
@@ -137,10 +141,10 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
       next: (res) => {
         console.log(res);
         if (typeChange == 1) {
-          this.transformToChartData(res?.data, 'categoriees', 'seriesData');
+          this.parseChartData(res, 'categoriees', 'seriesData', this.selectedYeartext, '',);
            this.onYearChange(2);
         }else if (typeChange == 2){
-          this.transformToChartData(res?.data, 'categoriees2', 'seriesData2');
+          this.parseChartData(res, 'categoriees2', 'seriesData2', this.selectedYeartext, this.selectedmonthtext);
         }
         
         this.spinnerService.forceHide();
@@ -150,56 +154,94 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
 
   } 
 
-  transformToChartData(raw: any[], categoriees: string, seriesData: string) {
+  //transformToChartData(raw: any[], categoriees: string, seriesData: string) {
 
-    if (!raw || raw.length === 0) {
-      this[categoriees] = [];
-      this[seriesData] = [];
-      return;
+  //  if (!raw || raw.length === 0) {
+  //    this[categoriees] = [];
+  //    this[seriesData] = [];
+  //    return;
+  //  }
+
+  //  const colors = ['#72C5C2', '#114D7D', '#FFA726', '#26A69A', '#FF7043'];
+  //  const valueKeys = Object.keys(raw[0]).filter(key =>
+  //    /^value\d+$/.test(key)
+  //  );
+
+  //  const categories = raw.map(item => item.nameAr || item.id);
+
+  //  const data = valueKeys.map((key, index) => {
+  //    const strKey = key + 'str';
+  //    const name = raw[0][strKey] ?? `Series ${index + 1}`;
+  //    return {
+  //      name,
+  //      data: raw.map(item => item[key] ?? 0),
+  //      color: colors[index % colors.length]
+  //    };
+  //  });
+  //  this[categoriees] = categories
+  //  this[seriesData] = data
+  //}
+  onChangemonthSelect2(selected: any[]): void {
+    if (selected && selected.length > 0) {
+      this.selectedmonthtext = selected.map(s => this.lang == "ar" ? s.text : s.textEn);
+    } else {
+      this.selectedmonthtext = [];
     }
-
-    const colors = ['#72C5C2', '#114D7D', '#FFA726', '#26A69A', '#FF7043'];
-    const valueKeys = Object.keys(raw[0]).filter(key =>
-      /^value\d+$/.test(key)
-    );
-
-    const categories = raw.map(item => item.nameAr || item.id);
-
-    const data = valueKeys.map((key, index) => {
-      const strKey = key + 'str';
-      const name = raw[0][strKey] ?? `Series ${index + 1}`;
-      return {
-        name,
-        data: raw.map(item => item[key] ?? 0),
-        color: colors[index % colors.length]
-      };
-    });
-    this[categoriees] = categories
-    this[seriesData] = data
   }
 
-
-  parseChartData(res: any, categoriesName: string, seriesDataName: string) {
-    const data = res?.data || [];
-    if (data.length === 0) {
-      this[categoriesName] = [];
-      this[seriesDataName] = [];
-      return;
+  parseChartData(res: any, categoriesName: string, seriesDataName: string, yearName: any, monthName: any) {
+    const data = res.data || [];
+    var chartvalueName: any = null;
+    if (
+      this.defaultChartType === "expensesByEntity" ||
+      this.defaultChartType === "expensesByDepartment" ||
+      this.defaultChartType === "expensesByBranch" ||
+      this.defaultChartType === "expensesByAccount"
+    ) {
+      chartvalueName = this.translate.instant('FinancialCharts.chartvalueNameforexpenses');
     }
+    else if (
+      this.defaultChartType === "revenueByEntity" ||
+      this.defaultChartType === "revenueByDepartment" ||
+      this.defaultChartType === "revenueByBranch" ||
+      this.defaultChartType === "revenueByAccount"
+    ) {
+      chartvalueName = this.translate.instant('FinancialCharts.chartvalueNameforrevenue');
+    }
+
+    if (this.typeService)
+      if (data.length === 0) {
+        this[categoriesName] = [];
+        this[seriesDataName] = [];
+        return;
+      }
     if (data.length > 0) {
       const result = this.chartUtils.parseChartData(res, this.currentLang, {
         useIndividualSeries: true,
         valueFields: ['value1', 'value2', 'value3', 'value4']
       });
-
       const mappedSeriesData: ChartSeriesData[] = [];
+
       result.seriesData.forEach((series, index) => {
+        const year = Array.isArray(yearName) ? yearName[index] : yearName;
+        const hasValidData = Array.isArray(series.data) && series.data.some(v => v !== null && v !== undefined);
+        if (!hasValidData) {
+          return;
+        }
         if (index === 0) {
-          mappedSeriesData.push({ ...series, name: 'Revenue' });
-        } else if (index === 1) {
-          mappedSeriesData.push({ ...series, name: 'Expense' });
+          mappedSeriesData.push({ ...series, name: chartvalueName + " " + monthName + " " + year });
+        }
+        if (index === 1) {
+          mappedSeriesData.push({ ...series, name: chartvalueName + " " + monthName + " " + year });
+        }
+        if (index === 2) {
+          mappedSeriesData.push({ ...series, name: this.translate.instant('FinancialCharts.chartvalueNameforRateofdeviation') });
+        }
+        if (index === 3) {
+          mappedSeriesData.push({ ...series, name: this.translate.instant('FinancialCharts.chartvalueNameforRateofdeviation') });
         }
       });
+
       this[categoriesName] = result.categories;
       this[seriesDataName] = mappedSeriesData;
     } else {
@@ -208,12 +250,7 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
     }
   }
 
-  setDefaultValues(categoriesName: string, seriesDataName: string) {
- const result = this.chartUtils.parseChartData(null, this.currentLang);
-    this[categoriesName] = result.categories;
-    this[seriesDataName] = result.seriesData;
 
-  }
   generateRandomValues(count: number): number[] {
     const randomValues: number[] = [];
     for (let i = 0; i < count; i++) {
@@ -222,9 +259,17 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
     return randomValues;
   };
 
+  onEntityChange(no: number = 2, ddlName: string, selected: any[]) {
+    if (selected && selected.length > 0) {
+      const sorted = [...selected].sort((a, b) => a.id - b.id);
 
-  onEntityChange(no: number = 2, ddlName: string) {
-    console.log(this[ddlName]);
+      this.selectedYearId = selected.map(s => s.id).sort((a, b) => a - b);
+      this.selectedYeartext = sorted.map(s => this.lang === "en" ? s.text : s.textEn);
+    } else {
+      this.selectedYearId = [];
+
+      this.selectedYeartext = [];
+    }
     if (this[ddlName].length >= no) {
       this.toastr.warning(`لا تستطيع اختيار أكثر من ${no} عناصر`);
     }

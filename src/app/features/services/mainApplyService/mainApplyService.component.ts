@@ -152,7 +152,6 @@ export class MainApplyServiceComponent {
   ngOnInit(): void {
     this.buildColumnDefs();
     this.lang = this.translate.currentLang;
-    console.log("lang", this.lang);
     this.rowActions = [
       { label: this.translate.instant('Common.applicantData'), icon: 'fas fa-address-card', action: 'onViewApplicantData' },
       //{ label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceConfirmationData' },
@@ -252,7 +251,6 @@ export class MainApplyServiceComponent {
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.statusSelect2 = response;
-          console.log("statusSelect2", response);
           this.loadingstatus = false;
         },
         error: () => this.loadingstatus = false
@@ -659,7 +657,6 @@ export class MainApplyServiceComponent {
         }
 
         this.loadformData = headerRecord;
-        console.log("this.loadformData", this.loadformData);
 
         if (Array.isArray(this.loadformData)) {
           this.loaduserformData = this.loadformData[0] ?? ({} as AppUserDto);
@@ -714,7 +711,6 @@ export class MainApplyServiceComponent {
         if (Array.isArray(this.loadformData)) {
           this.loaduserformData = this.loadformData[0] ?? ({} as AppUserDto);
         }
-        console.log("this.loadformData", this.loadformData);
         this.originalworkFlowId = this.loadformData?.workFlowSteps?.[0]?.id;
         this.originalNotes = this.loadformData.notesForApproving ?? '';
 

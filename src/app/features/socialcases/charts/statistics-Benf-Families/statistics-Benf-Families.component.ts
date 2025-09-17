@@ -17,7 +17,7 @@ import { ChartSeriesData, ChartUtilsService } from '../../../../../shared/servic
 @Component({
   selector: 'app-statistics-Benf-Families',
   standalone: true,
-  imports: [BarChartComponent,PieChartComponent, CommonModule, FormsModule, NgSelectModule, TranslateModule, RouterModule],
+  imports: [BarChartComponent, CommonModule, FormsModule, NgSelectModule, TranslateModule, RouterModule],
   templateUrl: './statistics-Benf-Families.component.html',
   styleUrls: ['./statistics-Benf-Families.component.scss'],
   providers: [Select2Service]
@@ -89,26 +89,23 @@ export class StatisticsOfBeneficiaryFamiliesComponents implements OnInit {
         switch (this.defaultChartType) {
           case 'Nationality':
             this.pageTitle = "SocialServiceCharts.menubyNationality";
-            this.selectedChart1 = this.findChartTypeId("TotalCases");
-            this.selectedChart2 = this.findChartTypeId("TotalCases");
+            this.selectedChart1 = this.findChartTypeId("TotalCasesByNationality");
             break;
           case 'Region':
             this.pageTitle = "SocialServiceCharts.menubyRegions";
-            this.selectedChart1 = this.findChartTypeId("TotalCases");
-            this.selectedChart2 = this.findChartTypeId("TotalCasesByCity");
+            this.selectedChart1 = this.findChartTypeId("TotalCasesByCity");
             break;
           case 'Branches':
             this.pageTitle = "SocialServiceCharts.menubyBranch";
-            this.selectedChart1 = this.findChartTypeId("TotalCases");
-            this.selectedChart2 = this.findChartTypeId("TotalCasesByBranch");
+            this.selectedChart1 = this.findChartTypeId("TotalCasesByBranch");
             break;
           case 'Emirates-Aids':
             this.pageTitle = "SocialServiceCharts.menutotalAidbyEmirates";
-           
+            this.selectedChart1 = this.findChartTypeId("TotalAidByEmirate");
             break;
           case 'Category-Aids':
             this.pageTitle = "SocialServiceCharts.menutotalAidsbyCategory";
-        
+            this.selectedChart1 = this.findChartTypeId("TotalAid");
             break;
         }
       },
@@ -123,10 +120,21 @@ export class StatisticsOfBeneficiaryFamiliesComponents implements OnInit {
     return item ? item.id : null;
   }
   onYearChange(typeChange?: string) {
+    var chartType: any = null;
+    if (this.defaultChartType == "Nationality" || this.defaultChartType == "Region" || this.defaultChartType == "Branches") {
+      chartType = 1
+    }
+    else if (this.defaultChartType == "Emirates-Aids" || this.defaultChartType == "Category-Aids") {
+      chartType = 9
+    }
+    else {
+      chartType = 1
+    }
+
     if (!this.selectedYearId) return;
     this.spinnerService.show();
     const payload = {
-      chartType: 5,
+      chartType: chartType,
       parameters: {
         language: 'en',
         periodYearId: this.selectedYearId.toString(),
@@ -143,13 +151,13 @@ export class StatisticsOfBeneficiaryFamiliesComponents implements OnInit {
     if (typeChange == 'changeEntit') {
       this.spinnerService.show();
       this.onTypeChange(this.selectedChart1, "categories2", "seriesData2");
-      this.onTypeChange(this.selectedChart2, "categories3", "seriesData3");
+      //this.onTypeChange(this.selectedChart2, "categories3", "seriesData3");
     } else {
       this._ChartsService.getSocialCasesChart(payload).subscribe({
         next: (res) => {
           this.parseChartData(res, 'categories', 'seriesData');
           this.onTypeChange(this.selectedChart1, "categories2", "seriesData2");
-          this.onTypeChange(this.selectedChart2, "categories3", "seriesData3");
+          //this.onTypeChange(this.selectedChart2, "categories3", "seriesData3");
           this.spinnerService.forceHide();
         },
         error: (err) => console.error(err)
@@ -191,6 +199,28 @@ export class StatisticsOfBeneficiaryFamiliesComponents implements OnInit {
 
   parseChartData(res: any, categoriesName: string, seriesDataName: string) {
     const data = res?.data || [];
+    var chartvalueName: any = null;
+
+    if (
+      this.defaultChartType === "Nationality" ||
+      this.defaultChartType === "Region" ||
+      this.defaultChartType === "Branches"
+    ) {
+      chartvalueName = this.translate.instant('SocialServiceCharts.chartvalueNameforstatisticsforbenf');
+    }
+    else if (
+      this.defaultChartType === "Emirates-Aids" ||
+      this.defaultChartType === "Category-Aids"
+    ) {
+      chartvalueName = this.translate.instant('SocialServiceCharts.chartvalueNameforFinancialAssistance');
+    }
+    if (this.defaultChartType === "Emirates-Aids" && seriesDataName == "seriesData2") {
+      chartvalueName = this.translate.instant('SocialServiceCharts.chartvalueNameforstatisticsforbenf');
+    }
+    else if (this.defaultChartType === "Category-Aids" && seriesDataName == "seriesData2") {
+      chartvalueName = this.translate.instant('SocialServiceCharts.chartvalueNameforAid');
+    }
+
     if (data.length === 0) {
       this[categoriesName] = [];
       this[seriesDataName] = [];
@@ -205,9 +235,7 @@ export class StatisticsOfBeneficiaryFamiliesComponents implements OnInit {
       const mappedSeriesData: ChartSeriesData[] = [];
       result.seriesData.forEach((series, index) => {
         if (index === 0) {
-          mappedSeriesData.push({ ...series, name: 'Revenue' });
-        } else if (index === 1) {
-          mappedSeriesData.push({ ...series, name: 'Expense' });
+          mappedSeriesData.push({ ...series, name: chartvalueName });
         }
       });
       this[categoriesName] = result.categories;

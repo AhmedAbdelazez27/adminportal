@@ -384,7 +384,6 @@ export class ServiceConfirmationComponent {
           if (Array.isArray(this.loadformData)) {
             this.loaduserformData = this.loadformData[0] ?? ({} as AppUserDto);
           }
-          console.log("this.loadformData", this.loadformData);
           this.originalworkFlowId = this.loadformData?.workFlowSteps?.[0]?.id;
           this.originalNotes = this.loadformData.notesForApproving ?? '';
 
@@ -464,7 +463,6 @@ export class ServiceConfirmationComponent {
         }
 
         this.loadformData = headerRecord;
-        console.log("this.loadformData", this.loadformData);
 
         if (Array.isArray(this.loadformData)) {
           this.loaduserformData = this.loadformData[0] ?? ({} as AppUserDto);

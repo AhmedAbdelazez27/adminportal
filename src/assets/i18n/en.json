@@ -1922,13 +1922,26 @@
     "menupaymentsbyDept": "Payments by Departments",
     "menupaymentsbyBranch": "Payments by Branches",
     "menupaymentsbyAcc": "Payments by Accounts",
+    "receiptsByEntit_title": "Comparison of Receipts by Entity",
+    "receiptsByDepartment_title": "Comparison of Receipts by Department",
+    "receiptsByBranch_title": "Comparison of Receipts by Branch",
+    "receiptsByAccount_title": "Comparison of Receipts by Account",
+    "paymentsByEntit_title": "Comparison of Payment by Entity",
+    "paymentsByDepartment_title": "Comparison of Payment by Department",
+    "paymentsByBranch_title": "Comparison of Payment by Branch",
+    "paymentsByAccount_title": "Comparison of Payment by Account",
     "entity": "Entity",
     "year": "Year",
     "department": "User Groups",
     "branch": "Branch",
     "account": "Account",
     "month": "Month",
-    "start": "Start"
+    "start": "Start",
+    "chartvalueNameforpayments": "Payments",
+    "chartvalueNameforreceipts": "Receipts",
+    "chartvalueNameforrevenue": "Revenues",
+    "chartvalueNameforexpenses": "Expenses",
+    "chartvalueNameforRateofdeviation": "Rate of deviation"
   },
   "SocialServiceCharts": {
     "charts": "Charts",
@@ -1939,7 +1952,12 @@
     "menutotalAidbyEmirates": "Total Aids by Emirates",
     "menutotalAidsbyCategory": "Total Aids by Category of Applicant",
     "titleForRequeststatistics": "Requests Statistics",
-    "menugeneral_title": "Interactive reports of receipts and payments"
+    "menugeneral_title": "Interactive reports of receipts and payments",
+    "chartvalueNameforstatisticsforbenf": "Total Cases",
+    "chartvalueNameforRequestStatistics": "Total Requests",
+    "chartvalueNameforFinancialAssistance": "Total Financial Assistance",
+    "chartvalueNameforAid": "Total Aid"
+
   },
   "ProjectCharts": {
     "charts": "Charts",
@@ -1947,7 +1965,10 @@
     "titleFornumofProject": "Number of Projects",
     "titleForprojectReceipt": "Project Receipts",
     "menubyCountry": "By Country",
-    "menubyType": "By Type"
+    "menubyType": "By Type",
+    "chartvalueNameforCostsofProject": "Cost of Projects",
+    "chartvalueNameforNumberofProject": "Total requests",
+    "chartvalueNameforProjectReceipts": "Project Receipts"
   },
   "sponsorshipchart": {
     "charts": "Charts",
@@ -1978,7 +1999,12 @@
     "byTypeOfSponsorshipheader": "Type of sponsorship",
     "byNationalityheader": "By Nationality",
     "byEntityOfficeheader": "Office of entity",
-    "casesAvailableForSponsorshipheader": "Cases available for sponsorship"
+    "casesAvailableForSponsorshipheader": "Cases available for sponsorship",
+    "nameValueforNumberofCases": "Number of Cases",
+    "nameValueforNumberofDonation": "Number of Donation",
+    "nameValueforNumberofContracts": "Total Contracts",
+    "nameValueforGuarantees": "Guarantees",
+    "nameValueforTotalCases": "Total Cases"
   },
   "mainApplyServiceResourceName": {
     "title": "Main Services",

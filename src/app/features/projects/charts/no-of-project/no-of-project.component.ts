@@ -17,7 +17,7 @@ import { ChartSeriesData, ChartUtilsService } from '../../../../../shared/servic
 @Component({
   selector: 'app-no-of-project',
   standalone: true,
-  imports: [BarChartComponent, PieChartComponent, CommonModule, FormsModule, NgSelectModule, TranslateModule, RouterModule],
+  imports: [BarChartComponent, CommonModule, FormsModule, NgSelectModule, TranslateModule, RouterModule],
   templateUrl: './no-of-project.component.html',
   styleUrls: ['./no-of-project.component.scss'],
   providers: [Select2Service]
@@ -87,11 +87,11 @@ export class NumberOfProjectComponents implements OnInit {
           case 'Country':
             this.pageTitle = `${this.translate.instant('ProjectCharts.titleFornumofProject')} ${this.translate.instant('ProjectCharts.menubyCountry')}`;
             this.selectedChart1 = this.findChartTypeId("ByCounrty");
-            this.selectedChart2 = this.findChartTypeId("ByCounrty");
+            this.selectedChart2 = this.findChartTypeId("ByType");
             break;
           case 'Type':
             this.pageTitle = `${this.translate.instant('ProjectCharts.titleFornumofProject')} ${this.translate.instant('ProjectCharts.menubyCountry')}`;
-            this.selectedChart1 = this.findChartTypeId("ByCounrty");
+            this.selectedChart1 = this.findChartTypeId("ByType");
             this.selectedChart2 = this.findChartTypeId("ByCounrty");
             break;
         }
@@ -185,10 +185,8 @@ export class NumberOfProjectComponents implements OnInit {
       const mappedSeriesData: ChartSeriesData[] = [];
       result.seriesData.forEach((series, index) => {
         if (index === 0) {
-          mappedSeriesData.push({ ...series, name: 'Revenue' });
-        } else if (index === 1) {
-          mappedSeriesData.push({ ...series, name: 'Expense' });
-        }
+          mappedSeriesData.push({ ...series, name: this.translate.instant('ProjectCharts.chartvalueNameforNumberofProject') });
+        } 
       });
       this[categoriesName] = result.categories;
       this[seriesDataName] = mappedSeriesData;

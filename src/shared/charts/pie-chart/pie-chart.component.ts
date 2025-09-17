@@ -47,8 +47,6 @@ export class PieChartComponent implements OnChanges {
   @Input() pageTitle: string = '';
 
   ngOnChanges(_: SimpleChanges): void {
-    console.log("categories ", this.categories);
-    console.log("seriesData ", this.seriesData);
     this.buildChartOptions();
   }
 
@@ -142,36 +140,42 @@ export class PieChartComponent implements OnChanges {
         },
         plotOptions: {
           pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
             dataLabels: {
-              enabled: this.showValues,
-              formatter: function() {
-                const anyThis = this as unknown as { y?: number; percentage?: number };
-                const v = Number(anyThis.y ?? 0);
-                if (isNaN(v) || v === 0) return '';
-                const percent = typeof anyThis.percentage === 'number' ? ` (${Highcharts.numberFormat(anyThis.percentage, 1)}%)` : '';
-                return Highcharts.numberFormat(v, 0, '.', ',') + percent;
+              enabled: true,
+              inside: false,
+              formatter: function () {
+                const point = (this as any).point;
+                const percentage = (point.percentage || 0);
+                if (percentage < 3) return null; // 🚀 hide labels < 3%
+
+                return `<span style="color:#000; font-size:12px; font-weight:bold;">
+          ${point.name}: ${Highcharts.numberFormat(point.y, 0, '.', ',')}
+        </span>`;
               },
-              style: { fontSize: '14px', fontWeight: 'normal', color: this.valueColor }
-            },
-            showInLegend: true
+              distance: 30,
+              connectorColor: '#000',
+              softConnector: true,
+              style: { textOutline: 'none' }
+            }
           }
         },
-              legend: {
-        enabled: true,
-        layout: 'horizontal',
-        verticalAlign: 'bottom',
-        align: 'center',
-        itemMarginTop: 6,
-        itemMarginBottom: 6,
-        itemDistance: 24,
-        symbolRadius: 6,
-        useHTML: true,
-        labelFormatter() {
-          return `<span style=\"font-size:14px;color:#1f2d3d;${isRtl ? 'direction:rtl;' : ''}\">${escapeHtml(this.name)}</span>`;
-        }
-      },
+        legend: {
+          enabled: true,
+          layout: 'horizontal',
+          verticalAlign: 'bottom',
+          align: 'center',
+          itemMarginTop: 6,
+          itemMarginBottom: 6,
+          itemDistance: 24,
+          symbolWidth: 0,
+          useHTML: true,
+          labelFormatter: function () {
+            const point = this as Highcharts.Point;
+            return `<span style="font-size:14px; color:#000000; font-weight:bold;${isRtl ? 'direction:rtl;' : ''}">
+      ${escapeHtml(point.name || '')} (${Highcharts.numberFormat(point.y || 0, 0, '.', ',')})
+    </span>`;
+          }
+        },
         colors: gradientColors as any,
         series: [
           {
@@ -243,47 +247,45 @@ export class PieChartComponent implements OnChanges {
         useHTML: true
       },
       plotOptions: {
-        column: {
-          groupPadding: 0.05,
-          pointPadding: 0,
-          borderWidth: 0,
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
           dataLabels: {
-            enabled: this.showValues,
-            formatter() {
-              const v = Number(this.y);
-              if (isNaN(v) || v === 0) return '';
-              return H.numberFormat(v, 0, '.', ',');
+            enabled: true,
+            formatter: function () {
+              const point = (this as any).point; // 👈 force-cast
+              const name = point?.name || '';
+              const value = Highcharts.numberFormat(point?.y || 0, 0, '.', ',');
+              return `${escapeHtml(name)}: ${value}`;
             },
-            style: { fontSize: '14px', fontWeight: 'normal', color: this.valueColor }
-          }
-        },
-        line: {
-          marker: { enabled: true, symbol: 'circle' },
-          dataLabels: {
-            enabled: this.showValues,
-            formatter() {
-              const v = Number(this.y);
-              if (isNaN(v) || v === 0) return '';
-              return H.numberFormat(v, 0, '.', ',');
+            style: {
+              fontSize: '12px',
+              fontWeight: 'normal',
+              color: '#000'
             },
-            style: { fontSize: '14px', fontWeight: 'normal', color: this.valueColor }
-          }
-        },
-        series: { cursor: 'pointer' }
+            distance: 10
+          },
+          showInLegend: false
+        }
       },
-       legend: {
+      legend: {
         enabled: true,
         layout: 'horizontal',
         verticalAlign: 'bottom',
         align: 'center',
-          itemMarginTop: 6,
+        itemMarginTop: 6,
         itemMarginBottom: 6,
         itemDistance: 24,
-        symbolRadius: 6,
+        symbolWidth: 0,  // 🚀 removes color symbol
         useHTML: true,
-        labelFormatter() {
-          return `<span style=\"font-size:14px;color:#1f2d3d;${isRtl ? 'direction:rtl;' : ''}\">${escapeHtml(this.name)}</span>`;
-        }},
+        labelFormatter: function () {
+          const point = this as Highcharts.Point;
+          return `<span style="font-size:14px;${isRtl ? 'direction:rtl;' : ''}">
+              ${escapeHtml(point.name || '')} (${Highcharts.numberFormat(point.y || 0, 0, '.', ',')})
+            </span>`;
+        }
+      },
+
       colors: gradientColors as any,
       exporting: { enabled: this.enableExport },
       responsive: {

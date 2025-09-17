@@ -303,7 +303,6 @@ export class orderListBranchRptComponent {
     this.socialCasesReportsService.getordersListRptData(this.searchParams)
       .pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
-          console.log("response", response);
           this.getAllDataForReports = response?.data || [];
           this.getAllDataForReports.forEach((c) => {
             c.aiD_REQUEST_DATEstr = this.openStandardReportService.formatDate(c.aiD_REQUEST_DATE);

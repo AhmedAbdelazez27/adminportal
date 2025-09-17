@@ -32,7 +32,7 @@ interface ChartDataItem {
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, BarChartComponent, TranslateModule, PieChartComponent],
+  imports: [CommonModule, BarChartComponent, TranslateModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -103,8 +103,6 @@ export class HomeComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.code = params['code'];
       this.state = params['state'];
-      // debugger;
-
       if (this.isValidCodeState(this.code, this.state)) {
         this.uaepassCheckCode(this.code!, this.state!);
       } else {
@@ -502,7 +500,6 @@ export class HomeComponent implements OnInit {
       state: state,
       lang: localStorage.getItem('lang')
     }
-    // debugger;
     this.spinnerService.show();
 
     this.auth.UAEPasslogin(params)

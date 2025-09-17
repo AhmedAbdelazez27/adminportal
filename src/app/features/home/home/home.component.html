@@ -1,21 +1,22 @@
-    <div class="container-fluid mt-3">
-      
+<div class="container-fluid mt-3">
 
-        <div class="row  smooth-cols">
-          
-            <div class=" col-anim" [ngClass]="leftExpanded ? 'col-xl-4 mb-3' : 'w-20 mb-3 me-3'">
-                <div class="main-container h-100">
-                    <div class="d-flex align-items-start justify-content-between mb-3">
-                        <a (click)="toggleLeftPanel()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 25 24" fill="none">
-                                <path d="M16.8567 2H8.47675C4.83675 2 2.66675 4.17 2.66675 7.81V16.18C2.66675 19.83 4.83675 22 8.47675 22H16.8467C20.4867 22 22.6567 19.83 22.6567 16.19V7.81C22.6667 4.17 20.4967 2 16.8567 2ZM9.30675 12.81L13.6867 8.43H11.2567C10.8467 8.43 10.5067 8.09 10.5067 7.68C10.5067 7.27 10.8467 6.93 11.2567 6.93H15.4967C15.5967 6.93 15.6867 6.95 15.7867 6.99C15.9667 7.07 16.1167 7.21 16.1967 7.4C16.2367 7.49 16.2567 7.59 16.2567 7.69V11.93C16.2567 12.34 15.9167 12.68 15.5067 12.68C15.0967 12.68 14.7567 12.34 14.7567 11.93V9.5L10.3667 13.87C10.2167 14.02 10.0267 14.09 9.83675 14.09C9.64675 14.09 9.45675 14.02 9.30675 13.87C9.01675 13.58 9.01675 13.1 9.30675 12.81ZM18.9067 17.22C16.8967 17.89 14.7867 18.23 12.6667 18.23C10.5467 18.23 8.43675 17.89 6.42675 17.22C6.03675 17.09 5.82675 16.66 5.95675 16.27C6.08675 15.88 6.50675 15.66 6.90675 15.8C10.6267 17.04 14.7167 17.04 18.4367 15.8C18.8267 15.67 19.2567 15.88 19.3867 16.27C19.5067 16.67 19.2967 17.09 18.9067 17.22Z" fill="#5B5B5B" />
-                            </svg>
-                        </a>
-                    </div>
-                    <ng-container *ngIf="leftExpanded" >
+
+    <div class="row  smooth-cols">
+
+        <div class=" col-anim" [ngClass]="leftExpanded ? 'col-xl-4 mb-3' : 'w-20 mb-3 '">
+            <div class="main-container h-100 d-flex gap-2">
+                <button (click)="toggleLeftPanel()" class="btn-expand-notification">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path
+                            d="M7.06592 8.47354C7.00344 8.41156 6.95384 8.33783 6.91999 8.25659C6.88615 8.17535 6.86872 8.08821 6.86872 8.0002C6.86872 7.9122 6.88615 7.82506 6.91999 7.74382C6.95384 7.66258 7.00344 7.58884 7.06592 7.52687L10.1259 4.47354C10.1884 4.41156 10.238 4.33783 10.2719 4.25659C10.3057 4.17535 10.3231 4.08821 10.3231 4.0002C10.3231 3.91219 10.3057 3.82506 10.2719 3.74382C10.238 3.66258 10.1884 3.58884 10.1259 3.52687C10.001 3.4027 9.83205 3.33301 9.65592 3.33301C9.4798 3.33301 9.31083 3.4027 9.18592 3.52687L6.12592 6.58687C5.75139 6.96187 5.54102 7.4702 5.54102 8.0002C5.54102 8.5302 5.75139 9.03854 6.12592 9.41354L9.18592 12.4735C9.3101 12.5967 9.4777 12.6661 9.65259 12.6669C9.74033 12.6674 9.8273 12.6506 9.90853 12.6174C9.98975 12.5842 10.0636 12.5353 10.1259 12.4735C10.1884 12.4116 10.238 12.3378 10.2719 12.2566C10.3057 12.1753 10.3231 12.0882 10.3231 12.0002C10.3231 11.9122 10.3057 11.8251 10.2719 11.7438C10.238 11.6626 10.1884 11.5888 10.1259 11.5269L7.06592 8.47354Z"
+                            fill="#374957" />
+                    </svg>
+                </button>
+                <ng-container *ngIf="leftExpanded">
+                    <div class="w-100">
                         <h4 class="  title-24 gold mb-0">{{ 'HOME.LATEST_NOTIFICATIONS' | translate }}</h4>
 
-                      
+
                         <div class="notification-list-item mb-2">
                             <div class="d-flex align-items-center justify-content-between mb-2">
                                 <h4 class="semi font-16 black mb-0">{{ 'HOME.NOTIFICATION_TITLE' | translate }}</h4>
@@ -44,108 +45,128 @@
                             </div>
                             <p class="mb-1 font-14 dark-gray">{{ 'HOME.NOTIFICATION_DESCRIPTION' | translate }}</p>
                         </div>
-                    </ng-container>
+                    </div>
+                </ng-container>
 
 
-                </div>
             </div>
+        </div>
 
-            <div class="col mb-3  col-anim">
-                <div class="main-container mb-3">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <h4 class="bold title-24 gold mb-0">{{ 'HOME.SHORTCUTS' | translate }}</h4>
-                        <button class="btn-edit-widjet" (click)="openAddShortcutModal()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none">
-                                <path d="M18.94 5.41994L13.77 2.42994C12.78 1.85994 11.23 1.85994 10.24 2.42994L5.01996 5.43994C2.94996 6.83994 2.82996 7.04994 2.82996 9.27994V14.7099C2.82996 16.9399 2.94996 17.1599 5.05996 18.5799L10.23 21.5699C10.73 21.8599 11.37 21.9999 12 21.9999C12.63 21.9999 13.27 21.8599 13.76 21.5699L18.98 18.5599C21.05 17.1599 21.17 16.9499 21.17 14.7199V9.27994C21.17 7.04994 21.05 6.83994 18.94 5.41994ZM12 15.2499C10.21 15.2499 8.74996 13.7899 8.74996 11.9999C8.74996 10.2099 10.21 8.74994 12 8.74994C13.79 8.74994 15.25 10.2099 15.25 11.9999C15.25 13.7899 13.79 15.2499 12 15.2499Z" fill="#5B5B5B" />
-                            </svg>
-                        </button>
-                    </div>
+        <div class="col mb-3  col-anim">
+            <div class="main-container mb-3">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h4 class="bold title-24 gold mb-0">{{ 'HOME.SHORTCUTS' | translate }}</h4>
+                    <button class="btn-edit-widjet" (click)="openAddShortcutModal()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none">
+                            <path
+                                d="M18.94 5.41994L13.77 2.42994C12.78 1.85994 11.23 1.85994 10.24 2.42994L5.01996 5.43994C2.94996 6.83994 2.82996 7.04994 2.82996 9.27994V14.7099C2.82996 16.9399 2.94996 17.1599 5.05996 18.5799L10.23 21.5699C10.73 21.8599 11.37 21.9999 12 21.9999C12.63 21.9999 13.27 21.8599 13.76 21.5699L18.98 18.5599C21.05 17.1599 21.17 16.9499 21.17 14.7199V9.27994C21.17 7.04994 21.05 6.83994 18.94 5.41994ZM12 15.2499C10.21 15.2499 8.74996 13.7899 8.74996 11.9999C8.74996 10.2099 10.21 8.74994 12 8.74994C13.79 8.74994 15.25 10.2099 15.25 11.9999C15.25 13.7899 13.79 15.2499 12 15.2499Z"
+                                fill="#5B5B5B" />
+                        </svg>
+                    </button>
+                </div>
 
-                    <!-- Loading indicator -->
-                    <div *ngIf="isLoadingShortcuts" class="text-center py-4">
-                        <div class="spinner-border text-gold" role="status">
-                            <span class="visually-hidden">{{ 'HOME.LOADING' | translate }}</span>
-                        </div>
-                        <p class="mt-2">{{ 'HOME.LOADING_SHORTCUTS' | translate }}</p>
+                <!-- Loading indicator -->
+                <div *ngIf="isLoadingShortcuts" class="text-center py-4">
+                    <div class="spinner-border text-gold" role="status">
+                        <span class="visually-hidden">{{ 'HOME.LOADING' | translate }}</span>
                     </div>
+                    <p class="mt-2">{{ 'HOME.LOADING_SHORTCUTS' | translate }}</p>
+                </div>
 
-                    <!-- Success/Error Messages -->
-                    <div *ngIf="showSuccessMessage" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
-                        <strong>{{ 'HOME.SUCCESS' | translate }}</strong> {{ 'HOME.SHORTCUTS_SAVED_SUCCESS' | translate }}
-                        <button type="button" class="btn-close" (click)="showSuccessMessage = false"></button>
-                    </div>
-                    
-                    <div *ngIf="showErrorMessage" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
-                        <strong>{{ 'HOME.ERROR' | translate }}</strong> {{ errorMessage }}
-                        <button type="button" class="btn-close" (click)="showErrorMessage = false"></button>
-                    </div>
+                <!-- Success/Error Messages -->
+                <div *ngIf="showSuccessMessage" class="alert alert-success alert-dismissible fade show mb-3"
+                    role="alert">
+                    <strong>{{ 'HOME.SUCCESS' | translate }}</strong> {{ 'HOME.SHORTCUTS_SAVED_SUCCESS' | translate }}
+                    <button type="button" class="btn-close" (click)="showSuccessMessage = false"></button>
+                </div>
 
-                    <!-- Shortcuts grid -->
-                    <div class="row" *ngIf="!isLoadingShortcuts">
-                        <!-- Existing shortcuts -->
-                        <div class="col-xl-2 col-lg-4 mb-3" *ngFor="let shortcut of shortcuts; trackBy: trackByShortcut">
-                            <div class="widjet" (click)="navigateToShortcut(shortcut)" style="cursor: pointer;">
-                                <div class="widjet-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 25 24" fill="none">
-                                <path d="M15.8333 13.15H13.6633C11.8833 13.15 10.4333 11.71 10.4333 9.92V7.75C10.4333 7.34 10.1033 7 9.68325 7H6.51325C4.20325 7 2.33325 8.5 2.33325 11.18V17.82C2.33325 20.5 4.20325 22 6.51325 22H12.4033C14.7133 22 16.5833 20.5 16.5833 17.82V13.9C16.5833 13.48 16.2433 13.15 15.8333 13.15Z" fill="black" />
-                                <path d="M18.1533 2H16.1833H15.0933H12.2633C10.0033 2 8.17326 3.44 8.09326 6.01C8.15326 6.01 8.20326 6 8.26326 6H11.0933H12.1833H14.1533C16.4633 6 18.3333 7.5 18.3333 10.18V12.15V14.86V16.83C18.3333 16.89 18.3233 16.94 18.3233 16.99C20.5533 16.92 22.3333 15.44 22.3333 12.83V10.86V8.15V6.18C22.3333 3.5 20.4633 2 18.1533 2Z" fill="black" />
-                                <path d="M12.3131 7.15024C12.0031 6.84024 11.4731 7.05024 11.4731 7.48024V10.1002C11.4731 11.2002 12.4031 12.1002 13.5431 12.1002C14.2531 12.1102 15.2431 12.1102 16.0931 12.1102C16.5231 12.1102 16.7431 11.6102 16.4431 11.3102C15.3531 10.2202 13.4131 8.27024 12.3131 7.15024Z" fill="black" />
-                            </svg>
-                                </div>
-                                {{ shortcut.displayName || shortcut.pageName }} 
-                                <button class="btn-remove-widjet" (click)="deleteShortcut(shortcut); $event.stopPropagation()" [disabled]="isDeletingShortcut">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 25 24" fill="none">
-                                        <path d="M16.523 2H8.14301C4.50301 2 2.33301 4.17 2.33301 7.81V16.18C2.33301 19.83 4.50301 22 8.14301 22H16.513C20.153 22 22.323 19.83 22.323 16.19V7.81C22.333 4.17 20.163 2 16.523 2ZM15.693 14.3C15.983 14.59 15.983 15.07 15.693 15.36C15.543 15.51 15.353 15.58 15.163 15.58C14.973 15.58 14.783 15.51 14.633 15.36L12.333 13.06L10.033 15.36C9.88301 15.51 9.69301 15.58 9.50301 15.58C9.31301 15.58 9.12301 15.51 8.97301 15.36C8.68301 15.07 8.68301 14.59 8.97301 14.3L11.273 12L8.97301 9.7C8.68301 9.41 8.68301 8.93 8.97301 8.64C9.26301 8.35 9.74301 8.35 10.033 8.64L12.333 10.94L14.633 8.64C14.923 8.35 15.403 8.35 15.693 8.64C15.983 8.93 15.983 9.41 15.693 9.7L13.393 12L15.693 14.3Z" fill="#CA4832" />
-                                    </svg>
-                                </button>
+                <div *ngIf="showErrorMessage" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                    <strong>{{ 'HOME.ERROR' | translate }}</strong> {{ errorMessage }}
+                    <button type="button" class="btn-close" (click)="showErrorMessage = false"></button>
+                </div>
+
+                <!-- Shortcuts grid -->
+                <div class="row" *ngIf="!isLoadingShortcuts">
+                    <!-- Existing shortcuts -->
+                    <div class="col-xl-2 col-lg-4 mb-3" *ngFor="let shortcut of shortcuts; trackBy: trackByShortcut">
+                        <div class="widjet" (click)="navigateToShortcut(shortcut)" style="cursor: pointer;">
+                            <div class="widjet-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 25 24"
+                                    fill="none">
+                                    <path
+                                        d="M15.8333 13.15H13.6633C11.8833 13.15 10.4333 11.71 10.4333 9.92V7.75C10.4333 7.34 10.1033 7 9.68325 7H6.51325C4.20325 7 2.33325 8.5 2.33325 11.18V17.82C2.33325 20.5 4.20325 22 6.51325 22H12.4033C14.7133 22 16.5833 20.5 16.5833 17.82V13.9C16.5833 13.48 16.2433 13.15 15.8333 13.15Z"
+                                        fill="black" />
+                                    <path
+                                        d="M18.1533 2H16.1833H15.0933H12.2633C10.0033 2 8.17326 3.44 8.09326 6.01C8.15326 6.01 8.20326 6 8.26326 6H11.0933H12.1833H14.1533C16.4633 6 18.3333 7.5 18.3333 10.18V12.15V14.86V16.83C18.3333 16.89 18.3233 16.94 18.3233 16.99C20.5533 16.92 22.3333 15.44 22.3333 12.83V10.86V8.15V6.18C22.3333 3.5 20.4633 2 18.1533 2Z"
+                                        fill="black" />
+                                    <path
+                                        d="M12.3131 7.15024C12.0031 6.84024 11.4731 7.05024 11.4731 7.48024V10.1002C11.4731 11.2002 12.4031 12.1002 13.5431 12.1002C14.2531 12.1102 15.2431 12.1102 16.0931 12.1102C16.5231 12.1102 16.7431 11.6102 16.4431 11.3102C15.3531 10.2202 13.4131 8.27024 12.3131 7.15024Z"
+                                        fill="black" />
+                                </svg>
                             </div>
-                        </div>
-
-                        <!-- Add Shortcut button -->
-                        <div class="col-xl-2 col-lg-4 mb-3">
-                            <button type="button" class="add-shortcut" (click)="openAddShortcutModal()">
-                                <div class="shortcut-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 25 24" fill="none">
-                                        <path d="M16.5233 2H8.14331C4.50331 2 2.33331 4.17 2.33331 7.81V16.18C2.33331 19.83 4.50331 22 8.14331 22H16.5133C20.1533 22 22.3233 19.83 22.3233 16.19V7.81C22.3333 4.17 20.1633 2 16.5233 2ZM16.3333 12.75H13.0833V16C13.0833 16.41 12.7433 16.75 12.3333 16.75C11.9233 16.75 11.5833 16.41 11.5833 16V12.75H8.33331C7.92331 12.75 7.58331 12.41 7.58331 12C7.58331 11.59 7.92331 11.25 8.33331 11.25H11.5833V8C11.5833 7.59 11.9233 7.25 12.3333 7.25C12.7433 7.25 13.0833 7.59 13.0833 8V11.25H16.3333C16.7433 11.25 17.0833 11.59 17.0833 12C17.0833 12.41 16.7433 12.75 16.3333 12.75Z" fill="#8D734D" />
-                                    </svg>
-                                </div>
-                       
-                       {{ 'HOME.ADD_SHORTCUT' | translate }}
+                            {{ shortcut.displayName || shortcut.pageName }}
+                            <button class="btn-remove-widjet"
+                                (click)="deleteShortcut(shortcut); $event.stopPropagation()"
+                                [disabled]="isDeletingShortcut">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 25 24"
+                                    fill="none">
+                                    <path
+                                        d="M16.523 2H8.14301C4.50301 2 2.33301 4.17 2.33301 7.81V16.18C2.33301 19.83 4.50301 22 8.14301 22H16.513C20.153 22 22.323 19.83 22.323 16.19V7.81C22.333 4.17 20.163 2 16.523 2ZM15.693 14.3C15.983 14.59 15.983 15.07 15.693 15.36C15.543 15.51 15.353 15.58 15.163 15.58C14.973 15.58 14.783 15.51 14.633 15.36L12.333 13.06L10.033 15.36C9.88301 15.51 9.69301 15.58 9.50301 15.58C9.31301 15.58 9.12301 15.51 8.97301 15.36C8.68301 15.07 8.68301 14.59 8.97301 14.3L11.273 12L8.97301 9.7C8.68301 9.41 8.68301 8.93 8.97301 8.64C9.26301 8.35 9.74301 8.35 10.033 8.64L12.333 10.94L14.633 8.64C14.923 8.35 15.403 8.35 15.693 8.64C15.983 8.93 15.983 9.41 15.693 9.7L13.393 12L15.693 14.3Z"
+                                        fill="#CA4832" />
+                                </svg>
                             </button>
                         </div>
                     </div>
 
+                    <!-- Add Shortcut button -->
+                    <div class="col-xl-2 col-lg-4 mb-3">
+                        <button type="button" class="add-shortcut" (click)="openAddShortcutModal()">
+                            <div class="shortcut-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 25 24"
+                                    fill="none">
+                                    <path
+                                        d="M16.5233 2H8.14331C4.50331 2 2.33331 4.17 2.33331 7.81V16.18C2.33331 19.83 4.50331 22 8.14331 22H16.5133C20.1533 22 22.3233 19.83 22.3233 16.19V7.81C22.3333 4.17 20.1633 2 16.5233 2ZM16.3333 12.75H13.0833V16C13.0833 16.41 12.7433 16.75 12.3333 16.75C11.9233 16.75 11.5833 16.41 11.5833 16V12.75H8.33331C7.92331 12.75 7.58331 12.41 7.58331 12C7.58331 11.59 7.92331 11.25 8.33331 11.25H11.5833V8C11.5833 7.59 11.9233 7.25 12.3333 7.25C12.7433 7.25 13.0833 7.59 13.0833 8V11.25H16.3333C16.7433 11.25 17.0833 11.59 17.0833 12C17.0833 12.41 16.7433 12.75 16.3333 12.75Z"
+                                        fill="#8D734D" />
+                                </svg>
+                            </div>
 
+                            {{ 'HOME.ADD_SHORTCUT' | translate }}
+                        </button>
+                    </div>
                 </div>
 
-                <div class="main-container">
-                     <div *ngIf="isLoadingRequestSummary" class="text-center py-4">
-                        <div class="spinner-border text-gold" role="status">
-                            <span class="visually-hidden">{{ 'HOME.LOADING' | translate }}</span>
-                        </div>
-                     </div>
 
-                     <div *ngIf="!isLoadingRequestSummary && requestSummaryData">
-                        <div class="d-xl-flex justify-content-between align-items-center mb-4">
-                            <div>
-                                <h4 class="bold gold title-24 mb-0">{{ 'HOME.REQUESTS' | translate }}</h4>
-                                <h4 class="bold black title-30 mb-0">{{ currentYear }}</h4>
-                            </div>
+            </div>
 
-                            <div class="text-center">
-                                <h4 class="bold black title-24 mb-0">{{ totalRequests | number }}</h4>
-                                <p class="font-16 light-gray mb-0">{{ 'HOME.TOTAL_REQUESTS' | translate }}</p>
-                            </div>
+            <div class="main-container">
+                <div *ngIf="isLoadingRequestSummary" class="text-center py-4">
+                    <div class="spinner-border text-gold" role="status">
+                        <span class="visually-hidden">{{ 'HOME.LOADING' | translate }}</span>
+                    </div>
+                </div>
 
-                            <div>
-                                <div class="progress request-progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                    <div class="progress-bar" [style.width.%]="completedPercentage || 0"></div>
-                                </div>
-                                <p class="black mb-0">{{ completedPercentage || 0 }}% {{ 'HOME.COMPLETED' | translate }}</p>
-                            </div>
+                <div *ngIf="!isLoadingRequestSummary && requestSummaryData">
+                    <div class="d-xl-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h4 class="bold gold title-24 mb-0">{{ 'HOME.REQUESTS' | translate }}</h4>
+                            <h4 class="bold black title-30 mb-0">{{ currentYear }}</h4>
                         </div>
 
-                         <!-- <div class="row" *ngIf="requestSummaryList.length > 0">
+                        <div class="text-center">
+                            <h4 class="bold black title-24 mb-0">{{ totalRequests | number }}</h4>
+                            <p class="font-16 light-gray mb-0">{{ 'HOME.TOTAL_REQUESTS' | translate }}</p>
+                        </div>
+
+                        <div>
+                            <div class="progress request-progress" role="progressbar" aria-label="Basic example"
+                                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar" [style.width.%]="completedPercentage || 0"></div>
+                            </div>
+                            <p class="black mb-0">{{ completedPercentage || 0 }}% {{ 'HOME.COMPLETED' | translate }}</p>
+                        </div>
+                    </div>
+
+                    <!-- <div class="row" *ngIf="requestSummaryList.length > 0">
                             <div class="col-12">
                                  <div class="row">
                                     <div class="col-md-2 mb-3" *ngFor="let item of requestSummaryList; trackBy: trackByRequestSummary">
@@ -160,193 +181,199 @@
                                 </div>
                             </div>
                         </div> -->
-                    </div>
-
-                     <div *ngIf="!isLoadingRequestSummary && !requestSummaryData" class="text-center py-4">
-                        <p class="text-muted">{{ 'HOME.NO_REQUEST_SUMMARY_DATA' | translate }}</p>
-                    </div>
                 </div>
-            </div>
 
-        </div>
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    </div>
-
-
-
-    <!-- Add Shortcut Modal -->
-    <div class="modal fade" id="shortcutModal" tabindex="-1" aria-labelledby="shortcutModalLabel" aria-hidden="true" 
-         [class.show]="showShortcutModal" [style.display]="showShortcutModal ? 'block' : 'none'"
-         (click)="onModalBackdropClick($event)">
-        <div class="modal-backdrop fade show" *ngIf="showShortcutModal"></div>
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Shortcut</h1>
-                    <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z" fill="#5B5B5B" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Loading indicator for modal -->
-                    <div *ngIf="isLoadingShortcuts" class="text-center py-4">
-                        <div class="spinner-border text-gold" role="status">
-                            <span class="visually-hidden">{{ 'HOME.LOADING' | translate }}</span>
-                        </div>
-                        <p class="mt-2">{{ 'HOME.LOADING_AVAILABLE_SHORTCUTS' | translate }}</p>
-                    </div>
-
-                    <!-- Selection controls -->
-                    <div class="row mb-3" *ngIf="!isLoadingShortcuts && availableShortcuts.length > 0">
-                        <div class="col-12">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="selection-info">
-                                    <span class="text-muted">
-                                        {{ 'HOME.SELECTED_COUNT' | translate: { selected: selectedShortcuts.length, total: availableShortcuts.length } }}
-                                    </span>
-                                </div>
-                                <div class="selection-controls">
-                                    <button type="button" class="btn btn-outline-secondary btn-sm me-2" 
-                                            (click)="selectAllShortcuts()" 
-                                            [disabled]="isAllSelected"
-                                            title="{{ 'HOME.SELECT_ALL' | translate }} (Ctrl+A)">
-                                        {{ 'HOME.SELECT_ALL' | translate }}
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary btn-sm" 
-                                            (click)="deselectAllShortcuts()" 
-                                            [disabled]="selectedShortcuts.length === 0"
-                                            title="{{ 'HOME.CLEAR_ALL' | translate }} (Ctrl+D)">
-                                        {{ 'HOME.CLEAR_ALL' | translate }}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Available shortcuts in dashboard format -->
-                    <div class="row" *ngIf="!isLoadingShortcuts">
-                        <div class="col-xxl-4 col-xl-6 mb-2" *ngFor="let shortcut of availableShortcuts; trackBy: trackByShortcut">
-                            <div class="shortcut-option">
-                                <div class="custom-checkbox-wrapper" 
-                                     [class.selected]="selectedShortcuts.includes(shortcut.pageName)"
-                                     (click)="toggleShortcutSelection(shortcut.pageName)">
-                                    <div class="custom-checkbox">
-                                        <input type="checkbox" 
-                                               [id]="'check-' + shortcut.id" 
-                                               [checked]="selectedShortcuts.includes(shortcut.pageName)"
-                                               (change)="onShortcutSelectionChange(shortcut.pageName, $event)"
-                                               autocomplete="off">
-                                        <div class="checkbox-indicator">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <div class="shortcut-content">
-                                        <span class="shortcut-text">{{ shortcut.displayName || shortcut.pageName }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Help text -->
-                    <div class="row mt-3" *ngIf="!isLoadingShortcuts && availableShortcuts.length > 0">
-                        <div class="col-12">
-                            <div class="help-text text-center">
-                                <small class="text-muted">
-                                    {{ 'HOME.TIP_MULTIPLE_SELECTION' | translate }}
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <!-- Validation message -->
-                    <div *ngIf="showValidationMessage" class="alert alert-warning w-100 mb-3" role="alert">
-                        <strong>{{ 'HOME.NOTES' | translate }}:</strong> {{ 'HOME.PLEASE_SELECT_AT_LEAST_ONE' | translate }}
-                    </div>
-                    
-                    <button type="button" class="btn btn-outline" (click)="closeModal()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                            <path d="M16.69 2H8.31C4.67 2 2.5 4.17 2.5 7.81V16.18C2.5 19.83 4.67 22 8.31 22H16.68C20.32 22 22.49 19.83 22.49 16.19V7.81C22.5 4.17 20.33 2 16.69 2ZM15.86 14.3C16.15 14.59 16.15 15.07 15.86 15.36C15.71 15.51 15.52 15.58 15.33 15.58C15.14 15.58 14.95 15.51 14.8 15.36L12.5 13.06L10.2 15.36C10.05 15.51 9.86 15.58 9.67 15.58C9.48 15.58 9.29 15.51 9.14 15.36C8.85 15.07 8.85 14.59 9.14 14.3L11.44 12L9.14 9.7C8.85 9.41 8.85 8.93 9.14 8.64C9.43 8.35 9.91 8.35 10.2 8.64L12.5 10.94L14.8 8.64C15.09 8.35 15.57 8.35 15.86 8.64C16.15 8.93 16.15 9.41 15.86 9.7L13.56 12L15.86 14.3Z" fill="#5B5B5B" />
-                        </svg>
-                        {{ 'HOME.CANCEL' | translate }}
-                    </button>
-                    <button type="button" class="btn btn-gold" (click)="saveShortcuts()" [disabled]="isSavingShortcuts || selectedShortcuts.length === 0">
-                        <svg *ngIf="!isSavingShortcuts" xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                            <path d="M16.69 2H8.31C4.67 2 2.5 4.17 2.5 7.81V16.18C2.5 19.83 4.67 22 8.31 22H16.68C20.32 22 22.49 19.83 22.49 16.19V7.81C22.5 4.17 20.33 2 16.69 2ZM17.28 9.7L11.61 15.37C11.47 15.51 11.28 15.59 11.08 15.59C10.88 15.59 10.69 15.51 10.55 15.37L7.72 12.54C7.43 12.25 7.43 11.77 7.72 11.48C8.01 11.19 8.49 11.19 8.78 11.48L11.08 13.78L16.22 8.64C16.51 8.35 16.99 8.35 17.28 8.64C17.57 8.93 17.57 9.4 17.28 9.7Z" fill="white" />
-                        </svg>
-                        <div *ngIf="isSavingShortcuts" class="spinner-border spinner-border-sm text-white" role="status">
-                                                    <span class="visually-hidden">{{ 'HOME.SAVING' | translate }}</span>
-                    </div>
-                    {{ isSavingShortcuts ? ('HOME.SAVING' | translate) : (selectedShortcuts.length > 0 ? ('HOME.SAVE_SHORTCUTS' | translate: { count: selectedShortcuts.length, plural: selectedShortcuts.length > 1 ? 's' : '' }) : ('HOME.SAVE' | translate)) }}
-                    </button>
+                <div *ngIf="!isLoadingRequestSummary && !requestSummaryData" class="text-center py-4">
+                    <p class="text-muted">{{ 'HOME.NO_REQUEST_SUMMARY_DATA' | translate }}</p>
                 </div>
             </div>
         </div>
+
     </div>
 
+</div>
 
 
-   <!-- KPI Row -->
-            <div class="col-12 mb-3">
-                <div class="kpi-modern">
-                    <button type="button" class="kpi-modern__arrow kpi-modern__arrow--left" (click)="scrollKpi(-1)" aria-label="Previous">
-                       <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34" fill="none">
-                        <path d="M16.9997 2.8335C9.19384 2.8335 2.83301 9.19433 2.83301 17.0002C2.83301 24.806 9.19384 31.1668 16.9997 31.1668C24.8055 31.1668 31.1663 24.806 31.1663 17.0002C31.1663 9.19433 24.8055 2.8335 16.9997 2.8335ZM19.5355 21.2502C19.9463 21.661 19.9463 22.341 19.5355 22.7518C19.323 22.9643 19.0538 23.0635 18.7847 23.0635C18.5155 23.0635 18.2463 22.9643 18.0338 22.7518L13.033 17.751C12.6222 17.3402 12.6222 16.6602 13.033 16.2493L18.0338 11.2485C18.4447 10.8377 19.1247 10.8377 19.5355 11.2485C19.9463 11.6593 19.9463 12.3393 19.5355 12.7502L15.2855 17.0002L19.5355 21.2502Z" fill="#8D734D"/>
-                        </svg>
-                    </button>
-                    <div #kpiScroll class="kpi-modern__track">
-                        <div class="kpi-modern__card" *ngFor="let c of kpiCards; let i = index">
-                            <div class="kpi-modern__icon" [ngClass]="{
+
+<!-- Add Shortcut Modal -->
+<div class="modal fade" id="shortcutModal" tabindex="-1" aria-labelledby="shortcutModalLabel" aria-hidden="true"
+    [class.show]="showShortcutModal" [style.display]="showShortcutModal ? 'block' : 'none'"
+    (click)="onModalBackdropClick($event)">
+    <div class="modal-backdrop fade show" *ngIf="showShortcutModal"></div>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Shortcut</h1>
+                <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z"
+                            fill="#5B5B5B" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Loading indicator for modal -->
+                <div *ngIf="isLoadingShortcuts" class="text-center py-4">
+                    <div class="spinner-border text-gold" role="status">
+                        <span class="visually-hidden">{{ 'HOME.LOADING' | translate }}</span>
+                    </div>
+                    <p class="mt-2">{{ 'HOME.LOADING_AVAILABLE_SHORTCUTS' | translate }}</p>
+                </div>
+
+                <!-- Selection controls -->
+                <div class="row mb-3" *ngIf="!isLoadingShortcuts && availableShortcuts.length > 0">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="selection-info">
+                                <span class="text-muted">
+                                    {{ 'HOME.SELECTED_COUNT' | translate: { selected: selectedShortcuts.length, total:
+                                    availableShortcuts.length } }}
+                                </span>
+                            </div>
+                            <div class="selection-controls">
+                                <button type="button" class="btn btn-outline-secondary btn-sm me-2"
+                                    (click)="selectAllShortcuts()" [disabled]="isAllSelected"
+                                    title="{{ 'HOME.SELECT_ALL' | translate }} (Ctrl+A)">
+                                    {{ 'HOME.SELECT_ALL' | translate }}
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm"
+                                    (click)="deselectAllShortcuts()" [disabled]="selectedShortcuts.length === 0"
+                                    title="{{ 'HOME.CLEAR_ALL' | translate }} (Ctrl+D)">
+                                    {{ 'HOME.CLEAR_ALL' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Available shortcuts in dashboard format -->
+                <div class="row" *ngIf="!isLoadingShortcuts">
+                    <div class="col-xxl-4 col-xl-6 mb-2"
+                        *ngFor="let shortcut of availableShortcuts; trackBy: trackByShortcut">
+                        <div class="shortcut-option">
+                            <div class="custom-checkbox-wrapper"
+                                [class.selected]="selectedShortcuts.includes(shortcut.pageName)"
+                                (click)="toggleShortcutSelection(shortcut.pageName)">
+                                <div class="custom-checkbox">
+                                    <input type="checkbox" [id]="'check-' + shortcut.id"
+                                        [checked]="selectedShortcuts.includes(shortcut.pageName)"
+                                        (change)="onShortcutSelectionChange(shortcut.pageName, $event)"
+                                        autocomplete="off">
+                                    <div class="checkbox-indicator">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none">
+                                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="shortcut-content">
+                                    <span class="shortcut-text">{{ shortcut.displayName || shortcut.pageName }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Help text -->
+                <div class="row mt-3" *ngIf="!isLoadingShortcuts && availableShortcuts.length > 0">
+                    <div class="col-12">
+                        <div class="help-text text-center">
+                            <small class="text-muted">
+                                {{ 'HOME.TIP_MULTIPLE_SELECTION' | translate }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <!-- Validation message -->
+                <div *ngIf="showValidationMessage" class="alert alert-warning w-100 mb-3" role="alert">
+                    <strong>{{ 'HOME.NOTES' | translate }}:</strong> {{ 'HOME.PLEASE_SELECT_AT_LEAST_ONE' | translate }}
+                </div>
+
+                <button type="button" class="btn btn-outline" (click)="closeModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                        <path
+                            d="M16.69 2H8.31C4.67 2 2.5 4.17 2.5 7.81V16.18C2.5 19.83 4.67 22 8.31 22H16.68C20.32 22 22.49 19.83 22.49 16.19V7.81C22.5 4.17 20.33 2 16.69 2ZM15.86 14.3C16.15 14.59 16.15 15.07 15.86 15.36C15.71 15.51 15.52 15.58 15.33 15.58C15.14 15.58 14.95 15.51 14.8 15.36L12.5 13.06L10.2 15.36C10.05 15.51 9.86 15.58 9.67 15.58C9.48 15.58 9.29 15.51 9.14 15.36C8.85 15.07 8.85 14.59 9.14 14.3L11.44 12L9.14 9.7C8.85 9.41 8.85 8.93 9.14 8.64C9.43 8.35 9.91 8.35 10.2 8.64L12.5 10.94L14.8 8.64C15.09 8.35 15.57 8.35 15.86 8.64C16.15 8.93 16.15 9.41 15.86 9.7L13.56 12L15.86 14.3Z"
+                            fill="#5B5B5B" />
+                    </svg>
+                    {{ 'HOME.CANCEL' | translate }}
+                </button>
+                <button type="button" class="btn btn-gold" (click)="saveShortcuts()"
+                    [disabled]="isSavingShortcuts || selectedShortcuts.length === 0">
+                    <svg *ngIf="!isSavingShortcuts" xmlns="http://www.w3.org/2000/svg" width="25" height="24"
+                        viewBox="0 0 25 24" fill="none">
+                        <path
+                            d="M16.69 2H8.31C4.67 2 2.5 4.17 2.5 7.81V16.18C2.5 19.83 4.67 22 8.31 22H16.68C20.32 22 22.49 19.83 22.49 16.19V7.81C22.5 4.17 20.33 2 16.69 2ZM17.28 9.7L11.61 15.37C11.47 15.51 11.28 15.59 11.08 15.59C10.88 15.59 10.69 15.51 10.55 15.37L7.72 12.54C7.43 12.25 7.43 11.77 7.72 11.48C8.01 11.19 8.49 11.19 8.78 11.48L11.08 13.78L16.22 8.64C16.51 8.35 16.99 8.35 17.28 8.64C17.57 8.93 17.57 9.4 17.28 9.7Z"
+                            fill="white" />
+                    </svg>
+                    <div *ngIf="isSavingShortcuts" class="spinner-border spinner-border-sm text-white" role="status">
+                        <span class="visually-hidden">{{ 'HOME.SAVING' | translate }}</span>
+                    </div>
+                    {{ isSavingShortcuts ? ('HOME.SAVING' | translate) : (selectedShortcuts.length > 0 ?
+                    ('HOME.SAVE_SHORTCUTS' | translate: { count: selectedShortcuts.length, plural:
+                    selectedShortcuts.length > 1 ? 's' : '' }) : ('HOME.SAVE' | translate)) }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- KPI Row -->
+<div class="col-12 mb-3">
+    <div class="kpi-modern">
+        <button type="button" class="kpi-modern__arrow kpi-modern__arrow--left" (click)="scrollKpi(-1)"
+            aria-label="Previous">
+            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34" fill="none">
+                <path
+                    d="M16.9997 2.8335C9.19384 2.8335 2.83301 9.19433 2.83301 17.0002C2.83301 24.806 9.19384 31.1668 16.9997 31.1668C24.8055 31.1668 31.1663 24.806 31.1663 17.0002C31.1663 9.19433 24.8055 2.8335 16.9997 2.8335ZM19.5355 21.2502C19.9463 21.661 19.9463 22.341 19.5355 22.7518C19.323 22.9643 19.0538 23.0635 18.7847 23.0635C18.5155 23.0635 18.2463 22.9643 18.0338 22.7518L13.033 17.751C12.6222 17.3402 12.6222 16.6602 13.033 16.2493L18.0338 11.2485C18.4447 10.8377 19.1247 10.8377 19.5355 11.2485C19.9463 11.6593 19.9463 12.3393 19.5355 12.7502L15.2855 17.0002L19.5355 21.2502Z"
+                    fill="#8D734D" />
+            </svg>
+        </button>
+        <div #kpiScroll class="kpi-modern__track">
+            <div class="kpi-modern__card d-flex align-items-center gap-2" *ngFor="let c of kpiCards; let i = index">
+                <div class="kpi-modern__icon" [ngClass]="{
                                 'kpi-modern__icon--purple': c.color==='purple',
                                 'kpi-modern__icon--blue': c.color==='blue',
                                 'kpi-modern__icon--red': c.color==='red',
                                 'kpi-modern__icon--teal': c.color==='teal'
                             }"></div>
-                            <div class="kpi-modern__content">
-                                <div class="kpi-modern__row" [ngClass]="{'rtl-flip': currentLang.startsWith('ar')}">
-                                    <div class="kpi-modern__value">{{ c.topValueStr || (c.topValueNum | number) || '0.00' }}</div>
-                                    <div class="kpi-modern__title">{{ c.topLabel }}</div>
-                                </div>
-                                <div class="kpi-modern__progress">
-                                    
-                                </div>
-                                <div class="kpi-modern__row kpi-modern__row--muted" [ngClass]="{'rtl-flip': currentLang.startsWith('ar')}">
-                                    <div class="kpi-modern__subvalue">{{ c.bottomValueStr || (c.bottomValueNum | number) || '0.00' }}</div>
-                                   <div class="kpi-modern__subtitle">{{ c.bottomLabel }}</div>  
-                                </div>
+                <div class="kpi-modern__content w-100">
+                    <div class="d-flex gap-3 align-items-center w-100 ">
+                        <div class="kpi-modern__title">{{ c.topLabel }}</div>
+                        <div class="w-100">
+                            <div class="d-flex justify-content-between">
+                                <div class="kpi-modern__value">{{ c.topValueStr || (c.topValueNum | number) || '0.00' }} </div>
+                                <div class="kpi-modern__value">2025 </div>
+                            </div>
+                            <div class="kpi-modern__progress"></div>
+                            <div class="d-flex justify-content-between">
+                                <div class="kpi-modern__subvalue">{{ c.bottomValueStr || (c.bottomValueNum | number) ||  '0.00' }}</div>
+                                <div class="kpi-modern__subvalue">2024 </div>
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="kpi-modern__arrow kpi-modern__arrow--right" (click)="scrollKpi(1)" aria-label="Next">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34" fill="none">
-                    <path d="M16.9997 2.8335C9.19384 2.8335 2.83301 9.19433 2.83301 17.0002C2.83301 24.806 9.19384 31.1668 16.9997 31.1668C24.8055 31.1668 31.1663 24.806 31.1663 17.0002C31.1663 9.19433 24.8055 2.8335 16.9997 2.8335ZM20.9522 17.751L15.9513 22.7518C15.7388 22.9643 15.4697 23.0635 15.2005 23.0635C14.9313 23.0635 14.6622 22.9643 14.4497 22.7518C14.0388 22.341 14.0388 21.661 14.4497 21.2502L18.6997 17.0002L14.4497 12.7502C14.0388 12.3393 14.0388 11.6593 14.4497 11.2485C14.8605 10.8377 15.5405 10.8377 15.9513 11.2485L20.9522 16.2493C21.3772 16.6602 21.3772 17.3402 20.9522 17.751Z" fill="#8D734D"/>
-                    </svg>
-                    </button>
+
                 </div>
             </div>
-            <!-- End KPI Row -->
+        </div>
+        <button type="button" class="kpi-modern__arrow kpi-modern__arrow--right" (click)="scrollKpi(1)"
+            aria-label="Next">
+            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34" fill="none">
+                <path
+                    d="M16.9997 2.8335C9.19384 2.8335 2.83301 9.19433 2.83301 17.0002C2.83301 24.806 9.19384 31.1668 16.9997 31.1668C24.8055 31.1668 31.1663 24.806 31.1663 17.0002C31.1663 9.19433 24.8055 2.8335 16.9997 2.8335ZM20.9522 17.751L15.9513 22.7518C15.7388 22.9643 15.4697 23.0635 15.2005 23.0635C14.9313 23.0635 14.6622 22.9643 14.4497 22.7518C14.0388 22.341 14.0388 21.661 14.4497 21.2502L18.6997 17.0002L14.4497 12.7502C14.0388 12.3393 14.0388 11.6593 14.4497 11.2485C14.8605 10.8377 15.5405 10.8377 15.9513 11.2485L20.9522 16.2493C21.3772 16.6602 21.3772 17.3402 20.9522 17.751Z"
+                    fill="#8D734D" />
+            </svg>
+        </button>
+    </div>
+</div>
+<!-- End KPI Row -->
 
 
- 
+
 
 
 <div class="row" *ngIf="processedCharts.length > 0">
@@ -359,7 +386,7 @@
             <div class="card-body">
                 <ng-container>
                     <app-bar-chart [categories]="chart.categories" [seriesData]="chart.seriesData"
-                        [useDynamicColors]="true"   [pageTitle]="chart.title"       >
+                        [useDynamicColors]="true" [pageTitle]="chart.title">
                     </app-bar-chart>
                 </ng-container>
 

@@ -713,7 +713,6 @@ export class aidRequestsComponent {
   }
 
   onTableAction(event: { action: string, row: any }) {
-    console.log("event", event);
     var data = event.row.composeKey.split(',');
     var source = data[0];
     var studyId = data[1];

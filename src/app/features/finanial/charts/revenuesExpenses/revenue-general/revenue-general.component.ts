@@ -239,9 +239,9 @@ export class RevenueGeneralComponent implements OnInit {
       const mappedSeriesData: ChartSeriesData[] = [];
       result.seriesData.forEach((series, index) => {
         if (index === 0) { 
-          mappedSeriesData.push({ ...series, name: 'Revenue' });
+          mappedSeriesData.push({ ...series, name: this.translate.instant('FinancialCharts.chartvalueNameforrevenue') });
         } else if (index === 1) {
-          mappedSeriesData.push({ ...series, name: 'Expense' });
+          mappedSeriesData.push({ ...series, name: this.translate.instant('FinancialCharts.chartvalueNameforexpenses') });
         }
       });
       this[categoriesName] = result.categories;

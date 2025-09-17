@@ -707,8 +707,6 @@ export class UsersListComponent implements OnInit {
         // Debug: Check if ApVendor and CaseSearchListRpt are in the response
         const vendorModule = res.find((m: any) => m.screenPermissions?.some((s: any) => s.screenName === 'ApVendor'));
         const caseSearchModule = res.find((m: any) => m.screenPermissions?.some((s: any) => s.screenName === 'CaseSearchListRpt'));
-        console.log("Vendor module found:", vendorModule);
-        console.log("CaseSearchListRpt module found:", caseSearchModule);
 
         this.originalPermissions = res
           .flatMap((module: any) => module.screenPermissions)
@@ -904,7 +902,6 @@ export class UsersListComponent implements OnInit {
   saveUserPermissions(userPermissions: string = 'userPermissions',
     originalPermissions: string = 'originalPermissions', modal_id: string = '.btn-close-user-permissions'
   ): void {
-    console.log("this.userPermissions ", this.userPermissions);
     const seen = new Set();
     const currentPermissions: any[] = (this as any)[userPermissions]
       .flatMap((m: any) => m?.screenPermissions ?? [])
@@ -918,15 +915,11 @@ export class UsersListComponent implements OnInit {
         seen.add(key);
         return true;
       });
-    console.log("currentPermissions = ", currentPermissions);
-    console.log("this.originalPermissions = ", (this as any)[originalPermissions]);
-
+    
     // Debug: Check if there are any permissions for ApVendor or CaseSearchListRpt
     const vendorPermissions = currentPermissions.filter(p => p.value && p.value.includes('ApVendor'));
     const caseSearchPermissions = currentPermissions.filter(p => p.value && p.value.includes('CaseSearchListRpt'));
-    console.log("Vendor permissions found:", vendorPermissions);
-    console.log("CaseSearchListRpt permissions found:", caseSearchPermissions);
-
+    
     const result = this.diffPermissions((this as any)[originalPermissions], currentPermissions);
 
 

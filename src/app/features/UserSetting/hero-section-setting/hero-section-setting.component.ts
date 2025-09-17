@@ -102,8 +102,8 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
     this.heroSectionForm = this.fb.group({
       titleAr: ['', [Validators.required, Validators.maxLength(1000)]],
       titleEn: ['', [Validators.required, Validators.maxLength(1000)]],
-      descriptionAr: ['', [Validators.required, Validators.maxLength(4000)]],
-      descriptionEn: ['', [Validators.required, Validators.maxLength(4000)]],
+      descriptionAr: ['', [Validators.required ]],
+      descriptionEn: ['', [Validators.required ]],
       link: ['', [Validators.maxLength(500), Validators.pattern('https?://.+')]],
       isActive: [true],
       viewOrder: [0, [Validators.required, Validators.min(0)]],
