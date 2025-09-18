@@ -131,16 +131,27 @@
                 </div>
 
                 <div class="col-md-12 mb-3">
-                  <label for="targetGroup" class="form-label required">{{ translate.instant('INITIATIVE.TARGET_GROUP')
+                  <label for="targetGroup" class="form-label required">{{ translate.instant('INITIATIVE.TARGET_GROUP_AR')
                     || 'Target Group' }}</label>
                   <input type="text" class="form-control" id="targetGroup" formControlName="targetGroup"
                     [class.is-invalid]="isFieldInvalid('targetGroup')" [class.is-valid]="isFieldValid('targetGroup')"
                     (blur)="onFieldBlur('targetGroup')" [disabled]="mode === 'view'"
-                    placeholder="{{ translate.instant('INITIATIVE.TARGET_GROUP_PLACEHOLDER') || 'Enter target group' }}">
+                    placeholder="{{ translate.instant('INITIATIVE.TARGET_GROUP_PLACEHOLDER_AR') || 'Enter target group' }}">
                   <div class="invalid-feedback" *ngIf="isFieldInvalid('targetGroup')">
                     {{ getFieldError('targetGroup') }}
                   </div>
                 </div>
+                <div class="col-md-12 mb-3">
+                    <label for="targetGroupEn" class="form-label required">{{ translate.instant('INITIATIVE.TARGET_GROUP_EN')
+                      || 'Target Group' }}</label>
+                    <input type="text" class="form-control" id="targetGroupEn" formControlName="targetGroupEn"
+                      [class.is-invalid]="isFieldInvalid('targetGroupEn')" [class.is-valid]="isFieldValid('targetGroupEn')"
+                      (blur)="onFieldBlur('targetGroupEn')" [disabled]="mode === 'view'"
+                      placeholder="{{ translate.instant('INITIATIVE.TARGET_GROUP_PLACEHOLDER_EN') || 'Enter target group' }}">
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('targetGroupEn')">
+                      {{ getFieldError('targetGroupEn') }}
+                    </div>
+                  </div>
 
                 <div class="col-md-12 mb-3">
                   <label for="initiativeDate" class="form-label required">{{ translate.instant('INITIATIVE.DATE') ||
@@ -622,8 +633,10 @@
             selectedInitiativeToDelete.nameAr || 'N/A' }}<br>
             <strong>{{ translate.instant('INITIATIVE.NAME_EN') || 'Initiative Name (English)' }}:</strong> {{
             selectedInitiativeToDelete.nameEn || 'N/A' }}<br>
-            <strong>{{ translate.instant('INITIATIVE.TARGET_GROUP') || 'Target Group' }}:</strong> {{
+            <strong>{{ translate.instant('INITIATIVE.TARGET_GROUP_AR') || 'Target Group (Arabic)' }}:</strong> {{
             selectedInitiativeToDelete.targetGroup || 'N/A' }}<br>
+             <strong>{{ translate.instant('INITIATIVE.TARGET_GROUP_EN') || 'Target Group (English)' }}:</strong> {{
+            selectedInitiativeToDelete.targetGroupEn || 'N/A' }}<br>
             <strong>{{ translate.instant('INITIATIVE.DATE') || 'Initiative Date' }}:</strong> {{
             selectedInitiativeToDelete.initiativeDate ? (selectedInitiativeToDelete.initiativeDate | date:'shortDate') :
             'N/A' }}<br>

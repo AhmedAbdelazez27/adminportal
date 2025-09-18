@@ -62,6 +62,8 @@ export class ApiEndpoints {
 
   static readonly Entity = {
     Base: '/Entity',
+    Update: '/Update',
+    Delete: '/Delete',
     GetSelect2List: '/GetSelect2List',
     GetAll: '/Entity/GetAll',
     GetById: (id: string) => `/Entity/${id}`,

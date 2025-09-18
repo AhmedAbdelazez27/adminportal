@@ -53,7 +53,7 @@ export class EntityService {
 
   // Update entity
   updateEntity(entity: UpdateEntityDto): Observable<EntityDto> {
-    return this.http.post<EntityDto>(`${this.BASE_URL}`, entity);
+    return this.http.post<EntityDto>(`${environment.apiBaseUrl}${ApiEndpoints.Entity.Update}`, entity);
   }
 
   // Delete entity

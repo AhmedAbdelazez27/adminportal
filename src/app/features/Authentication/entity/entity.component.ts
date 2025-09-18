@@ -787,8 +787,17 @@ export class EntityComponent implements OnInit, OnDestroy {
                     },
                 });
             } else if (this.mode === 'edit') {
+                // Ensure we have the correct ENTITY_ID for update
+                const entityId = formData.ENTITY_ID || this.editingEntityId || this.selectedEntityObject?.ENTITY_ID;
+                
+                if (!entityId) {
+                    this.toastr.error(this.translate.instant('TOAST.ENTITY_ID_MISSING_ERROR'));
+                    this.spinnerService.hide();
+                    return;
+                }
+
                 const updateData: UpdateEntityDto = {
-                    ENTITY_ID: formData.ENTITY_ID,
+                    ENTITY_ID: entityId,
                     ENTITY_NAME: formData.ENTITY_NAME?.trim(),
                     ENTITY_NAME_EN: formData.ENTITY_NAME_EN?.trim(),
                     ENTITY_LOCALTION: formData.ENTITY_LOCALTION?.trim() || null,
@@ -804,7 +813,6 @@ export class EntityComponent implements OnInit, OnDestroy {
                     licenseNumber: formData.licenseNumber?.trim() || null,
                     licenseEndDate: this.toIsoOrNull(formData.licenseEndDate),
                     foundationType: formData.foundationType ?? null,
-
                 };
 
                 this.entityService.updateEntity(updateData).subscribe({
@@ -812,13 +820,17 @@ export class EntityComponent implements OnInit, OnDestroy {
                         this.toastr.success(this.translate.instant('TOAST.ENTITY_UPDATED'));
 
                         // Handle attachment update separately
-                        if (attachmentDto && this.existingAttachment) {
-                            this.updateAttachmentSeparately(attachmentDto);
-                        } else if (attachmentDto) {
-                            // Create new attachment
-                            this.createAttachmentSeparately(attachmentDto);
+                        if (attachmentDto) {
+                            if (this.existingAttachment) {
+                                // Update existing attachment
+                                this.updateAttachmentSeparately(attachmentDto);
+                            } else {
+                                // Create new attachment with correct masterId
+                                attachmentDto.masterId = this.selectedEntityObject?.MasterId || 0;
+                                this.createAttachmentSeparately(attachmentDto);
+                            }
                         } else {
-                            // No attachment change, just refresh the image
+                            // No attachment change, just refresh and close
                             this.refreshImageAfterUpdate();
                             this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
                             this.closeModal();
@@ -1512,8 +1524,8 @@ export class EntityComponent implements OnInit, OnDestroy {
     }
 
     private createAttachmentSeparately(attachmentDto: AttachmentBase64Dto): void {
-        // Ensure we have the correct masterId for edit mode
-        if (this.mode === 'edit' && this.selectedEntityObject?.MasterId) {
+        // Ensure we have the correct masterId - this should already be set by the caller
+        if (attachmentDto.masterId === 0 && this.mode === 'edit' && this.selectedEntityObject?.MasterId) {
             attachmentDto.masterId = this.selectedEntityObject.MasterId;
         }
 
