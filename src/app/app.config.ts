@@ -12,6 +12,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import { apiKeyInterceptor } from './core/interceptors/api-key.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -23,7 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
      provideHttpClient(
       withFetch(),
-      withInterceptors([apiKeyInterceptor,authInterceptor]) 
+      withInterceptors([apiKeyInterceptor,authInterceptor,errorInterceptor]) 
     ),
     provideAnimations(), 
     importProvidersFrom(
