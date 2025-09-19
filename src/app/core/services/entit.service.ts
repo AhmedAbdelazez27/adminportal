@@ -55,7 +55,7 @@ export class EntityService {
   updateEntity(entity: UpdateEntityDto): Observable<EntityDto> {
     return this.http.post<EntityDto>(`${this.BASE_URL}${ApiEndpoints.Entity.Update}`, entity);
   }
-  
+
   // Delete entity
   deleteEntity(id: string): Observable<void> {
     return this.http.delete<void>(`${this.BASE_URL}${ApiEndpoints.Entity.Delete}/${id}`);
