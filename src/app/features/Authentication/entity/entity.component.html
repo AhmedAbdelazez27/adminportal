@@ -504,7 +504,7 @@
           <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">
             {{ 'COMMON.CANCEL' | translate }}
           </button>
-          <button type="submit" class="btn btn-gold" [disabled]="submitted || !areMandatoryFieldsValid()">
+          <button type="submit" class="btn btn-gold" >
             {{ mode === 'add' ? ('COMMON.CREATE' | translate) : ('COMMON.UPDATE' | translate) }}
           </button>
         </div>

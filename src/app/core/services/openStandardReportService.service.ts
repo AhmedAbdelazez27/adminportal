@@ -4,7 +4,7 @@ import { reportPrintConfig } from '../dtos/FndLookUpValuesdtos/FndLookUpValues.d
 
 @Injectable({ providedIn: 'root' })
 export class openStandardReportService {
-
+  currentLang = localStorage.getItem("lang")
   openStandardReportExcel(config: reportPrintConfig): void {
     const {
       reportTitle,
@@ -213,7 +213,7 @@ export class openStandardReportService {
         }
       </style>
     </head>
-    <body class="printing-body">
+    <body class=" ${this.currentLang == 'ar' ? 'printing-body' : 'printing-body-ltr'}"> 
       <div class="report-header mb-5">
         <h2 class="gold bold title-32 mb-0">${title}</h2>
         <div class="d-flex align-items-center gap-3">
