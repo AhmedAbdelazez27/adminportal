@@ -30,9 +30,16 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/@kolkov/angular-editor/assets/icons",
+                "output": "assets/ae-icons/"
+              }
             ],
             "styles": [
+              "node_modules/@kolkov/angular-editor/themes/default.scss",
+              "node_modules/@kolkov/angular-editor/themes/default.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/leaflet/dist/leaflet.css",
@@ -129,7 +136,12 @@
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/@kolkov/angular-editor/assets/icons",
+                "output": "assets/ae-icons/"
+              }
             ],
             "styles": [
               "src/styles.scss"

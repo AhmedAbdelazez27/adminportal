@@ -131,7 +131,8 @@
                 </div>
 
                 <div class="col-md-12 mb-3">
-                  <label for="targetGroup" class="form-label required">{{ translate.instant('INITIATIVE.TARGET_GROUP_AR')
+                  <label for="targetGroup" class="form-label required">{{
+                    translate.instant('INITIATIVE.TARGET_GROUP_AR')
                     || 'Target Group' }}</label>
                   <input type="text" class="form-control" id="targetGroup" formControlName="targetGroup"
                     [class.is-invalid]="isFieldInvalid('targetGroup')" [class.is-valid]="isFieldValid('targetGroup')"
@@ -142,16 +143,18 @@
                   </div>
                 </div>
                 <div class="col-md-12 mb-3">
-                    <label for="targetGroupEn" class="form-label required">{{ translate.instant('INITIATIVE.TARGET_GROUP_EN')
-                      || 'Target Group' }}</label>
-                    <input type="text" class="form-control" id="targetGroupEn" formControlName="targetGroupEn"
-                      [class.is-invalid]="isFieldInvalid('targetGroupEn')" [class.is-valid]="isFieldValid('targetGroupEn')"
-                      (blur)="onFieldBlur('targetGroupEn')" [disabled]="mode === 'view'"
-                      placeholder="{{ translate.instant('INITIATIVE.TARGET_GROUP_PLACEHOLDER_EN') || 'Enter target group' }}">
-                    <div class="invalid-feedback" *ngIf="isFieldInvalid('targetGroupEn')">
-                      {{ getFieldError('targetGroupEn') }}
-                    </div>
+                  <label for="targetGroupEn" class="form-label required">{{
+                    translate.instant('INITIATIVE.TARGET_GROUP_EN')
+                    || 'Target Group' }}</label>
+                  <input type="text" class="form-control" id="targetGroupEn" formControlName="targetGroupEn"
+                    [class.is-invalid]="isFieldInvalid('targetGroupEn')"
+                    [class.is-valid]="isFieldValid('targetGroupEn')" (blur)="onFieldBlur('targetGroupEn')"
+                    [disabled]="mode === 'view'"
+                    placeholder="{{ translate.instant('INITIATIVE.TARGET_GROUP_PLACEHOLDER_EN') || 'Enter target group' }}">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('targetGroupEn')">
+                    {{ getFieldError('targetGroupEn') }}
                   </div>
+                </div>
 
                 <div class="col-md-12 mb-3">
                   <label for="initiativeDate" class="form-label required">{{ translate.instant('INITIATIVE.DATE') ||
@@ -165,7 +168,7 @@
                   </div>
                 </div>
 
-               
+
 
 
                 <div class="col-12 mb-3" [attr.dir]="translate.currentLang === 'ar' ? 'rtl' : 'ltr'">
@@ -174,12 +177,12 @@
                   </label>
                   <br />
 
-                  <quill-editor id="descriptionAr" formControlName="descriptionAr" class="w-100"
-                    [modules]="quillModules" theme="snow" [readOnly]="mode === 'view'" [styles]="{ height: '200px' }"
+
+                  <angular-editor id="descriptionAr" class="w-100" theme="snow"
                     [ngClass]="{ 'is-invalid': isFieldInvalid('descriptionAr'), 'is-valid': isFieldValid('descriptionAr') }"
-                    (blur)="onFieldBlur('descriptionAr')" (onEditorCreated)="onQuillCreated($event)"
-                    placeholder="{{ translate.instant('INITIATIVE.DESCRIPTION_AR_PLACEHOLDER') || 'Enter description in Arabic' }}">
-                  </quill-editor>
+                    (blur)="onFieldBlur('descriptionAr')"
+                    placeholder="{{ translate.instant('INITIATIVE.DESCRIPTION_AR_PLACEHOLDER') || 'Enter description in Arabic' }}"
+                    formControlName="descriptionAr"></angular-editor>
 
                   <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('descriptionAr')">
                     {{ getFieldError('descriptionAr') }}
@@ -197,12 +200,11 @@
                   </label>
                   <br />
 
-                  <quill-editor id="descriptionEn" formControlName="descriptionEn" [modules]="quillModules" theme="snow"
-                    [readOnly]="mode === 'view'" [styles]="{ height: '200px', width: '100%'}"
+
+                  <angular-editor id="descriptionEn" formControlName="descriptionEn" theme="snow"
                     [ngClass]="{ 'is-invalid': isFieldInvalid('descriptionEn'), 'is-valid': isFieldValid('descriptionEn') }"
-                    (blur)="onFieldBlur('descriptionEn')" (onEditorCreated)="onQuillCreated($event)"
-                    placeholder="{{ translate.instant('INITIATIVE.DESCRIPTION_EN_PLACEHOLDER') || 'Enter description in English' }}">
-                  </quill-editor>
+                    (blur)="onFieldBlur('descriptionEn')"
+                    placeholder="{{ translate.instant('INITIATIVE.DESCRIPTION_EN_PLACEHOLDER') || 'Enter description in English' }}"></angular-editor>
 
                   <div class="invalid-feedback d-block" *ngIf="isFieldInvalid('descriptionEn')">
                     {{ getFieldError('descriptionEn') }}
@@ -418,7 +420,7 @@
           {{ translate.instant('COMMON.CANCEL') || 'Cancel' }}
         </button>
         <button type="submit" form="initiativeForm" class="btn btn-gold"
-          [disabled]="initiativeForm.invalid || isLoading">
+        [disabled]="initiativeForm.invalid || isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
           {{ mode === 'add' ? (translate.instant('COMMON.CREATE') || 'Create') : (translate.instant('COMMON.UPDATE') ||
           'Update') }}
@@ -635,7 +637,7 @@
             selectedInitiativeToDelete.nameEn || 'N/A' }}<br>
             <strong>{{ translate.instant('INITIATIVE.TARGET_GROUP_AR') || 'Target Group (Arabic)' }}:</strong> {{
             selectedInitiativeToDelete.targetGroup || 'N/A' }}<br>
-             <strong>{{ translate.instant('INITIATIVE.TARGET_GROUP_EN') || 'Target Group (English)' }}:</strong> {{
+            <strong>{{ translate.instant('INITIATIVE.TARGET_GROUP_EN') || 'Target Group (English)' }}:</strong> {{
             selectedInitiativeToDelete.targetGroupEn || 'N/A' }}<br>
             <strong>{{ translate.instant('INITIATIVE.DATE') || 'Initiative Date' }}:</strong> {{
             selectedInitiativeToDelete.initiativeDate ? (selectedInitiativeToDelete.initiativeDate | date:'shortDate') :

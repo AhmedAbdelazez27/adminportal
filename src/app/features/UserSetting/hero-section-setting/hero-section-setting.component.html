@@ -144,13 +144,18 @@
                   {{ 'HERO_SECTION_SETTING.DESCRIPTION_AR' | translate }}
                 </label>
 
-                <quill-editor id="descriptionAr" formControlName="descriptionAr" class="w-100 quill-editor"
+                <!-- <quill-editor id="descriptionAr" formControlName="descriptionAr" class="w-100 quill-editor"
                   [modules]="quillModules" theme="snow" [styles]="{ height: '200px' }" [ngClass]="{
       'is-invalid': heroSectionForm.get('descriptionAr')?.invalid && (heroSectionForm.get('descriptionAr')?.touched || submitted),
       'is-valid': heroSectionForm.get('descriptionAr')?.valid && (heroSectionForm.get('descriptionAr')?.touched || submitted)
     }" (onEditorCreated)="onQuillCreated($event)"
                   placeholder="{{ 'HERO_SECTION_SETTING.ENTER_DESCRIPTION_AR' | translate }}">
-                </quill-editor>
+                </quill-editor> -->
+                <angular-editor id="descriptionAr" class="w-100" theme="snow" [ngClass]="{
+      'is-invalid': heroSectionForm.get('descriptionAr')?.invalid && (heroSectionForm.get('descriptionAr')?.touched || submitted),
+      'is-valid': heroSectionForm.get('descriptionAr')?.valid && (heroSectionForm.get('descriptionAr')?.touched || submitted)
+    }" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_DESCRIPTION_AR' | translate }}"
+                  formControlName="descriptionAr"></angular-editor>
 
                 <div class="invalid-feedback d-block"
                   *ngIf="heroSectionForm.get('descriptionAr')?.invalid && (heroSectionForm.get('descriptionAr')?.touched || submitted)">
@@ -184,13 +189,18 @@
                   {{ 'HERO_SECTION_SETTING.DESCRIPTION_EN' | translate }}
                 </label>
 
-                <quill-editor id="descriptionEn" formControlName="descriptionEn" class="w-100 quill-editor"
+                <!-- <quill-editor id="descriptionEn" formControlName="descriptionEn" class="w-100 quill-editor"
                   [modules]="quillModules" theme="snow" [styles]="{ height: '200px' }" [ngClass]="{
       'is-invalid': heroSectionForm.get('descriptionEn')?.invalid && (heroSectionForm.get('descriptionEn')?.touched || submitted),
       'is-valid': heroSectionForm.get('descriptionEn')?.valid && (heroSectionForm.get('descriptionEn')?.touched || submitted)
     }" (onEditorCreated)="onQuillCreated($event)"
                   placeholder="{{ 'HERO_SECTION_SETTING.ENTER_DESCRIPTION_EN' | translate }}">
-                </quill-editor>
+                </quill-editor> -->
+                <angular-editor id="descriptionEn" class="w-100" theme="snow" [ngClass]="{
+      'is-invalid': heroSectionForm.get('descriptionEn')?.invalid && (heroSectionForm.get('descriptionEn')?.touched || submitted),
+      'is-valid': heroSectionForm.get('descriptionEn')?.valid && (heroSectionForm.get('descriptionEn')?.touched || submitted)
+    }" placeholder="{{ 'HERO_SECTION_SETTING.ENTER_DESCRIPTION_EN' | translate }}"
+                  formControlName="descriptionEn"></angular-editor>
 
                 <div class="invalid-feedback d-block"
                   *ngIf="heroSectionForm.get('descriptionEn')?.invalid && (heroSectionForm.get('descriptionEn')?.touched || submitted)">

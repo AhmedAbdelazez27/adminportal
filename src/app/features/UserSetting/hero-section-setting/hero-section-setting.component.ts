@@ -25,9 +25,10 @@ import {
 import { AttachmentBase64Dto, AttachmentDto, UpdateAttachmentBase64Dto } from '../../../core/dtos/attachments/attachment.dto';
 import { AttachmentsConfigType } from '../../../core/dtos/attachments/attachments-config.dto';
 import { AttachmentsConfigDto } from '../../../core/dtos/attachments/attachments-config.dto';
-import { QuillModule } from 'ngx-quill';
-import Quill from 'quill';
-import { Subscription } from 'rxjs';
+// import { QuillModule } from 'ngx-quill';
+// import Quill from 'quill';
+import { Subscription } from 'rxjs'; 
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'app-hero-section-setting',
@@ -39,7 +40,8 @@ import { Subscription } from 'rxjs';
     TranslateModule,
     NgSelectModule,
     GenericDataTableComponent,
-    QuillModule
+    // QuillModule,
+    AngularEditorModule
   ],
   templateUrl: './hero-section-setting.component.html',
   styleUrl: './hero-section-setting.component.scss',
@@ -77,19 +79,19 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
   attachmentConfigs: AttachmentsConfigDto[] = [];
   isLoadingDropdowns: boolean = false;
 
-    private quill?: Quill;
+    // private quill?: Quill;
   private langSub?: Subscription;
 
-  quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ align: [] }],            
-      [{ direction: 'rtl' }],     
-      ['link', 'clean']
-    ]
-  };
+  // quillModules = {
+  //   toolbar: [
+  //     [{ header: [1, 2, 3, false] }],
+  //     ['bold', 'italic', 'underline', 'strike'],
+  //     [{ list: 'ordered' }, { list: 'bullet' }],
+  //     [{ align: [] }],            
+  //     [{ direction: 'rtl' }],     
+  //     ['link', 'clean']
+  //   ]
+  // };
 
   constructor(
     private heroSectionSettingService: HeroSectionSettingService,
@@ -116,22 +118,22 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
         this.langSub = this.translate.onLangChange.subscribe(() => {
-      this.applyEditorDir();
+      // this.applyEditorDir();
     });
     this.loadHeroSectionSettings();
   }
-  onQuillCreated(q: Quill) {
-    this.quill = q;
-    this.applyEditorDir();
-  }
+  // onQuillCreated(q: Quill) {
+  //   this.quill = q;
+  //   this.applyEditorDir();
+  // }
 
-  private applyEditorDir() {
-    if (!this.quill) return;
-    const isAr = this.translate.currentLang === 'ar';
-    const editorEl = this.quill.root as HTMLElement;
-    editorEl.setAttribute('dir', isAr ? 'rtl' : 'ltr');
-    editorEl.style.textAlign = isAr ? 'right' : 'left';
-  }
+  // private applyEditorDir() {
+  //   if (!this.quill) return;
+  //   const isAr = this.translate.currentLang === 'ar';
+  //   const editorEl = this.quill.root as HTMLElement;
+  //   editorEl.setAttribute('dir', isAr ? 'rtl' : 'ltr');
+  //   editorEl.style.textAlign = isAr ? 'right' : 'left';
+  // }
 
   private initializeColumnDefs(): void {
     this.columnDefs = [

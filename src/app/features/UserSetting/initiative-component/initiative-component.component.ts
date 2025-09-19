@@ -41,6 +41,8 @@ import * as L from 'leaflet';
 import { QuillModule } from 'ngx-quill';
 import Quill from 'quill';
 import { Subscription } from 'rxjs';
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'app-initiative-component',
@@ -54,6 +56,7 @@ import { Subscription } from 'rxjs';
     GenericDataTableComponent,
     AttachmentGalleryComponent,
     QuillModule,
+    AngularEditorModule 
   ],
   templateUrl: './initiative-component.component.html',
   styleUrl: './initiative-component.component.scss',
@@ -129,7 +132,50 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
       ['link', 'clean'],
     ],
   };
-
+editorConfig: AngularEditorConfig = {
+    editable: true,
+      spellcheck: true,
+      height: 'auto',
+      minHeight: '0',
+      maxHeight: 'auto',
+      width: 'auto',
+      minWidth: '0',
+      translate: 'yes',
+      enableToolbar: true,
+      showToolbar: true,
+      placeholder: 'Enter text here...',
+      defaultParagraphSeparator: '',
+      defaultFontName: '',
+      defaultFontSize: '',
+      fonts: [
+        {class: 'arial', name: 'Arial'},
+        {class: 'times-new-roman', name: 'Times New Roman'},
+        {class: 'calibri', name: 'Calibri'},
+        {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      ],
+      customClasses: [
+      {
+        name: 'quote',
+        class: 'quote',
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: 'titleText',
+        class: 'titleText',
+        tag: 'h1',
+      },
+    ],
+    uploadUrl: 'v1/image',
+    sanitize: true,
+    toolbarPosition: 'top',
+    toolbarHiddenButtons: [
+      ['bold', 'italic'],
+      ['fontSize']
+    ]
+};
   constructor(
     private initiativeService: InitiativeService,
     private attachmentService: AttachmentService,
@@ -1005,7 +1051,8 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
   // Continue with submit and other methods...
   async submit(): Promise<void> {
     this.submitted = true;
-
+    console.log(this.initiativeForm.value);
+    
     if (this.initiativeForm.invalid) return;
 
     const initiativeImageConfig = this.getInitiativeImageConfig();
