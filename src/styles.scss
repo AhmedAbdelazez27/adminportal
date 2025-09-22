@@ -5050,3 +5050,19 @@ transform: rotate(180deg);
   border: 1px solid #e9ecef;
   overflow-y: auto !important;
 }
+
+.active .nav-link{
+    background-color: var(--Color-25, #8D734D);
+    color: var(--Color-15, #FFF);
+}
+
+
+.nav-item.active .nav-link svg,
+.nav-item.active .nav-link svg {
+    fill: #fff;
+}
+
+.mega-list li.active, .mega-list li.active {
+    color: var(--Color-25, #8D734D);
+    background: var(--Color-21, #F7F7F7);
+}

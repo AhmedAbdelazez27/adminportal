@@ -124,9 +124,9 @@
         fileName="charts"></app-export-toolbar>
 
       <ul class="navbar-nav m-auto">
-        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+        <li class="nav-item">
 
-          <a class="nav-link " aria-current="page" routerLink="/home">
+          <a class="nav-link " aria-current="page" routerLink="/home"  routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
               <path
                 d="M12.9466 1.3335H11.68C10.2266 1.3335 9.45996 2.10016 9.45996 3.5535V4.82016C9.45996 6.2735 10.2266 7.04016 11.68 7.04016H12.9466C14.4 7.04016 15.1666 6.2735 15.1666 4.82016V3.5535C15.1666 2.10016 14.4 1.3335 12.9466 1.3335Z"
@@ -172,7 +172,7 @@
                   {{ 'navbarMenu.authentication' | translate }}
                 </div>
                 <ul class="mega-list">
-                  <li *ngIf="hasPermission('Role.View')">
+                  <li *ngIf="hasPermission('Role.View')"    routerLinkActive="active">
                     <a routerLink="/authentication/roles">
                       {{ 'navbarMenu.role' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -182,8 +182,8 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('User.View')">
-                    <a routerLink="/authentication/users">
+                  <li *ngIf="hasPermission('User.View')"    routerLinkActive="active">
+                    <a routerLink="/authentication/users" >
                       {{ 'navbarMenu.user' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
                         <path
@@ -192,7 +192,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('Entity.View')">
+                  <li *ngIf="hasPermission('Entity.View')"    routerLinkActive="active">
                     <a routerLink="/authentication/entity">
                       {{ 'navbarMenu.entity' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -202,7 +202,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('Departments.View')">
+                  <li *ngIf="hasPermission('Departments.View')"    routerLinkActive="active">
                     <a routerLink="/authentication/department">
                       {{ 'navbarMenu.department' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -212,7 +212,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('DataTransLogs.View')">
+                  <li *ngIf="hasPermission('DataTransLogs.View')"    routerLinkActive="active">
                     <a routerLink="/authentication/datatranslogs">
                       {{ 'navbarMenu.datatranslogs' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -228,7 +228,7 @@
           </div>
         </li>
 
-        <li class="nav-item dropdown" *ngIf="hasAnyFinancialPermission()">
+        <li class="nav-item dropdown" routerLinkActive="active" *ngIf="hasAnyFinancialPermission()">
           <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
               <path
@@ -259,7 +259,7 @@
                   {{ 'navbarMenu.operation' | translate }}
                 </div>
                 <ul class="mega-list">
-                  <li *ngIf="hasPermission('VwApInvoiceHd.View')">
+                  <li *ngIf="hasPermission('VwApInvoiceHd.View')"    routerLinkActive="active">
                     <a [routerLink]="['/financial/operations/invoice']">
                       {{ 'navbarMenu.invoiceTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -269,7 +269,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('GlJeHeader.View')">
+                  <li *ngIf="hasPermission('GlJeHeader.View')"    routerLinkActive="active">
                     <a [routerLink]="['/financial/operations/general-journal']">
                       {{ 'navbarMenu.gljeTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -279,7 +279,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('ApMiscPaymentHeader.View')">
+                  <li *ngIf="hasPermission('ApMiscPaymentHeader.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/operations/payment-voucher']">
                       {{ 'navbarMenu.paymentvoucherTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -289,7 +289,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('ArMiscReciptHeader.View')">
+                  <li *ngIf="hasPermission('ArMiscReciptHeader.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/operations/receipt-voucher']">
                       {{ 'navbarMenu.receiptvoucherTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -299,7 +299,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('ApPaymentTransactionsHdr.View')">
+                  <li *ngIf="hasPermission('ApPaymentTransactionsHdr.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/operations/receipt-operations']">
                       {{ 'navbarMenu.receiptoperationTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -309,7 +309,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('ApVendor.View')">
+                  <li *ngIf="hasPermission('ApVendor.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/operations/vendor']">
                       {{ 'navbarMenu.vendorTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -320,7 +320,7 @@
                     </a>
                   </li>
 
-                  <li *ngIf="hasPermission('ApVendor.View')">
+                  <li *ngIf="hasPermission('ApVendor.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/operations/glAccount']">
                       {{ 'navbarMenu.glAccountTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -331,7 +331,7 @@
                     </a>
                   </li>
 
-                  <li *ngIf="hasPermission('ApVendor.View')">
+                  <li *ngIf="hasPermission('ApVendor.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/operations/glAccountEntity']">
                       {{ 'navbarMenu.glAccountEntityTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -355,7 +355,7 @@
                   {{ 'navbarMenu.report' | translate }}
                 </div>
                 <ul class="mega-list">
-                  <li *ngIf="hasPermission('CatchReceiptRpt.View')">
+                  <li *ngIf="hasPermission('CatchReceiptRpt.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/reports/catchReceiptRpt']">
                       {{ 'navbarMenu.catchReceiptRptTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -365,7 +365,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('GeneralGlJournalRpt.View')">
+                  <li *ngIf="hasPermission('GeneralGlJournalRpt.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/reports/generalLJournalRpt']">
                       {{ 'navbarMenu.generalLJournalRptTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -375,7 +375,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('BalanceReviewRpt.View')">
+                  <li *ngIf="hasPermission('BalanceReviewRpt.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/reports/balanceReviewRpt']">
                       {{ 'navbarMenu.finalrptTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -385,7 +385,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('ReceiptRpt.View')">
+                  <li *ngIf="hasPermission('ReceiptRpt.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/reports/receiptRPT']">
                       {{ 'navbarMenu.receiptRPTTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -395,7 +395,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('VendorsPayRpt.View')">
+                  <li *ngIf="hasPermission('VendorsPayRpt.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/reports/vendorsPayTransRPT']">
                       {{ 'navbarMenu.vendorsPayTransRPTTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -405,7 +405,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('TotalBenDonationsRpt.View')">
+                  <li *ngIf="hasPermission('TotalBenDonationsRpt.View')"   routerLinkActive="active">
                     <a [routerLink]="['/financial/reports/getTotlaBenDonationsRPT']">
                       {{ 'navbarMenu.getTotlaBenDonationsRPTTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -443,19 +443,19 @@
                     <div class="collapse" id="collapseExample">
                       <div class="card card-body">
                         <ul>
-                          <li *ngIf="hasPermission('RevenueAndExpensesCharts.View')">
+                          <li *ngIf="hasPermission('RevenueAndExpensesCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/revenue-expenses/General']">{{"general"|translate}}</a>
                           </li>
-                          <li *ngIf="hasPermission('RevenueAndExpensesCharts.View')">
+                          <li *ngIf="hasPermission('RevenueAndExpensesCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/revenue-expenses/Period-Dapartment']">{{"periods_and_departments"|translate}}</a>
                           </li>
-                          <li *ngIf="hasPermission('RevenueAndExpensesCharts.View')">
+                          <li *ngIf="hasPermission('RevenueAndExpensesCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/revenue-expenses/Branches-Accounts']">{{"branches_and_accounts"|translate}}</a>
                           </li>
-                          <li *ngIf="hasPermission('RevenueAndExpensesCharts.View')">
+                          <li *ngIf="hasPermission('RevenueAndExpensesCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/revenue-expenses/Branches-Departments']">{{"branches_and_departments"|translate}}</a>
                           </li>
-                          <li *ngIf="hasPermission('RevenueAndExpensesCharts.View')">
+                          <li *ngIf="hasPermission('RevenueAndExpensesCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/revenue-expenses/Period-Branches']">{{"period_and_branches"|translate}}</a>
                           </li>
                         </ul>
@@ -477,19 +477,19 @@
                     <div class="collapse" id="collapsereceiptpayment">
                       <div class="card card-body">
                         <ul>
-                          <li>
+                          <li   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipt-payment', 'General']"> {{ 'FinancialCharts.menugeneral' | translate }}</a>
                           </li>
-                          <li>
+                          <li   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipt-payment', 'Periods-Departments']"> {{ 'FinancialCharts.menuperiodsdept' | translate }}</a>
                           </li>
-                          <li>
+                          <li   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipt-payment', 'Periods-Branches']"> {{ 'FinancialCharts.menuperiodsbranch' | translate }}</a>
                           </li>
-                          <li>
+                          <li   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipt-payment', 'Branches-Accounts']"> {{ 'FinancialCharts.menubranchaccount' | translate }}</a>
                           </li>
-                          <li>
+                          <li   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipt-payment', 'Branches-Departments']"> {{ 'FinancialCharts.menubranchdept' | translate }}</a>
                           </li>
                         </ul>
@@ -510,28 +510,28 @@
                     <div class="collapse" id="collapseComparssionReceiptPayment">
                       <div class="card card-body">
                         <ul>
-                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')">
+                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipts-payments-comparission', 'receiptsByEntity']"> {{ 'FinancialCharts.menureceiptsbyEntity' | translate }}</a>
                           </li>
-                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')">
+                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipts-payments-comparission', 'receiptsByDepartment']"> {{ 'FinancialCharts.menureceiptsbyDept' | translate }}</a>
                           </li>
-                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')">
+                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipts-payments-comparission', 'receiptsByBranch']"> {{ 'FinancialCharts.menureceiptsbyBranch' | translate }}</a>
                           </li>
-                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')">
+                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipts-payments-comparission', 'receiptsByAccount']"> {{ 'FinancialCharts.menureceiptsbyAcc' | translate }}</a>
                           </li>
-                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')">
+                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipts-payments-comparission', 'paymentsByEntity']"> {{ 'FinancialCharts.menupaymentsbyEntity' | translate }}</a>
                           </li>
-                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')">
+                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipts-payments-comparission', 'paymentsByDepartment']"> {{ 'FinancialCharts.menupaymentsbyDept' | translate }}</a>
                           </li>
-                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')">
+                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipts-payments-comparission', 'paymentsByBranch']"> {{ 'FinancialCharts.menupaymentsbyBranch' | translate }}</a>
                           </li>
-                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')">
+                          <li *ngIf="hasPermission('ReceiptsAndPaymentsCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/receipts-payments-comparission', 'paymentsByAccount']"> {{ 'FinancialCharts.menupaymentsbyAcc' | translate }}</a>
                           </li>
                         </ul>
@@ -553,43 +553,43 @@
                       <div class="card card-body">
 
                         <ul>
-                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')">
+                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/comparisons-revenue-expenses/revenueByDepartment']">
                               {{ 'RevenueByDepartment' | translate }}
                             </a>
                           </li>
-                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')">
+                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/comparisons-revenue-expenses/revenueByEntit']">
                               {{ 'RevenueByEntit' | translate }}
                             </a>
                           </li>
-                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')">
+                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/comparisons-revenue-expenses/revenueByBranch']">
                               {{ 'RevenueByBranch' | translate }}
                             </a>
                           </li>
-                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')">
+                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/comparisons-revenue-expenses/revenueByAccount']">
                               {{ 'RevenueByAccount' | translate }}
                             </a>
                           </li>
 
-                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')">
+                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/comparisons-revenue-expenses/expensesByEntit']">
                               {{ 'ExpensesByEntit' | translate }}
                             </a>
                           </li>
-                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')">
+                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/comparisons-revenue-expenses/expensesByBranch']">
                               {{ 'ExpensesByBranch' | translate }}
                             </a>
                           </li>
-                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')">
+                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/comparisons-revenue-expenses/expensesByDepartment']">
                               {{ 'ExpensesByDepartment' | translate }}
                             </a>
                           </li>
-                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')">
+                          <li *ngIf="hasPermission('RevenueComparisonCharts.View')"   routerLinkActive="active">
                             <a [routerLink]="['/financial/charts/comparisons-revenue-expenses/expensesByAccount']">
                               {{ 'ExpensesByAccount' | translate }}
                             </a>
@@ -604,7 +604,7 @@
           </div>
         </li>
 
-        <li class="nav-item dropdown" *ngIf="hasAnySponsorshipPermission()">
+        <li class="nav-item dropdown" routerLinkActive="active" *ngIf="hasAnySponsorshipPermission()">
           <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
               <path
@@ -636,7 +636,7 @@
                   {{ 'navbarMenu.operation' | translate }}
                 </div>
                 <ul class="mega-list">
-                  <li *ngIf="hasPermission('SpCasesPayment.View')">
+                  <li     routerLinkActive="active" *ngIf="hasPermission('SpCasesPayment.View')">
                     <a [routerLink]="['/Sponsorship/operations/CasePayments']">
                       {{ 'navbarMenu.casePaymentsTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -646,7 +646,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('SpBeneficents.View')">
+                  <li     routerLinkActive="active" *ngIf="hasPermission('SpBeneficents.View')">
                     <a [routerLink]="['/Sponsorship/operations/Beneficent']">
                       {{ 'navbarMenu.beneficentTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -656,7 +656,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('SpContracts.View')">
+                  <li     routerLinkActive="active" *ngIf="hasPermission('SpContracts.View')">
                     <a [routerLink]="['/Sponsorship/operations/Contracts']">
                       {{ 'navbarMenu.contractsTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -666,7 +666,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li *ngIf="hasPermission('SpCases.View')">
+                  <li     routerLinkActive="active" *ngIf="hasPermission('SpCases.View')">
                     <a [routerLink]="['/Sponsorship/operations/CasesSearch']">
                       {{ 'navbarMenu.casesSearchTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -690,7 +690,7 @@
                   {{ 'navbarMenu.report' | translate }}
                 </div>
                 <ul class="mega-list">
-                  <li *ngIf="hasPermission('BeneficentsRpt.View')">
+                  <li     routerLinkActive="active" *ngIf="hasPermission('BeneficentsRpt.View')">
                     <a [routerLink]="['/Sponsorship/reports/GetBeneficents']">
                       {{ 'navbarMenu.getBeneficentsrtpTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -701,7 +701,7 @@
                     </a>
                   </li>
 
-                  <li *ngIf="hasPermission('CaseSearchRpt.View')">
+                  <li     routerLinkActive="active" *ngIf="hasPermission('CaseSearchRpt.View')">
                     <a [routerLink]="['/Sponsorship/reports/GetCases']">
                       {{ 'navbarMenu.getCasesrptTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -712,7 +712,7 @@
                     </a>
                   </li>
 
-                  <li *ngIf="hasPermission('BenifcientTotalRpt.View')">
+                  <li     routerLinkActive="active" *ngIf="hasPermission('BenifcientTotalRpt.View')">
                     <a [routerLink]="['/Sponsorship/reports/BenifcientTotla']">
                       {{ 'navbarMenu.benifcientTotlarptTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -724,7 +724,7 @@
                   </li>
 
 
-                  <li *ngIf="hasPermission('CaseAidEntitiesRpt.View')">
+                  <li     routerLinkActive="active" *ngIf="hasPermission('CaseAidEntitiesRpt.View')">
                     <a [routerLink]="['/Sponsorship/reports/GetCaseAIDEntities']">
                       {{ 'navbarMenu.getCaseAIDEntitiesrptTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -735,7 +735,7 @@
                     </a>
                   </li>
 
-                  <li *ngIf="hasPermission('CaseSearchListRpt.View')">
+                  <li     routerLinkActive="active" *ngIf="hasPermission('CaseSearchListRpt.View')">
                     <a [routerLink]="['/Sponsorship/reports/caseSearchListRpt']">
                       {{ 'navbarMenu.caseSearchListRptTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -759,7 +759,7 @@
                   {{ 'sponsorshipchart.charts' | translate }}
                 </div>
                 <ul class="mega-list">
-                  <li>
+                  <li   routerLinkActive="active">
                     <a [routerLink]="['/Sponsorship/charts/CasesNumberBySponsorShip']">
                       {{ 'sponsorshipchart.numbersOfSponsors' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -770,7 +770,7 @@
                     </a>
                   </li>
 
-                  <li>
+                  <li   routerLinkActive="active">
                     <a [routerLink]="['/Sponsorship/charts/byperiodandtypeofsponsorship']">
                       {{ 'sponsorshipchart.numbersByPeriodAndType' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -781,7 +781,7 @@
                     </a>
                   </li>
 
-                  <li>
+                  <li   routerLinkActive="active">
                     <a [routerLink]="['/Sponsorship/charts/bytypeofsponsorshipandnationality']">
                       {{ 'sponsorshipchart.numbersByTypeAndNationality' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -793,7 +793,7 @@
                   </li>
 
 
-                  <li>
+                  <li   routerLinkActive="active">
                     <a [routerLink]="['/Sponsorship/charts/Totaldonationsbytypeofsponsorship']">
                       {{ 'sponsorshipchart.totalDonationsByType' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -804,7 +804,7 @@
                     </a>
                   </li>
 
-                  <li>
+                  <li   routerLinkActive="active">
                     <a [routerLink]="['/Sponsorship/charts/Contractstatisticsbypaymentmethod']">
                       {{ 'sponsorshipchart.contractStatsByPaymentMethod' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -815,7 +815,7 @@
                     </a>
                   </li>
 
-                  <li>
+                  <li   routerLinkActive="active">
                     <a [routerLink]="['/Sponsorship/charts/noofsponsorsbyentityandtypeofsponsorship']">
                       {{ 'sponsorshipchart.numbersByEntityAndType' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -827,7 +827,7 @@
                   </li>
 
 
-                  <li>
+                  <li   routerLinkActive="active">
                     <a [routerLink]="['/Sponsorship/charts/nofsponsorsinoutcountry']">
                       {{ 'sponsorshipchart.numbersInOutCountry' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -851,17 +851,17 @@
                       <div class="card card-body">
 
                         <ul>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/Sponsorship/charts/comparisonofCasesbytypeofsponsorship']">
                               {{ 'sponsorshipchart.byTypeOfSponsorship' | translate }}
                             </a>
                           </li>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/Sponsorship/charts/comparisonofCasesaccordingtonationality']">
                               {{ 'sponsorshipchart.byNationality' | translate }}
                             </a>
                           </li>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/Sponsorship/charts/comparisonofCasesbyofficeoftheEntity']">
                               {{ 'sponsorshipchart.byEntityOffice' | translate }}
                             </a>
@@ -873,7 +873,7 @@
                       </div>
                     </div>
                   </li>
-                  <li>
+                  <li    routerLinkActive="active">
                     <a [routerLink]="['/Sponsorship/charts/casesavailableforsponsorship']">
                       {{ 'sponsorshipchart.casesAvailableForSponsorship' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -889,7 +889,7 @@
           </div>
         </li>
 
-        <li class="nav-item dropdown" *ngIf="hasAnySocialCasesPermission()">
+        <li class="nav-item dropdown" routerLinkActive="active" *ngIf="hasAnySocialCasesPermission()">
           <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
               <path
@@ -1017,25 +1017,25 @@
                     <div class="collapse" id="collapsestatisticsbenfFamilies">
                       <div class="card card-body">
                         <ul>
-                          <li>
+                          <li    routerLinkActive="active">
                             <!--<a [routerLink]="['/financial/charts/receipt-payment', 'General']"> {{ 'FinancialCharts.menugeneral' | translate }}</a>-->
 
                             <a [routerLink]="['/socialcases/charts/statistics-benf-families', 'Nationality']"> {{
                               'SocialServiceCharts.menubyNationality' | translate }}</a>
                           </li>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/socialcases/charts/statistics-benf-families', 'Region']"> {{
                               'SocialServiceCharts.menubyRegions' | translate }}</a>
                           </li>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/socialcases/charts/statistics-benf-families', 'Branches']"> {{
                               'SocialServiceCharts.menubyBranch' | translate }}</a>
                           </li>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/socialcases/charts/statistics-benf-families', 'Emirates-Aids']"> {{
                               'SocialServiceCharts.menutotalAidbyEmirates' | translate }}</a>
                           </li>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/socialcases/charts/statistics-benf-families', 'Category-Aids']"> {{
                               'SocialServiceCharts.menutotalAidsbyCategory' | translate }}</a>
                           </li>
@@ -1057,15 +1057,15 @@
                     <div class="collapse" id="collapserequestStatisticsChart">
                       <div class="card card-body">
                         <ul>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/socialcases/charts/requests-statistics', 'Nationality']"> {{
                               'SocialServiceCharts.menubyNationality' | translate }}</a>
                           </li>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/socialcases/charts/requests-statistics', 'Region']"> {{
                               'SocialServiceCharts.menubyRegions' | translate }}</a>
                           </li>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/socialcases/charts/requests-statistics', 'Branches']"> {{
                               'SocialServiceCharts.menubyBranch' | translate }}</a>
                           </li>
@@ -1079,7 +1079,7 @@
           </div>
         </li>
 
-        <li class="nav-item dropdown" *ngIf="hasAnyProjectsPermission()">
+        <li class="nav-item dropdown" routerLinkActive="active" *ngIf="hasAnyProjectsPermission()">
           <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
               <path
@@ -1178,11 +1178,11 @@
                     <div class="collapse" id="collapsecostofProjectChart">
                       <div class="card card-body">
                         <ul>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/Projects/charts/cost-of-project', 'Country']"> {{
                               'ProjectCharts.menubyCountry' | translate }}</a>
                           </li>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/Projects/charts/cost-of-project', 'Type']"> {{
                               'ProjectCharts.menubyType' | translate }}</a>
                           </li>
@@ -1204,11 +1204,11 @@
                     <div class="collapse" id="collapsenumofProjectChart">
                       <div class="card card-body">
                         <ul>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/Projects/charts/no-of-project', 'Country']"> {{
                               'ProjectCharts.menubyCountry' | translate }}</a>
                           </li>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/Projects/charts/no-of-project', 'Type']"> {{ 'ProjectCharts.menubyType'
                               | translate }}</a>
                           </li>
@@ -1230,11 +1230,11 @@
                     <div class="collapse" id="collapseprojectReceiptChart">
                       <div class="card card-body">
                         <ul>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/Projects/charts/project-receipts', 'Country']"> {{
                               'ProjectCharts.menubyCountry' | translate }}</a>
                           </li>
-                          <li>
+                          <li    routerLinkActive="active">
                             <a [routerLink]="['/Projects/charts/project-receipts', 'Type']"> {{
                               'ProjectCharts.menubyType' | translate }}</a>
                           </li>
@@ -1248,7 +1248,7 @@
           </div>
         </li>
 
-        <li class="nav-item dropdown" *ngIf="hasAnyServicesPermission()">
+        <li class="nav-item dropdown" routerLinkActive="active" *ngIf="hasAnyServicesPermission()">
           <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
               <path
@@ -1284,7 +1284,7 @@
                       </svg>
                     </a>
                   </li>
-                  <!-- <li>
+                  <!-- <li    routerLinkActive="active">
                     <a [routerLink]="['/settings/regions']">
                       {{ 'navbarMenu.regionsTitle' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -1346,7 +1346,7 @@
             </div>
           </div>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown" routerLinkActive="active">
           <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
               <path
@@ -1372,7 +1372,7 @@
                   {{ 'navbarMenu.regionsTitle' | translate }}
                 </div>
                 <ul class="mega-list">
-                   <li>
+                   <li    routerLinkActive="active">
                     <a [routerLink]="['/settings/regions']" [queryParams]="{ tab: 'regions' }">
                       {{ 'navbarMenu.generalSetting' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -1382,7 +1382,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li>
+                  <li    routerLinkActive="active">
                     <a  [routerLink]="['/settings/regions']" [queryParams]="{ tab: 'contact-information' }">
                       {{ 'settingsservices.contactus' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -1392,7 +1392,7 @@
                       </svg>
                     </a>
                   </li>
-                  <li>
+                  <li    routerLinkActive="active">
                     <a [routerLink]="['/settings/regions']" [queryParams]="{ tab: 'attachments-config' }">
                       {{ 'settingsservices.attachment' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -1403,7 +1403,7 @@
                     </a>
                   </li>
 
-                  <li>
+                  <li    routerLinkActive="active">
                     <a [routerLink]="['/settings/regions']" [queryParams]="{ tab: 'initiatives' }">
                       {{ 'settingsservices.initiative' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -1414,7 +1414,7 @@
                     </a>
                   </li>
 
-                  <li>
+                  <li    routerLinkActive="active">
                     <a [routerLink]="['/settings/regions']"  [queryParams]="{tab : 'polls'}">
                       {{ 'POLLS.TITLE' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -1425,7 +1425,7 @@
                     </a>
                   </li>
 
-                  <li>
+                  <li    routerLinkActive="active">
                     <a [routerLink]="['/settings/regions']" [queryParams]="{tab: 'hero-section-setting'}">
                      {{ 'settingsservices.heroSectionSetting' | translate }}
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
