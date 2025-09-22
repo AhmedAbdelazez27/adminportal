@@ -160,7 +160,7 @@
 
         <div class="modal-body">
           <div class="d-flex">
-            <div class="flex-shrink-0 me-4" style="width: 500px;" *ngIf="glAccountshowTree">
+            <div class="flex-shrink-0 me-4" style="width: 550px; height: 500px;" *ngIf="glAccountshowTree">
               <div class="card p-2">
                 <input type="search"
                        id="searchForm"
@@ -174,7 +174,7 @@
             <div class="flex-grow-1">
               <form [formGroup]="glAccountForm">
                 <div class="row g-3">
-                  <div class="col-xl-6 mb-3">
+                  <div class="col-md-6 col-lg-8">
                     <label class="form-label">{{ 'glAccountEntityResourceName.entityId' | translate }}</label>
                     <ng-select class="ng-select-custom"
                                name="entityIdSelect2New"
@@ -264,7 +264,7 @@
 
               </form>
             </div>
-            <div class="flex-shrink-0 me-4" style="width: 500px;" *ngIf="glAccountEntityshowTree">
+            <div class="flex-shrink-0" style="width: 550px; height: 500px;" *ngIf="glAccountEntityshowTree">
               <div class="card p-2">
                 <input type="search"
                        id="searchForm"

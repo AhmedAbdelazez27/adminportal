@@ -410,6 +410,7 @@
     "COORDINATES": "Location Coordinates",
     "MAP_TITLE": "Location Map",
     "NO_DETAILS": "No location details added yet.",
+    "RegionName": "Region",
     "FILE_UPLOAD": {
       "CLICK_TO_REPLACE": "Click here to replace with a new image",
       "DRAG_DROP_TEXT": "Drag and drop your file here or click to browse",

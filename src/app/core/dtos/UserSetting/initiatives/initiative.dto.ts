@@ -49,6 +49,7 @@ export interface InitiativeDetailsDto {
   initiativeId: number;
   locationNameAr: string;
   locationNameEn: string;
+  region: string;
   locationCoordinates: string;
   isActive: boolean;
 }
@@ -58,6 +59,7 @@ export interface CreateInitiativeDetailsDto {
   locationNameAr: string;
   locationNameEn: string;
   locationCoordinates: string;
+  region: string;
   isActive: boolean;
 }
 
@@ -66,6 +68,7 @@ export interface UpdateInitiativeDetailsDto {
   initiativeId: number;
   locationNameAr: string;
   locationNameEn: string;
+  region: string;
   locationCoordinates: string;
   isActive: boolean;
 }
@@ -79,4 +82,8 @@ export interface GetAllInitiativeParameter {
 export interface InitiativePagedResponse {
   totalCount: number;
   data: InitiativeDto[];
+}
+export class FilterById {
+  id: number | null = null;
+  regionName: string | null = null;
 }

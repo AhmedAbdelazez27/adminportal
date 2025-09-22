@@ -135,8 +135,6 @@ export class GlAccountEntityComponent implements OnInit, OnDestroy {
       accountCode: [null, Validators.required],
       parentCode: [null, Validators.required],
     });
-    
-    console.log('Form initialized:', this.glAccountForm);
   }
 
   ngOnInit(): void {
@@ -593,7 +591,7 @@ getFormDatabyId(id: string, mode: 'edit' | 'view'): void {
          params.entityId = null;
          params.take = 10000000;
          params.skip = 0;
-         params.accountId = detail.id?.toString();
+         params.accountId = null;
          
          const GlAccountparams = new FilterGlAccountDto();
          GlAccountparams.accountCode = detail.accountCode;
@@ -684,7 +682,7 @@ getFormDatabyId(id: string, mode: 'edit' | 'view'): void {
         disabled: item.accountStatus !== 1
       },
       a_attr: {
-        style: item.accountStatus !== 1 ? 'color: red; font-weight: 600;' : 'color: gray;'
+        style: item.accountStatus === 1 ? 'color: red; font-weight: 600;' : 'color: gray;'
       },
       children: item.children ? this.mapToJsTreeDataByNumericId(item.children) : []
     }));

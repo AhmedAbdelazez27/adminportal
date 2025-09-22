@@ -337,6 +337,7 @@
     "LOCATION_NAME_EN_PLACEHOLDER": "أدخل اسم الموقع باللغة الإنجليزية",
     "COORDINATES": "إحداثيات الموقع",
     "NO_DETAILS": "لم يتم إضافة تفاصيل الموقع بعد.",
+    "RegionName": "منطقة",
     "FILE_UPLOAD": {
       "CLICK_TO_REPLACE": "انقر هنا لاستبدال الصورة بصورة جديدة",
       "DRAG_DROP_TEXT": "اسحب وأفلت الملف هنا أو انقر للتصفح",

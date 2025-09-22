@@ -431,7 +431,7 @@ getFormDatabyId(accountCode: string, mode: 'edit' | 'view'): void {
         }
 
         const filterParams = new FilterGlAccountDto();
-        filterParams.accountCode = detail.accountCode ?? "0";
+        //filterParams.accountCode = detail.accountCode ?? "0";
 
         return this.glAccountService.geGlAccountsTree(filterParams)
           .pipe(map(treeData => ({ detail, treeData })));

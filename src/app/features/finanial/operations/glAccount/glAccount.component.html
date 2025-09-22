@@ -108,14 +108,14 @@
         <div class="modal-body">
           <div class="d-flex">
             <!-- Tree Section -->
-            <div class="flex-shrink-0 me-4" style="width: 250px;" *ngIf="showTree">
+            <div class="flex-shrink-0 me-4" style="width: 550px; height: 500px;" *ngIf="showTree">
               <div class="card p-2">
                 <input type="search"
                        id="searchForm"
                        placeholder="Search"
                        class="form-control mb-2"
                        (keyup)="onTreeSearch($event)">
-                <div id="jstreeForm" style="max-height: 400px; overflow-y: auto;"></div>
+                <div id="jstreeForm" style="max-height: 800px; overflow-y: auto;"></div>
               </div>
             </div>
 

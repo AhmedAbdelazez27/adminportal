@@ -26,6 +26,7 @@ import {
   InitiativeDetailsDto,
   CreateInitiativeDetailsDto,
   UpdateInitiativeDetailsDto,
+  FilterById,
 } from '../../../core/dtos/UserSetting/initiatives/initiative.dto';
 import {
   AttachmentBase64Dto,
@@ -132,50 +133,7 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
       ['link', 'clean'],
     ],
   };
-editorConfig: AngularEditorConfig = {
-    editable: true,
-      spellcheck: true,
-      height: 'auto',
-      minHeight: '0',
-      maxHeight: 'auto',
-      width: 'auto',
-      minWidth: '0',
-      translate: 'yes',
-      enableToolbar: true,
-      showToolbar: true,
-      placeholder: 'Enter text here...',
-      defaultParagraphSeparator: '',
-      defaultFontName: '',
-      defaultFontSize: '',
-      fonts: [
-        {class: 'arial', name: 'Arial'},
-        {class: 'times-new-roman', name: 'Times New Roman'},
-        {class: 'calibri', name: 'Calibri'},
-        {class: 'comic-sans-ms', name: 'Comic Sans MS'}
-      ],
-      customClasses: [
-      {
-        name: 'quote',
-        class: 'quote',
-      },
-      {
-        name: 'redText',
-        class: 'redText'
-      },
-      {
-        name: 'titleText',
-        class: 'titleText',
-        tag: 'h1',
-      },
-    ],
-    uploadUrl: 'v1/image',
-    sanitize: true,
-    toolbarPosition: 'top',
-    toolbarHiddenButtons: [
-      ['bold', 'italic'],
-      ['fontSize']
-    ]
-};
+
   constructor(
     private initiativeService: InitiativeService,
     private attachmentService: AttachmentService,
@@ -199,6 +157,7 @@ editorConfig: AngularEditorConfig = {
     this.detailsForm = this.fb.group({
       locationNameAr: ['', [Validators.required, Validators.minLength(2)]],
       locationNameEn: ['', [Validators.required, Validators.minLength(2)]],
+      region: ['', [Validators.required, Validators.minLength(2)]],
       locationCoordinates: ['', [Validators.required]],
       isActive: [true],
     });
@@ -296,11 +255,11 @@ editorConfig: AngularEditorConfig = {
         cellRenderer: (params: any) => {
           return params.value
             ? '<span class="status-active">' +
-                (this.translate.instant('COMMON.ACTIVE') || 'Active') +
-                '</span>'
+            (this.translate.instant('COMMON.ACTIVE') || 'Active') +
+            '</span>'
             : '<span class="status-inactive">' +
-                (this.translate.instant('COMMON.INACTIVE') || 'Inactive') +
-                '</span>';
+            (this.translate.instant('COMMON.INACTIVE') || 'Inactive') +
+            '</span>';
         },
       },
     ];
@@ -331,6 +290,15 @@ editorConfig: AngularEditorConfig = {
         width: 180,
       },
       {
+        field: 'region',
+        headerName:
+          this.translate.instant('INITIATIVE.RegionName') ||
+          'Region Name',
+        sortable: true,
+        filter: true,
+        width: 180,
+      },
+      {
         field: 'locationCoordinates',
         headerName:
           this.translate.instant('INITIATIVE.COORDINATES') || 'Coordinates',
@@ -346,11 +314,11 @@ editorConfig: AngularEditorConfig = {
         cellRenderer: (params: any) => {
           return params.value
             ? '<span class="status-active">' +
-                (this.translate.instant('COMMON.ACTIVE') || 'Active') +
-                '</span>'
+            (this.translate.instant('COMMON.ACTIVE') || 'Active') +
+            '</span>'
             : '<span class="status-inactive">' +
-                (this.translate.instant('COMMON.INACTIVE') || 'Inactive') +
-                '</span>';
+            (this.translate.instant('COMMON.INACTIVE') || 'Inactive') +
+            '</span>';
         },
       },
     ];
@@ -572,7 +540,11 @@ editorConfig: AngularEditorConfig = {
   }
 
   openEditModal(initiative: InitiativeDto): void {
-    this.initiativeService.getById(initiative.id).subscribe({
+    const params: FilterById = {
+      id: initiative.id,
+      regionName: null,
+    };
+    this.initiativeService.getById(params).subscribe({
       next: async (fullInitiative: InitiativeDto) => {
         await this.resetModalState('edit', fullInitiative);
 
@@ -604,7 +576,11 @@ editorConfig: AngularEditorConfig = {
   }
 
   openViewModal(initiative: InitiativeDto): void {
-    this.initiativeService.getById(initiative.id).subscribe({
+    const params: FilterById = {
+      id: initiative.id,
+      regionName: null,
+    };
+    this.initiativeService.getById(params).subscribe({
       next: async (fullInitiative: InitiativeDto) => {
         await this.resetModalState('view', fullInitiative);
 
@@ -835,12 +811,17 @@ editorConfig: AngularEditorConfig = {
             detail.locationNameEn,
             [Validators.required, Validators.minLength(2)],
           ],
+          region: [
+            detail.region,
+            [Validators.required, Validators.minLength(2)],
+          ],
           locationCoordinates: [
             detail.locationCoordinates,
             [Validators.required],
           ],
           isActive: [detail.isActive],
         });
+        // console.log("detailForms", detailForm)
         this.initiativeDetailsFormArray.push(detailForm);
       });
     }
@@ -928,7 +909,7 @@ editorConfig: AngularEditorConfig = {
         next: () => {
           this.toastr.success(
             this.translate.instant('INITIATIVE.MESSAGES.ATTACHMENT_DELETED') ||
-              'Attachment deleted successfully'
+            'Attachment deleted successfully'
           );
           this.existingAttachment = null;
           this.existingImageUrl = null;
@@ -991,7 +972,7 @@ editorConfig: AngularEditorConfig = {
     if (!allowedTypes.includes(file.type)) {
       this.fileValidationErrors.push(
         this.translate.instant('INITIATIVE.FILE_UPLOAD.INVALID_FILE_TYPE') ||
-          'Invalid file type. Only PDF, JPG, and PNG files are allowed.'
+        'Invalid file type. Only PDF, JPG, and PNG files are allowed.'
       );
       return;
     }
@@ -999,7 +980,7 @@ editorConfig: AngularEditorConfig = {
     if (file.size > maxSize) {
       this.fileValidationErrors.push(
         this.translate.instant('INITIATIVE.FILE_UPLOAD.FILE_SIZE_ERROR') ||
-          'File size must be less than 2MB.'
+        'File size must be less than 2MB.'
       );
       return;
     }
@@ -1020,7 +1001,7 @@ editorConfig: AngularEditorConfig = {
     if (this.mode === 'edit' && this.existingImageUrl) {
       this.toastr.info(
         this.translate.instant('INITIATIVE.FILE_UPLOAD.NEW_IMAGE_SELECTED') ||
-          'New image selected. This will replace the current image when you save.'
+        'New image selected. This will replace the current image when you save.'
       );
     }
   }
@@ -1037,7 +1018,7 @@ editorConfig: AngularEditorConfig = {
     }
     this.toastr.error(
       this.translate.instant('INITIATIVE.FILE_UPLOAD.IMAGE_LOAD_ERROR') ||
-        'Failed to load image. The image file may not exist or the server may be unavailable.',
+      'Failed to load image. The image file may not exist or the server may be unavailable.',
       'Image Load Error'
     );
   }
@@ -1051,8 +1032,7 @@ editorConfig: AngularEditorConfig = {
   // Continue with submit and other methods...
   async submit(): Promise<void> {
     this.submitted = true;
-    console.log(this.initiativeForm.value);
-    
+
     if (this.initiativeForm.invalid) return;
 
     const initiativeImageConfig = this.getInitiativeImageConfig();
@@ -1063,14 +1043,14 @@ editorConfig: AngularEditorConfig = {
       if (this.mode === 'add' && !hasNewFile) {
         this.toastr.error(
           this.translate.instant('INITIATIVE.FILE_UPLOAD.IMAGE_REQUIRED') ||
-            'Initiative image is required'
+          'Initiative image is required'
         );
         return;
       }
       if (this.mode === 'edit' && !hasExistingAttachment && !hasNewFile) {
         this.toastr.error(
           this.translate.instant('INITIATIVE.FILE_UPLOAD.IMAGE_REQUIRED') ||
-            'Initiative image is required'
+          'Initiative image is required'
         );
         return;
       }
@@ -1177,7 +1157,7 @@ editorConfig: AngularEditorConfig = {
     } catch (error) {
       this.toastr.error(
         this.translate.instant('INITIATIVE.MESSAGES.ERROR_PROCESSING_FILE') ||
-          'Error processing file'
+        'Error processing file'
       );
       this.spinnerService.hide();
     }
@@ -1201,7 +1181,7 @@ editorConfig: AngularEditorConfig = {
       next: (response) => {
         this.toastr.success(
           this.translate.instant('INITIATIVE.MESSAGES.IMAGE_UPDATED') ||
-            'Image updated successfully'
+          'Image updated successfully'
         );
         this.refreshImageAfterUpdate();
         this.closeModal();
@@ -1211,7 +1191,7 @@ editorConfig: AngularEditorConfig = {
       error: (error) => {
         this.toastr.error(
           this.translate.instant('INITIATIVE.MESSAGES.ERROR_UPDATING_IMAGE') ||
-            'Error updating image'
+          'Error updating image'
         );
         this.spinnerService.hide();
       },
@@ -1223,7 +1203,7 @@ editorConfig: AngularEditorConfig = {
       next: (response) => {
         this.toastr.success(
           this.translate.instant('INITIATIVE.MESSAGES.IMAGE_UPLOADED') ||
-            'Image uploaded successfully'
+          'Image uploaded successfully'
         );
         this.refreshImageAfterUpdate();
         this.closeModal();
@@ -1233,7 +1213,7 @@ editorConfig: AngularEditorConfig = {
       error: (error) => {
         this.toastr.error(
           this.translate.instant('INITIATIVE.MESSAGES.ERROR_UPLOADING_IMAGE') ||
-            'Error uploading image'
+          'Error uploading image'
         );
         this.spinnerService.hide();
       },
@@ -1322,7 +1302,7 @@ editorConfig: AngularEditorConfig = {
           console.log('✅ Delete successful');
           this.toastr.success(
             this.translate.instant('INITIATIVE.MESSAGES.INITIATIVE_DELETED') ||
-              'Initiative deleted successfully'
+            'Initiative deleted successfully'
           );
           this.selectedInitiativeToDelete = null;
           this.loadInitiatives();
@@ -1398,6 +1378,7 @@ editorConfig: AngularEditorConfig = {
     const detailForm = this.fb.group({
       locationNameAr: ['', [Validators.required, Validators.minLength(2)]],
       locationNameEn: ['', [Validators.required, Validators.minLength(2)]],
+      region: ['', [Validators.required, Validators.minLength(2)]],
       locationCoordinates: ['', [Validators.required]],
       isActive: [true],
     });
@@ -1443,12 +1424,18 @@ editorConfig: AngularEditorConfig = {
           detailValue.locationNameEn,
           [Validators.required, Validators.minLength(2)],
         ],
+        region: [
+          detailValue.region,
+          [Validators.required, Validators.minLength(2)],
+        ],
         locationCoordinates: [
           detailValue.locationCoordinates,
           [Validators.required],
         ],
         isActive: [detailValue.isActive],
       });
+      // console.log("detailForm", detailForm)
+
       this.initiativeDetailsFormArray.push(detailForm);
     }
 
@@ -1513,7 +1500,7 @@ editorConfig: AngularEditorConfig = {
       if (typeof L === 'undefined') {
         this.toastr.error(
           this.translate.instant('INITIATIVE.MAP.MAP_LIBRARY_ERROR') ||
-            'Map library not loaded. Please refresh the page.'
+          'Map library not loaded. Please refresh the page.'
         );
         return;
       }
@@ -1639,9 +1626,9 @@ editorConfig: AngularEditorConfig = {
         title:
           this.detailsMode === 'view'
             ? this.translate.instant('INITIATIVE.MAP.LOCATION_MARKER') ||
-              'Location marker'
+            'Location marker'
             : this.translate.instant('INITIATIVE.MAP.DRAG_MARKER') ||
-              'Click and drag to move the marker',
+            'Click and drag to move the marker',
       }).addTo(this.detailsMap);
 
       if (this.detailsMode !== 'view') {
@@ -1655,20 +1642,18 @@ editorConfig: AngularEditorConfig = {
 
       const popupContent = `
         <div style="font-family: inherit; font-size: 14px;">
-          <strong>📍 ${
-            this.detailsMode === 'view'
-              ? this.translate.instant('INITIATIVE.MAP.LOCATION_MARKER') ||
-                'Location'
-              : this.translate.instant('INITIATIVE.MAP.SELECTED_LOCATION') ||
-                'Selected Location'
-          }</strong><br/>
+          <strong>📍 ${this.detailsMode === 'view'
+          ? this.translate.instant('INITIATIVE.MAP.LOCATION_MARKER') ||
+          'Location'
+          : this.translate.instant('INITIATIVE.MAP.SELECTED_LOCATION') ||
+          'Selected Location'
+        }</strong><br/>
           <strong>Lat:</strong> ${lat.toFixed(6)}<br/>
           <strong>Lng:</strong> ${lng.toFixed(6)}<br/>
-          ${
-            this.detailsMode !== 'view'
-              ? '<small style="color: #666;">Drag marker to adjust position</small>'
-              : ''
-          }
+          ${this.detailsMode !== 'view'
+          ? '<small style="color: #666;">Drag marker to adjust position</small>'
+          : ''
+        }
         </div>
       `;
 
@@ -1682,7 +1667,7 @@ editorConfig: AngularEditorConfig = {
         this.detailsMarker.openPopup();
         this.toastr.success(
           this.translate.instant('INITIATIVE.MAP.LOCATION_SELECTED') ||
-            'Location selected! You can drag the marker to adjust the position.'
+          'Location selected! You can drag the marker to adjust the position.'
         );
       }
     } catch (error) {
@@ -1726,18 +1711,18 @@ editorConfig: AngularEditorConfig = {
         this.getAddressFromCoordinates(lat, lng);
         this.toastr.success(
           this.translate.instant('INITIATIVE.MAP.COORDINATES_SET') ||
-            'Coordinates set successfully'
+          'Coordinates set successfully'
         );
       } else {
         this.toastr.error(
           this.translate.instant('INITIATIVE.MAP.INVALID_COORDINATES') ||
-            'Invalid coordinates. Please use format: latitude/longitude (e.g., 25.2048/55.2708)'
+          'Invalid coordinates. Please use format: latitude/longitude (e.g., 25.2048/55.2708)'
         );
       }
     } catch (error) {
       this.toastr.error(
         this.translate.instant('INITIATIVE.MAP.INVALID_COORDINATES_FORMAT') ||
-          'Invalid coordinates format. Please use: latitude/longitude'
+        'Invalid coordinates format. Please use: latitude/longitude'
       );
     }
   }
@@ -1785,7 +1770,7 @@ editorConfig: AngularEditorConfig = {
         this.isMapLoading = false;
         this.toastr.error(
           this.translate.instant('INITIATIVE.MAP.ERROR_GETTING_ADDRESS') ||
-            'Error getting address from coordinates'
+          'Error getting address from coordinates'
         );
         return Promise.reject(error);
       });
@@ -1795,19 +1780,30 @@ editorConfig: AngularEditorConfig = {
   private mapAddressToLocationNames(englishData: any, arabicData: any): void {
     const currentLocationNameEn = this.detailsForm.get('locationNameEn')?.value;
     const currentLocationNameAr = this.detailsForm.get('locationNameAr')?.value;
+    const currentRegion = this.detailsForm.get('region')?.value;
+
+    console.log("mapAddressToLocationNames", englishData);
 
     // Build English location name
     let englishLocationName = '';
+    let englishRegion = '';
     if (englishData.address) {
       const englishParts = [];
       if (englishData.address.road) englishParts.push(englishData.address.road);
-      if (englishData.address.suburb)
-        englishParts.push(englishData.address.suburb);
+      if (englishData.address.suburb) englishParts.push(englishData.address.suburb);
       if (englishData.address.city) englishParts.push(englishData.address.city);
-      if (englishData.address.state)
-        englishParts.push(englishData.address.state);
-      if (englishData.address.country)
-        englishParts.push(englishData.address.country);
+
+      // Region (choose whichever matches your business logic best)
+      if (englishData.address.state_district) {
+        englishParts.push(englishData.address.state_district);
+        englishRegion = englishData.address.state_district;
+      } else if (englishData.address.county) {
+        englishParts.push(englishData.address.county);
+        englishRegion = englishData.address.county;
+      }
+
+      if (englishData.address.state) englishParts.push(englishData.address.state);
+      if (englishData.address.country) englishParts.push(englishData.address.country);
 
       if (englishParts.length > 0) {
         englishLocationName = englishParts.join(', ');
@@ -1816,61 +1812,67 @@ editorConfig: AngularEditorConfig = {
 
     // Build Arabic location name
     let arabicLocationName = '';
+    let arabicRegion = '';
     if (arabicData.address) {
       const arabicParts = [];
       if (arabicData.address.road) arabicParts.push(arabicData.address.road);
-      if (arabicData.address.suburb)
-        arabicParts.push(arabicData.address.suburb);
+      if (arabicData.address.suburb) arabicParts.push(arabicData.address.suburb);
       if (arabicData.address.city) arabicParts.push(arabicData.address.city);
+
+      // Region (Arabic)
+      if (arabicData.address.state_district) {
+        arabicParts.push(arabicData.address.state_district);
+        arabicRegion = arabicData.address.state_district;
+      } else if (arabicData.address.county) {
+        arabicParts.push(arabicData.address.county);
+        arabicRegion = arabicData.address.county;
+      }
+
       if (arabicData.address.state) arabicParts.push(arabicData.address.state);
-      if (arabicData.address.country)
-        arabicParts.push(arabicData.address.country);
+      if (arabicData.address.country) arabicParts.push(arabicData.address.country);
 
       if (arabicParts.length > 0) {
         arabicLocationName = arabicParts.join(', ');
       }
     }
 
-    // Update form fields if they are empty or if user wants to update them
     const updates: any = {};
 
     if (!currentLocationNameEn && englishLocationName) {
       updates.locationNameEn = englishLocationName;
     }
-
     if (!currentLocationNameAr && arabicLocationName) {
       updates.locationNameAr = arabicLocationName;
     }
+    if (!currentRegion && (englishRegion || arabicRegion)) {
+      updates.region = englishRegion || arabicRegion;
+    }
 
-    // If we have updates, apply them
     if (Object.keys(updates).length > 0) {
       this.detailsForm.patchValue(updates);
 
-      // Show success message
       const updateMessages = [];
-      if (updates.locationNameEn) {
-        updateMessages.push('English location name');
-      }
-      if (updates.locationNameAr) {
-        updateMessages.push('Arabic location name');
-      }
+      if (updates.locationNameEn) updateMessages.push('English location name');
+      if (updates.locationNameAr) updateMessages.push('Arabic location name');
+      if (updates.region) updateMessages.push('Region');
 
       this.toastr.success(
         this.translate.instant('INITIATIVE.MAP.LOCATION_NAMES_UPDATED') ||
-          `Updated: ${updateMessages.join(' and ')}`
+        `Updated: ${updateMessages.join(', ')}`
       );
     }
   }
 
   // Enhanced method to get coordinates from address (supports both English and Arabic)
-  getCoordinatesFromDetailAddress(): void {
+  public async getCoordinatesFromDetailAddress(): Promise<void> {
     const locationNameEn = this.detailsForm.get('locationNameEn')?.value;
     const locationNameAr = this.detailsForm.get('locationNameAr')?.value;
+    const region = this.detailsForm.get('region')?.value;
 
     if (!locationNameEn && !locationNameAr) {
       this.toastr.warning(
         this.translate.instant('INITIATIVE.MAP.ENTER_LOCATION_FIRST') ||
-          'Please enter a location name first (English or Arabic)'
+        'Please enter a location name first (English or Arabic)'
       );
       return;
     }
@@ -1878,56 +1880,60 @@ editorConfig: AngularEditorConfig = {
     this.spinnerService.show();
     this.isMapLoading = true;
 
-    // Try English first, then Arabic if English is not available
-    const searchQuery = locationNameEn || locationNameAr;
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-      searchQuery
-    )}&limit=1`;
+    // Build queries: with region first, then fallback without region
+    const baseQuery = locationNameEn || locationNameAr;
+    console.log("baseQuery", baseQuery)
 
-    // Add a timeout to the fetch request
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Request timeout')), 10000); // 10 seconds timeout
-    });
+    const queries = region ? [`${baseQuery}, ${region}`, baseQuery] : [baseQuery];
+    console.log("queries", queries)
 
-    Promise.race([fetch(url), timeoutPromise])
-      .then((response: any) => response.json())
-      .then((data) => {
-        this.spinnerService.hide();
-        this.isMapLoading = false;
+    let foundResult: any = null;
+
+    for (const query of queries) {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+        query
+      )}&limit=1`;
+      console.log("url", url)
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
         if (data?.length > 0) {
-          const result = data[0];
-          const lat = parseFloat(result.lat);
-          const lng = parseFloat(result.lon);
-
-          this.addMarkerToDetailsMap(lat, lng);
-          this.updateDetailsCoordinates(lat, lng);
-
-          if (this.detailsMap) {
-            this.detailsMap.setView([lat, lng], 15);
-          }
-
-          // After getting coordinates, also get the full address details to update location names
-          this.getAddressFromCoordinates(lat, lng);
-
-          this.toastr.success(
-            this.translate.instant('INITIATIVE.MAP.COORDINATES_FOUND') ||
-              'Coordinates found and set on map'
-          );
-        } else {
-          this.toastr.warning(
-            this.translate.instant('INITIATIVE.MAP.NO_COORDINATES_FOUND') ||
-              'No coordinates found for this location'
-          );
+          foundResult = data[0];
+          break; // ✅ found something, stop trying
         }
-      })
-      .catch((error) => {
-        this.spinnerService.hide();
-        this.isMapLoading = false;
-        this.toastr.error(
-          this.translate.instant('INITIATIVE.MAP.ERROR_GETTING_COORDINATES') ||
-            'Error getting coordinates from location name'
-        );
-      });
+      } catch (err) {
+        console.error("Nominatim fetch error:", err);
+      }
+    }
+
+    this.spinnerService.hide();
+    this.isMapLoading = false;
+
+    if (foundResult) {
+      const lat = parseFloat(foundResult.lat);
+      const lng = parseFloat(foundResult.lon);
+
+      this.addMarkerToDetailsMap(lat, lng);
+      this.updateDetailsCoordinates(lat, lng);
+
+      if (this.detailsMap) {
+        this.detailsMap.setView([lat, lng], 15);
+      }
+
+      // After getting coordinates, also get the full address details
+      this.getAddressFromCoordinates(lat, lng);
+
+      this.toastr.success(
+        this.translate.instant('INITIATIVE.MAP.COORDINATES_FOUND') ||
+        'Coordinates found and set on map'
+      );
+    } else {
+      this.toastr.warning(
+        this.translate.instant('INITIATIVE.MAP.NO_COORDINATES_FOUND') ||
+        'No coordinates found for this location'
+      );
+    }
   }
 
   // Method to use current location
@@ -1935,7 +1941,7 @@ editorConfig: AngularEditorConfig = {
     if (!navigator.geolocation) {
       this.toastr.error(
         this.translate.instant('INITIATIVE.MAP.GEOLOCATION_NOT_SUPPORTED') ||
-          'Geolocation is not supported by this browser'
+        'Geolocation is not supported by this browser'
       );
       return;
     }
@@ -1959,7 +1965,7 @@ editorConfig: AngularEditorConfig = {
 
         this.toastr.success(
           this.translate.instant('INITIATIVE.MAP.CURRENT_LOCATION_SET') ||
-            'Current location set successfully'
+          'Current location set successfully'
         );
       },
       (error) => {
@@ -2086,7 +2092,7 @@ editorConfig: AngularEditorConfig = {
       this.selectedDetailIndex = -1;
       this.toastr.success(
         this.translate.instant('INITIATIVE.MESSAGES.DETAIL_DELETED') ||
-          'Initiative detail deleted successfully'
+        'Initiative detail deleted successfully'
       );
     }
   }
