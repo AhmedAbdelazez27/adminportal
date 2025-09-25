@@ -53,12 +53,17 @@ export class EntityService {
 
   // Update entity
   updateEntity(entity: UpdateEntityDto): Observable<EntityDto> {
-    return this.http.post<EntityDto>(`${this.BASE_URL}${ApiEndpoints.Entity.Update}`, entity);
+    return this.http.post<EntityDto>(
+      `${this.BASE_URL}${ApiEndpoints.Entity.Update}`,
+      entity
+    );
   }
 
   // Delete entity
   deleteEntity(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.BASE_URL}${ApiEndpoints.Entity.Delete}/${id}`);
+    return this.http.post<void>(`${this.BASE_URL}/Delete/${id}`, null, {
+      responseType: 'text' as 'json',
+    });
   }
 
   GetSelect2List(skip: number = 0, take: number = 2000): Observable<any> {
