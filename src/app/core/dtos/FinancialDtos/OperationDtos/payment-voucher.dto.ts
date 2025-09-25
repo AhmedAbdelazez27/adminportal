@@ -6,6 +6,8 @@ export class FilterpaymentvoucherDto {
   amount: string | null = null;
   status: string | null = null;
   orderByValue: string = 'MISC_PAYMENT_ID asc';
+  fromDate: string | null = null;
+  toDate: string | null = null;
   take: number = 10;
   skip: number = 0;
 

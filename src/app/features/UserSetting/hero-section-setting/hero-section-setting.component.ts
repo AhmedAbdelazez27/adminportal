@@ -629,7 +629,6 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
   }
 
   onImageLoad(event: any): void {
-    console.log('Image loaded successfully:', event);
     // You can add success handling logic here
   }
 
@@ -837,7 +836,6 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
   private fetchAttachmentData(heroSectionId: number): void {
     // This method can be implemented if you need to fetch attachment data separately
     // For now, we'll use the attachment data that comes with the hero section
-    console.log('Fetching attachment data for hero section:', heroSectionId);
   }
 
   private async validateImageUrl(imageUrl: string): Promise<boolean> {
@@ -968,7 +966,6 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
     );
     
     if (config) {
-      console.log('Found hero section config:', config);
     } else {
       console.log('No hero section config found. Available configs:', this.attachmentConfigs);
     }

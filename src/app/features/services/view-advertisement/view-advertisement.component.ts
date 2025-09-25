@@ -192,6 +192,8 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
   originalNotes: string | null = null;
   userForm: FormGroup;
   submitted = false;
+  rejectResonsForm: FormGroup;
+  returnModificationForm: FormGroup;
 
   private subscriptions: Subscription[] = [];
   
@@ -214,6 +216,12 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
     this.userForm = this.fb.group({
       comment: ['', [Validators.required, Validators.minLength(1)]],
       commentTypeId: [null, Validators.required],
+    });
+    this.rejectResonsForm = this.fb.group({
+      reasonTxt: [[], Validators.required]
+    });
+    this.returnModificationForm = this.fb.group({
+      returnModificationreasonTxt: [[], Validators.required]
     });
   }
 
@@ -367,7 +375,6 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
           .filter(x => x !== '');
 
         storeddepartmentId = storeddepartmentId.replace(/"/g, '').trim();
-
         //this.workFlowSteps = this.workFlowSteps.map((step: any) => ({
         //  ...step,
         //  isMatched: step?.deptId?.toString() === storeddepartmentId.toString()
@@ -902,6 +909,138 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
       modal.show();
     };
   }
+
+
+  rejectReasonSave(): void {
+    this.submitted = true;
+
+    if (this.rejectResonsForm.invalid) {
+      this.userForm.markAllAsTouched();
+      this.toastr.error(this.translate.instant('TOAST.VALIDATION_ERROR'));
+      return;
+    }
+
+    const formData = this.rejectResonsForm.value;
+
+    const modalElement = document.getElementById('myModalReject');
+    const modal = modalElement ? bootstrap.Modal.getInstance(modalElement) : null;
+
+    this.submitRejectComment().subscribe({
+      next: () => {
+        this.rejectResonsForm.reset();
+        this.submitted = false;
+
+        if (modal) {
+          modal.hide();
+        }
+
+        this.updateStatus("3", formData.reasonTxt);
+        this.spinnerService.hide();
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('TOAST.SAVE_FAILED'));
+      }
+    });
+  }
+
+  returnModficationReasonSave(): void {
+    this.submitted = true;
+
+    if (this.returnModificationForm.invalid) {
+      this.returnModificationForm.markAllAsTouched();
+      this.toastr.error(this.translate.instant('TOAST.VALIDATION_ERROR'));
+      return;
+    }
+
+    const formData = this.returnModificationForm.value;
+
+    this.submitModficationReasonComment().subscribe({
+      next: () => {
+        this.returnModificationForm.reset();
+        this.submitted = false;
+        const modalElement = document.getElementById('myModalReturnModification');
+        if (modalElement) {
+          const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+          modal.hide();
+        }
+        this.updateStatus("3", formData.returnModificationreasonTxt);
+        this.spinnerService.hide();
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('TOAST.SAVE_FAILED'));
+      }
+    });
+  }
+
+
+  submitRejectComment(): Observable<any> {
+    this.submitted = true;
+
+    if (this.rejectResonsForm.invalid) {
+      this.userForm.markAllAsTouched();
+      this.toastr.error(this.translate.instant('TOAST.VALIDATION_ERROR'));
+      return EMPTY;
+    }
+
+    const formData = this.rejectResonsForm.value;
+
+    const params: Partial<WorkFlowCommentDto> = {
+      id: null,
+      empId: localStorage.getItem('userId'),
+      workFlowStepsId: this.originalworkFlowId,
+      comment: "ملاحظات    : " + this.originalNotes,
+      commentTypeId: 2,
+    };
+
+    this.spinnerService.show();
+
+    return this.mainApplyServiceService.saveComment(params).pipe(
+      tap({
+        next: (res) => {
+          this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
+        },
+        error: () => {
+          this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
+        },
+        complete: () => this.spinnerService.hide()
+      })
+    );
+  }
+
+  submitModficationReasonComment(): Observable<any> {
+    this.submitted = true;
+
+    if (this.returnModificationForm.invalid) {
+      this.returnModificationForm.markAllAsTouched();
+      this.toastr.error(this.translate.instant('TOAST.VALIDATION_ERROR'));
+      return EMPTY;
+    }
+
+    const formData = this.returnModificationForm.value;
+
+    const params: WorkFlowCommentDto = {
+      id: null,
+      empId: localStorage.getItem('userId'),
+      workFlowStepsId: this.originalworkFlowId,
+      comment: "سبب ارجاع الطلب للتعديل : " + formData.returnModificationreasonTxt,
+      commentTypeId: 2,
+    };
+
+    this.spinnerService.show();
+
+    return this.mainApplyServiceService.saveComment(params).pipe(
+      tap({
+        next: (res) => {
+          this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
+        },
+        error: () => {
+          this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
+        },
+        complete: () => this.spinnerService.hide()
+      })
+    );
+  }
+
 
   updateStatus(status: string, reason: string): void {
     this.spinnerService.show();

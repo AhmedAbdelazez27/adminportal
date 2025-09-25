@@ -738,9 +738,7 @@ openAddNew(): void {
    
    // Reset selected objects
    this.selectedentityIdSelect2ObjNew = null;
-   
-   console.log('Form after reset:', this.glAccountForm.value);
-   
+     
    this.spinnerService.show();
  
    // Initialize with default values to avoid 400 errors
@@ -759,12 +757,7 @@ openAddNew(): void {
    })
      .pipe(takeUntil(this.destroy$))
      .subscribe({
-                next: (result) => {
-         console.log('Tree data loaded successfully:', result);
-         console.log('glAccount data:', result.glAccountreturnData);
-         console.log('glAccountEntity data:', result.glAccountEntityreturnData);
-         
-         // ✅ map to jsTree format
+       next: (result) => {
          this.glAccountjstreeData = this.mapToJsTreeDataByAccountCode(result.glAccountreturnData);
          this.glAccountshowTree = true;
          this.glAccountcreateJSTreeForm(this.glAccountjstreeData);

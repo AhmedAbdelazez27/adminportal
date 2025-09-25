@@ -141,7 +141,7 @@ export class AttachmentsConfigDto {
 }
 
 export class AttachmentDto {
-  id?: number | null = null;
+  id: number | null = null;
   masterId?: number | null = null;
   imgPath?: string | null = null;
   masterType?: number | null = null;
@@ -152,6 +152,16 @@ export class AttachmentDto {
   attachmentBinary?: string | null = null;
 }
 
+
+export interface AttachmentDtos {
+  id: number;
+  imgPath?: string;
+  masterType?: number;
+  masterId?: number;
+  attachmentTitle?: string;
+  attConfigID?: number;
+  lastModified?: Date;
+}
 export class AppUserDto {
   id?: string | null = null;
   masterId?: number | null = null;

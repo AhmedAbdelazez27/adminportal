@@ -304,22 +304,35 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
     const btn = target.closest('.action-kebab-btn') as HTMLElement | null;
     if (btn) {
       const btnTableId = btn.getAttribute('data-table-id');
-
-      // لو الزر يخص كومبوننت تاني -> اقفل منيو هذا الجدول وامشي
       if (btnTableId !== this.uniqueId) {
         this.openMenuRowId = null;
         return;
       }
-
+              
       // افتح/حدّث مكان المينو لهذا الجدول
       const btnRect = btn.getBoundingClientRect();
       const hostRect = this.el.nativeElement.getBoundingClientRect();
 
-      const horizontalOffset = this.isRtl ? 0 : 180; // اضبطها حسب تصميمك
-      const verticalOffset = 30;
+      // Estimate dropdown height (48px per item, adjust if needed)
+      const dropdownHeight = 48 * (this.rowActions.length || 1);
 
+      // Calculate available space below and above the button
+      const spaceBelow = window.innerHeight - btnRect.bottom;
+      const spaceAbove = btnRect.top;
+
+      let menuY: number;
+      if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
+        // Not enough space below, but enough above: show above
+        menuY = btnRect.top - hostRect.top - dropdownHeight;
+      } else {
+        // Default: show below
+        menuY = btnRect.bottom - hostRect.top;
+      }
+
+      // Horizontal offset logic (unchanged)
+      const horizontalOffset = this.isRtl ? 0 : 180;
       this.menuX = btnRect.right - hostRect.left - horizontalOffset;
-      this.menuY = btnRect.bottom - hostRect.top - verticalOffset;
+      this.menuY = menuY;
       this.openMenuRowId = btn.getAttribute('data-row-id');
       return;
     }

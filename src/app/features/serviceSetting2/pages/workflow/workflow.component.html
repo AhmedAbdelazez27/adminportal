@@ -34,13 +34,15 @@
 <!-- Add/Edit/View Service Department Modal -->
 <div class="modal fade" id="ServiceDepartmentModal" tabindex="-1" aria-labelledby="ServiceDepartmentModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered" style="max-height: 80vh;">
+  <div class="modal-dialog modal-xl custom-modal-height">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="ServiceDepartmentModalLabel">
-          {{ mode === 'add' ? ('SERVICE_SETTING.ADD_SERVICE_DEPARTMENT' | translate) : mode === 'edit' ?
+          {{
+ mode === 'add' ? ('SERVICE_SETTING.ADD_SERVICE_DEPARTMENT' | translate) : mode === 'edit' ?
           ('SERVICE_SETTING.EDIT_SERVICE_DEPARTMENT' | translate) : ('SERVICE_SETTING.VIEW_SERVICE_DEPARTMENT' |
-          translate) }}
+          translate)
+          }}
         </h5>
         <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
       </div>
@@ -48,13 +50,14 @@
         <form [formGroup]="serviceDepartmentForm" (ngSubmit)="submit()" id="serviceDepartmentForm">
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="deptId" class="form-label">{{ 'SERVICE_SETTING.DEPARTMENT' | translate }} <span
-                  class="text-danger">*</span></label>
+              <label for="deptId" class="form-label">
+                {{ 'SERVICE_SETTING.DEPARTMENT' | translate }} <span class="text-danger">*</span>
+              </label>
               <ng-select [items]="departmentOptions" bindLabel="text" bindValue="value" [multiple]="false"
-                [closeOnSelect]="true" [clearable]="mode !== 'view'" formControlName="deptId"
-                [class.is-invalid]="isFieldInvalid('deptId')" (blur)="onFieldBlur('deptId')"
-                class="ng-select ng-select-custom" [disabled]="mode === 'view'"
-                [loading]="departmentOptions.length === 0">
+                         [closeOnSelect]="true" [clearable]="mode !== 'view'" formControlName="deptId"
+                         [class.is-invalid]="isFieldInvalid('deptId')" (blur)="onFieldBlur('deptId')"
+                         class="ng-select ng-select-custom" [disabled]="mode === 'view'"
+                         [loading]="departmentOptions.length === 0">
                 <ng-template ng-option-tmp let-item="item">
                   {{ item.text }}
                 </ng-template>
@@ -65,39 +68,51 @@
             </div>
 
             <div class="col-md-6 mb-3">
-              <label for="serviceLevel" class="form-label">{{ 'SERVICE_SETTING.SERVICE_LEVEL' | translate }} <span
-                  class="text-danger">*</span></label>
+              <label for="serviceLevel" class="form-label">
+                {{ 'SERVICE_SETTING.SERVICE_LEVEL' | translate }} <span class="text-danger">*</span>
+              </label>
               <input type="number" class="form-control" id="serviceLevel" formControlName="serviceLevel"
-                [class.is-invalid]="isFieldInvalid('serviceLevel')" [class.is-valid]="isFieldValid('serviceLevel')"
-                (blur)="onFieldBlur('serviceLevel')" [disabled]="mode === 'view'" min="1">
+                     [class.is-invalid]="isFieldInvalid('serviceLevel')" [class.is-valid]="isFieldValid('serviceLevel')"
+                     (blur)="onFieldBlur('serviceLevel')" [disabled]="mode === 'view'" min="1">
               <div class="invalid-feedback" *ngIf="isFieldInvalid('serviceLevel')">
                 {{ getFieldError('serviceLevel') }}
               </div>
             </div>
 
-            <div class="col-md-6 mb-3">
-              <label for="departmentAction" class="form-label">{{ 'SERVICE_SETTING.DEPARTMENT_ACTION' | translate }}
-                <span class="text-danger">*</span></label>
-              <ng-select [items]="departmentActions" bindLabel="label" bindValue="value" [multiple]="false"
-                [closeOnSelect]="true" [clearable]="mode !== 'view'" formControlName="departmentAction"
-                [class.is-invalid]="isFieldInvalid('departmentAction')" (blur)="onFieldBlur('departmentAction')"
-                (change)="onDepartmentActionChange($event)" class="ng-select ng-select-custom"
-                [disabled]="mode === 'view'">
-                <ng-template ng-option-tmp let-item="item">
-                  {{ item.label }}
-                </ng-template>
+            <div class="col-xl-6 mb-3">
+              <label for="departmentActions" class="form-label">{{ 'SERVICE_SETTING.DEPARTMENT_ACTION' | translate }}<span class="text-danger">*</span></label>
+              <ng-select [items]="departmentActionsSelect2" bindLabel="text" bindValue="value" [multiple]="false"
+                         [class.is-invalid]="isFieldInvalid('departmentActionsSelect2')" (blur)="onFieldBlur('departmentActionsSelect2')"
+                         formControlName="departmentAction" class="ng-select-custom" [disabled]="mode === 'view'">
               </ng-select>
-              <div class="invalid-feedback" *ngIf="isFieldInvalid('departmentAction')">
-                {{ getFieldError('departmentAction') }}
-              </div>
             </div>
 
+            <!--<div class="col-md-6 mb-3">
+    <label for="departmentAction" class="form-label">
+      {{ 'SERVICE_SETTING.DEPARTMENT_ACTION' | translate }}
+      <span class="text-danger">*</span>
+    </label>
+    <ng-select [items]="departmentActions" bindLabel="label" bindValue="value" [multiple]="false"
+               [closeOnSelect]="true" [clearable]="mode !== 'view'" formControlName="departmentAction"
+               [class.is-invalid]="isFieldInvalid('departmentAction')" (blur)="onFieldBlur('departmentAction')"
+               (change)="onDepartmentActionChange($event)" class="ng-select ng-select-custom"
+               [disabled]="mode === 'view'">
+      <ng-template ng-option-tmp let-item="item">
+        {{ item.label }}
+      </ng-template>
+    </ng-select>
+    <div class="invalid-feedback" *ngIf="isFieldInvalid('departmentAction')">
+      {{ getFieldError('departmentAction') }}
+    </div>
+  </div>-->
+
             <div class="col-md-6 mb-3">
-              <label for="stepName" class="form-label">{{ 'SERVICE_SETTING.STEP_NAME' | translate }} <span
-                  class="text-danger">*</span></label>
+              <label for="stepName" class="form-label">
+                {{ 'SERVICE_SETTING.STEP_NAME' | translate }} <span class="text-danger">*</span>
+              </label>
               <input type="text" class="form-control" id="stepName" formControlName="stepName"
-                [class.is-invalid]="isFieldInvalid('stepName')" [class.is-valid]="isFieldValid('stepName')"
-                (blur)="onFieldBlur('stepName')" [disabled]="mode === 'view'" maxlength="200">
+                     [class.is-invalid]="isFieldInvalid('stepName')" [class.is-valid]="isFieldValid('stepName')"
+                     (blur)="onFieldBlur('stepName')" [disabled]="mode === 'view'" maxlength="200">
               <div class="invalid-feedback" *ngIf="isFieldInvalid('stepName')">
                 {{ getFieldError('stepName') }}
               </div>
@@ -110,11 +125,10 @@
           {{ mode === 'view' ? ('COMMON.CLOSE' | translate) : ('COMMON.CANCEL' | translate) }}
         </button>
         <button type="submit" form="serviceDepartmentForm" class="btn btn-gold" *ngIf="mode !== 'view'"
-          [disabled]="serviceDepartmentForm.invalid || isSubmitting">
+                [disabled]="serviceDepartmentForm.invalid || isSubmitting">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-              fill="white" />
+            <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+                  fill="white" />
           </svg>
           {{ mode === 'add' ? ('COMMON.CREATE' | translate) : ('COMMON.UPDATE' | translate) }}
         </button>

@@ -1015,8 +1015,59 @@
           </div>
 
           <div class="mb-4">
-            <h4 class="bold gold">{{ 'attachments' | translate }}</h4>
-            <app-attachment-gallery [attachments]="attachment"></app-attachment-gallery>
+            <div id="detailsInfo">
+              <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      {{ 'SHARED.ATTACHMENTS.TITLE' | translate }}
+                    </button>
+                  </h2>
+                  <div id="collapseTwo" class="accordion-collapse collapse"
+                       data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="step-content">
+
+                        <div *ngIf="attachment && attachment.length > 0">
+                          <div class="row">
+                            <div class="col-xl-4 col-lg-6 mb-4"
+                                 *ngFor="let attachment of attachment">
+                              <div class="attachment-box">
+                                <h6 class="card-title">
+                                  {{ attachment.attachmentTitle || ('SHARED.ATTACHMENTS.ATTACHMENT' | translate) }}
+                                </h6>
+                                <p class="mb-4">
+                                  {{ 'COMMON.UPLOADED_ON' | translate }}:
+                                  {{formatDateTime(attachment.lastModified)}}
+                                </p>
+                                <div class="d-flex justify-content-between mt-auto">
+                                  <button class="btn btn-next-style me-2"
+                                          (click)="viewAttachment(attachment)">
+                                    <i class="fas fa-eye me-1"></i>
+                                    {{ 'COMMON.VIEW' | translate }}
+                                  </button>
+                                  <button class="btn btn-download-style"
+                                          (click)="downloadAttachment(attachment)">
+                                    <i class="fas fa-download me-1"></i>
+                                    {{ 'COMMON.DOWNLOAD' | translate }}
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div *ngIf="!attachment || attachment.length === 0"
+                             class="alert alert-info">
+                          {{ 'SHARED.ATTACHMENTS.NO_ATTACHMENTS' | translate }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="d-flex justify-content-center gap-2">

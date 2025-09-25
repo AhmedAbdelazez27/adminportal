@@ -24,6 +24,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../../../../core/services/spinner.service';
+import { Select2Service } from '../../../../core/services/Select2.service';
+import { FndLookUpValuesSelect2RequestDto } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 
 @Component({
   selector: 'app-service-workflow',
@@ -64,6 +66,8 @@ export class WorkflowComponent implements OnInit, OnDestroy, AfterViewInit {
     { value: 3, label: 'Review' },
     { value: 4, label: 'Return' },
   ];
+  departmentActionsSelect2: any[] = [];
+  searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
 
   // Modal instances
   private serviceDepartmentModal: any = null;
@@ -78,7 +82,8 @@ export class WorkflowComponent implements OnInit, OnDestroy, AfterViewInit {
     private translate: TranslateService,
     private toastr: ToastrService,
     private spinnerService: SpinnerService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private select2Service: Select2Service
   ) {
     this.serviceDepartmentForm = this.fb.group({
       deptId: ['', [Validators.required]],
@@ -91,6 +96,7 @@ export class WorkflowComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     // Force hide any existing spinner first
     this.spinnerService.forceHide();
+    this.fetchdepartmentActionsSelect2();
 
     // Also force hide after a short delay to ensure it's hidden
     setTimeout(() => {
@@ -135,6 +141,18 @@ export class WorkflowComponent implements OnInit, OnDestroy, AfterViewInit {
       this.routeSubscription.unsubscribe();
     }
   }
+
+  fetchdepartmentActionsSelect2(): void {
+    this.select2Service.getDepartmentActionsSelect2List(this.searchSelect2Params).subscribe({
+      next: (response: any) => {
+        this.departmentActionsSelect2 = response?.results || [];
+      },
+      error: (err: any) => {
+        this.toastr.error('Failed to load Country.', 'Error');
+      }
+    });
+  }
+
 
   private initializeModals(): void {
     // Initialize Bootstrap modals

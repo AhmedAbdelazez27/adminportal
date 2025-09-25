@@ -109,6 +109,16 @@
             </div>
 
             <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'FinancialReportResourceName.fromDate' | translate }}</label>
+              <input type="date" class="form-control" [(ngModel)]="searchParams.fromDate" name="fromDate">
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'FinancialReportResourceName.toDate' | translate }}</label>
+              <input type="date" class="form-control" [(ngModel)]="searchParams.toDate" name="toDate">
+            </div>
+
+            <div class="col-xl-4 mb-3">
               <label for="amount" class="form-label">{{ 'ArMiscReceiptHeaderResourceName.Amount' | translate }}</label>
               <input type="text" name="amount" class="form-control" [(ngModel)]="searchParams.amount" placeholder="Search">
             </div>

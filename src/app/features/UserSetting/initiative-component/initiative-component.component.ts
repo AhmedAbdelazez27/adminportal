@@ -341,7 +341,6 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
       },
     ];
 
-    console.log('📋 Row actions initialized:', this.rowActions);
 
     this.detailsRowActions = [
       {
@@ -502,34 +501,25 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
   }
 
   onActionClick(event: { action: string; row: any }): void {
-    console.log('🔥 onActionClick called with event:', event);
-
     if (!event) {
-      console.error('❌ No event provided');
       return;
     }
 
     const initiative = event.row as InitiativeDto;
-    console.log('📋 Initiative:', initiative);
-    console.log('🎯 Action:', event.action);
-
+   
     switch (event.action) {
       case 'view':
-        console.log('👁️ Opening view modal');
         this.openViewModal(initiative);
         break;
       case 'edit':
-        console.log('✏️ Opening edit modal');
         this.openEditModal(initiative);
         break;
       case 'delete':
-        console.log('🗑️ Opening delete confirmation');
         this.selectInitiativeToDelete(initiative);
         break;
       default:
         console.warn('⚠️ Unknown action:', event.action);
     }
-    console.log('✅ onActionClick completed');
   }
 
   openAddModal(): void {
@@ -821,7 +811,6 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
           ],
           isActive: [detail.isActive],
         });
-        // console.log("detailForms", detailForm)
         this.initiativeDetailsFormArray.push(detailForm);
       });
     }
@@ -1267,12 +1256,8 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
   }
 
   selectInitiativeToDelete(initiative: InitiativeDto): void {
-    console.log('🗑️ selectInitiativeToDelete called');
-    console.log('📋 Initiative to delete:', initiative);
-
     try {
       this.selectedInitiativeToDelete = initiative;
-      console.log('✅ Set selectedInitiativeToDelete');
 
       // Directly call delete without confirm or modal
       this.deleteInitiative();
@@ -1282,24 +1267,16 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
   }
 
   deleteInitiative(): void {
-    console.log('🗑️ deleteInitiative called');
 
     if (!this.selectedInitiativeToDelete) {
       console.error('❌ No initiative selected for deletion');
       return;
     }
-
-    console.log(
-      '🚀 Starting deletion for initiative:',
-      this.selectedInitiativeToDelete.id
-    );
     this.spinnerService.show();
-
     this.initiativeService
       .deleteAsync(this.selectedInitiativeToDelete.id)
       .subscribe({
         next: () => {
-          console.log('✅ Delete successful');
           this.toastr.success(
             this.translate.instant('INITIATIVE.MESSAGES.INITIATIVE_DELETED') ||
             'Initiative deleted successfully'
@@ -1434,8 +1411,6 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
         ],
         isActive: [detailValue.isActive],
       });
-      // console.log("detailForm", detailForm)
-
       this.initiativeDetailsFormArray.push(detailForm);
     }
 
@@ -1782,8 +1757,6 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
     const currentLocationNameAr = this.detailsForm.get('locationNameAr')?.value;
     const currentRegion = this.detailsForm.get('region')?.value;
 
-    console.log("mapAddressToLocationNames", englishData);
-
     // Build English location name
     let englishLocationName = '';
     let englishRegion = '';
@@ -1882,10 +1855,8 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
 
     // Build queries: with region first, then fallback without region
     const baseQuery = locationNameEn || locationNameAr;
-    console.log("baseQuery", baseQuery)
 
     const queries = region ? [`${baseQuery}, ${region}`, baseQuery] : [baseQuery];
-    console.log("queries", queries)
 
     let foundResult: any = null;
 
@@ -1893,7 +1864,6 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
       const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
         query
       )}&limit=1`;
-      console.log("url", url)
       try {
         const response = await fetch(url);
         const data = await response.json();

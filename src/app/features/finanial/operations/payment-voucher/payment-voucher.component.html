@@ -90,6 +90,17 @@
                          placeholder="{{ 'Common.Select' | translate }}">
               </ng-select>
             </div>
+
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'FinancialReportResourceName.fromDate' | translate }}</label>
+              <input type="date" class="form-control" [(ngModel)]="searchParams.fromDate" name="fromDate">
+            </div>
+
+            <div class="col-xl-4 mb-3">
+              <label class="form-label">{{ 'FinancialReportResourceName.toDate' | translate }}</label>
+              <input type="date" class="form-control" [(ngModel)]="searchParams.toDate" name="toDate">
+            </div>
           </div>
         </form>
 

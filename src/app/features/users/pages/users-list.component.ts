@@ -26,6 +26,8 @@ import { PagedDto, Pagination } from '../../../core/dtos/FndLookUpValuesdtos/Fnd
 import { GenericDataTableComponent } from '../../../../shared/generic-data-table/generic-data-table.component';
 import { AttachmentGalleryComponent } from '../../../../shared/attachment-gallery/attachment-gallery.component';
 import { Gender, UserStatus, UserType } from '../../../core/enum/user-type.enum';
+import { AttachmentDto } from '../../../core/dtos/mainApplyService/mainApplyService.dto';
+import { environment } from '../../../../environments/environment';
 declare var bootstrap: any;
 
 @Component({
@@ -1322,4 +1324,39 @@ export class UsersListComponent implements OnInit {
       });
   }
 
+
+  getAttachmentUrl(imgPath: string): string {
+    if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+      return imgPath;
+    }
+    const cleanPath = imgPath.startsWith('/') ? imgPath.substring(1) : imgPath;
+    return `${environment.apiBaseUrl}/files/${cleanPath}`;
+  }
+
+  viewAttachment(attachment: AttachmentDto | any): void {
+    if (attachment.imgPath) {
+      const fileUrl = this.getAttachmentUrl(attachment.imgPath);
+      window.open(fileUrl, '_blank');
+    }
+  }
+
+  downloadAttachment(attachment: AttachmentDto | any): void {
+    if (attachment.imgPath) {
+      const fileUrl = this.getAttachmentUrl(attachment.imgPath);
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = attachment.attachmentTitle || attachment.imgPath;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+
+
+  formatDateTime(date: Date | string | null): string {
+    if (!date) return '';
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return d.toLocaleString();
+  }
 }

@@ -1334,6 +1334,25 @@ li {
     width: 95% !important;
 }
 
+.modal-dialog.modal-xl.custom-modal-height {
+  max-width: 90%;
+  height: 90vh !important;
+  margin: 1.5rem auto;
+}
+
+.modal-dialog.modal-xl.custom-modal-height .modal-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-dialog.modal-xl.custom-modal-height .modal-body {
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+
+
 ng-select {
     border: none !important;
 }

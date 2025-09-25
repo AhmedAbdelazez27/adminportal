@@ -17,6 +17,8 @@ import { MainApplyService } from '../../../core/services/mainApplyService/mainAp
 import { ServiceDataType, serviceIdEnum } from '../../../core/enum/user-type.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EntityService } from '../../../core/services/entit.service';
+import { AttachmentGalleryComponent } from '../../../../shared/attachment-gallery/attachment-gallery.component';
+import { environment } from '../../../../environments/environment';
 enum ServiceStatus {
   Accept = 1,
   Reject = 2,
@@ -31,8 +33,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-mainApplyService',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent, NgSelectModule, ReactiveFormsModule
-  ],
+  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent, NgSelectModule, ReactiveFormsModule, AttachmentGalleryComponent],
   templateUrl: './mainApplyService.component.html',
   styleUrls: ['./mainApplyService.component.scss']
 })
@@ -576,7 +577,7 @@ export class MainApplyServiceComponent {
 
         this.loaduserformData = headerRecord;
 
-        this.loaduserattachmentsListformData = this.loaduserformData?.attachments ?? [];
+        this.loaduserattachmentsListformData = headerRecord.attachments ?? [];
 
         const modalElement = document.getElementById('viewdetails');
         if (modalElement) {
@@ -589,6 +590,34 @@ export class MainApplyServiceComponent {
         this.spinnerService.hide();;
       }
     });
+  }
+
+  getAttachmentUrl(imgPath: string): string {
+    if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+      return imgPath;
+    }
+    const cleanPath = imgPath.startsWith('/') ? imgPath.substring(1) : imgPath;
+    return `${environment.apiBaseUrl}/files/${cleanPath}`;
+  }
+
+  viewAttachment(attachment: AttachmentDto | any): void {
+    if (attachment.imgPath) {
+      const fileUrl = this.getAttachmentUrl(attachment.imgPath);
+      window.open(fileUrl, '_blank');
+    }
+  }
+
+  downloadAttachment(attachment: AttachmentDto | any): void {
+    if (attachment.imgPath) {
+      const fileUrl = this.getAttachmentUrl(attachment.imgPath);
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = attachment.attachmentTitle || attachment.imgPath;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }
 
   getFormDatabyId(id: string, serviceId: string): void {
@@ -1027,7 +1056,6 @@ export class MainApplyServiceComponent {
         width: 200,
         cellRenderer: (params: any) => {
           const statusClass = this.getStatusClassForGrid(params.data.serviceStatus);
-          // console.log(params)
           return `<div class="${statusClass}">${params.data.serviceStatusName || ''}</div>`;
         }
       },
@@ -1144,56 +1172,57 @@ export class MainApplyServiceComponent {
 
 
   onTableAction(event: { action: string, row: any }) {
-
     if (event.action === 'onViewApplicantData') {
       this.getuserFormDatabyId(event.row.userId);
     }
 
-    if (event.action === 'onViewServiceConfirmationData') {
+    else if (event.action === 'onViewServiceConfirmationData') {
       window.open(`/mainServices/services/serviceconfirmation/${event.row.id}`, '_blank');
     }
 
-    if (event.action === 'onViewServiceInqueryData') {
+    else  if (event.action === 'onViewServiceInqueryData') {
       window.open(`/mainServices/services/serviceinquery/${event.row.id}`, '_blank');
     }
 
-    if (event.action === 'onViewFastingServiceInqueryData') {
+    else if (event.action === 'onViewFastingServiceInqueryData') {
       window.open(`/mainServices/services/fastingserviceinquery/${event.row.id}`, '_blank');
     }
 
-    if (event.action === 'oneditServiceData') {
-      if (event.row.serviceId === 1) {
-        sessionStorage.setItem("screenmode", 'edit');
-        window.open(`/mainServices/services/view-fasting-tent-request/${event.row.id}`, '_blank');
-      }
-      else if (event.row.serviceId === 1001) {
-        sessionStorage.setItem("screenmode", 'edit');
-        window.open(`/mainServices/services/view-distribution-site-permit/${event.row.id}`, '_blank');
-      }
-      else if (event.row.serviceId == serviceIdEnum.serviceId2) {
-        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
-        sessionStorage.setItem("screenmode", 'edit');
-        window.open(`/mainServices/services/charity-event-permit/${event.row.id}`, '_blank');
-      }
-      else if (event.row.serviceId == serviceIdEnum.serviceId6) {
-        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
-        sessionStorage.setItem("screenmode", 'edit');
-        window.open(`/mainServices/services/request-event-permit/${event.row.id}`, '_blank');
-      }
-      else if (event.row.serviceId == serviceIdEnum.serviceId7) {
-        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
-        sessionStorage.setItem("screenmode", 'edit');
-        window.open(`/mainServices/services/plaint-request/${event.row.id}`, '_blank');
-      }
-      else if (event.row.serviceId == serviceIdEnum.serviceId1002) {
-        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
-        sessionStorage.setItem("screenmode", 'edit');
-        window.open(`/mainServices/services/complaint-request/${event.row.id}`, '_blank');
-      }
-      else if (event.row.serviceId == serviceIdEnum.serviceId5) {
-        sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
-        sessionStorage.setItem("screenmode", 'edit');
-        window.open(`/mainServices/services/advertisement/${event.row.id}`, '_blank');
+    else if (event.action === 'oneditServiceData') {
+      if (event.row.serviceStatus != 1) {
+        if (event.row.serviceId === 1) {
+          sessionStorage.setItem("screenmode", 'edit');
+          window.open(`/mainServices/services/view-fasting-tent-request/${event.row.id}`, '_blank');
+        }
+        else if (event.row.serviceId === 1001) {
+          sessionStorage.setItem("screenmode", 'edit');
+          window.open(`/mainServices/services/view-distribution-site-permit/${event.row.id}`, '_blank');
+        }
+        else if (event.row.serviceId == serviceIdEnum.serviceId2) {
+          sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+          sessionStorage.setItem("screenmode", 'edit');
+          window.open(`/mainServices/services/charity-event-permit/${event.row.id}`, '_blank');
+        }
+        else if (event.row.serviceId == serviceIdEnum.serviceId6) {
+          sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+          sessionStorage.setItem("screenmode", 'edit');
+          window.open(`/mainServices/services/request-event-permit/${event.row.id}`, '_blank');
+        }
+        else if (event.row.serviceId == serviceIdEnum.serviceId7) {
+          sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+          sessionStorage.setItem("screenmode", 'edit');
+          window.open(`/mainServices/services/plaint-request/${event.row.id}`, '_blank');
+        }
+        else if (event.row.serviceId == serviceIdEnum.serviceId1002) {
+          sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+          sessionStorage.setItem("screenmode", 'edit');
+          window.open(`/mainServices/services/complaint-request/${event.row.id}`, '_blank');
+        }
+        else if (event.row.serviceId == serviceIdEnum.serviceId5) {
+          sessionStorage.setItem("loadformData", JSON.stringify(this.loadformData));
+          sessionStorage.setItem("screenmode", 'edit');
+          window.open(`/mainServices/services/advertisement/${event.row.id}`, '_blank');
+        }
       }
       else {
         this.translate
@@ -1206,8 +1235,7 @@ export class MainApplyServiceComponent {
         return;
       }
     }
-
-
+   
     if (event.action === 'onViewServiceData') {
       if (event.row.serviceId === 1) {
         sessionStorage.setItem("screenmode", 'view');

@@ -8,6 +8,8 @@ export class FilterArMiscReceiptHeaderDto {
   benName: string | null = null;
   amount: string | null = null;
   orderByValue: string = 'RECEIPT_NUMBER asc';
+  fromDate: string | null = null;
+  toDate: string | null = null;
   take: number = 10;
   skip: number = 0;
 

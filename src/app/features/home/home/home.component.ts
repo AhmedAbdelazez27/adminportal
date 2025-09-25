@@ -369,8 +369,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   // slide kpi start 
   scrollKpi(direction: number): void {
-    console.log("direction = ", direction);
-
     const container = this.kpiScroll?.nativeElement;
     if (!container) return;
     const firstCard = container.querySelector('.kpi-modern__card') as HTMLElement | null;
@@ -544,8 +542,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.log("ere", err)
-
           this.toastr.error(
             this.translate.instant('LOGIN.FAILED'),
             this.translate.instant('TOAST.TITLE.ERROR')

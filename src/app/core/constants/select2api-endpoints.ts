@@ -67,6 +67,7 @@ export class Select2APIEndpoint {
     GetPermitTypeSelect2: '/Lookup/PermitType',
     GetPlaintReasonsSelect2List: '/Lookup/PlaintReasons',
     GetCaseAidEntitiesSelect2List: '/GuaranteesReports/GetCaseAidEntitiesSelect2List',
+    GetDepartmentActionsSelect2List: '/Lookup/DepartmentActions',
   };
 }
 
