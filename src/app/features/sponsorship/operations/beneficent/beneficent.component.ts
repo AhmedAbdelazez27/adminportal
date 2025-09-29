@@ -262,10 +262,10 @@ export class BeneficentComponent {
     }
   }
 
-  getFormDatabyId(beneficenT_ID: any, entitY_ID: any): void {
+  getFormDatabyId(beneficentId: any, entitY_ID: any): void {
     const params: filterBeneficentByIdDto = {
       entityId: entitY_ID,
-      beneficenT_ID: beneficenT_ID
+      beneficentId: beneficentId
     };
     this.spinnerService.show();
     forkJoin({

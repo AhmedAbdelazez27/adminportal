@@ -449,7 +449,7 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
               this.createAttachmentSeparately(attachmentDto);
             } else {
               // No attachment change, just refresh the image
-              this.refreshImageAfterUpdate();
+             // this.refreshImageAfterUpdate();
               this.hideModal();
               this.loadHeroSectionSettings();
               this.spinnerService.hide();
@@ -696,7 +696,7 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
     this.attachmentService.updateAsync(updateAttachmentDto).subscribe({
       next: (response) => {
         this.toastr.success(this.translate.instant('TOAST.IMAGE_UPDATED_SUCCESSFULLY'));
-        this.refreshImageAfterUpdate();
+      //  this.refreshImageAfterUpdate();
         this.hideModal();
         this.loadHeroSectionSettings();
         this.spinnerService.hide();
@@ -715,7 +715,7 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
     this.attachmentService.saveAttachmentFileBase64(attachmentDto).subscribe({
       next: (response) => {
         this.toastr.success(this.translate.instant('TOAST.IMAGE_UPLOADED_SUCCESSFULLY'));
-        this.refreshImageAfterUpdate();
+      //  this.refreshImageAfterUpdate();
         this.hideModal();
         this.loadHeroSectionSettings();
         this.spinnerService.hide();

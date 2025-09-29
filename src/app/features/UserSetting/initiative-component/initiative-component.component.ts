@@ -538,9 +538,9 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
       next: async (fullInitiative: InitiativeDto) => {
         await this.resetModalState('edit', fullInitiative);
 
-        if (!fullInitiative.attachment && initiative.id) {
-          this.fetchAttachmentData(initiative.id);
-        }
+        //if (!fullInitiative.attachment && initiative.id) {
+        //  this.fetchAttachmentData(initiative.id);
+        //}
 
         this.populateForm(fullInitiative);
         this.initiativeForm.enable();
@@ -554,9 +554,9 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
         );
         await this.resetModalState('edit', initiative);
 
-        if (!initiative.attachment && initiative.id) {
-          this.fetchAttachmentData(initiative.id);
-        }
+        //if (!initiative.attachment && initiative.id) {
+        //  this.fetchAttachmentData(initiative.id);
+        //}
 
         this.populateForm(initiative);
         this.initiativeForm.enable();
@@ -574,9 +574,9 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
       next: async (fullInitiative: InitiativeDto) => {
         await this.resetModalState('view', fullInitiative);
 
-        if (initiative.id) {
-          this.fetchAttachmentData(initiative.id);
-        }
+        //if (initiative.id) {
+        //  this.fetchAttachmentData(initiative.id);
+        //}
 
         this.populateForm(fullInitiative);
         this.initiativeForm.disable();
@@ -590,9 +590,9 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
         );
         await this.resetModalState('view', initiative);
 
-        if (initiative.id) {
-          this.fetchAttachmentData(initiative.id);
-        }
+        //if (initiative.id) {
+        //  this.fetchAttachmentData(initiative.id);
+        //}
 
         this.populateForm(initiative);
         this.initiativeForm.disable();
@@ -1127,7 +1127,7 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
             } else if (attachmentDto) {
               this.createAttachmentSeparately(attachmentDto);
             } else {
-              this.refreshImageAfterUpdate();
+            //  this.refreshImageAfterUpdate();
               this.closeModal();
               this.loadInitiatives();
               this.spinnerService.hide();
@@ -1172,7 +1172,7 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
           this.translate.instant('INITIATIVE.MESSAGES.IMAGE_UPDATED') ||
           'Image updated successfully'
         );
-        this.refreshImageAfterUpdate();
+     //  this.refreshImageAfterUpdate();
         this.closeModal();
         this.loadInitiatives();
         this.spinnerService.hide();
@@ -1194,7 +1194,7 @@ export class InitiativeComponentComponent implements OnInit, OnDestroy {
           this.translate.instant('INITIATIVE.MESSAGES.IMAGE_UPLOADED') ||
           'Image uploaded successfully'
         );
-        this.refreshImageAfterUpdate();
+      //  this.refreshImageAfterUpdate();
         this.closeModal();
         this.loadInitiatives();
         this.spinnerService.hide();

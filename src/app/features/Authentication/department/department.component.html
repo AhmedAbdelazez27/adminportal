@@ -91,7 +91,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="DepartmentLabel">
-          {{ mode === 'add' ? 'Add New Department' : mode === 'edit' ? 'Edit Department' : 'View Department' }}
+          {{ mode === 'add' ? ('AuthenticationResorceName.addTitle' | translate) : mode === 'edit' ? ('AuthenticationResorceName.editTitle' | translate) : ('AuthenticationResorceName.viewTitle' | translate) }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -142,7 +142,7 @@
         <div class="modal-footer" *ngIf="mode !== 'view'">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'Common.cancel' | translate }}</button>
           <button type="submit" class="btn btn-gold" [disabled]="submitted">
-            {{ mode === 'add' ? 'Create' : 'Update' }}
+            {{ mode === 'add' ? ('Common.save' | translate) : ('Common.upDate' | translate) }}
           </button>
         </div>
         <div class="modal-footer" *ngIf="mode === 'view'">
@@ -180,7 +180,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="usersInDepartmentModalLabel">
-          Users in {{ selectedDepartment?.ename || 'Department' }}
+          {{ 'AuthenticationResorceName.userIn' | translate  }} {{ selectedDepartment?.ename || 'Department' }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>

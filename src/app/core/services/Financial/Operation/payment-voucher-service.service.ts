@@ -24,23 +24,23 @@ export class PaymentVoucherServiceService {
     if (!params.paymentId || !params.entityId) {
       throw new Error('paymentId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ApMiscPaymentHeader.GetById(params.paymentId, params.entityId)}`;
-    return this.http.get<paymentvoucherDto>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ApMiscPaymentHeader.GetById}`;
+    return this.http.post<paymentvoucherDto>(apiUrl, params);
   }
 
   getPaymentDetailsListDataById(params: FilterpaymentvoucherByIdDto): Observable<paymentvoucherdetailsDto[]> {
     if (!params.paymentId || !params.entityId) {
       throw new Error('paymentId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ApMiscPaymentHeader.GetPaymentDetailsById(params.paymentId, params.entityId)}`;
-    return this.http.get<paymentvoucherdetailsDto[]>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ApMiscPaymentHeader.GetPaymentDetailsById}`;
+    return this.http.post<paymentvoucherdetailsDto[]>(apiUrl, params);
   }
 
   getPaymentLinesListDataById(params: FilterpaymentvoucherByIdDto): Observable<paymentvoucherlinesDto[]> {
     if (!params.paymentId || !params.entityId) {
       throw new Error('paymentId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ApMiscPaymentHeader.GetPaymentLinesById(params.paymentId, params.entityId)}`;
-    return this.http.get<paymentvoucherlinesDto[]>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ApMiscPaymentHeader.GetPaymentLinesById}`;
+    return this.http.post<paymentvoucherlinesDto[]>(apiUrl, params);
   }
 }

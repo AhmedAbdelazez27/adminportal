@@ -23,17 +23,17 @@ export class gljeService {
     if (!params.receiptId || !params.entityId) {
       throw new Error('receiptId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.GlJeHeader.GetById(params.receiptId, params.entityId)}`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.GlJeHeader.GetById}`;
 
-    return this.http.get<gljeHeaderDto>(apiUrl);
+    return this.http.post<gljeHeaderDto>(apiUrl, params);
   }
 
   getLineDatabyId(params: getgljeByIDDto): Observable<GljeDetailsDto[]> {
     if (!params.receiptId || !params.entityId) {
       throw new Error('receiptId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.GlJeHeader.GetLineDetailsById(params.receiptId, params.entityId)}`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.GlJeHeader.GetLineDetailsById}`;
 
-    return this.http.get<GljeDetailsDto[]>(apiUrl);
+    return this.http.post<GljeDetailsDto[]>(apiUrl, params);
   }
 }

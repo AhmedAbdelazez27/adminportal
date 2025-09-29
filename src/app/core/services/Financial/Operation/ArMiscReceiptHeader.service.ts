@@ -20,26 +20,26 @@ export class ArMiscReceiptHeaderService {
   }
 
   getDetailById(params: FilterArMiscReceiptHeaderByIdDto): Observable<ArMiscReceiptHeaderDto> {
-    if (!params.miscReceiptId || !params.entityId) {
-      throw new Error('miscReceiptId and entityId must not be null');
+    if (!params.miscReciptId || !params.entityId) {
+      throw new Error('miscReciptId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ArMiscReceiptHeader.GetById(params.miscReceiptId, params.entityId)}`;
-    return this.http.get<ArMiscReceiptHeaderDto>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ArMiscReceiptHeader.GetById}`;
+    return this.http.post<ArMiscReceiptHeaderDto>(apiUrl, params);
   }
 
   getReceiptDetailsListDataById(params: FilterArMiscReceiptHeaderByIdDto): Observable<ArMiscReceiptDetailsDto[]> {
-    if (!params.miscReceiptId || !params.entityId) {
-      throw new Error('miscReceiptId and entityId must not be null');
+    if (!params.miscReciptId || !params.entityId) {
+      throw new Error('miscReciptId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ArMiscReceiptHeader.GetReceiptDetailsById(params.miscReceiptId, params.entityId)}`;
-    return this.http.get<ArMiscReceiptDetailsDto[]>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ArMiscReceiptHeader.GetReceiptDetailsById}`;
+    return this.http.post<ArMiscReceiptDetailsDto[]>(apiUrl, params);
   }
 
   getReceiptLinesListDataById(params: FilterArMiscReceiptHeaderByIdDto): Observable<ArMiscReceiptLinesDto[]> {
-    if (!params.miscReceiptId || !params.entityId) {
-      throw new Error('miscReceiptId and entityId must not be null');
+    if (!params.miscReciptId || !params.entityId) {
+      throw new Error('miscReciptId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ArMiscReceiptHeader.GetReceiptLinesById(params.miscReceiptId, params.entityId)}`;
-    return this.http.get<ArMiscReceiptLinesDto[]>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ArMiscReceiptHeader.GetReceiptLinesById}`;
+    return this.http.post<ArMiscReceiptLinesDto[]>(apiUrl, params);
   }
 }

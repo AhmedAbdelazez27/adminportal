@@ -41,7 +41,7 @@
             </div>
             <div class="col-xl-4 mb-3">
               <label for="projectNumber" class="form-label">{{ 'ProjectsResourceName.projectNumber' | translate}}</label>
-              <input type="text" name="projectNumber" class="form-control" [(ngModel)]="searchParams.projectNumber" placeholder="Search">
+              <input type="text" name="projectNumber" class="form-control" [(ngModel)]="searchParams.projectNumber" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
 
             <div class="col-xl-4 mb-3">
@@ -136,17 +136,17 @@
 
             <div class="col-xl-4 mb-3">
               <label for="applicationDate" class="form-label">{{ 'ProjectsResourceName.applicationDate' | translate }}</label>
-              <input type="date" name="applicationDate" class="form-control" [(ngModel)]="searchParams.applicationDate" placeholder="Search">
+              <input type="date" name="applicationDate" class="form-control" [(ngModel)]="searchParams.applicationDate" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
 
             <div class="col-xl-4 mb-3">
               <label for="fromDate" class="form-label">{{ 'FinancialReportResourceName.fromDate' | translate}}</label>
-              <input type="date" name="fromDate" class="form-control" [(ngModel)]="searchParams.fromDate" placeholder="Search">
+              <input type="date" name="fromDate" class="form-control" [(ngModel)]="searchParams.fromDate" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
 
             <div class="col-xl-4 mb-3">
               <label for="toDate" class="form-label">{{ 'FinancialReportResourceName.toDate' | translate}}</label>
-              <input type="date" name="toDate" class="form-control" [(ngModel)]="searchParams.toDate" placeholder="Search">
+              <input type="date" name="toDate" class="form-control" [(ngModel)]="searchParams.toDate" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
           </div>
         </form>

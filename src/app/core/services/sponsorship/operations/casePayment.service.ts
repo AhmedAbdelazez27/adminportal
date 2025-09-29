@@ -19,18 +19,18 @@ export class casePaymentService {
   }
 
   getDetailById(params: filtercasePaymentByIdDto): Observable<casePaymentDto> {
-    if (!params.composeKey) {
-      throw new Error('composeKey and entityId must not be null');
+    if (!params.paymentCode) {
+      throw new Error('paymentCode and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.SpCasesPayment.Base}${ApiEndpoints.SpCasesPayment.GetById(params.composeKey)}`;
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.SpCasesPayment.Base}${ApiEndpoints.SpCasesPayment.GetById(params.paymentCode)}`;
     return this.http.get<casePaymentDto>(apiUrl);
   }
 
   getspCasesPaymentHdr(params: filtercasePaymentByIdDto): Observable<casePaymentHdrDto[]> {
-    if (!params.composeKey || !params.entityId) {
-      throw new Error('composeKey and entityId must not be null');
+    if (!params.paymentCode || !params.entityId) {
+      throw new Error('paymentCode and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.SpCasesPayment.GetspCasesPaymentHdrBase}${ApiEndpoints.SpCasesPayment.GetspCasesPaymentHdr(params.composeKey, params.entityId)}`;
-    return this.http.get<casePaymentHdrDto[]>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.SpCasesPayment.GetspCasesPaymentHdrBase}${ApiEndpoints.SpCasesPayment.GetspCasesPaymentHdr}`;
+    return this.http.post<casePaymentHdrDto[]>(apiUrl, params);
   }
 }

@@ -87,63 +87,9 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
   uploadProgress: number = 0;
   fileValidationErrors: string[] = [];
   fileValidationSuccess: boolean = false;
-
+  columnDefs: ColDef[] = [];
+  rowActions: Array<{ label: string; icon?: string; action: string }> = [];
   // AG Grid column definitions
-  columnDefs: ColDef[] = [
-    {
-      headerName: '#',
-      width: 80,
-      sortable: false,
-      valueGetter: (params: any) => {
-        return this.currentPage * this.pageSize + params.node.rowIndex + 1;
-      },
-    },
-    {
-      field: 'locationName',
-      headerName: 'Location Name',
-      sortable: true,
-      filter: true,
-      width: 150,
-    },
-    {
-      field: 'locationType',
-      headerName: 'Location Type',
-      sortable: true,
-      filter: true,
-      width: 120,
-    },
-    {
-      field: 'regionName',
-      headerName: 'Region',
-      sortable: true,
-      filter: true,
-      width: 120,
-    },
-    {
-      field: 'street',
-      headerName: 'Street',
-      sortable: true,
-      filter: true,
-      width: 150,
-    },
-    {
-      field: 'isActive',
-      headerName: 'Status',
-      width: 100,
-      sortable: true,
-      cellRenderer: (params: any) => {
-        return params.value
-          ? '<span class="status-active">Active</span>'
-          : '<span class="status-inactive">Inactive</span>';
-      },
-    },
-  ];
-
-  rowActions = [
-    { label: 'View', action: 'view', icon: 'icon-frame-view' },
-    { label: 'Edit', action: 'edit', icon: 'icon-frame-edit' },
-    { label: 'Delete', action: 'delete', icon: 'icon-frame-delete' },
-  ];
 
   constructor(
     private locationService: LocationService,
@@ -172,6 +118,12 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
     this.loadRegionsAndLocationTypes();
     this.loadAttachmentsConfig();
     this.fixLeafletIcons();
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'view' },
+      { label: this.translate.instant('Common.edit'), icon: 'icon-frame-edit', action: 'edit' },
+      { label: this.translate.instant('Common.deletd'), icon: 'icon-frame-delete', action: 'delete' },
+    ];
   }
 
   ngOnDestroy(): void {
@@ -179,6 +131,29 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
       this.map.remove();
     }
   }
+
+  public buildColumnDefs(): void {
+    this.columnDefs = [
+      { headerName: this.translate.instant('mainApplyServiceResourceName.LocaName'), field: 'locationName', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.LocationType1'), field: 'locationType', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.regionname'), field: 'region', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.streetname'), field: 'street', width: 200 },
+      {
+        field: 'isActive',
+        headerName: this.translate.instant('AuthenticationResorceName.status'),
+        width: 100,
+        sortable: true,
+        filter: true,
+        cellRenderer: (params: any) => {
+          const isActive = params.value;
+          return `<span class="badge ${isActive ? 'status-approved' : 'status-rejected'
+            }">${isActive ? this.translate.instant('AuthenticationResorceName.ACTIVE') : this.translate.instant('AuthenticationResorceName.INACTIVE')}</span>`;
+        },
+      },
+    ];
+  }
+
+
 
   fixLeafletIcons(): void {
     try {
@@ -418,9 +393,9 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
         await this.resetModalState('edit', fullLocation);
 
         // If no attachment data, try to fetch it separately
-        if (!fullLocation.attachment && location.id) {
-          this.fetchAttachmentData(location.id);
-        }
+        //if (!fullLocation.attachment && location.id) {
+        //  this.fetchAttachmentData(location.id);
+        //}
 
         this.populateForm(fullLocation);
         this.locationForm.enable();
@@ -432,9 +407,9 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
         await this.resetModalState('edit', location);
 
         // If no attachment data, try to fetch it separately
-        if (!location.attachment && location.id) {
-          this.fetchAttachmentData(location.id);
-        }
+        //if (!location.attachment && location.id) {
+        //  this.fetchAttachmentData(location.id);
+        //}
 
         this.populateForm(location);
         this.locationForm.enable();
@@ -490,9 +465,9 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
         await this.resetModalState('view', fullLocation);
 
         // Always fetch fresh attachment data to ensure we get the latest image
-        if (location.id) {
-          this.fetchAttachmentData(location.id);
-        }
+        //if (location.id) {
+        //  this.fetchAttachmentData(location.id);
+        //}
 
         this.populateForm(fullLocation);
         this.locationForm.disable();
@@ -504,9 +479,9 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
         await this.resetModalState('view', location);
 
         // Always fetch fresh attachment data even in fallback
-        if (location.id) {
-          this.fetchAttachmentData(location.id);
-        }
+        //if (location.id) {
+        //  this.fetchAttachmentData(location.id);
+        //}
 
         this.populateForm(location);
         this.locationForm.disable();
@@ -1057,7 +1032,7 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
     this.attachmentService.updateAsync(updateAttachmentDto).subscribe({
       next: (response) => {
         this.toastr.success('Image updated successfully');
-        this.refreshImageAfterUpdate();
+        //this.refreshImageAfterUpdate();
         this.closeModal();
         this.loadLocations();
         this.spinnerService.hide();
@@ -1076,7 +1051,7 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
     this.attachmentService.saveAttachmentFileBase64(attachmentDto).subscribe({
       next: (response) => {
         this.toastr.success('Image uploaded successfully');
-        this.refreshImageAfterUpdate();
+      //  this.refreshImageAfterUpdate();
         this.closeModal();
         this.loadLocations();
         this.spinnerService.hide();
@@ -1197,7 +1172,7 @@ export class LocationsComponentComponent implements OnInit, OnDestroy {
               this.createAttachmentSeparately(attachmentDto);
             } else {
               // No attachment change, just refresh the image
-              this.refreshImageAfterUpdate();
+            // this.refreshImageAfterUpdate();
               this.closeModal();
               this.loadLocations();
               this.spinnerService.hide();

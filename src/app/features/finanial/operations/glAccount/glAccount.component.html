@@ -45,7 +45,7 @@
 
             <div class="col-xl-4 mb-3">
               <label for="accountDescription" class="form-label">{{ 'glAccountResourceName.accountDescription' | translate}}</label>
-              <input type="text" name="accountDescription" class="form-control" [(ngModel)]="searchParams.accountDescription" placeholder="Search">
+              <input type="text" name="accountDescription" class="form-control" [(ngModel)]="searchParams.accountDescription" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
           </div>
         </form>
@@ -101,7 +101,7 @@
     <div class="modal-dialog modal-xl custom-modal-width">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="viewLabel">{{ 'glAccountResourceName.Title' | translate }}</h5>
+          <h5 class="modal-title" id="viewLabel">{{ 'glAccountResourceName.title' | translate }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
@@ -112,7 +112,7 @@
               <div class="card p-2">
                 <input type="search"
                        id="searchForm"
-                       placeholder="Search"
+                       [placeholder]="'Common.placeholderSearch' | translate"
                        class="form-control mb-2"
                        (keyup)="onTreeSearch($event)">
                 <div id="jstreeForm" style="max-height: 800px; overflow-y: auto;"></div>
@@ -174,13 +174,14 @@
         </div>
 
         <div class="modal-footer">
-        <button type="button" class="btn btn-outline" data-bs-dismiss="modal"> {{ 'Common.Close' | translate }}
+          <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+            {{ 'Common.Close' | translate }}
           </button>
-        <button *ngIf="modalMode !== 'view'" type="button" class="btn btn-primary" (click)="onSubmit()"> {{ modalMode === 'edit' ? ('Common.upDate' | translate) : ('Common.save' | translate) }}
+          <button *ngIf="modalMode !== 'view'" type="button" class="btn btn-gold" (click)="onSubmit()">
+            {{ modalMode === 'edit' ? ('Common.upDate' | translate) : ('Common.save' | translate) }}
           </button>
         </div>
       </div>
     </div>
   </div>
-
 </div>

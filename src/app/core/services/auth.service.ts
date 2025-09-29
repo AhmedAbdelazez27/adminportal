@@ -33,6 +33,7 @@ export class AuthService {
     localStorage.removeItem('permissions');
     localStorage.removeItem('pages');
     const logoutUrl = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(window.location.origin + '/login');
+    console.log("logoutURL", logoutUrl);
     window.location.href = logoutUrl;
   }
 

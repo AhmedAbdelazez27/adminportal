@@ -62,7 +62,7 @@
 
             <div class="col-xl-4 mb-3">
               <label for="idNumber" class="form-label">{{ 'SponsorshipReportResourceName.caseIdNumber' | translate}}</label>
-              <input type="text" name="idNumber" class="form-control" [(ngModel)]="searchParams.idNumber" placeholder="Search">
+              <input type="text" name="idNumber" class="form-control" [(ngModel)]="searchParams.idNumber" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
           </div>
         </form>

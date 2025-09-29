@@ -831,7 +831,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                             }
                         } else {
                             // No attachment change, just refresh and close
-                            this.refreshImageAfterUpdate();
+                          //  this.refreshImageAfterUpdate();
                             this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
                             this.closeModal();
                             this.spinnerService.hide();
@@ -899,9 +899,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                 // Set the selectedEntityObject with the full entity data including MasterId
                 this.selectedEntityObject = transformedEntity;
                 await this.resetModalState('edit', transformedEntity);
-                if (!transformedEntity.Attachment && entity.ENTITY_ID) {
-                    this.fetchAttachmentData(entity.ENTITY_ID);
-                }
+               
                 this.populateForm(transformedEntity);
                 this.entityForm.enable();
                 this.showModal();
@@ -911,9 +909,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                 // Set the selectedEntityObject with the original entity data
                 this.selectedEntityObject = entity;
                 await this.resetModalState('edit', entity);
-                if (!entity.Attachment && entity.ENTITY_ID) {
-                    this.fetchAttachmentData(entity.ENTITY_ID);
-                }
+             
                 this.populateForm(entity);
                 this.entityForm.enable();
                 this.showModal();
@@ -932,9 +928,7 @@ export class EntityComponent implements OnInit, OnDestroy {
                 // Transform the API response to expected format
                 const transformedEntity = this.transformApiResponse(fullEntity);
                 await this.resetModalState('view', transformedEntity);
-                if (entity.ENTITY_ID) {
-                    this.fetchAttachmentData(entity.ENTITY_ID);
-                }
+               
                 this.populateForm(transformedEntity);
                 this.entityForm.disable();
                 this.showModal();
@@ -942,9 +936,7 @@ export class EntityComponent implements OnInit, OnDestroy {
             error: async (error: any) => {
                 this.toastr.error(this.translate.instant('TOAST.ERROR_LOADING_ENTITY_DETAILS'));
                 await this.resetModalState('view', entity);
-                if (entity.ENTITY_ID) {
-                    this.fetchAttachmentData(entity.ENTITY_ID);
-                }
+               
                 this.populateForm(entity);
                 this.entityForm.disable();
                 this.showModal();
@@ -1511,7 +1503,7 @@ export class EntityComponent implements OnInit, OnDestroy {
         this.attachmentService.updateAsync(updateAttachmentDto).subscribe({
             next: (response) => {
                 this.toastr.success(this.translate.instant('FILE.IMAGE_UPDATED_SUCCESS'));
-                this.refreshImageAfterUpdate();
+               // this.refreshImageAfterUpdate();
                 this.closeModal();
                 this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
                 this.spinnerService.hide();
@@ -1532,7 +1524,7 @@ export class EntityComponent implements OnInit, OnDestroy {
         this.attachmentService.saveAttachmentFileBase64(attachmentDto).subscribe({
             next: (response) => {
                 this.toastr.success(this.translate.instant('FILE.IMAGE_UPLOADED_SUCCESS'));
-                this.refreshImageAfterUpdate();
+              //  this.refreshImageAfterUpdate();
                 this.closeModal();
                 this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
                 this.spinnerService.hide();

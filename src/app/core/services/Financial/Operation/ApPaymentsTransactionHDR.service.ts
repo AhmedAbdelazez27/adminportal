@@ -24,7 +24,7 @@ export class ApPaymentsTransactionHDRService {
     if (!params.paymentId || !params.entityId) {
       throw new Error('paymentId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ApMiscPaymentTransactionHDR.GetById(params.paymentId, params.entityId)}`;
-    return this.http.get<ApPaymentsTransactionHDRDto>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ApMiscPaymentTransactionHDR.GetById}`;
+    return this.http.post<ApPaymentsTransactionHDRDto>(apiUrl, params);
   }
 }

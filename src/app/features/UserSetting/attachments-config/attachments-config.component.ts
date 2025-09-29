@@ -255,9 +255,8 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
         filter: true,
         cellRenderer: (params: any) => {
           const isActive = params.value;
-          return `<span class="badge ${
-            isActive ? 'status-approved' : 'status-rejected'
-          }">${isActive ? 'Active' : 'Inactive'}</span>`;
+          return `<span class="badge ${isActive ? 'status-approved' : 'status-rejected'
+            }">${isActive ? this.translate.instant('ATTACHMENTS_CONFIG.ACTIVE') : this.translate.instant('ATTACHMENTS_CONFIG.INACTIVE')}</span>`;
         },
       },
       {
@@ -268,9 +267,8 @@ export class AttachmentsConfigComponent implements OnInit, OnDestroy {
         filter: true,
         cellRenderer: (params: any) => {
           const isMandatory = params.value;
-          return `<span class="badge ${
-            isMandatory ? 'status-waiting' : 'status-rejected'
-          }">${isMandatory ? 'Mandatory' : 'Optional'}</span>`;
+          return `<span class="badge ${isMandatory ? 'status-waiting' : 'status-rejected'
+            }">${isMandatory ? this.translate.instant('ATTACHMENTS_CONFIG.MANDATORY') : this.translate.instant('ATTACHMENTS_CONFIG.OPTIONAL')}</span>`;
         },
       },
     ];

@@ -60,7 +60,7 @@
 
               <div class="col-xl-4 mb-3">
                 <label for="contractDate" class="form-label">{{ 'SpContractsResourceName.contractDate' | translate}}</label>
-                <input type="date" name="contractDate" class="form-control" [(ngModel)]="searchParams.contractDate" placeholder="Search">
+                <input type="date" name="contractDate" class="form-control" [(ngModel)]="searchParams.contractDate" [placeholder]="'Common.placeholderSearch' | translate">
               </div>
 
               <div class="col-xl-4 mb-3">
@@ -101,7 +101,7 @@
 
               <div class="col-xl-4 mb-3">
                 <label for="beneficentNo" class="form-label">{{ 'SpContractsResourceName.beneficentNo' | translate }}</label>
-                <input type="text" name="beneficentNo" class="form-control" [(ngModel)]="searchParams.beneficentNo" placeholder="Search">
+                <input type="text" name="beneficentNo" class="form-control" [(ngModel)]="searchParams.beneficentNo" [placeholder]="'Common.placeholderSearch' | translate">
               </div>
 
               <div class="col-xl-4 mb-3">
@@ -142,12 +142,12 @@
 
               <div class="col-xl-4 mb-3">
                 <label for="fromDate" class="form-label">{{ 'FinancialReportResourceName.fromDate' | translate}}</label>
-                <input type="date" name="fromDate" class="form-control" [(ngModel)]="searchParams.fromDate" placeholder="Search">
+                <input type="date" name="fromDate" class="form-control" [(ngModel)]="searchParams.fromDate" [placeholder]="'Common.placeholderSearch' | translate">
               </div>
 
               <div class="col-xl-4 mb-3">
                 <label for="toDate" class="form-label">{{ 'FinancialReportResourceName.toDate' | translate}}</label>
-                <input type="date" name="toDate" class="form-control" [(ngModel)]="searchParams.toDate" placeholder="Search">
+                <input type="date" name="toDate" class="form-control" [(ngModel)]="searchParams.toDate" [placeholder]="'Common.placeholderSearch' | translate">
               </div>
             </div>
           </form>

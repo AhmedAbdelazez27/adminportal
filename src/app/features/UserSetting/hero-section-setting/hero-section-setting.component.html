@@ -419,7 +419,7 @@
             <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
               {{ 'Common.Cancel' | translate }}
             </button>
-            <button type="submit" class="btn btn-gold" [disabled]="heroSectionForm.invalid || mode === 'view'">
+            <button type="submit" class="btn btn-gold" *ngIf="heroSectionForm.invalid || mode !== 'view'">
               <span *ngIf="mode === 'add'">{{ 'Common.Create' | translate }}</span>
               <span *ngIf="mode === 'edit'">{{ 'Common.Update' | translate }}</span>
             </button>

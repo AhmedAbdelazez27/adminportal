@@ -441,7 +441,13 @@ getFormDatabyId(accountCode: string, mode: 'edit' | 'view'): void {
       next: (result) => {
         // ✅ map to jsTree format
         this.jstreeData = this.mapToJsTreeData(result.treeData);
-        this.showTree = true;
+        if (this.modalMode === 'view') {
+          this.showTree = false;
+        }
+        else {
+          this.showTree = true;
+        }
+
         this.createJSTreeForm(this.jstreeData);
 
         setTimeout(() => {

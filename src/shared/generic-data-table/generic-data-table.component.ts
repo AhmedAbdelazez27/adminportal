@@ -63,7 +63,7 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
   showInfoModal: boolean = false;
   selectedRowData: any = null;
   public selectedRowKeysArr: string[] = [];
-
+  mainColumns = this.columnDefs.slice(0, 4); 
   showGrid: boolean = true;
 
   // context menu state
@@ -78,10 +78,12 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
   defaultColDef: ColDef = {
     sortable: true,
     resizable: true,
-    filter: true,
-    flex: 1,
-    minWidth: 10
+    filter: false,
+    wrapText: true,
+    autoHeight: true,
+    minWidth: 80
   };
+
 
   private destroy$ = new Subject<void>();
   public api!: GridApi;
@@ -177,12 +179,16 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
     if (actionCol) {
       actionCol.pinned = this.isRtl ? 'left' : 'right';
     }
-    if (this.api) {
-      this.api.applyColumnState({
-        state: [{ colId: 'action', pinned: this.isRtl ? 'left' : 'right' }],
-        applyOrder: true
-      });
+    if (this.api && (changes['rowData'] || changes['columnDefs'])) {
+      const columnApi = (this.api as any).columnApi || (this.api as any).getColumnApi?.();
+      setTimeout(() => this.adjustColumnSizing(columnApi, this.api), 80);
     }
+    //if (this.api) {
+    //  this.api.applyColumnState({
+    //    state: [{ colId: 'action', pinned: this.isRtl ? 'left' : 'right' }],
+    //    applyOrder: true
+    //  });
+    //}
   }
 
   actionCellRenderer = (params: any) => {
@@ -201,21 +207,74 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
     `;
   };
 
-  onGridReady(event: GridReadyEvent) {
-    this.api = event.api;
-    this.applyRtl();
-    if (this.api) {
-      const pinSide = this.isRtl ? 'left' : 'right';
-      this.api.setColumnPinned('action', pinSide as any);
-      if ((this.api as any).setEnableRtl) {
-        (this.api as any).setEnableRtl(this.isRtl);
+  private getDisplayedCols(columnApi: any) {
+    if (typeof columnApi.getAllDisplayedColumns === 'function') {
+      return columnApi.getAllDisplayedColumns();
+    }
+    if (typeof columnApi.getAllGridColumns === 'function') {
+      return columnApi.getAllGridColumns();
+    }
+    const state = columnApi.getColumnState ? columnApi.getColumnState() : [];
+    return state.map((s: any) => ({ getColId: () => s.colId, getActualWidth: () => s.width || 100 }));
+  }
+
+ 
+  private adjustColumnSizing(columnApi: any, api: any) {
+    if (!columnApi || !api) return;
+
+    const displayedCols = this.getDisplayedCols(columnApi);
+    const colIds = displayedCols.map((c: any) => c.getColId());
+
+    const gridHost = this.el.nativeElement.querySelector('.ag-theme-alpine') as HTMLElement;
+    const gridWidth = (gridHost && gridHost.clientWidth) || window.innerWidth;
+
+    if (displayedCols.length <= 8) {
+      // 👉 Few columns → stretch to fill grid
+      try {
+        api.sizeColumnsToFit();
+      } catch (e) {
+        console.warn('sizeColumnsToFit error', e);
       }
-      this.ensureActionPin();
-      this.api.setColumnDefs([...this.columnDefs]);
-      this.api.refreshHeader();
+    } else {
+      // 👉 Many columns → cap width and allow wrapping
+      const maxWidth = 200;
+      displayedCols.forEach((col: any) => {
+        try {
+          columnApi.setColumnWidth(col.getColId(), maxWidth, false);
+        } catch (e) {
+          try { columnApi.setColumnWidth(col, maxWidth, false); } catch { }
+        }
+      });
     }
 
-    // لو عندك cell actions جوه الكولمن ممكن تكمّل هنا
+    // Always recalc row heights so wrapped text shows correctly
+    setTimeout(() => {
+      api.resetRowHeights();
+    }, 50);
+  }
+
+  onGridReady(event: GridReadyEvent) {
+    this.api = event.api;
+
+    // ensure rtl/pins and defs as you already have
+    this.applyRtl();
+    this.ensureActionPin();
+    this.api.setColumnDefs([...this.columnDefs]);
+
+    // run sizing once grid & columns are ready
+    setTimeout(() => {
+      this.adjustColumnSizing(event.columnApi, event.api);
+    }, 50);
+
+    // run on resize
+    window.addEventListener('resize', () => {
+      // throttle lightly if you want
+      if (this.api) {
+        this.adjustColumnSizing((this.api as any).columnApi || (event as any).columnApi, this.api);
+      }
+    });
+
+    // preserve your existing listeners
     this.api.addEventListener('cellClicked', (agEvt: any) => {
       if (agEvt.colDef.colId === 'action' && agEvt.event?.target) {
         const action = agEvt.event.target.getAttribute('data-action');

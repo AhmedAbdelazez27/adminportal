@@ -137,6 +137,7 @@ export class aidRequestsStudyDetailsDto {
 
 export class filteraidRequestsByIdDto {
   headerId: string | null = null;
+  studyId: string | null = null;
   entityId: string | null = null;
   caseCode: string | null = null;
   caseId: string | null = null;

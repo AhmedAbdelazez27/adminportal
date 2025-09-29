@@ -570,6 +570,7 @@ export class aidRequestsComponent {
       entityId: entityId,
       caseCode: caseCode,
       headerId: null,
+      studyId: null,
       caseId: caseid,
     };
 
@@ -602,13 +603,15 @@ export class aidRequestsComponent {
 
 
   getStudyDetailsFormDatabyId(source: string, entityId: string, studyId: string): void {
-
+    console.log("source", source);
     const params: filteraidRequestsByIdDto = {
       entityId: entityId,
-      headerId: studyId,
+      studyId: studyId,
+      headerId: null,
       caseCode: null,
       caseId:null
     };
+    console.log("params", params);
 
     this.spinnerService.show();
     if (source == '1') {
@@ -630,13 +633,13 @@ export class aidRequestsComponent {
             this.spinnerService.hide();
           },
           error: (err) => {
-            this.toastr.info(this.translate.instant(err.error.reason)); 
+            this.toastr.info(this.translate.instant(err.error.reason));
             this.spinnerService.hide();
           }
         });
     }
 
-    if (source == '5') {
+    else if (source == '5') {
       forkJoin({
         showstudydetaildata: this.aidRequestsService.getQuotationHeaderDetailById(params) as Observable<aidRequestsStudyDetailsDto | aidRequestsStudyDetailsDto[]>,
       })
@@ -661,7 +664,7 @@ export class aidRequestsComponent {
         });
     }
 
-    if (source == '6') {
+    else if (source == '6') {
       forkJoin({
         showstudydetaildata: this.aidRequestsService.getZakatStudyDetailById(params) as Observable<aidRequestsStudyDetailsDto | aidRequestsStudyDetailsDto[]>,
       })
@@ -683,6 +686,18 @@ export class aidRequestsComponent {
             this.spinnerService.hide();
           }
         });
+    }
+
+    else {
+      this.translate
+        .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
+        .subscribe(translations => {
+          this.toastr.error(
+            `${translations['mainApplyServiceResourceName.NoPermission']}`,
+          );
+        });
+      this.spinnerService.hide();
+      return;
     }
   }
 

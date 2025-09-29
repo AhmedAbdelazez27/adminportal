@@ -49,6 +49,8 @@ export class RegionsComponentComponent implements OnInit {
   editingRegionId: number | null = null;
   selectedRegionToDelete: RegionDto | null = null;
   isLoading: boolean = false;
+  columnDefs: ColDef[] = [];
+  rowActions: Array<{ label: string; icon?: string; action: string }> = [];
 
   // Filter properties
   selectedStatusFilter: boolean | null = null;
@@ -61,57 +63,12 @@ export class RegionsComponentComponent implements OnInit {
   ];
 
   // AG Grid column definitions
-  columnDefs: ColDef[] = [
-    {
-      headerName: '#',
-      width: 80,
-      sortable: false,
-      valueGetter: (params: any) => {
-        return this.currentPage * this.pageSize + params.node.rowIndex + 1;
-      },
-    },
-    {
-      field: 'regionArabicName',
-      headerName: 'Arabic Name',
-      sortable: true,
-      filter: true,
-    },
-    {
-      field: 'regionEnglishName',
-      headerName: 'English Name',
-      sortable: true,
-      filter: true,
-    },
-    {
-      field: 'maxCountOfLocations',
-      headerName: 'Max Locations',
-      width: 120,
-      sortable: true,
-    },
-    {
-      field: 'isActive',
-      headerName: 'Status',
-      width: 100,
-      sortable: true,
-      cellRenderer: (params: any) => {
-        return params.value
-          ? '<span class="badge status-approved">Active</span>'
-          : '<span class="badge status-rejected">Inactive</span>';
-      },
-    },
-  ];
-
-  rowActions = [
-    { label: 'View', action: 'view', icon: 'icon-frame-view' },
-    { label: 'Edit', action: 'edit', icon: 'icon-frame-edit' },
-    { label: 'Delete', action: 'delete', icon: 'icon-frame-delete' },
-  ];
 
   constructor(
     private regionService: RegionService,
     private spinnerService: SpinnerService,
     private toastr: ToastrService,
-    public translate: TranslateService,
+    private translate: TranslateService,
     private fb: FormBuilder
   ) {
     this.regionForm = this.fb.group({
@@ -124,7 +81,37 @@ export class RegionsComponentComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadRegions();
+    this.buildColumnDefs();
+    this.rowActions = [
+      { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'view' },
+      { label: this.translate.instant('Common.edit'), icon: 'icon-frame-edit', action: 'edit' },
+      { label: this.translate.instant('Common.deletd'), icon: 'icon-frame-delete', action: 'delete' },
+    ];
   }
+
+  public buildColumnDefs(): void {
+    this.columnDefs = [
+      { headerName: this.translate.instant('mainApplyServiceResourceName.ARABIC_NAME'), field: 'regionArabicName', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.ENGLISH_NAME'), field: 'regionEnglishName', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.RegionMaxCount'), field: 'maxCountOfLocations', width: 200 },
+      {
+        field: 'isActive',
+        headerName: this.translate.instant('AuthenticationResorceName.status'),
+        width: 100,
+        sortable: true,
+        filter: true,
+        cellRenderer: (params: any) => {
+          const isActive = params.value;
+          return `<span class="badge ${isActive ? 'status-approved' : 'status-rejected'
+            }">${isActive ? this.translate.instant('AuthenticationResorceName.ACTIVE') : this.translate.instant('AuthenticationResorceName.INACTIVE')}</span>`;
+        },
+      },
+    ];
+  }
+
+
+ 
+
 
   loadRegions(): void {
     this.isLoading = true;

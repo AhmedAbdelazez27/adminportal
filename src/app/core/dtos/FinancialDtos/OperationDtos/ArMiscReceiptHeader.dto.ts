@@ -109,6 +109,6 @@ export interface PagedResult<T> {
 }
 
 export class FilterArMiscReceiptHeaderByIdDto {
-  miscReceiptId: string | null = null;
+  miscReciptId: string | null = null;
   entityId: string | null = null;
 }

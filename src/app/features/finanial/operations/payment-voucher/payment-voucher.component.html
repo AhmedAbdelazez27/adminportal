@@ -42,7 +42,7 @@
 
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'PaymentVoucherResourceName.paymentNumber' | translate }}</label>
-              <input type="text" class="form-control" name="paymentNumber" id="paymentNumber" [(ngModel)]="searchParams.paymentNumber" placeholder="Search">
+              <input type="text" class="form-control" name="paymentNumber" id="paymentNumber" [(ngModel)]="searchParams.paymentNumber" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
 
             <div class="col-xl-4 mb-3">
@@ -65,12 +65,12 @@
 
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'PaymentVoucherResourceName.checkNumber' | translate }}</label>
-              <input type="text" class="form-control" name="checkNumber" id="checkNumber" [(ngModel)]="searchParams.checkNumber" placeholder="Search">
+              <input type="text" class="form-control" name="checkNumber" id="checkNumber" [(ngModel)]="searchParams.checkNumber" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
 
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'PaymentVoucherResourceName.amount' | translate }}</label>
-              <input type="text" class="form-control" name="amount" id="amount" [(ngModel)]="searchParams.amount" placeholder="Search">
+              <input type="text" class="form-control" name="amount" id="amount" [(ngModel)]="searchParams.amount" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
 
             <div class="col-xl-4 mb-3">

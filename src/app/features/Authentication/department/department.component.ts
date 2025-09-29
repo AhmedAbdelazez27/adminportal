@@ -532,7 +532,7 @@ export class DepartmentComponent implements OnInit {
         cellRenderer: (params: any) => {
           const isActive = params.value;
           return `<span class="badge ${isActive ? 'status-approved' : 'status-rejected'
-            }">${isActive ? 'Active' : 'Inactive'}</span>`;
+            }">${isActive ? this.translate.instant('AuthenticationResorceName.ACTIVE') : this.translate.instant('AuthenticationResorceName.INACTIVE') }</span>`;
         },
       },
     ];

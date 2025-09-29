@@ -11,6 +11,8 @@ import { TranslationService } from '../../../core/services/translation.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoginUAEPassDto, ReturnUAEPassDto, UAEPassDto } from '../../../core/dtos/uaepass.dto';
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule, NgxSpinnerModule, CommonModule, FormsModule, TranslateModule],
@@ -58,10 +60,27 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       this.code = params['code'];
       this.state = params['state'];
-      if (this.isValidCodeState(this.code, this.state)) {
-        this.uaepassCheckCode(this.code!, this.state!);
-      } else {
-        console.log('Code or state is invalid. API call not made.');
+
+      if (this.state != undefined || this.code != undefined) {
+        if (this.isValidCodeState(this.code, this.state)) {
+          this.uaepassCheckCode(this.code!, this.state!);
+        } else {
+          const redirectUri = window.location.origin + '/login';
+          const logoutURL =
+            'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' +
+            encodeURIComponent(redirectUri);
+
+          this.translate
+            .get(['Common.UAEPassCancelRequest'])
+            .subscribe(translations => {
+              this.toastr.error(translations['Common.UAEPassCancelRequest']);
+            });
+
+          setTimeout(() => {
+            window.location.href = logoutURL;
+            this.spinnerService.hide();
+          }, 2000);
+        }
       }
     });
   }
@@ -119,6 +138,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.currentlang = "en";
     }
     var UAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://compassint.ddns.net:2036/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
+    var LocalUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:4200/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
     var ProdUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=ccc_web_stg&scope=urn:uae:digitalid:profile:general&state=Q9pOTvlchYARcSFL&redirect_uri=https://192.168.51.130:2002/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
     window.location.href = `${ProdUAEPassURL}&ui_locales=${this.currentlang}`;
   }
@@ -155,33 +175,48 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.router.navigate(['/home']);
         },
         error: (err) => {
-          this.toastr.error(
-            this.translate.instant('LOGIN.FAILED'),
-            this.translate.instant('TOAST.TITLE.ERROR')
-          );
-          if (err.error.message != undefined) {
-            this.toastr.info(this.translate.instant(err.error.message));
-            const redirectUri = window.location.origin + '/login';
-            const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
-            window.location.href = logoutURL;
-            this.spinnerService.hide();
-          }
-          else {
-            this.toastr.info(this.translate.instant(err.error.reason));
-            const redirectUri = window.location.origin + '/login';
-            const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
-            window.location.href = logoutURL;
-            this.spinnerService.hide();
-          }
-        
-        },
+          console.log("err", err);
+          this.spinnerService.hide();
 
+          const notVerifiedText = this.translate.instant('Common.notVerifiedUser');
+          const errorMsg = err?.message || err?.reason;
+
+          if (errorMsg === notVerifiedText) {
+            const modalElement = document.getElementById('notVerifiedUser');
+            if (modalElement) {
+              const modal = new bootstrap.Modal(modalElement);
+              modal.show();
+            }
+          } else {
+            this.toastr.error(
+              this.translate.instant('LOGIN.FAILED'),
+              this.translate.instant('TOAST.TITLE.ERROR')
+            );
+
+            if (errorMsg) {
+              setTimeout(() => {
+                this.toastr.info(this.translate.instant(errorMsg));
+              }, 1000);
+            }
+            this.spinnerService.hide();
+
+            const redirectUri = window.location.origin + '/login';
+            const logoutURL =
+              'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' +
+              encodeURIComponent(redirectUri);
+            window.location.href = logoutURL;
+          }
+        },
         complete: () => {
           this.spinnerService.hide();
         }
       });
   }
 
+  logout(): void {
+    const logoutUrl = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(window.location.origin + '/login');
+    window.location.href = logoutUrl;
+  }
 
   ngOnDestroy() {
     this.destroy$.next(true);

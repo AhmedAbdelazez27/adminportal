@@ -67,3 +67,12 @@ export enum serviceIdEnum {
   serviceId1001 = "1001",
   serviceId1002 = "1002",
 }
+
+
+export class accountStatus {
+  static readonly accountStatusList = [
+    { id: 1, text: 'جديد', textEn: 'New' },
+    { id: 2, text: 'تم المعالجة', textEn: 'Mapped' },
+    { id: 3, text: 'موجود', textEn: 'Existing' },
+  ];
+}

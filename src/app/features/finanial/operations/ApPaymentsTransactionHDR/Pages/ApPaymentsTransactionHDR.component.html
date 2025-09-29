@@ -42,7 +42,7 @@
 
             <div class="col-xl-4 mb-3">
               <label for="paymentNumber" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.PaymentNumber' | translate}}</label>
-              <input type="text" name="PaymentNumber" class="form-control" [(ngModel)]="searchParams.paymentNumber" placeholder="Search">
+              <input type="text" name="PaymentNumber" class="form-control" [(ngModel)]="searchParams.paymentNumber" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
 
             <div class="col-xl-4 mb-3">
@@ -60,7 +60,7 @@
             </div>
             <div class="col-xl-4 mb-3">
               <label for="vendorNumber" class="form-label">{{ 'ApPaymentsTransactionHDRResourceName.VendorNumber' | translate }}</label>
-              <input type="text" name="VendorNumber" class="form-control" [(ngModel)]="searchParams.vendorNumber" placeholder="Search">
+              <input type="text" name="VendorNumber" class="form-control" [(ngModel)]="searchParams.vendorNumber" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
 
             <div class="col-xl-4 mb-3">

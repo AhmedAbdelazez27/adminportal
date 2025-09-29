@@ -24,10 +24,10 @@ export class beneficentService {
   }
 
   getDetailById(params: filterBeneficentByIdDto): Observable<beneficentDto> {
-    if (!params.beneficenT_ID || !params.entityId) {
-      throw new Error('paymentId and entityId must not be null');
+    if (!params.beneficentId || !params.entityId) {
+      throw new Error('beneficentId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.beneficent.GetById(params.beneficenT_ID, params.entityId)}`;
-    return this.http.get<beneficentDto>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.beneficent.GetById}`;
+    return this.http.post<beneficentDto>(apiUrl, params);
   }
 }

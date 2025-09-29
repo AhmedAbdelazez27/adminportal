@@ -491,7 +491,7 @@
         <div class="modal-body">
           <form [formGroup]="userDepartmentForm">
             <div class="mb-3 relative-select">
-              <label for="departments" class="form-label">{{ 'AuthenticationResorceName.Departments' | translate
+              <label for="departments" class="form-label">{{ 'AuthenticationResorceName.dept' | translate
                 }}</label>
               <ng-select [items]="departments" bindLabel="text" bindValue="id" [multiple]="true" [closeOnSelect]="true"
                 formControlName="departmentIds" class="ng-select-custom">
@@ -695,7 +695,7 @@
                 <!-- <label class="form-label">Filter by Module(s)</label> -->
                 <ng-select [items]="moduleOptions" bindLabel="label" bindValue="value" [multiple]="true"
                   [closeOnSelect]="false" formControlName="selectedModules" class="ng-select-custom"
-                  [placeholder]="filterForm.get('selectedModules')?'Filter by Module(s)':''">
+                  [placeholder]="filterForm.get('selectedModules')? ('Common.filterbymodule' | translate) : ''">
                 </ng-select>
               </div>
 
@@ -709,7 +709,7 @@
               </div>
               <div class="text-end mb-3 col-xl-2">
                 <button type="button" class="btn btn-gold w-100" style="height:48px;" (click)="applySearch()">
-                  Apply Filter
+                  {{ 'Common.applyFilter' | translate }}
                 </button>
                 <div class="mt-2">
                   <!-- <button type="button" 

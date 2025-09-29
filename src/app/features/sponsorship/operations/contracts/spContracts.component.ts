@@ -134,8 +134,8 @@ export class spContractsComponent {
       .subscribe(() => this.fetchbankAccountSelect2());
 
     this.fetchentitySelect2();
-    this.fetchstatusSelect2();
-    this.fetchpaymentMethodSelect2();
+  //  this.fetchstatusSelect2();
+  //  this.fetchpaymentMethodSelect2();
     this.fetchbankAccountSelect2();
     this.fetchbeneficentIdSelect2();
     this.fetchcontractIdSelect2();

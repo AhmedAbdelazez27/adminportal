@@ -26,7 +26,7 @@
         </button>
         <div class="d-lg-flex justify-content-center align-items-center gap-2 mb-5 text-center">
           <!-- <img src="./../../../../assets/images/logo.png" style="width: 150px;"/> -->
-          <img src="./../../../../assets/images/council-logo.png"  style="width: 150px;"/>
+          <img src="./../../../../assets/images/council-logo.png" style="width: 150px;" />
         </div>
         <form [formGroup]="form" (ngSubmit)="submit()">
           <div class="mb-4">
@@ -76,6 +76,29 @@
         </form>
 
 
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+<div class="modal fade" id="notVerifiedUser" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header border-0 p-2">
+      </div>
+      <div class="modal-body text-center">
+        <div class="heading" data-wow-duration="1s">
+          <h2 class="m-0 mb-2" style="color: #ff007d">
+            {{ 'Common.notVerifiedUserMessage' | translate }}
+          </h2>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center border-0">
+        <button type="button" class="btn btn-gold" (click)="logout()">
+          {{ 'Common.Close' | translate }}
+        </button>
       </div>
     </div>
   </div>

@@ -30,31 +30,31 @@ export class aidRequestsService {
     if (!params.caseCode || !params.entityId || !params.caseId) {
       throw new Error('caseCode and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.AidRequest.GetShowDetailById(params.caseCode, params.entityId, params.caseId)}`;
-    return this.http.get<aidRequestsShowDetailsDto>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.AidRequest.GetShowDetailById}`;
+    return this.http.post<aidRequestsShowDetailsDto>(apiUrl, params);
   }
 
   getAidRequestsStudyById(params: filteraidRequestsByIdDto): Observable<aidRequestsStudyDetailsDto> {
-    if (!params.headerId || !params.entityId) {
-      throw new Error('headerId and entityId must not be null');
+    if (!params.studyId || !params.entityId) {
+      throw new Error('studyId and entityId must not be null');
     }
-    const apiUrl = `${this.AidRequestsStudiesBASE_URL}${ApiEndpoints.AidRequest.GetAidRequestsStudyDetailById(params.headerId, params.entityId)}`;
-    return this.http.get<aidRequestsStudyDetailsDto>(apiUrl);
+    const apiUrl = `${this.AidRequestsStudiesBASE_URL}${ApiEndpoints.AidRequest.GetAidRequestsStudyDetailById}`;
+    return this.http.post<aidRequestsStudyDetailsDto>(apiUrl, params);
   }
 
   getZakatStudyDetailById(params: filteraidRequestsByIdDto): Observable<aidRequestsStudyDetailsDto> {
-    if (!params.headerId || !params.entityId) {
-      throw new Error('caseCode and entityId must not be null');
+    if (!params.studyId || !params.entityId) {
+      throw new Error('studyId and entityId must not be null');
     }
-    const apiUrl = `${this.AidRequestsZakatBASE_URL}${ApiEndpoints.AidRequest.GetZakatStudyDetailById(params.headerId, params.entityId)}`;
-    return this.http.get<aidRequestsStudyDetailsDto>(apiUrl);
+    const apiUrl = `${this.AidRequestsZakatBASE_URL}${ApiEndpoints.AidRequest.GetZakatStudyDetailById}`;
+    return this.http.post<aidRequestsStudyDetailsDto>(apiUrl, params);
   }
 
   getQuotationHeaderDetailById(params: filteraidRequestsByIdDto): Observable<aidRequestsStudyDetailsDto> {
     if (!params.headerId || !params.entityId) {
-      throw new Error('caseCode and entityId must not be null');
+      throw new Error('headerId and entityId must not be null');
     }
-    const apiUrl = `${this.QuotationHeaderBASE_URL}${ApiEndpoints.AidRequest.GetQuotationHeaderDetailById(params.headerId, params.entityId)}`;
-    return this.http.get<aidRequestsStudyDetailsDto>(apiUrl);
+    const apiUrl = `${this.QuotationHeaderBASE_URL}${ApiEndpoints.AidRequest.GetQuotationHeaderDetailById}`;
+    return this.http.post<aidRequestsStudyDetailsDto>(apiUrl, params);
   }
 }

@@ -11,81 +11,95 @@ import { AssignRoleDto } from '../dtos/assign-role.dto';
 import { PagedDto } from '../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class RoleService {
-    private readonly BASE_URL = `${environment.apiBaseUrl}${ApiEndpoints.Roles.Base}`;
+  private readonly BASE_URL = `${environment.apiBaseUrl}${ApiEndpoints.Roles.Base}`;
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-    createRole(payload: CreateRoleDto): Observable<any> {
-        return this.http.post(this.BASE_URL, payload);
-    }
-
-    getRoles(skip: number, take: number, searchValue: string): Observable<any> {
-        const params = new HttpParams()
-            .set('skip', skip)
-            .set('take', take)
-            .set('searchValue', searchValue);
-
-        return this.http.get(`${this.BASE_URL}`, { params });
+  createRole(payload: CreateRoleDto): Observable<any> {
+    return this.http.post(this.BASE_URL, payload);
   }
 
-    getAllRoles(param: PagedDto): Observable<any> {
+  getRoles(skip: number, take: number, searchValue: string): Observable<any> {
     const params = new HttpParams()
-      .set('skip', param.skip)
-      .set('take', param.take)
-      .set('searchValue', param.searchValue);
-    const apiUrl = this.http.get(`${this.BASE_URL}`, { params });
-    return apiUrl;
+      .set('skip', skip)
+      .set('take', take)
+      .set('searchValue', searchValue);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.Roles.GetAll}`;
+    return this.http.post<any>(apiUrl, params);
   }
 
-    updateRole(payload: any): Observable<any> {
-        return this.http.post(`${this.BASE_URL}/Update`, { id: payload?.id, name: payload?.name, aspNetUsersRoleCount: 1 });
-    }
+  getAllRoles(params: PagedDto): Observable<any> {
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.Roles.GetAll}`;
+    return this.http.post<any>(apiUrl, params);
+  }
 
-    unassignRole(payload: UnassignRoleDto): Observable<any> {
-        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.Unassign}`, payload);
-    }
+  //  getRoles(skip: number, take: number, searchValue: string): Observable<any> {
+  //      const params = new HttpParams()
+  //          .set('skip', skip)
+  //          .set('take', take)
+  //          .set('searchValue', searchValue);
 
-    getRoleUsers(roleId: string): Observable<any> {
-        return this.http.get(`${this.BASE_URL}${ApiEndpoints.Roles.GetRoleUsers(roleId)}`);
-    }
+  //      return this.http.get(`${this.BASE_URL}`, { params });
+  //}
 
-    getRoleById(roleId: string): Observable<any> {
-        return this.http.get(`${this.BASE_URL}${ApiEndpoints.Roles.GetById(roleId)}`);
-    }
+  //  getAllRoles(param: PagedDto): Observable<any> {
+  //  const params = new HttpParams()
+  //    .set('skip', param.skip)
+  //    .set('take', param.take)
+  //    .set('searchValue', param.searchValue);
+  //  const apiUrl = this.http.get(`${this.BASE_URL}`, { params });
+  //  return apiUrl;
+  //}
 
-    deleteRole(roleId: string): Observable<any> {
-        const url = `${this.BASE_URL}${ApiEndpoints.Roles.Delete(roleId)}`;
-        return this.http.post(url, {});
-    }
+  updateRole(payload: any): Observable<any> {
+    return this.http.post(`${this.BASE_URL}/Update`, { id: payload?.id, name: payload?.name, aspNetUsersRoleCount: 1 });
+  }
 
-    getRolesSelect2List(payload: RoleSelect2RequestDto): Observable<any> {
-        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.GetRolesSelect2List}`, payload);
-    }
+  unassignRole(payload: UnassignRoleDto): Observable<any> {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.Unassign}`, payload);
+  }
 
-    assignRole(payload: AssignRoleDto): Observable<any> {
-        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.Assign}`, payload);
-    }
-    unAssignRole(payload: AssignRoleDto): Observable<any> {
-        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.unAssign}`, payload);
-    }
+  getRoleUsers(roleId: string): Observable<any> {
+    return this.http.get(`${this.BASE_URL}${ApiEndpoints.Roles.GetRoleUsers(roleId)}`);
+  }
 
-    getScreensList(payload: any): Observable<any> {
+  getRoleById(roleId: string): Observable<any> {
+    return this.http.get(`${this.BASE_URL}${ApiEndpoints.Roles.GetById(roleId)}`);
+  }
 
-        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.GetScreensList}`, payload);
-    }
+  deleteRole(roleId: string): Observable<any> {
+    const url = `${this.BASE_URL}${ApiEndpoints.Roles.Delete(roleId)}`;
+    return this.http.post(url, {});
+  }
 
-    assignScreens(payload: {
-        roleId: string;
-        claimType: string;
-        claimValues: string[];
-    }) {
-        return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.AssignScreenPermission}`, payload);
-    }
+  getRolesSelect2List(payload: RoleSelect2RequestDto): Observable<any> {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.GetRolesSelect2List}`, payload);
+  }
 
-    getUsersRoleById(roleId: string): Observable<any> {
-        return this.http.get(`${this.BASE_URL}${ApiEndpoints.Roles.GetUserOfRole(roleId)}`);
-    }
+  assignRole(payload: AssignRoleDto): Observable<any> {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.Assign}`, payload);
+  }
+  unAssignRole(payload: AssignRoleDto): Observable<any> {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.unAssign}`, payload);
+  }
+
+  getScreensList(payload: any): Observable<any> {
+
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.GetScreensList}`, payload);
+  }
+
+  assignScreens(payload: {
+    roleId: string;
+    claimType: string;
+    claimValues: string[];
+  }) {
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.Roles.AssignScreenPermission}`, payload);
+  }
+
+  getUsersRoleById(roleId: string): Observable<any> {
+    return this.http.get(`${this.BASE_URL}${ApiEndpoints.Roles.GetUserOfRole(roleId)}`);
+  }
 }

@@ -396,7 +396,7 @@ export class casePaymentComponent implements OnInit, OnDestroy {
     };
     const params: filtercasePaymentByIdDto = {
       entityId: entitY_ID,
-      composeKey: composeKey
+      paymentCode: composeKey
     };
     this.spinnerService.show();
  

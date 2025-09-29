@@ -20,7 +20,7 @@ export class filtercasePaymentDto {
 
 export class filtercasePaymentByIdDto {
   entityId?: string | null = null;
-  composeKey?: string | null = null;
+  paymentCode?: string | null = null;
 }
 export class filtercasePaymentBycomposeKeyDto {
   composeKey?: string | null = null;

@@ -80,32 +80,32 @@
                 <label for="applyDate" class="form-label">{{ 'mainApplyServiceResourceName.applydate' | translate
                   }}</label>
                 <input type="date" name="applyDate" class="form-control" [(ngModel)]="searchParams.applyDate"
-                  placeholder="Search">
+                  [placeholder]="'Common.placeholderSearch' | translate">
               </div>
 
               <div class="col-xl-4 mb-3">
                 <label for="applyNo" class="form-label">{{ 'mainApplyServiceResourceName.RefNo' | translate}}</label>
                 <input type="text" name="applyNo" class="form-control" [(ngModel)]="searchParams.applyNo"
-                  placeholder="Search">
+                  [placeholder]="'Common.placeholderSearch' | translate">
               </div>
 
               <div class="col-xl-4 mb-3">
                 <label for="applyNo" class="form-label">{{ 'mainApplyServiceResourceName.address' | translate}}</label>
                 <input type="text" name="applyNo" class="form-control" [(ngModel)]="searchParams.applyNo"
-                  placeholder="Search">
+                  [placeholder]="'Common.placeholderSearch' | translate">
               </div>
 
               <div class="col-xl-4 mb-3">
                 <label for="fromDate" class="form-label">{{ 'FinancialReportResourceName.fromDate' | translate
                   }}</label>
                 <input type="date" name="fromDate" class="form-control" [(ngModel)]="searchParams.fromDate"
-                  placeholder="Search">
+                  [placeholder]="'Common.placeholderSearch' | translate">
               </div>
 
               <div class="col-xl-4 mb-3">
                 <label for="toDate" class="form-label">{{ 'FinancialReportResourceName.toDate' | translate }}</label>
                 <input type="date" name="toDate" class="form-control" [(ngModel)]="searchParams.toDate"
-                  placeholder="Search">
+                  [placeholder]="'Common.placeholderSearch' | translate">
               </div>
             </div>
           </form>

@@ -43,7 +43,7 @@
 
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'InvoiceHdResourceName.invoiceNo' | translate }}</label>
-              <input type="text" name="invoiceNo" class="form-control" [(ngModel)]="searchParams.invoiceNo" placeholder="Search">
+              <input type="text" name="invoiceNo" class="form-control" [(ngModel)]="searchParams.invoiceNo" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
 
             <div class="col-xl-4 mb-3">
@@ -61,7 +61,7 @@
             </div>
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'InvoiceHdResourceName.vendorNo' | translate }}</label>
-              <input type="text" name="vendorNo" class="form-control" [(ngModel)]="searchParams.vendorNo" placeholder="Search">
+              <input type="text" name="vendorNo" class="form-control" [(ngModel)]="searchParams.vendorNo" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
 
             <div class="col-xl-4 mb-3">

@@ -61,7 +61,7 @@
                 {{ 'beneficentResourceName.beneficentNumber' | translate }}
               </label>
               <input type="text" name="beneficentNumber" class="form-control"
-                     [(ngModel)]="searchParams.beneficentNumber" placeholder="Search">
+                     [(ngModel)]="searchParams.beneficentNumber" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
 
             <div class="col-xl-4 mb-3">
@@ -69,7 +69,7 @@
                 {{ 'beneficentResourceName.phoneNumber' | translate }}
               </label>
               <input type="text" name="phoneNumber" class="form-control"
-                     [(ngModel)]="searchParams.phoneNumber" placeholder="Search">
+                     [(ngModel)]="searchParams.phoneNumber" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
           </div>
         </form>

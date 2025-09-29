@@ -36,8 +36,13 @@ export class UserService {
     return this.http.get(`${this.BASE_URL}${ApiEndpoints.User.Base}${ApiEndpoints.User.UserType}`);
   }
 
-  deleteUser(id: string): Observable<any> {
-    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Delete(id)}`, {});
+  //deleteUser(id: string): Observable<any> {
+  //  return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.Delete(id)}`, {});
+  //}
+
+  deleteUser(id: string) {
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.User.Delete}`;
+    return this.http.post(apiUrl, id);
   }
 
   getUsersForSelect2(payload: {
@@ -95,6 +100,7 @@ export class UserService {
   }
 
   getDashboardPermission(userId: string) {
-    return this.http.get(`${this.BASE_URL}${ApiEndpoints.User.GetDashboardPermissionList(userId)}`);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.User.GetDashboardPermissionList}`;
+    return this.http.post(apiUrl, userId);
   }
 }

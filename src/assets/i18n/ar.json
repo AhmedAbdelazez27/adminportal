@@ -257,6 +257,7 @@
     "BACK_TO_HOME": "العودة إلى الرئيسية",
     "OPEN_IN_GOOGLE_MAPS": "فتح في خرائط جوجل"
   },
+
   "ENTITY": {
     "TITLE": "الصلاحيات /الجمعيات",
     "ARABIC_NAME": "الاسم العربي",
@@ -762,7 +763,13 @@
     "Entries": "سجلات",
     "DASHBOARD_PERMISSIONS": "صلاحيات الشاشة الرئيسية",
     "ALREADY_MAPPED": "تم تعيين الحساب بالفعل",
-    "BasicInformation": "المعلومات الأساسية"
+    "BasicInformation": "المعلومات الأساسية",
+    "placeholderSearch": "ابحث",
+    "applyFilter": "تطبيق الفلتر",
+    "filterbymodule": "تصفية حسب الوحدة(ات)",
+    "UAEPassCancelRequest": "قام المستخدم بإلغاء تسجيل الدخول",
+    "notVerifiedUser": "الاكونت غير صحيح",
+    "notVerifiedUserMessage": " أنت غير مؤهل للوصول إلى هذه الخدمة. إما أن حسابك لم تتم ترقيته أو لديك حساب زائر. يرجى الاتصال بـ بيت الشارقة لتتمكن من الوصول إلى الخدمة"
   },
   "AuthenticationResorceName": {
     "titleRole": " الصلاحيات /الدور الوظيفي",
@@ -815,7 +822,7 @@
     "nameArReqMsg": "يجب أن يحتوي الاسم بالعربية على حرف واحد على الأقل",
     "nameEnReq": "الاسم بالإنجليزية مطلوب",
     "nameEnReqMsg": "يجب أن يحتوي الاسم بالإنجليزية على حرف واحد على الأقل",
-    "active": "نشط",
+    "inactive": "نشط",
     "deleteConfirm": "تأكيد الحذف",
     "deleteConfirmMsg": "هل أنت متأكد أنك تريد حذف هذا مجموعة المستخدمين لا يمكن التراجع عن هذا الإجراء.",
     "noUserFound": "لم يتم العثور على مستخدمين في هذا مجموعة المستخدمين.",
@@ -838,7 +845,13 @@
     "uaePassLogin": "تسجيل الدخول عبر الهوية الرقمية الإماراتية",
     "UAE_PASS_LOGIN": "تسجيل الدخول بـ UAE Pass",
     "entities": "الجمعيات",
-    "Dashboard": "الشاشة الرئيسية"
+    "Dashboard": "الشاشة الرئيسية",
+    "addTitle": "إضافة جديد  الصلاحيات /مجموعة المستخدمين",
+    "editTitle": "تعديل   الصلاحيات /مجموعة المستخدمين",
+    "viewTitle": "عرض التفاصيل الصلاحيات /مجموعة المستخدمين",
+    "userIn": "المستخدمون في",
+    "ACTIVE": "نشط",
+    "INACTIVE": "غير نشط"
   },
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "اسم الجمعية",
@@ -1567,6 +1580,7 @@
     "ENGLISH_NAME": "الاسم بالإنجليزية",
     "CONFIG_TYPE": "نوع الإعداد",
     "ACTIVE": "نشط",
+    "INACTIVE": "غير نشط",
     "MANDATORY": "إجباري",
     "LAST_MODIFIED": "آخر تعديل",
     "ATTACHMENTS_CONFIG_TYPE": "نوع إعداد المرفقات",
@@ -1576,7 +1590,8 @@
     "CLOSE": "إغلاق",
     "CANCEL": "إلغاء",
     "CREATE": "إنشاء",
-    "UPDATE": "تحديث"
+    "UPDATE": "تحديث",
+    "OPTIONAL": "اختياري"
   },
   "LOCATIONS": {
     "TITLE": "       الخدمات  / الاعدادات    / إدارة المواقع",
@@ -2035,6 +2050,7 @@
     "spec": "التخصص",
     "specia": "التخصص *",
     "sregionname": "اسم المنطقه",
+    "regionname": "اسم المنطقه",
     "sscreentype": "نوع الموقع",
     "sstreetname": "اسم الشارع",
     "StartDate": "تاريخ البدء",
@@ -2116,6 +2132,11 @@
     "licenseEndDate": "تاريخ انتهاء الترخيص",
     "NoPermission": "لا إذن",
     "navigateService": "الخدمات",
+    "ARABIC_NAME": "الاسم العربي",
+    "ENGLISH_NAME": "الاسم بالإنجليزية",
+    "LocationType1": "نوع الموقع",
+    "LocaName": "اسم الموقع",
+
     "LOCATION": {
       "DETAILS": "تفاصيل الموقع",
       "DESC": "عرض معلومات الموقع والخريطة",

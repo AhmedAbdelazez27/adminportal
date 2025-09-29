@@ -329,6 +329,7 @@
     "NO_PARTNERS": "No Partners",
     "DASHBOARD_PERMISSIONS": "Dashboard Permissions"
   },
+
   "ENTITY": {
     "TITLE": "Entities",
     "ARABIC_NAME": "Arabic Name",
@@ -832,8 +833,15 @@
     "Cancel": "Cancel",
     "DASHBOARD_PERMISSIONS": "Dashboard Permissions",
     "BasicInformation": "Basic Information",
-    "ALREADY_MAPPED": "Account Already Mapped"
+    "ALREADY_MAPPED": "Account Already Mapped",
+    "placeholderSearch": "Search",
+    "applyFilter": "Apply Filter",
+    "filterbymodule": "Filter by Module(s)",
+    "UAEPassCancelRequest": "User cancelled the login",
+    "notVerifiedUser": "Account is not verified",
+    "notVerifiedUserMessage": "You are not eligible to access this service. Your account is either not upgraded or you have a visitor account. Please contact Admin to access the services."
   },
+
   "AuthenticationResorceName": {
     "titleRole": "Roles",
     "name": "name",
@@ -909,7 +917,13 @@
     "login": "Login",
     "forgetpassWord": "Forget Password?",
     "uaePassLogin": "UAEPass Login",
-    "UAE_PASS_LOGIN": "Login with UAE Pass"
+    "UAE_PASS_LOGIN": "Login with UAE Pass",
+    "addTitle": "Add New Permissions/user Group",
+    "editTitle": "Modify Permissions/user Group",
+    "viewTitle": "View details Permissions/User Group",
+    "userIn": "Users in",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive"
   },
   "ArMiscReceiptHeaderResourceName": {
     "EntityId": "Entity Name",
@@ -1631,6 +1645,7 @@
     "ENGLISH_NAME": "English Name",
     "CONFIG_TYPE": "Config Type",
     "ACTIVE": "Active",
+    "INACTIVE": "InActive",
     "MANDATORY": "Mandatory",
     "LAST_MODIFIED": "Last Modified",
     "ATTACHMENTS_CONFIG_TYPE": "Attachments Config Type",
@@ -1640,7 +1655,8 @@
     "CLOSE": "Close",
     "CANCEL": "Cancel",
     "CREATE": "Create",
-    "UPDATE": "Update"
+    "UPDATE": "Update",
+    "OPTIONAL": "Optional"
   },
   "LOCATIONS": {
     "TITLE": "Locations Management",
@@ -2470,6 +2486,9 @@
     "serviceName": "Service Name",
     "NoPermission": "No Permission",
     "navigateService": "Service",
+    "ARABIC_NAME": "Arabic Name",
+    "ENGLISH_NAME": "English Name",
+
     "WORKFLOW": {
       "PROCESS_STEPS": "Workflow Process Steps",
       "PROCESS_STEPS_DESC": "View workflow process steps",

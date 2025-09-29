@@ -828,6 +828,7 @@ export class SpCasesComponent {
       entityId: entityId,
       caseCode: caseCode,
       headerId: null,
+      studyId: null,
       caseId: caseid,
     };
 
@@ -861,7 +862,8 @@ export class SpCasesComponent {
   getStudyDetailsFormDatabyId(source: string, entityId: string, studyId: string): void {
     const params: filteraidRequestsByIdDto = {
       entityId: entityId,
-      headerId: studyId,
+      studyId: studyId,
+      headerId: null,
       caseCode: null,
       caseId: null
     };

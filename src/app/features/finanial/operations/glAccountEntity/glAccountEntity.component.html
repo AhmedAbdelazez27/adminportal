@@ -44,22 +44,22 @@
             </div>
 
             <!-- <div class="col-xl-4 mb-3">
-              <label class="form-label">{{ 'glAccountEntityResourceName.accountCode' | translate }}</label>
-              <ng-select class="ng-select-custom"
-                         name="accountCodeSelect2"
-                         [(ngModel)]="selectedaccountCodeSelect2Obj"
-                         [items]="accountCodeSelect2"
-                         bindLabel="text"
-                         bindValue="id"
-                         [typeahead]="accountCodeSearchInput$"
-                         [loading]="loadingaccountCode"
-                         [virtualScroll]="true"
-                         (scrollToEnd)="loadMoreaccountCode()"
-                         (change)="onaccountCodeSelect2Change($event)"
-                         (search)="onaccountCodeSearch($event)"
-                         placeholder="{{ 'Common.Select' | translate }}">
-              </ng-select>
-            </div> -->
+    <label class="form-label">{{ 'glAccountEntityResourceName.accountCode' | translate }}</label>
+    <ng-select class="ng-select-custom"
+               name="accountCodeSelect2"
+               [(ngModel)]="selectedaccountCodeSelect2Obj"
+               [items]="accountCodeSelect2"
+               bindLabel="text"
+               bindValue="id"
+               [typeahead]="accountCodeSearchInput$"
+               [loading]="loadingaccountCode"
+               [virtualScroll]="true"
+               (scrollToEnd)="loadMoreaccountCode()"
+               (change)="onaccountCodeSelect2Change($event)"
+               (search)="onaccountCodeSearch($event)"
+               placeholder="{{ 'Common.Select' | translate }}">
+    </ng-select>
+  </div> -->
 
             <div class="col-xl-4 mb-3">
               <label class="form-label">{{ 'glAccountEntityResourceName.accountId' | translate }}</label>
@@ -83,22 +83,20 @@
               <label class="form-label">{{ 'glAccountEntityResourceName.accountStatus' | translate }}</label>
               <ng-select class="ng-select-custom"
                          name="accountStatusSelect2"
-                         [(ngModel)]="selectedaccountStatusSelect2Obj"
-                         [items]="accountStatusSelect2"
-                         bindLabel="text"
+                         [items]="glaccountStatusSelect2"
                          bindValue="id"
-                         [typeahead]="accountStatusSearchInput$"
-                         [loading]="loadingaccountStatus"
-                         [virtualScroll]="true"
-                         (scrollToEnd)="loadMoreaccountStatus()"
+                         [bindLabel]="lang === 'ar' ? 'text' : 'textEn'"
+                         [(ngModel)]="selectedaccountStatusSelect2Obj"
+                         [closeOnSelect]="true"
                          (change)="onaccountStatusSelect2Change($event)"
-                         (search)="onaccountStatusSearch($event)"
-                         placeholder="{{ 'Common.Select' | translate }}">
+                         [placeholder]="'Common.Select' | translate">
               </ng-select>
             </div>
+
+      
             <div class="col-xl-4 mb-3">
               <label for="accountDescription" class="form-label">{{ 'glAccountEntityResourceName.accountDescription' | translate}}</label>
-              <input type="text" name="accountDescription" class="form-control" [(ngModel)]="searchParams.accountDescription" placeholder="Search">
+              <input type="text" name="accountDescription" class="form-control" [(ngModel)]="searchParams.accountDescription" [placeholder]="'Common.placeholderSearch' | translate">
             </div>
           </div>
         </form>
@@ -164,7 +162,7 @@
               <div class="card p-2">
                 <input type="search"
                        id="searchForm"
-                       placeholder="Search"
+                       [placeholder]="'Common.placeholderSearch' | translate"
                        class="form-control mb-2"
                        (keyup)="onglAccountTreeSearch($event)">
                 <div id="glAccountjstreeForm" style="max-height: 400px; overflow-y: auto;"></div>
@@ -268,7 +266,7 @@
               <div class="card p-2">
                 <input type="search"
                        id="searchForm"
-                       placeholder="Search"
+                       [placeholder]="'Common.placeholderSearch' | translate"
                        class="form-control mb-2"
                        (keyup)="onglAccountEntityTreeSearch($event)">
                 <div id="glAccountEntityjstreeForm" style="max-height: 400px; overflow-y: auto;"></div>

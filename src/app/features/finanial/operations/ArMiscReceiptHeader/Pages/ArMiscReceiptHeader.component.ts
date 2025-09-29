@@ -346,22 +346,22 @@ export class ArMiscReceiptHeaderComponent {
   }): void {
     this.paginationDetailData.currentPage = event.pageNumber;
     this.paginationDetailData.take = event.pageSize;
-    const miscReceiptId = this.searchParamsById.miscReceiptId || '';
+    const miscReciptId = this.searchParamsById.miscReciptId || '';
     const entityId = this.searchParamsById.entityId || '';
     this.getFormDatabyId(
       { pageNumber: 1, pageSize: this.paginationDetailData.take },
-      miscReceiptId,
+      miscReciptId,
       entityId
     );
   }
 
   onTableSearchDetailData(text: string): void {
     this.searchText = text;
-    const miscReceiptId = this.searchParamsById.miscReceiptId || '';
+    const miscReciptId = this.searchParamsById.miscReciptId || '';
     const entityId = this.searchParamsById.entityId || '';
     this.getFormDatabyId(
       { pageNumber: 1, pageSize: this.paginationDetailData.take },
-      miscReceiptId,
+      miscReciptId,
       entityId
     );
   }
@@ -369,22 +369,22 @@ export class ArMiscReceiptHeaderComponent {
   onPageChangeLineData(event: { pageNumber: number; pageSize: number }): void {
     this.paginationLineData.currentPage = event.pageNumber;
     this.paginationLineData.take = event.pageSize;
-    const miscReceiptId = this.searchParamsById.miscReceiptId || '';
+    const miscReciptId = this.searchParamsById.miscReciptId || '';
     const entityId = this.searchParamsById.entityId || '';
     this.getFormDatabyId(
       { pageNumber: 1, pageSize: this.paginationLineData.take },
-      miscReceiptId,
+      miscReciptId,
       entityId
     );
   }
 
   onTableSearchLineData(text: string): void {
     this.searchText = text;
-    const miscReceiptId = this.searchParamsById.miscReceiptId || '';
+    const miscReciptId = this.searchParamsById.miscReciptId || '';
     const entityId = this.searchParamsById.entityId || '';
     this.getFormDatabyId(
       { pageNumber: 1, pageSize: this.paginationLineData.take },
-      miscReceiptId,
+      miscReciptId,
       entityId
     );
   }
@@ -433,12 +433,12 @@ export class ArMiscReceiptHeaderComponent {
 
   getFormDatabyId(
     event: { pageNumber: number; pageSize: number },
-    miscReceiptId: string,
+    miscReciptId: string,
     entitY_ID: string
   ): void {
     const params: FilterArMiscReceiptHeaderByIdDto = {
       entityId: entitY_ID,
-      miscReceiptId: miscReceiptId,
+      miscReciptId: miscReciptId,
     };
     this.spinnerService.show();
     forkJoin({

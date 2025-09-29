@@ -31,7 +31,7 @@ import {
 } from '../../../../core/dtos/FinancialDtos/OperationDtos/glAccountEntity.dto';
 
 import 'jquery';
-import { isDisabledType } from '../../../../core/enum/user-type.enum';
+import { accountStatus, isDisabledType } from '../../../../core/enum/user-type.enum';
 import { GlAccountService } from '../../../../core/services/Financial/Operation/glAccount.service';
 import { FilterGlAccountDto } from '../../../../core/dtos/FinancialDtos/OperationDtos/glAccount.dto';
 declare var $: any;
@@ -109,11 +109,15 @@ export class GlAccountEntityComponent implements OnInit, OnDestroy {
   selectedaccountStatusSelect2Obj: any = null;
   accountStatusSearchInput$ = new Subject<string>();
 
+  glaccountStatusSelect2 = accountStatus.accountStatusList;
+
+
   glAccountjstreeData: any[] = [];
   glAccountEntityjstreeData: any[] = [];
   glAccountshowTree = false;
   glAccountEntityshowTree = false;
   currentLang = 'en';
+  lang: string | null = null;
   glAccountparentTextPath:any;
   glAccountEntityparentTextPath:any;
   pendingItems: Array<{ entityId: any; entityIdText?: string | null; accountCode: string; accountCodeText?: string | null; parentCode: string; parentCodeText?: string | null; glAccountEntityId?: any }> = [];
@@ -138,6 +142,7 @@ export class GlAccountEntityComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.lang = localStorage.getItem('lang');
     this.buildColumnDefs();
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
     this.rowActions = [
@@ -170,7 +175,7 @@ export class GlAccountEntityComponent implements OnInit, OnDestroy {
     this.fetchaccountCodeSelect2();
     this.fetchentityIdSelect2();
     this.fetchaccountIdSelect2();
-    this.fetchaccountStatusSelect2();
+  //  this.fetchaccountStatusSelect2();
   }
 
   ngOnDestroy(): void {

@@ -54,12 +54,12 @@
             <div class="col-xl-4 mb-3">
               <label for="Att10" class="form-label">{{ 'glJEResourceName.jvNo' | translate }} </label>
               <input type="text" class="form-control" [(ngModel)]="searchParams.att10" name="att10"
-                     placeholder="Search">
+                     [placeholder]="'Common.placeholderSearch' | translate">
             </div>
             <div class="col-xl-4 mb-3">
               <label for="JE_NAME" class="form-label">{{ 'glJEResourceName.jvName' | translate }}</label>
               <input type="text" class="form-control" [(ngModel)]="searchParams.jE_NAME" name="jE_NAME"
-                     placeholder="Search">
+                     [placeholder]="'Common.placeholderSearch' | translate">
             </div>
           </div>
 
@@ -67,12 +67,12 @@
             <div class="col-xl-4 mb-3">
               <label for="att7" class="form-label">{{ 'glJEResourceName.jvManualNo' | translate }} </label>
               <input type="text" class="form-control" [(ngModel)]="searchParams.att7" name="att7"
-                     placeholder="Search">
+                     [placeholder]="'Common.placeholderSearch' | translate">
             </div>
             <div class="col-xl-4 mb-3">
               <label for="amount" class="form-label">{{ 'glJEResourceName.value' | translate }}</label>
               <input type="number" class="form-control" [(ngModel)]="searchParams.amount" name="amount"
-                     placeholder="Search">
+                     [placeholder]="'Common.placeholderSearch' | translate">
             </div>
             <div class="col-xl-4 mb-3">
               <label for="je_Soure" class="form-label">{{ 'glJEResourceName.referenceNo' | translate }}</label>

@@ -24,8 +24,8 @@ export class vendorService {
     if (!params.vendorId || !params.entityId) {
       throw new Error('vendorId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ApVendor.GetById(params.vendorId, params.entityId)}`;
-    return this.http.get<vendorHeaderDto[]>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.ApVendor.GetById}`;
+    return this.http.post<vendorHeaderDto[]>(apiUrl, params);
   }
 }
 

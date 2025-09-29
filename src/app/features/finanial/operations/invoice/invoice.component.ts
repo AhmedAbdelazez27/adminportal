@@ -173,6 +173,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
+          console.log("newItems", newItems);
           this.vendorSelect2 = [...this.vendorSelect2, ...newItems];
           this.loadingvendors = false;
         },
@@ -182,7 +183,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
 
   onvendorSelect2Change(selectedvendor: any): void {
     if (selectedvendor) {
-      this.searchParams.vendorName = selectedvendor.id;
+      this.searchParams.vendorName = selectedvendor.text;
       this.searchParams.vendorNamestr = selectedvendor.text;
     } else {
       this.searchParams.vendorName = null;

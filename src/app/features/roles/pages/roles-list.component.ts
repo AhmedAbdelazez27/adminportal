@@ -340,10 +340,7 @@ export class RolesListComponent {
     }
 
     assignRole(): void {
-        if (this.usersForm.invalid || !this.selectedRoleId) {
-            this.toastr.error('Please select at least one User');
-            return;
-        }
+  
 
         const currentUsers = this.usersForm.value.userIds;
         // Determine which users to add and which ones to remove
@@ -504,9 +501,9 @@ export class RolesListComponent {
 
     applyFilter(): void {
         const keyword = this.searchKeyword.trim();
-        const selectedModule = this.selectedModuleFilter;
+      const selectedModule = this.selectedModuleFilter;
 
-        // Normalize Arabic text for better search
+      // Normalize Arabic text for better search
         const normalizeText = (text: string) => {
             if (!text) return '';
             return text.toLowerCase()
@@ -518,10 +515,10 @@ export class RolesListComponent {
         const normalizedKeyword = normalizeText(keyword);
 
         this.modules = this.originalModules
-            .filter((module) => {
+          .filter((module) => {
                 const matchesModule =
                     selectedModule === 'all' ||
-                    module.module.toString() === selectedModule;
+                    module.module === selectedModule;
 
                 const filteredScreens = module.screens.filter((screen: any) => {
                     if (!normalizedKeyword) return true; // Show all if no search term

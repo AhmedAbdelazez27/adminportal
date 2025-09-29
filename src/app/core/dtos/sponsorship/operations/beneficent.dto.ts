@@ -48,7 +48,7 @@ address: string | null = null;
 
 
 export class filterBeneficentByIdDto {
-  beneficenT_ID: string | null = null;
+  beneficentId: string | null = null;
   entityId: string | null = null;
 }
 
