@@ -138,48 +138,55 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.currentlang = "en";
     }
     var UAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://compassint.ddns.net:2036/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-    var LocalUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:4200/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
+    var LocalUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:64088/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
     var ProdUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=ccc_web_stg&scope=urn:uae:digitalid:profile:general&state=Q9pOTvlchYARcSFL&redirect_uri=https://192.168.51.130:2002/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-    window.location.href = `${ProdUAEPassURL}&ui_locales=${this.currentlang}`;
+    window.location.href = `${LocalUAEPassURL}&ui_locales=${this.currentlang}`;
   }
 
 
  
   uaepassCheckCode(code: string, state: string) {
-    const params: LoginUAEPassDto =
-    {
-      code : code,
-      state : state,
-      lang : localStorage.getItem('lang')
-    }
-   
+    const params: LoginUAEPassDto = {
+      code: code,
+      state: state,
+      lang: localStorage.getItem('lang')
+    };
+
     this.spinnerService.show();
 
     this.auth.UAEPasslogin(params)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
-
           this.auth.saveToken(res?.token);
           const decodedData = this.auth.decodeToken();
 
-          if (decodedData && decodedData.Permissions) {
-            const permissions = decodedData.Permissions;
-            localStorage.setItem('permissions', JSON.stringify(permissions));
-            localStorage.setItem('pages', JSON.stringify(decodedData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']));
-            localStorage.setItem('userId', decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']);
-          }
+          if (decodedData) {
+            if (decodedData.Permissions) {
+              localStorage.setItem('permissions', JSON.stringify(decodedData.Permissions));
+              localStorage.setItem('pages', JSON.stringify(decodedData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']));
+              localStorage.setItem('userId', decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']);
+            }
 
-          this.toastr.success(this.translate.instant('LOGIN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
-          this.spinnerService.hide();
-          this.router.navigate(['/home']);
+            this.toastr.success(
+              this.translate.instant('LOGIN.SUCCESS'),
+              this.translate.instant('TOAST.TITLE.SUCCESS')
+            );
+
+            setTimeout(() => {
+              this.spinnerService.hide();
+              this.router.navigate(['/home']);
+            }, 1500);
+
+          } else {
+            this.showErrorAndRedirect('AUTH.MESSAGES.INVALID_TOKEN_ERROR');
+          }
         },
         error: (err) => {
-          console.log("err", err);
-          this.spinnerService.hide();
+          console.log('UAEPass Error:', err);
 
           const notVerifiedText = this.translate.instant('Common.notVerifiedUser');
-          const errorMsg = err?.message || err?.reason;
+          const errorMsg = err?.message || err?.reason || 'LOGIN.FAILED';
 
           if (errorMsg === notVerifiedText) {
             const modalElement = document.getElementById('notVerifiedUser');
@@ -187,31 +194,29 @@ export class LoginComponent implements OnInit, OnDestroy {
               const modal = new bootstrap.Modal(modalElement);
               modal.show();
             }
-          } else {
-            this.toastr.error(
-              this.translate.instant('LOGIN.FAILED'),
-              this.translate.instant('TOAST.TITLE.ERROR')
-            );
-
-            if (errorMsg) {
-              setTimeout(() => {
-                this.toastr.info(this.translate.instant(errorMsg));
-              }, 1000);
-            }
             this.spinnerService.hide();
-
-            const redirectUri = window.location.origin + '/login';
-            const logoutURL =
-              'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' +
-              encodeURIComponent(redirectUri);
-            window.location.href = logoutURL;
+          } else {
+            this.showErrorAndRedirect(errorMsg);
           }
-        },
-        complete: () => {
-          this.spinnerService.hide();
         }
       });
   }
+
+  private showErrorAndRedirect(messageKey: string) {
+    alert(messageKey);
+    this.toastr.error(
+      this.translate.instant(messageKey),
+      this.translate.instant('TOAST.TITLE.ERROR')
+    );
+
+    setTimeout(() => {
+      this.spinnerService.hide();
+      const redirectUri = window.location.origin + '/login';
+      const logoutURL = `https://stg-id.uaepass.ae/idshub/logout?redirect_uri=${encodeURIComponent(redirectUri)}`;
+      window.location.href = logoutURL;
+    }, 1500);
+  }
+
 
   logout(): void {
     const logoutUrl = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(window.location.origin + '/login');

@@ -113,10 +113,17 @@ export class RolesListComponent {
         ];
     }
 
+
     getRoles(page: number, searchValue: string = ''): void {
-        const skip = (page - 1) * this.itemsPerPage;
+
+      this.searchParams.skip = (page - 1) * this.itemsPerPage;
+      this.searchParams.take = this.itemsPerPage;
+      this.searchParams.searchValue = searchValue;
+      const cleanedFilters = this.cleanFilterObject(this.searchParams);
+      cleanedFilters.searchValue = cleanedFilters.searchValue != null ? cleanedFilters.searchValue : '';
+
         this.spinnerService.show();
-        this.roleService.getRoles(skip, this.itemsPerPage, searchValue).subscribe(
+      this.roleService.getAllRoles(cleanedFilters).subscribe(
             (data: any) => {
                 this.roles = data.data;
                 this.totalCount = data.totalCount;
