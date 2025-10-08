@@ -33,7 +33,7 @@ type="ball-clip-rotate-multiple"
             <div class="input-group">
               <input [type]="showCurrentPassword ? 'text' : 'password'" id="currentPassword" class="form-control"
                      [ngClass]="{'is-invalid': changePasswordForm.get('currentPassword')?.invalid && (changePasswordForm.get('currentPassword')?.touched || submitted)}"
-                     formControlName="currentPassword" placeholder="Enter current password" />
+                     formControlName="currentPassword" placeholder = "{{ 'EDIT_PROFILE.ENTER_CURRENT_PASSWORD' | translate }}"/>
               <button type="button" class="btn btn-outline-secondary"
                       style="background-color: #F7F7F7 !important; border:none  !important;"
                       (click)="showCurrentPassword = !showCurrentPassword">

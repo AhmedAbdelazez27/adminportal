@@ -20,7 +20,14 @@
             "outputPath": "dist/adminportal",
             "allowedCommonJsDependencies": [
               "highcharts",
-              "leaflet"
+              "leaflet",
+              "canvg",
+              "html2canvas",
+              "jquery",
+              "file-saver",
+              "rgbcolor",
+              "raf",
+              "core-js"
             ],
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -37,7 +44,7 @@
                 "output": "assets/ae-icons/"
               }
             ],
-            "styles": [
+            "styles": [ 
               "node_modules/@kolkov/angular-editor/themes/default.scss",
               "node_modules/@kolkov/angular-editor/themes/default.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -83,7 +90,7 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "16kB",
+                  "maximumWarning": "20kB",
                   "maximumError": "64kB"
                 }
               ]

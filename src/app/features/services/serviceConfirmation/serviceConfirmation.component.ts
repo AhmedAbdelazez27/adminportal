@@ -871,19 +871,24 @@ export class ServiceConfirmationComponent {
   }
 
   updateStatus(status: string, reason: string): void {
-    if (status === "1" && !this.addReason.fastingTentService?.tentConstructDatestr && this.firstLevel && this.loadformData.serviceId === 1) {
-      this.toastr.warning(this.translate.instant('VALIDATION.TENT_DATE_REQUIRED'));
-      return;
-    }
-    if (status === "1" && !this.addReason.fastingTentService?.endDatestr && this.loadformData.serviceId === 1) {
+
+    const tentDate = this.openStandardReportService.formatDate(this.loadgridData[0].fastingTentService?.tentDate ?? null);
+    const startDate = this.openStandardReportService.formatDate(this.loadgridData[0].fastingTentService?.startDate ?? null);
+    const endDate = this.openStandardReportService.formatDate(this.loadgridData[0].fastingTentService?.endDate ?? null);
+
+    //if (status === "1" && !tentDate && this.firstLevel && this.mainApplyService?.serviceId === 1) {
+    //  this.toastr.warning(this.translate.instant('VALIDATION.TENT_DATE_REQUIRED'));
+    //  return;
+    //}
+
+    if (status === "1" && !endDate && this.loadgridData[0].serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.END_DATE_REQUIRED'));
       return;
     }
-    if (status === "1" && !this.addReason.fastingTentService?.startDatestr && this.loadformData.serviceId === 1) {
+    if (status === "1" && !startDate && this.loadgridData[0].serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.START_DATE_REQUIRED'));
       return;
     }
-
     this.spinnerService.show();
 
     this.saveNotesForApproving().subscribe({

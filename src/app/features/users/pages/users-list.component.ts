@@ -15,12 +15,12 @@ import { confirmPasswordValidator } from '../../../shared/customValidators/confi
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DepartmentService } from '../../../core/services/department.service';
 import { EntityService } from '../../../core/services/entit.service';
-import { Subject, forkJoin, of, take, takeUntil } from 'rxjs';
+import { Subject, finalize, forkJoin, map, of, switchMap, take, takeUntil, tap } from 'rxjs';
 import { EntityInfoService } from '../../../core/services/entitIfo.service';
 import { FndLookUpValuesSelect2RequestDto, reportPrintConfig } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { Select2Service } from '../../../core/services/Select2.service';
 import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
-import { FilterUserDto } from '../../../core/dtos/search-user.dto';
+import { FilterUserByIdDto, FilterUserDto } from '../../../core/dtos/search-user.dto';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { PagedDto, Pagination } from '../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
 import { GenericDataTableComponent } from '../../../../shared/generic-data-table/generic-data-table.component';
@@ -28,6 +28,7 @@ import { AttachmentGalleryComponent } from '../../../../shared/attachment-galler
 import { Gender, UserStatus, UserType } from '../../../core/enum/user-type.enum';
 import { AttachmentDto } from '../../../core/dtos/mainApplyService/mainApplyService.dto';
 import { environment } from '../../../../environments/environment';
+import { GlAccountDto, FilterGlAccountDto } from '../../../core/dtos/FinancialDtos/OperationDtos/glAccount.dto';
 declare var bootstrap: any;
 
 @Component({
@@ -39,8 +40,7 @@ declare var bootstrap: any;
     TranslateModule,
     NgSelectModule,
     FormsModule,
-    GenericDataTableComponent,
-    AttachmentGalleryComponent
+    GenericDataTableComponent
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss',
@@ -62,7 +62,7 @@ export class UsersListComponent implements OnInit {
   entities: any[] = [];
   entitiesInfo: any[] = [];
   roles: any[] = [];
-  mode: 'add' | 'edit' = 'add';
+  mode: 'add' | 'edit' | 'view'= 'add';
   editingUserId: any | null = null;
   showPassword: boolean = false;
   showCPassword: boolean = false;
@@ -113,6 +113,7 @@ export class UsersListComponent implements OnInit {
   // // // // // 
   searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
   countrySelect2: any[] = [];
+  citySelect2: any[] = [];
   filterUserCriteria = new FilterUserDto();
   userStatusOptions: any[] = [];
   userTypesOptions: any[] = [];
@@ -201,6 +202,7 @@ export class UsersListComponent implements OnInit {
     this.getEntitys();
     this.getEntitysInfo();
     this.fetchcountrySelect2();
+    this.fetchCitySelect2();
     this.fetchUsersStatusSelect2();
     this.fetchUsersTypesSelect2();
     this.initializeGenderOptions();
@@ -1067,6 +1069,17 @@ export class UsersListComponent implements OnInit {
     });
   }
 
+  fetchCitySelect2(): void {
+    this.select2Service.getCitySelect2(this.searchSelect2Params).subscribe({
+      next: (response: any) => {
+        this.citySelect2 = response?.results || [];
+      },
+      error: (err: any) => {
+        this.toastr.error('Failed to load Country.', 'Error');
+      }
+    });
+  }
+
   fetchUsersStatusSelect2(): void {
     this.userService.getUserStatusSelect2(0, 2000).subscribe({
       next: (response: any) => {
@@ -1120,7 +1133,62 @@ export class UsersListComponent implements OnInit {
       const modal = new bootstrap.Modal(modalElement);
       modal.show();
     };
+  }
 
+  getFormDatabyId(id: string, mode: 'edit' | 'view'): void {
+    this.mode = mode;
+    this.spinnerService.show();
+
+    this.userService.getUserById(id)
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((detail: any) => {
+          console.log('User details:', detail);
+          this.user = detail;
+          this.attachment = detail.attachments;
+
+          if (this.mode === 'view') {
+            const modalElement = document.getElementById('details');
+            if (modalElement) {
+              const modal = new bootstrap.Modal(modalElement);
+              modal.show();
+            }
+          } else if (this.mode === 'edit') {
+            this.editingUserId = id;
+            this.submitted = false;
+
+            let genderValue: boolean | null = null;
+            if (this.user.gender === Gender.male) {
+              genderValue = false;
+            } else if (this.user.gender === Gender.female) {
+              genderValue = true;
+            }
+
+            this.userForm.patchValue({
+              ...this.user,
+              roles: this.user.roles?.map((r: any) => r.id) || [],
+              gender: genderValue,
+              id: this.user.id ?? null,
+              masterId: this.user?.masterId ?? null,
+            });
+
+            this.togglePasswordFields(false);
+
+            const modalElement = document.getElementById('Users');
+            if (modalElement) {
+              const modal = new bootstrap.Modal(modalElement);
+              modal.show();
+            }
+          }
+        }),
+        finalize(() => this.spinnerService.hide())
+      )
+      .subscribe({
+        error: (err) => {
+          console.error('Error fetching user:', err);
+          this.spinnerService.hide();
+        }
+      });
   }
 
   updateUserStatus(status: number) {
@@ -1232,7 +1300,7 @@ export class UsersListComponent implements OnInit {
     }
 
     if (event.action === 'onEditInfo') {
-      this.openEditModal(event.row);
+      this.getFormDatabyId(event.row.id, 'edit');
     }
 
     if (event.action === 'onDeletdInfo') {
@@ -1244,7 +1312,7 @@ export class UsersListComponent implements OnInit {
     }
 
     if (event.action === 'onViewInfo') {
-      this.onViewDetails(event.row);
+      this.getFormDatabyId(event.row.id, 'view');
     }
   }
 
@@ -1358,5 +1426,30 @@ export class UsersListComponent implements OnInit {
     if (!date) return '';
     const d = typeof date === 'string' ? new Date(date) : date;
     return d.toLocaleString();
+  }
+
+
+  getCountryName(countryId: number): string {
+    if (!countryId || !this.countrySelect2) return '-';
+    const country = this.countrySelect2.find((c: any) => c.id === countryId);
+    return country ? country.text : '-';
+  }
+
+  getCityName(cityId: number): string {
+    if (!cityId || !this.citySelect2) return '-';
+    const city = this.citySelect2.find((c: any) => c.id === cityId);
+    return city ? city.text : '-';
+  }
+
+  getEntityName(entityId: number): string {
+    if (!entityId || !this.entities) return '-';
+    const entity = this.entities.find((c: any) => c.id === entityId);
+    return entity ? entity.text : '-';
+  }
+
+  getEntityInfoName(entityInfoId: number): string {
+    if (!entityInfoId || !this.entitiesInfo) return '-';
+    const entity = this.entitiesInfo.find((c: any) => c.id === entityInfoId);
+    return entity ? entity.text : '-';
   }
 }

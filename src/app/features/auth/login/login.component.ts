@@ -138,9 +138,9 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.currentlang = "en";
     }
     var UAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://compassint.ddns.net:2036/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-    var LocalUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:64088/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
+    var LocalUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:4200/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
     var ProdUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=ccc_web_stg&scope=urn:uae:digitalid:profile:general&state=Q9pOTvlchYARcSFL&redirect_uri=https://192.168.51.130:2002/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-    window.location.href = `${LocalUAEPassURL}&ui_locales=${this.currentlang}`;
+    window.location.href = `${ProdUAEPassURL}&ui_locales=${this.currentlang}`;
   }
 
 
@@ -203,7 +203,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private showErrorAndRedirect(messageKey: string) {
-    alert(messageKey);
     this.toastr.error(
       this.translate.instant(messageKey),
       this.translate.instant('TOAST.TITLE.ERROR')

@@ -22,6 +22,7 @@ import { AdvertisementsService } from '../../../core/services/mainApplyService/a
 import { environment } from '../../../../environments/environment';
 import { arrayMinLength, dateRangeValidator } from '../../../shared/customValidators';
 import { SpinnerService } from '../../../core/services/spinner.service';
+import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
 
 declare var bootstrap: any;
 
@@ -108,6 +109,8 @@ type RequestAdvertisementTarget = {
   mainApplyServiceId: number;
   lkpTargetTypeId: number;
   othertxt?: string | null;
+    lkpTargetTypeText: string | null;
+
 };
 
 type RequestAdvertisementLocation = {
@@ -120,6 +123,7 @@ type RequestAdvertisementMethod = {
   id: number;
   mainApplyServiceId: number;
   lkpAdMethodId: number;
+  lkpAdMethodText: string | null;
   othertxt?: string | null;
 };
 
@@ -303,6 +307,7 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
   isEditMode: boolean = false;
   serviceDepartmentActions: number[] = [];
   userForm: FormGroup;
+  fastingTentService: any = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -318,7 +323,8 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
     public translationService: TranslationService,
     private _CharityEventPermitRequestService: CharityEventPermitRequestService,
     private _AdvertisementsService: AdvertisementsService,
-    private spinnerService: SpinnerService
+    private spinnerService: SpinnerService,
+    private openStandardReportService: openStandardReportService
   ) {
     this.commentForm = this.fb.group({ comment: [''] });
     this.initAdvertisementForm();
@@ -358,10 +364,13 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
 
     const sub = this.mainApplyServiceService.getDetailById({ id }).subscribe({
       next: (resp: any) => {
+        console.log(resp);
         this.mainApplyService = resp;
+        this.fastingTentService = resp.fastingTentService;
         this.charityEventPermit = resp.charityEventPermit || null;
         this.workFlowSteps = resp.workFlowSteps || [];
         this.partners = resp.partners || [];
+        this.attachments = resp.attachments || [];
         this.attachments = resp.attachments || [];
         let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
 
@@ -1387,19 +1396,23 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
   }
 
   updateStatus(status: string, reason: string): void {
-    if (status === "1" && !this.addReason.fastingTentService?.tentConstructDatestr && this.firstLevel && this.mainApplyService?.serviceId === 1) {
-      this.toastr.warning(this.translate.instant('VALIDATION.TENT_DATE_REQUIRED'));
-      return;
-    }
-    if (status === "1" && !this.addReason.fastingTentService?.endDatestr && this.mainApplyService?.serviceId === 1) {
+    const tentDate = this.openStandardReportService.formatDate(this.fastingTentService?.tentDate ?? null);
+    const startDate = this.openStandardReportService.formatDate(this.fastingTentService?.startDate ?? null);
+    const endDate = this.openStandardReportService.formatDate(this.fastingTentService?.endDate ?? null);
+
+    //if (status === "1" && !tentDate && this.firstLevel && this.mainApplyService?.serviceId === 1) {
+    //  this.toastr.warning(this.translate.instant('VALIDATION.TENT_DATE_REQUIRED'));
+    //  return;
+    //}
+
+    if (status === "1" && !endDate && this.mainApplyService?.serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.END_DATE_REQUIRED'));
       return;
     }
-    if (status === "1" && !this.addReason.fastingTentService?.startDatestr && this.mainApplyService?.serviceId === 1) {
+    if (status === "1" && !startDate && this.mainApplyService?.serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.START_DATE_REQUIRED'));
       return;
     }
-
     this.spinnerService.show();
 
     this.saveNotesForApproving().subscribe({

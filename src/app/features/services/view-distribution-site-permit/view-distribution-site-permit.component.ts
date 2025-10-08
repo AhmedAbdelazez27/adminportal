@@ -28,6 +28,7 @@ import { AttachmentsConfigDto,AttachmentsConfigType} from '../../../core/dtos/at
 import { WorkFlowCommentsService } from '../../../core/services/mainApplyService/workFlowComments.service';
 import { AttachmentBase64Dto, CreateWorkFlowCommentDto, WorkflowCommentsType } from '../../../core/dtos/service/workFlowComments/workFlowComments.dto';
 import { SpinnerService } from '../../../core/services/spinner.service';
+import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
 
 // Service Status Enum (matching backend enum)
 declare var bootstrap: any;
@@ -138,7 +139,8 @@ export class ViewDistributionSitePermitComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private translate: TranslateService,
     private cdr: ChangeDetectorRef,
-    private spinnerService: SpinnerService
+    private spinnerService: SpinnerService,
+    private openStandardReportService: openStandardReportService
   ) {
     this.initializeCommentForm();
     this.initializeMapIcon();
@@ -1566,19 +1568,24 @@ export class ViewDistributionSitePermitComponent implements OnInit, OnDestroy {
   }
 
   updateStatus(status: string, reason: string): void {
-    if (status === "1" && !this.addReason.fastingTentService?.tentConstructDatestr && this.firstLevel && this.mainApplyService?.serviceId === 1) {
-      this.toastr.warning(this.translate.instant('VALIDATION.TENT_DATE_REQUIRED'));
-      return;
-    }
-    if (status === "1" && !this.addReason.fastingTentService?.endDatestr && this.mainApplyService?.serviceId === 1) {
+
+    const tentDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.tentDate ?? null);
+    const startDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.startDate ?? null);
+    const endDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.endDate ?? null);
+
+    //if (status === "1" && !tentDate && this.firstLevel && this.mainApplyService?.serviceId === 1) {
+    //  this.toastr.warning(this.translate.instant('VALIDATION.TENT_DATE_REQUIRED'));
+    //  return;
+    //}
+
+    if (status === "1" && !endDate && this.mainApplyService?.serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.END_DATE_REQUIRED'));
       return;
     }
-    if (status === "1" && !this.addReason.fastingTentService?.startDatestr && this.mainApplyService?.serviceId === 1) {
+    if (status === "1" && !startDate && this.mainApplyService?.serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.START_DATE_REQUIRED'));
       return;
     }
-
     this.spinnerService.show();
 
     this.saveNotesForApproving().subscribe({

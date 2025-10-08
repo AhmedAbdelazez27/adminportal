@@ -610,7 +610,7 @@
                 placeholder="{{ 'TELEPHONE' | translate }}">
             </div>
             <div class="col-xl-6 mb-3">
-              <label for="exampleFormControlInput1" class="form-label"> {{ 'AuthenticationResorceName.gender' |
+              <label for="exampleFormControlInput1" class="form-label"> {{ 'AuthenticationResorceName.genderName' |
                 translate }}</label>
               <select class="form-select" aria-label="Default select example">
                 <option selected>{{ 'SELECT' | translate }}</option>
@@ -962,7 +962,7 @@
             </div>
             <div class="col-xl-4 col-lg-6">
               <label class="bold black">{{ 'gender' | translate }}</label>
-              <p>{{ user?.gender || '-' }}</p>
+              <p>{{ user?.genderName || '-' }}</p>
             </div>
             <div class="col-xl-4 col-lg-6">
               <label class="bold black">{{ 'box_number' | translate }}</label>
@@ -990,15 +990,15 @@
             </div>
             <div class="col-xl-4 col-lg-6">
               <label class="bold black">{{ 'city' | translate }}</label>
-              <p>{{ user?.cityId || '-' }}</p>
+              <p>{{ getCityName(user?.cityId) }}</p>
             </div>
             <div class="col-xl-4 col-lg-6">
               <label class="bold black">{{ 'country' | translate }}</label>
-              <p>{{ user?.countryId || '-' }}</p>
+              <p>{{ getCountryName(user?.countryId) }}</p>
             </div>
             <div class="col-xl-4 col-lg-6">
               <label class="bold black">{{ 'association' | translate }}</label>
-              <p>{{ user?.entityId || '-' }}</p>
+              <p>{{getEntityName(user?.entityIdInfo) }}</p>
             </div>
             <div class="col-xl-4 col-lg-6">
               <label class="bold black">{{ 'address' | translate }}</label>
@@ -1007,10 +1007,12 @@
             <div class="col-xl-4 col-lg-6">
               <label class="bold black">{{ 'AuthenticationResorceName.userStatusName' | translate }}</label>
               <p>
-                <span *ngIf="user?.userStatus && user?.userStatusName && user?.userStatusName !== 'null'"
-                  [ngClass]="getStatusClass(user?.userStatus)">{{ user?.userStatusName }}</span>
-                <span *ngIf="!user?.userStatus || !user?.userStatusName || user?.userStatusName === 'null'">-</span>
-              </p>
+              <p>{{ user?.userStatusName || '-' }}</p>
+
+              <!--<span *ngIf="user?.userStatus && user?.userStatusName && user?.userStatusName !== 'null'"
+                    [ngClass]="getStatusClass(user?.userStatus)">{{ user?.userStatusName }}</span>
+              <span *ngIf="!user?.userStatus || !user?.userStatusName || user?.userStatusName === 'null'">-</span>
+              </p>-->
             </div>
           </div>
 

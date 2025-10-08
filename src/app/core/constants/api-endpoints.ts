@@ -5,7 +5,7 @@ export class ApiEndpoints {
     GetById: (id: string) => `/User/${id}`,
     Delete: (id: string) => `/User/Delete/${id}`,
     GetUsersSelect2List: '/User/GetUsersSelect2List',
-    GetUserPermissionList: (id: string) => `/Permission/GetAll/${id}`,
+    GetUserPermissionList: `/Permission/GetAll`,
     AssignActionPermission: '/Permission/CreateUserPermission',
     DeleteActionPermission: '/Permission/DeleteUserPermission',
     UserType: '/UserTypes',
@@ -15,8 +15,7 @@ export class ApiEndpoints {
     OtpSendViaEmail: '/Otp/SendViaEmail',
     ResetPassword: '/ResetPassword',
     UpdateUserStatus: '/UpdateUserStatus',
-    GetDashboardPermissionList: (id: string) =>
-      `/Permission/GetAllDashboardPermissions/${id}`,
+    GetDashboardPermissionList: `/Permission/GetAllDashboardPermissions`,
     UAEPassBaseURL: '/UAEPass',
     //GetUAEPAssInfo: (code: string, state: string, lang: string) => `/Login/${code}/${state}/${lang}`,
     GetUAEPAssInfo: '/Login',
@@ -103,7 +102,7 @@ export class ApiEndpoints {
     GetAll: '/GetAll',
     GetById: '/GetDetailById',
     GetPaymentDetailsById: '/GetPaymentDetails',
-    GetPaymentLinesById: '/GetPaymentLines'
+    GetPaymentLinesById: '/GetPaymentLines',
   };
 
   static readonly ArMiscReceiptHeader = {
@@ -131,7 +130,7 @@ export class ApiEndpoints {
     GetAll: '/GetAll',
     GetById: '/GetGeneralJournalHeaderDetails',
     GetLineDetailsById: '/GetGLLines',
-   // GetById: (receiptId: string, entityId: string) =>`/GetGeneralJournalHeaderDetails/${receiptId}/${entityId}`,
+    // GetById: (receiptId: string, entityId: string) =>`/GetGeneralJournalHeaderDetails/${receiptId}/${entityId}`,
     //GetLineDetailsById: (receiptId: string, entityId: string) =>`/GetGLLines/${receiptId}/${entityId}`,
   };
 

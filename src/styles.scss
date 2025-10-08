@@ -5113,3 +5113,12 @@ td {
     background: var(--Color-21, #F7F7F7);
   }
 }
+
+.ng-select.ng-select-opened .ng-select-container {
+    z-index: 10 !important;
+}
+ 
+.ng-dropdown-panel{
+        z-index: 10 !important;
+}
+ 

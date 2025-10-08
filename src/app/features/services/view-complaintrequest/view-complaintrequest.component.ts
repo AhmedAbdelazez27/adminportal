@@ -8,6 +8,7 @@ import { MainApplyService } from '../../../core/services/mainApplyService/mainAp
 import { UpdateStatusDto, WorkFlowCommentDto, WorkFlowStepDto, mainApplyServiceDto } from '../../../core/dtos/mainApplyService/mainApplyService.dto';
 import { Observable, tap, catchError, throwError, EMPTY } from 'rxjs';
 import { SpinnerService } from '../../../core/services/spinner.service';
+import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
 
 declare var bootstrap: any;
 
@@ -57,7 +58,8 @@ export class ViewComplaintrequestComponent implements OnInit {
     private toastr: ToastrService,
     private translate: TranslateService,
     private fb: FormBuilder,
-    private spinnerService: SpinnerService
+    private spinnerService: SpinnerService,
+    private openStandardReportService: openStandardReportService
   ) {
     this.rejectResonsForm = this.fb.group({
       reasonTxt: [[], Validators.required]
@@ -355,19 +357,24 @@ export class ViewComplaintrequestComponent implements OnInit {
   }
 
   updateStatus(status: string, reason: string): void {
-    if (status === "1" && !this.addReason.fastingTentService?.tentConstructDatestr && this.firstLevel && this.mainApplyService?.serviceId === 1) {
-      this.toastr.warning(this.translate.instant('VALIDATION.TENT_DATE_REQUIRED'));
-      return;
-    }
-    if (status === "1" && !this.addReason.fastingTentService?.endDatestr && this.mainApplyService?.serviceId === 1) {
+
+    const tentDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.tentDate ?? null);
+    const startDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.startDate ?? null);
+    const endDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.endDate ?? null);
+
+    //if (status === "1" && !tentDate && this.firstLevel && this.mainApplyService?.serviceId === 1) {
+    //  this.toastr.warning(this.translate.instant('VALIDATION.TENT_DATE_REQUIRED'));
+    //  return;
+    //}
+
+    if (status === "1" && !endDate && this.mainApplyService?.serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.END_DATE_REQUIRED'));
       return;
     }
-    if (status === "1" && !this.addReason.fastingTentService?.startDatestr && this.mainApplyService?.serviceId === 1) {
+    if (status === "1" && !startDate && this.mainApplyService?.serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.START_DATE_REQUIRED'));
       return;
     }
-
     this.spinnerService.show();
 
     this.saveNotesForApproving().subscribe({

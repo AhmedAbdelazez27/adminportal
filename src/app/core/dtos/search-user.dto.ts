@@ -15,3 +15,6 @@ export class FilterUserDto {
   take: number = 10;
   orderByValue: string | null = null;
 }
+export class FilterUserByIdDto {
+  id: string | null = null;
+}

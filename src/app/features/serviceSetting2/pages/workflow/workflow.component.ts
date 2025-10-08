@@ -143,7 +143,7 @@ export class WorkflowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   fetchdepartmentActionsSelect2(): void {
-    this.select2Service.getDepartmentActionsSelect2List(this.searchSelect2Params).subscribe({
+    this.select2Service.getDepartmentActionsSelect2List().subscribe({
       next: (response: any) => {
         this.departmentActionsSelect2 = response?.results || [];
       },

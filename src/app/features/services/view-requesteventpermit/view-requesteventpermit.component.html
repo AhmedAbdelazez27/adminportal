@@ -467,7 +467,7 @@
                                       <ng-container *ngIf="ad.requestAdvertisementTargets?.length; else noTargets">
                                         <span class="badge bg-light text-dark border me-1"
                                               *ngFor="let t of ad.requestAdvertisementTargets">
-                                          {{ t.othertxt || ('REQUEST_EVENT_PERMIT.TARGET_TYPE' | translate) + ' ' + t.lkpTargetTypeId }}
+                                          {{ t.othertxt || ('REQUEST_EVENT_PERMIT.TARGET_TYPE' | translate) + ' ' + t.lkpTargetTypeText }}
                                         </span>
                                       </ng-container>
                                       <ng-template #noTargets>-</ng-template>
@@ -493,7 +493,7 @@
                                       <ng-container *ngIf="ad.requestAdvertisementAdMethods?.length; else noMethods">
                                         <span class="badge bg-light text-dark border me-1"
                                               *ngFor="let m of ad.requestAdvertisementAdMethods">
-                                          {{ m.othertxt || ('REQUEST_EVENT_PERMIT.METHOD' | translate) + ' ' + m.lkpAdMethodId }}
+                                          {{ m.lkpAdMethodText || ('REQUEST_EVENT_PERMIT.METHOD' | translate) + ' ' + m.lkpAdMethodText }}
                                         </span>
                                       </ng-container>
                                       <ng-template #noMethods>-</ng-template>

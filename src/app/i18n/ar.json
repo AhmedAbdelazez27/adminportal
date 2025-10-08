@@ -705,7 +705,7 @@
     "deleteWarning": "هل أنت متأكد أنك تريد الحذف؟",
     "applicantData": "بيانات مقدم الطلب",
     "Recordperpage": "السجلات لكل صفحة",
-    "serviceData": " تفاصيل الطب",
+    "serviceData": " تفاصيل الطلب",
     "addedSuccessfully": "تمت الإضافة بنجاح",
     "updateSuccessfully": "تم التحديث بنجاح",
     "noPreview": "لا يوجد معاينة متاحة",
@@ -3029,7 +3029,9 @@
     "LOCATIONS_COUNT": "عدد المواقع",
     "PROVIDER": "مزود الخدمة",
     "MOBILE": "رقم الجوال",
-    "FAX": "رقم الفاكس"
+    "FAX": "رقم الفاكس"  ,
+    "AD_ATTACHMENTS" :"اضافة مرفق"
+     
   },
   "CHARITY_ORGANIZATIONS": {
     "TITLE": "المؤسسات الخيرية",

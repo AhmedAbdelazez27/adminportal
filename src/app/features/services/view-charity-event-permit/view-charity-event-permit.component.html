@@ -389,7 +389,7 @@
                                       <strong>{{ 'CHARITY_EVENT_PERMIT.AD_END' | translate }}:</strong> {{formatDate(ad.endDate ?? null)}}
                                     </div>
 
-                                    <div class="col-md-6 mb-2">
+                                    <!-- <div class="col-md-6 mb-2">
                                       <strong>{{ 'CHARITY_EVENT_PERMIT.AD_MOBILE' | translate }}:</strong> {{ ad.mobile}}
                                     </div>
 
@@ -409,13 +409,13 @@
                                       <strong>{{ 'CHARITY_EVENT_PERMIT.AD_FLAGS' | translate }}:</strong>
                                       <span class="badge bg-primary me-2" *ngIf="ad.newAd">{{'CHARITY_EVENT_PERMIT.NEW_AD' | translate}}</span>
                                       <span class="badge bg-warning text-dark" *ngIf="ad.reNewAd">{{'CHARITY_EVENT_PERMIT.RENEW_AD' | translate}}</span>
-                                    </div>
+                                    </div> -->
 
-                                    <div class="col-12 mt-3" *ngIf="ad.requestAdvertisementTargets?.length">
+                                  <div class="col-12 mt-3" *ngIf="ad.requestAdvertisementTargets?.length">
                                       <h6 class="fw-bold">{{ 'CHARITY_EVENT_Permit.AD_TARGETS' | translate }}</h6>
                                       <ul class="mb-0">
                                         <li *ngFor="let t of ad.requestAdvertisementTargets">
-                                          {{ 'CHARITY_EVENT_PERMIT.TARGET_TYPE' | translate }}: {{t.lkpTargetTypeId}} <span *ngIf="t.othertxt">— {{ t.othertxt }}</span>
+                                          {{ 'CHARITY_EVENT_PERMIT.TARGET_TYPE' | translate }}: {{t.lkpTargetTypeText}} <span *ngIf="t.othertxt">— {{ t.othertxt }}</span>
                                         </li>
                                       </ul>
                                     </div>
@@ -431,7 +431,7 @@
                                       <h6 class="fw-bold">{{ 'CHARITY_EVENT_PERMIT.AD_METHODS' | translate }}</h6>
                                       <ul class="mb-0">
                                         <li *ngFor="let m of ad.requestAdvertisementAdMethods">
-                                          {{ 'CHARITY_EVENT_PERMIT.METHOD' | translate }}: {{ m.lkpAdMethodId }}
+                                          {{ 'CHARITY_EVENT_PERMIT.METHOD' | translate }}: {{ m.lkpAdMethodText }}
                                           <span *ngIf="m.othertxt">— {{ m.othertxt }}</span>
                                         </li>
                                       </ul>

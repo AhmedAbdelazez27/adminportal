@@ -311,8 +311,8 @@ export class Select2Service {
     return this.http.post<SelectdropdownResult>(apiUrl, params);
   }
 
-  getDepartmentActionsSelect2List(params: FndLookUpValuesSelect2RequestbyIdDto): Observable<SelectdropdownResult> {
+  getDepartmentActionsSelect2List(): Observable<SelectdropdownResult> {
     const apiUrl = `${this.BASE_URL}${Select2APIEndpoint.Select2.GetDepartmentActionsSelect2List}`
-    return this.http.post<SelectdropdownResult>(apiUrl, params);
+    return this.http.get<SelectdropdownResult>(apiUrl);
   }
 }
