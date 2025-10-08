@@ -74,7 +74,7 @@ export class UserService {
   }
 
   getUserPermission(userId: string) {
-    return this.http.get(`${this.BASE_URL}${ApiEndpoints.User.GetUserPermissionList(userId)}`);
+    return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.GetUserPermissionList}`,{userId});
   }
   deleteUserPermission(payload: any): Observable<any> {
     return this.http.post(`${this.BASE_URL}${ApiEndpoints.User.DeleteActionPermission}`, payload);

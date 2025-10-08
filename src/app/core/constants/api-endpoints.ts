@@ -5,7 +5,7 @@ export class ApiEndpoints {
     GetById: (id: string) => `/User/${id}`,
     Delete: (id: string) => `/User/Delete/${id}`,
     GetUsersSelect2List: '/User/GetUsersSelect2List',
-    GetUserPermissionList: (id: string) => `/Permission/GetAll/${id}`,
+    GetUserPermissionList: `/Permission/GetAll`,
     AssignActionPermission: '/Permission/CreateUserPermission',
     DeleteActionPermission: '/Permission/DeleteUserPermission',
     UserType: '/UserTypes',
@@ -24,6 +24,11 @@ export class ApiEndpoints {
       'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=?',
     UAEPassLogInBaseURL:
       'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:4200&acr_values=urn:safelayer:tws:policies:authentication:level:low',
+    ResendVerifyTwoFactorOtp : '/Auth/ResendVerifyTwoFactorOtp'  ,
+    VerifyTwoFactor : '/Auth/VerifyTwoFactor'  ,
+    RefreshToken : '/Auth/RefreshToken'  ,
+    Logout : '/Logout'  ,
+
   };
 
   static readonly Roles = {

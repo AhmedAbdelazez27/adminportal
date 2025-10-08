@@ -11,6 +11,8 @@ import { TranslationService } from '../../../core/services/translation.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoginUAEPassDto, ReturnUAEPassDto, UAEPassDto } from '../../../core/dtos/uaepass.dto';
+import { UserProfile } from '../../../core/dtos/user-profile';
+import { ProfileDbService } from '../../../core/services/profile-db.service';
 declare var bootstrap: any;
 
 @Component({
@@ -41,7 +43,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private translate: TranslateService,
     private route: ActivatedRoute,
-    private translation: TranslationService
+    private translation: TranslationService,
+    private profileDb: ProfileDbService,
   ) {
     this.form = this.fb.group({
       userName: ['', Validators.required],
@@ -92,22 +95,62 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.auth.login(this.form.value).subscribe({
       next: (res) => {
+        console.log("res = ", res);
+        if (res?.isTwoFactorEnabled) {
+          localStorage.setItem('comeFromisTwoFactorEnabled', JSON.stringify({ isTwoFactorEnabled: true}))
+          this.router.navigate(['/verify-otp']);
+          this.spinnerService.hide();
+        } else {
+          // this.auth.saveToken(res?.token);
+          // const decodedData = this.auth.decodeToken();
+          // if (decodedData && decodedData.Permissions) {
+          //   localStorage.setItem('departmentId', decodedData.DepartmentId);
+          //   const permissions = decodedData.Permissions;
+          //   localStorage.setItem('userName', decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'])
+          //   localStorage.setItem('permissions', JSON.stringify(permissions));
+          //   localStorage.setItem('pages', JSON.stringify(decodedData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']));
+          //   localStorage.setItem('userId', decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']);
+          // }
+                  this.auth.GetMyProfile().subscribe({
+                    next: async (profile: UserProfile) => {
+                     await this.profileDb.saveProfile(profile);  
+                     this.auth.setProfile(profile);
+          
+                      this.toastr.success(
+                        this.translate.instant('OTP.VERIFY_SUCCESS'),
+                        this.translate.instant('TOAST.TITLE.SUCCESS')
+                      );
+                      this.spinnerService.hide();
+                      this.router.navigate(['/home']);
+                    },
+                    error: (err) => {
+                      this.spinnerService.hide();
+                      this.toastr.error(this.translate.instant('OTP.VERIFY_FAILED'), this.translate.instant('TOAST.TITLE.ERROR'));
+                      console.debug('GetMyProfile error:', err);
+                    }
+                  });
+          
 
-        this.auth.saveToken(res?.token);
-        const decodedData = this.auth.decodeToken();
 
-        if (decodedData && decodedData.Permissions) {
-          localStorage.setItem('departmentId', decodedData.DepartmentId);
-          const permissions = decodedData.Permissions;
-          localStorage.setItem('userName',decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'])
-          localStorage.setItem('permissions', JSON.stringify(permissions));
-          localStorage.setItem('pages', JSON.stringify(decodedData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']));
-          localStorage.setItem('userId', decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']);
+          this.toastr.success(this.translate.instant('LOGIN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
+          this.spinnerService.hide();
+          this.router.navigate(['/home']);
         }
 
-        this.toastr.success(this.translate.instant('LOGIN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
+        // this.auth.saveToken(res?.token);
+        // const decodedData = this.auth.decodeToken();
+        // if (decodedData && decodedData.Permissions) {
+        //   localStorage.setItem('departmentId', decodedData.DepartmentId);
+        //   const permissions = decodedData.Permissions;
+        //   localStorage.setItem('userName',decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'])
+        //   localStorage.setItem('permissions', JSON.stringify(permissions));
+        //   localStorage.setItem('pages', JSON.stringify(decodedData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']));
+        //   localStorage.setItem('userId', decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']);
+        // }
+
+        // this.toastr.success(this.translate.instant('LOGIN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
         this.spinnerService.hide();
-        this.router.navigate(['/home']);
+        // this.router.navigate(['/home']);
       },
       error: () => {
         this.toastr.error(this.translate.instant('LOGIN.FAILED'), this.translate.instant('TOAST.TITLE.ERROR'));
@@ -144,7 +187,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
 
- 
+
   uaepassCheckCode(code: string, state: string) {
     const params: LoginUAEPassDto = {
       code: code,
