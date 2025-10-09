@@ -195,3 +195,13 @@
 .ag-theme-alpine .ag-center-cols-clipper {
   overflow: visible;
 }
+
+
+.context-menu {
+  overflow: hidden; // حسب تصميمك
+  // pointer-events: auto; // عادةً مش محتاجه
+}
+
+.ag-theme-alpine {
+  position: relative; // أنت عاملها بالفعل
+}

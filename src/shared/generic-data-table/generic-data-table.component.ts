@@ -92,6 +92,8 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
   // فريد لكل instance
   private uniqueId: string = 'gdt-' + Math.random().toString(36).slice(2, 9) + '-' + Date.now().toString(36);
 
+  @ViewChild('menuRef', { static: false }) menuRef!: ElementRef<HTMLElement>;
+
   constructor(
     private translationService: TranslationService,
     private translate: TranslateService,
@@ -354,62 +356,6 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
     this.openMenuRowId = null;
   }
 
-  /** بديل document.addEventListener — آمن ومختصر */
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(ev: MouseEvent) {
-    const target = ev.target as HTMLElement;
-
-    // لو كليك على زر الأكشن
-    const btn = target.closest('.action-kebab-btn') as HTMLElement | null;
-    if (btn) {
-      const btnTableId = btn.getAttribute('data-table-id');
-      if (btnTableId !== this.uniqueId) {
-        this.openMenuRowId = null;
-        return;
-      }
-              
-      // افتح/حدّث مكان المينو لهذا الجدول
-      const btnRect = btn.getBoundingClientRect();
-      const hostRect = this.el.nativeElement.getBoundingClientRect();
-
-      // Estimate dropdown height (48px per item, adjust if needed)
-      const dropdownHeight = 48 * (this.rowActions.length || 1);
-
-      // Calculate available space below and above the button
-      const spaceBelow = window.innerHeight - btnRect.bottom;
-      const spaceAbove = btnRect.top;
-
-      let menuY: number;
-      if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
-        // Not enough space below, but enough above: show above
-        menuY = btnRect.top - hostRect.top - dropdownHeight;
-      } else {
-        // Default: show below
-        menuY = btnRect.bottom - hostRect.top;
-      }
-
-      // Horizontal offset logic (unchanged)
-      const horizontalOffset = this.isRtl ? 0 : 180;
-      this.menuX = btnRect.right - hostRect.left - horizontalOffset;
-      this.menuY = menuY;
-      this.openMenuRowId = btn.getAttribute('data-row-id');
-      return;
-    }
-
-    // اقفل القائمة لو الكليك داخل نفس الـ host لكن خارج المينو
-    const clickedInsideHost = this.el.nativeElement.contains(target);
-    const clickedInsideMenu = !!target.closest('.context-menu');
-
-    if (clickedInsideHost && !clickedInsideMenu) {
-      this.openMenuRowId = null;
-      return;
-    }
-
-    // لو كليك برا الـ host خالص برضه اقفل
-    if (!clickedInsideHost) {
-      this.openMenuRowId = null;
-    }
-  }
 
   private ensureActionPin() {
     if (!this._columnDefs) return;
@@ -419,4 +365,67 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
       }
     });
   }
+
+
+@HostListener('window:scroll')
+@HostListener('window:resize')
+onWindowChange() {
+  // when scroll close it
+  this.openMenuRowId = null;
+}
+
+@HostListener('document:click', ['$event'])
+onDocumentClick(ev: MouseEvent) {
+  const target = ev.target as HTMLElement;
+
+  // Actions btn click
+  const btn = target.closest('.action-kebab-btn') as HTMLElement | null;
+  if (btn) {
+    const btnTableId = btn.getAttribute('data-table-id');
+    if (btnTableId !== this.uniqueId) {
+      this.openMenuRowId = null;
+      return;
+    }
+
+    const btnRect = btn.getBoundingClientRect();
+
+    this.openMenuRowId = btn.getAttribute('data-row-id');
+
+    setTimeout(() => {
+      const menuEl = this.menuRef?.nativeElement;
+      const menuW = menuEl?.offsetWidth ?? 200;
+      const menuH = menuEl?.offsetHeight ?? (48 * (this.rowActions.length || 1));
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const margin = 8;
+
+      // Y: تحت لو في مساحة، غير كده فوق
+      let y = (vh - btnRect.bottom >= menuH + margin)
+        ? btnRect.bottom
+        : (btnRect.top - menuH);
+
+      // X: حسب RTL/LTR
+      let x = this.isRtl
+        ? btnRect.left  
+        : (btnRect.right - menuW); 
+
+      // Clamp جوّه الشاشة
+      if (x < margin) x = margin;
+      if (x + menuW > vw - margin) x = vw - menuW - margin;
+      if (y < margin) y = margin;
+      if (y + menuH > vh - margin) y = vh - menuH - margin;
+
+      this.menuX = Math.round(x);
+      this.menuY = Math.round(y);
+    }, 0);
+
+    return;
+  }
+
+  const clickedInsideMenu = !!target.closest('.context-menu');
+  if (clickedInsideMenu) return;
+
+  this.openMenuRowId = null;
+}
+
 }
