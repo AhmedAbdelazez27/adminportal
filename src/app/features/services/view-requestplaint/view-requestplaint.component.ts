@@ -494,7 +494,7 @@ export class ViewRequestplaintComponent implements OnInit {
           modal.hide();
         }
 
-        this.updateStatus("3", formData.reasonTxt);
+        this.updateStatus("7", formData.reasonTxt);
         this.spinnerService.hide();
       },
       error: () => {
@@ -533,7 +533,7 @@ export class ViewRequestplaintComponent implements OnInit {
           const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
           modal.hide();
         }
-        this.updateStatus("3", formData.returnModificationreasonTxt);
+        this.updateStatus("7", formData.returnModificationreasonTxt);
         this.spinnerService.hide();
       },
       error: () => {

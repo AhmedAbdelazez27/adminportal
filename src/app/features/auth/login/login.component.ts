@@ -66,10 +66,8 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.uaepassCheckCode(this.code!, this.state!);
         } else {
           const redirectUri = window.location.origin + '/login';
-          const logoutURL =
-            'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' +
-            encodeURIComponent(redirectUri);
-
+          const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
+          const prodlogoutUrl = 'https://id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
           this.translate
             .get(['Common.UAEPassCancelRequest'])
             .subscribe(translations => {
@@ -77,7 +75,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             });
 
           setTimeout(() => {
-            window.location.href = logoutURL;
+            window.location.href = prodlogoutUrl;
             this.spinnerService.hide();
           }, 2000);
         }
@@ -138,9 +136,13 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.currentlang = "en";
     }
     var UAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://compassint.ddns.net:2036/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-    var LocalUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:4200/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-    var ProdUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=ccc_web_stg&scope=urn:uae:digitalid:profile:general&state=Q9pOTvlchYARcSFL&redirect_uri=https://192.168.51.130:2002/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-    window.location.href = `${ProdUAEPassURL}&ui_locales=${this.currentlang}`;
+    var LocalUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:51336/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
+    var ProdStgUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=ccc_web_stg&scope=urn:uae:digitalid:profile:general&state=Q9pOTvlchYARcSFL&redirect_uri=https://192.168.51.130:2002/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
+    var ProdUAEPassURL = 'https://id.uaepass.ae/idshub/authorize?response_type=code&client_id=ajm_ccc_web_prod&scope=urn:uae:digitalid:profile:general&state=PXr2q2Tu8AMbK7mT&redirect_uri=https://admin.ajmanccc.ae&acr_values=urn:safelayer:tws:policies:authentication:level:low';
+  //  var ProdUAEPassURL = 'https://id.uaepass.ae/idshub/authorize?response_type=code&client_id=ajm_ccc_web_prod&scope=urn:uae:digitalid:profile:general&state=PXr2q2Tu8AMbK7mT&redirect_uri=https://ajmanccc.ae/home&acr_values=urn:safelayer:tws:policies:authentication:level:low';
+   // var ServiceProdUAEPassURL = 'https://id.uaepass.ae/idshub/authorize?response_type=code&client_id=ajm_ccc_web_prod&scope=urn:uae:digitalid:profile:general&state=PXr2q2Tu8AMbK7mT&redirect_uri=https://www.ajmanccc.ae/login&acr_values=urn:safelayer:tws:policies:authentication:level:high';
+
+    window.location.href = `${UAEPassURL}&ui_locales=${this.currentlang}`;
   }
 
 
@@ -212,14 +214,17 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.spinnerService.hide();
       const redirectUri = window.location.origin + '/login';
       const logoutURL = `https://stg-id.uaepass.ae/idshub/logout?redirect_uri=${encodeURIComponent(redirectUri)}`;
-      window.location.href = logoutURL;
+      const ProdUAEPassURL = `https://id.uaepass.ae/idshub/logout?redirect_uri=${encodeURIComponent(redirectUri)}`;
+
+      window.location.href = ProdUAEPassURL;
     }, 1500);
   }
 
 
   logout(): void {
     const logoutUrl = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(window.location.origin + '/login');
-    window.location.href = logoutUrl;
+    const ProdUAEPassURL = 'https://id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(window.location.origin + '/login');
+    window.location.href = ProdUAEPassURL;
   }
 
   ngOnDestroy() {

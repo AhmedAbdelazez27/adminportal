@@ -59,10 +59,10 @@
           <div class="w-100">
             <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
               <h4 class="title ">{{ 'ADVERTISEMENT.VIEW_TITLE' | translate }}</h4>
-              <button *ngIf="targetWorkFlowStep && isEditMode && workFlowQuery?.length" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
+              <!--<button *ngIf="targetWorkFlowStep && isEditMode && workFlowQuery?.length" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
                 <i class="fas fa-plus me-2"></i>
                 {{ 'COMMON.ADD_COMMENT' | translate }}
-              </button>
+              </button>-->
             </div>
 
             <div class="row">
@@ -177,7 +177,7 @@
                       {{ 'mainApplyServiceResourceName.disagree' | translate }}
                     </div>
 
-                    <div *ngIf="workFlowQuery[0].serviceStatus == 3" class="alert alert-warning text-center">
+                    <div *ngIf="workFlowQuery[0].serviceStatus == 7" class="alert alert-warning text-center">
                       <div class="popover__wrapper">
                         <a href="javascript:void(0);">
                           <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
@@ -188,7 +188,7 @@
                       </div>
                     </div>
 
-                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 3 && workFlowQuery[0].serviceStatus != 5">
+                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 7 && workFlowQuery[0].serviceStatus != 5">
                       <ng-template #returnForModification>
                         <div class="alert alert-warning text-center">
                           <div class="popover__wrapper">
@@ -202,7 +202,7 @@
                         </div>
                       </ng-template>
 
-                      <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else returnForModification">
+                      <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else returnForModification">
                         <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
                           <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
@@ -248,7 +248,7 @@
                       </div>
                     </ng-template>
 
-                    <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else noWorkflowReturn">
+                    <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else noWorkflowReturn">
                       <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
                         <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
@@ -461,12 +461,12 @@
                        data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                       <div class="step-content">
-                        <div class="d-flex justify-content-end align-items-center mb-4">
+                        <!--<div class="d-flex justify-content-end align-items-center mb-4">
                           <button *ngIf="targetWorkFlowStep && isEditMode" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
                             <i class="fas fa-plus me-2"></i>
                             {{ 'COMMON.ADD_COMMENT' | translate }}
                           </button>
-                        </div>
+                        </div>-->
 
                         <div *ngIf="isLoadingComments" class="text-center py-5">
                           <div class="spinner-border spinner-border-sm" role="status">
@@ -541,7 +541,7 @@
                       {{ 'mainApplyServiceResourceName.disagree' | translate }}
                     </div>
 
-                    <div *ngIf="workFlowQuery[0].serviceStatus == 3" class="alert alert-warning text-center">
+                    <div *ngIf="workFlowQuery[0].serviceStatus == 7" class="alert alert-warning text-center">
                       <div class="popover__wrapper">
                         <a href="javascript:void(0);">
                           <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
@@ -552,7 +552,7 @@
                       </div>
                     </div>
 
-                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 3">
+                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 7">
                       <ng-template #returnForModification>
                         <div class="alert alert-warning text-center">
                           <div class="popover__wrapper">
@@ -566,7 +566,7 @@
                         </div>
                       </ng-template>
 
-                      <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else returnForModification">
+                      <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else returnForModification">
                         <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
                           <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
@@ -612,7 +612,7 @@
                       </div>
                     </ng-template>
 
-                    <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else noWorkflowReturn">
+                    <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else noWorkflowReturn">
                       <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
                         <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">

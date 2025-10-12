@@ -164,61 +164,14 @@ export class openStandardReportService {
       <link href="/styles.css" rel="stylesheet" />
       <title>${title}</title>
       <style>
-      .rtl{
-              direction:rtl !important;'
-
-      }
-        body { font-family: Cairo, Arial, sans-serif; background: #f7f7f7; padding: 2rem; }
-        .bold { font-weight: bold; }
-        .gold { color: #8D734D; font-size: 32px; }
-        .filter-label { font-weight: bold; color: #222; min-width: 120px; display: inline-block; }
-        .filter-value { text-align: center; color: #444; display: inline-block; width: 100%; }
-        .col-6 { padding: 10px; box-sizing: border-box; flex: 0 0 50%; max-width: 50%; }
-        .row { display: flex; flex-wrap: wrap; }
-        .details-table-container {
-          background: #fff;
-          padding: 1rem;
-          border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        }
-        .new-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-        .new-table th, .new-table td {
-          border: none; border-bottom: 1px solid #dee2e6;
-          padding: 8px;
-          text-align: center;
-          font-size: 14px;
-          text-align:start;
-        }
-        .new-table thead th {
-          background: #e0e0e0;
-          color: #222;
-          font-weight: bold;
-          border: none;
-          padding: 8px;
-          font-size: 14px;
-          text-align:start;
-        }
-        .new-table tfoot td {
-          font-weight: bold;
-          background: #fff;
-        }
-        .new-table thead th:first-child { border-top-left-radius: 15px; }
-        .new-table thead th:last-child { border-top-right-radius: 15px; }
-
-        .rtl{
-        td, th, tr, thead, tbody, table, body{
-        direction:rtl !important;'
-          }
-
-        }
+      
       </style>
     </head>
-    <body class=" ${this.currentLang == 'ar' ? 'printing-body' : 'printing-body-ltr'}"> 
+    <body class=" ${this.currentLang == 'ar' ? 'printing-body' : 'printing-body-ltr'}" > 
       <div class="report-header mb-5">
         <h2 class="gold bold title-32 mb-0">${title}</h2>
         <div class="d-flex align-items-center gap-3">
-          <img src="/assets/images/logo.png" width="100px" />
-          <img src="/assets/images/council-logo.png" width="100px" />
+          <img src="/assets/images/council-logo.png" width="300px" />
         </div>
       </div>
       <div class="container-fluid">
@@ -226,7 +179,7 @@ export class openStandardReportService {
           <div class="row">${fieldHtml}</div>
         </div>
         <div class="report-section">
-          <table class="new-table">
+          <table class="new-table" >
             <thead>
               <tr>
                 <th>#</th>

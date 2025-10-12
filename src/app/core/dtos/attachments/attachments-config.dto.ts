@@ -17,6 +17,14 @@ export interface CreateAttachmentsConfigDto {
   mendatory?: boolean;
 }
 
+export interface CreateServiceAttachmentsConfigDto {
+  name: string;
+  nameEn: string;
+  serviceId: number;
+  active: boolean;
+  mendatory: boolean;
+}
+
 export interface UpdateAttachmentsConfigDto {
   id: number;
   attachmentsConfigType: number;

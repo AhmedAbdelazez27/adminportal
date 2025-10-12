@@ -156,7 +156,7 @@
                   {{ 'mainApplyServiceResourceName.disagree' | translate }}
                 </div>
 
-                <div *ngIf="workFlowQuery[0].serviceStatus == 3" class="alert alert-warning text-center">
+                <div *ngIf="workFlowQuery[0].serviceStatus == 7" class="alert alert-warning text-center">
                   <div class="popover__wrapper">
                     <a href="javascript:void(0);">
                       <span class="btn btn-info">{{ loadformData.lastStatus }}</span>
@@ -169,7 +169,7 @@
 
                 <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1
                 && workFlowQuery[0].serviceStatus != 2
-                && workFlowQuery[0].serviceStatus != 3">
+                && workFlowQuery[0].serviceStatus != 7">
                   <ng-template #returnForModification>
                     <div class="alert alert-warning text-center">
                       <div class="popover__wrapper">
@@ -183,7 +183,7 @@
                     </div>
                   </ng-template>
 
-                  <div *ngIf="loadformData.lastStatus != 'إرجاع الطلب للتعديل'; else returnForModification"
+                  <div *ngIf="loadformData.lastStatus != 'إرجاع للتعديل'; else returnForModification"
                        class="d-flex flex-wrap gap-2 justify-content-center">
                     <button type="button" (click)="acceptbtn()" class="btn btn-success">
                       {{ 'mainApplyServiceResourceName.accep' | translate }}
@@ -215,7 +215,7 @@
                   </div>
                 </ng-template>
 
-                <div *ngIf="loadformData.lastStatus != 'إرجاع الطلب للتعديل'; else noWorkflowReturn"
+                <div *ngIf="loadformData.lastStatus != 'إرجاع للتعديل'; else noWorkflowReturn"
                      class="d-flex flex-wrap gap-2 justify-content-center">
                   <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
                     {{ 'SERVICE_SETTING.DEPARTMENT_ACTION_REVIEW' | translate }}

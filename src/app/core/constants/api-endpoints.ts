@@ -326,6 +326,7 @@ export class ApiEndpoints {
     GetById: (id: number) => `/Get/${id}`,
     Update: '/Update',
     Delete: (id: number) => `/Delete/${id}`,
+    CreateServiceAttachmentConfig: '/CreateServiceAttachmentCofig',
   };
 
   static readonly MainApplyService = {

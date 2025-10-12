@@ -35,8 +35,11 @@ export class InitiativeService {
     if (!params.id) {
       throw new Error('id must not be null');
     }
-    const apiUrl = `${this.apiUrl}/Get/${params.id}/${params.regionName}`;
-    return this.http.get<InitiativeDto>(apiUrl);
+    const apiUrl = `${this.apiUrl}/Get`;
+    return this.http.post<InitiativeDto>(apiUrl, {
+      id: params.id,
+      regionName: params.regionName
+    });
   }
 
   createAsync(initiative: CreateInitiativeDto): Observable<InitiativeDto> {
@@ -48,7 +51,7 @@ export class InitiativeService {
   }
 
   deleteAsync(id: number): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/Delete/${id}`, {});
+    return this.http.post<void>(`${this.apiUrl}/Delete/${id}`, { id });
   }
 
   // Initiative Details CRUD Operations

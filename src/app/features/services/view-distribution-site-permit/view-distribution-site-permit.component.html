@@ -59,10 +59,10 @@
           <div class="w-100">
             <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
               <h4 class="title ">{{ 'VIEW_DISTRIBUTION_SITE.TITLE' | translate }}</h4>
-              <button *ngIf="targetWorkFlowStep  && isEditMode  && (workFlowQuery?.length || workFlowQuery[0]?.ServiceStatus === 4 || workFlowQuery[0]?.ServiceStatus === 5)" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
+              <!--<button *ngIf="targetWorkFlowStep  && isEditMode  && (workFlowQuery?.length || workFlowQuery[0]?.ServiceStatus === 4 || workFlowQuery[0]?.ServiceStatus === 5)" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
                 <i class="fas fa-plus me-2"></i>
                 {{ 'COMMON.ADD_COMMENT' | translate }}
-              </button>
+              </button>-->
             </div>
 
             <div class="row">
@@ -136,11 +136,10 @@
                         </div>
                       </div>
                       <h6 class="department-name">{{step.departmentName}}</h6>
-                    <button type="button" class="btn btn-link p-0"
-                      (click)="openHistoryModal(step.workFlowHistories || [])">
-                      <i class="bi bi-clock-history me-1"></i>{{ 'mainApplyServiceResourceName.WORKFLOW.VIEW_HISTORY' |
-                      translate }}
-                    </button>
+                      <button type="button" class="btn btn-link p-0"
+                              (click)="openHistoryModal(step.workFlowHistories || [])">
+                        <i class="bi bi-clock-history me-1"></i>{{'mainApplyServiceResourceName.WORKFLOW.VIEW_HISTORY' | translate}}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -182,7 +181,7 @@
                       {{ 'mainApplyServiceResourceName.disagree' | translate }}
                     </div>
 
-                    <div *ngIf="workFlowQuery[0].serviceStatus == 3" class="alert alert-warning text-center">
+                    <div *ngIf="workFlowQuery[0].serviceStatus == 7" class="alert alert-warning text-center">
                       <div class="popover__wrapper">
                         <a href="javascript:void(0);">
                           <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
@@ -193,7 +192,7 @@
                       </div>
                     </div>
 
-                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 3">
+                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 7">
                       <ng-template #returnForModification>
                         <div class="alert alert-warning text-center">
                           <div class="popover__wrapper">
@@ -207,7 +206,7 @@
                         </div>
                       </ng-template>
 
-                      <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else returnForModification">
+                      <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else returnForModification">
                         <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
                           <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
@@ -253,7 +252,7 @@
                       </div>
                     </ng-template>
 
-                    <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else noWorkflowReturn">
+                    <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else noWorkflowReturn">
                       <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
                         <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
@@ -591,7 +590,7 @@
                        data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                       <div class="step-content">
-                        <div class="d-flex justify-content-end align-items-center mb-4">
+                        <!--<div class="d-flex justify-content-end align-items-center mb-4">
                           <div *ngIf="isEditMode && (workFlowQuery?.length || workFlowQuery[0]?.ServiceStatus === 4 || workFlowQuery[0]?.ServiceStatus === 5)" class="d-flex justify-content-end align-items-center mb-4">
                             <button *ngIf="targetWorkFlowStep"
                                     type="button"
@@ -602,7 +601,7 @@
                               {{ 'COMMON.ADD_COMMENT' | translate }}
                             </button>
                           </div>
-                        </div>
+                        </div>-->
 
                         <div *ngIf="isLoadingComments" class="text-center py-5">
                           <div class="spinner-border spinner-border-sm" role="status">
@@ -690,7 +689,7 @@
                       {{ 'mainApplyServiceResourceName.disagree' | translate }}
                     </div>
 
-                    <div *ngIf="workFlowQuery[0].serviceStatus == 3" class="alert alert-warning text-center">
+                    <div *ngIf="workFlowQuery[0].serviceStatus == 7" class="alert alert-warning text-center">
                       <div class="popover__wrapper">
                         <a href="javascript:void(0);">
                           <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
@@ -701,7 +700,7 @@
                       </div>
                     </div>
 
-                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 3">
+                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 7">
                       <ng-template #returnForModification>
                         <div class="alert alert-warning text-center">
                           <div class="popover__wrapper">
@@ -715,7 +714,7 @@
                         </div>
                       </ng-template>
 
-                      <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else returnForModification">
+                      <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else returnForModification">
                         <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
                           <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
@@ -761,7 +760,7 @@
                       </div>
                     </ng-template>
 
-                    <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else noWorkflowReturn">
+                    <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else noWorkflowReturn">
                       <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
                         <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
@@ -1119,7 +1118,7 @@
 
       <div class="modal-body">
         <ng-container *ngIf="historyForModal?.length; else noHistory">
-          
+
           <div class="history-timeline">
             <div class="history-item" *ngFor="let h of historyForModal; let i = index">
               <div class="dot"></div>
@@ -1155,8 +1154,7 @@
                 </div>
 
                 <div class="mb-1" *ngIf="h.description">
-                  <small class="text-muted">{{ 'mainApplyServiceResourceName.WORKFLOW.DESCRIPTION' | translate
-                    }}:</small>
+                  <small class="text-muted">{{ 'mainApplyServiceResourceName.WORKFLOW.DESCRIPTION' | translate }}:</small>
                   <span>{{ h.description }}</span>
                 </div>
               </div>
@@ -1175,6 +1173,46 @@
         <button type="button" class="btn btn-outline-secondary" (click)="closeHistoryModal()">
           {{ 'COMMON.CLOSE' | translate }}
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModalReturnModification" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl custom-modal-width">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editLabel">سبب ارجاع الطلب للتعديل</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z"
+                  fill="#5B5B5B" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="">
+          <form [formGroup]="returnModificationForm">
+            <div class="row">
+              <div class="col-xl-12 mb-3">
+                <label for="returnModificationreasonTxt" class="form-label">{{ 'mainApplyServiceResourceName.reason' | translate }}
+                </label>
+                <textarea id="returnModificationreasonTxt" class="form-control" rows="3"
+                          [ngClass]="{'is-invalid': returnModificationForm.get('returnModificationreasonTxt')?.invalid && (returnModificationForm.get('returnModificationreasonTxt')?.touched || submitted)}"
+                          formControlName="returnModificationreasonTxt"
+                          placeholder="{{ 'returnModificationreasonTxt' | translate }}"></textarea>
+                <div *ngIf="returnModificationForm.get('returnModificationreasonTxt')?.invalid && (returnModificationForm.get('returnModificationreasonTxt')?.touched || submitted)"
+                     class="invalid-feedback">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer mt-3">
+        <button type="button" class="btn btn-gold" (click)="returnModficationReasonSave()"> {{ 'Common.save' | translate }}</button>
+        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
       </div>
     </div>
   </div>

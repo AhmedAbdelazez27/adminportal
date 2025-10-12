@@ -33,15 +33,27 @@
     >
     </ag-grid-angular>
 
-    <!-- Custom context menu for row actions -->
-   <div *ngIf="openMenuRowId !== null"
-      [ngStyle]="{ position: 'absolute', left: menuX + 'px', top: menuY + 'px', zIndex: 20000, minWidth: '10px', borderRadius: '1rem', boxShadow: '0 8px 32px rgba(0,0,0,0.12)', background: '#fff', padding: '0.5rem 0', border: 'none' }">
-      <button *ngFor="let a of rowActions"
-              class="dropdown-item d-flex align-items-center gap-2"
-              style="border-radius:0.5rem; color:#495057; font-size:1rem; padding:0.5rem 1.2rem; background:none; border:none; width:100%; text-align:left;"
-              (click)="onMenuAction(a.action)">
-        <i *ngIf="a.icon" [class]="a.icon + ' fs-5'" style="color:#A6A6A6; min-width:1.5em; text-align:center;"></i>
-        <span>{{ (a.labelKey || a.label || '') | translate }}</span>
+    <div *ngIf="openMenuRowId !== null"
+         class="context-menu"
+         [ngStyle]="{ 
+           position: 'absolute', 
+           left: menuX + 'px', 
+           top: menuY + 'px',
+           direction: isRtl ? 'rtl' : 'ltr'
+         }"
+         [attr.data-menu-id]="uniqueId">
+      <button *ngFor="let a of rowActions; trackBy: trackByAction; let i = index"
+              [class]="getActionClasses(a)"
+              [attr.aria-label]="(a.labelKey || a.label || '') | translate"
+              [attr.tabindex]="i === 0 ? '0' : '-1'"
+              [disabled]="isActionDisabled(a)"
+              (click)="!isActionDisabled(a) && onMenuAction(a.action)"
+              type="button">
+        <i *ngIf="a.icon && !a.separator" 
+           [class]="a.icon" 
+           class="context-menu-icon"
+           aria-hidden="true"></i>
+        <span *ngIf="!a.separator" class="context-menu-text">{{ (a.labelKey || a.label || '') | translate }}</span>
       </button>
     </div>
   </div>

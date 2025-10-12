@@ -48,7 +48,7 @@ export class UserService {
 
   deleteUser(id: string) {
     const apiUrl = `${this.BASE_URL}${ApiEndpoints.User.Delete}`;
-    return this.http.post(apiUrl, id);
+    return this.http.post(apiUrl, { id });
   }
 
   getUsersForSelect2(payload: {
@@ -142,6 +142,6 @@ export class UserService {
 
   getDashboardPermission(userId: string) {
     const apiUrl = `${this.BASE_URL}${ApiEndpoints.User.GetDashboardPermissionList}`;
-    return this.http.post(apiUrl, userId);
+    return this.http.post(apiUrl, { userId });
   }
 }

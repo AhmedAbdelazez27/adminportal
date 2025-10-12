@@ -43,9 +43,25 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() currentPage: number = 0;
   @Input() showActionColumn: boolean = false;
   @Input() columnHeaderMap: { [key: string]: string } = {};
-  @Input() rowActions: Array<{ label?: string; labelKey?: string; icon?: string; action: string }> = [];
+  @Input() rowActions: Array<{ 
+    label?: string; 
+    labelKey?: string; 
+    icon?: string; 
+    action: string;
+    variant?: 'default' | 'success' | 'danger';
+    disabled?: boolean;
+    separator?: boolean;
+  }> = [];
 
-  @Input() set actions(value: Array<{ label?: string; labelKey?: string; icon?: string; action: string }>) {
+  @Input() set actions(value: Array<{ 
+    label?: string; 
+    labelKey?: string; 
+    icon?: string; 
+    action: string;
+    variant?: 'default' | 'success' | 'danger';
+    disabled?: boolean;
+    separator?: boolean;
+  }>) {
     this.rowActions = value || [];
     this.translateActionLabels();
   }
@@ -90,7 +106,7 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
   public isRtl = false;
 
   // فريد لكل instance
-  private uniqueId: string = 'gdt-' + Math.random().toString(36).slice(2, 9) + '-' + Date.now().toString(36);
+  public uniqueId: string = 'gdt-' + Math.random().toString(36).slice(2, 9) + '-' + Date.now().toString(36);
 
   constructor(
     private translationService: TranslationService,
@@ -197,11 +213,12 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
       <button class='btn btn-link p-0 action-kebab-btn'
               aria-label='Actions'
               data-row-id='${rowId}'
-              data-table-id='${this.uniqueId}'>
+              data-table-id='${this.uniqueId}'
+              title='More actions'>
         <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
-          <circle cx='10' cy='4' r='1.5' fill='#495057'/>
-          <circle cx='10' cy='10' r='1.5' fill='#495057'/>
-          <circle cx='10' cy='16' r='1.5' fill='#495057'/>
+          <circle cx='10' cy='4' r='2' fill='currentColor'/>
+          <circle cx='10' cy='10' r='2' fill='currentColor'/>
+          <circle cx='10' cy='16' r='2' fill='currentColor'/>
         </svg>
       </button>
     `;
@@ -368,31 +385,13 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
         return;
       }
               
-      // افتح/حدّث مكان المينو لهذا الجدول
-      const btnRect = btn.getBoundingClientRect();
-      const hostRect = this.el.nativeElement.getBoundingClientRect();
-
-      // Estimate dropdown height (48px per item, adjust if needed)
-      const dropdownHeight = 48 * (this.rowActions.length || 1);
-
-      // Calculate available space below and above the button
-      const spaceBelow = window.innerHeight - btnRect.bottom;
-      const spaceAbove = btnRect.top;
-
-      let menuY: number;
-      if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
-        // Not enough space below, but enough above: show above
-        menuY = btnRect.top - hostRect.top - dropdownHeight;
-      } else {
-        // Default: show below
-        menuY = btnRect.bottom - hostRect.top;
-      }
-
-      // Horizontal offset logic (unchanged)
-      const horizontalOffset = this.isRtl ? 0 : 180;
-      this.menuX = btnRect.right - hostRect.left - horizontalOffset;
-      this.menuY = menuY;
+      this.calculateMenuPosition(btn);
       this.openMenuRowId = btn.getAttribute('data-row-id');
+      
+      setTimeout(() => {
+        const firstMenuItem = this.el.nativeElement.querySelector('.context-menu-item') as HTMLButtonElement;
+        firstMenuItem?.focus();
+      }, 50);
       return;
     }
 
@@ -411,6 +410,56 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
+  private calculateMenuPosition(btn: HTMLElement): void {
+    const btnRect = btn.getBoundingClientRect();
+    const hostRect = this.el.nativeElement.getBoundingClientRect();
+    const tableContainer = this.el.nativeElement.querySelector('.table-responsive');
+    const containerRect = tableContainer ? tableContainer.getBoundingClientRect() : hostRect;
+    
+    const menuWidth = 180;
+    const menuItemHeight = 48;
+    const menuHeight = menuItemHeight * (this.rowActions.length || 1) + 16; // +16 for padding
+    const menuPadding = 8;
+    
+    const spaceBelow = window.innerHeight - btnRect.bottom;
+    const spaceAbove = btnRect.top;
+    const spaceRight = window.innerWidth - btnRect.right;
+    const spaceLeft = btnRect.left;
+    
+    let menuY: number;
+    menuY = btnRect.top - containerRect.top;
+    
+    if (menuY < menuPadding) {
+      menuY = menuPadding;
+    }
+    
+    const maxY = containerRect.height - menuHeight - menuPadding;
+    if (menuY > maxY) {
+      menuY = maxY;
+    }
+    
+    let menuX: number;
+    if (this.isRtl) {
+      if (spaceRight >= menuWidth + menuPadding) {
+        menuX = btnRect.right - containerRect.left + menuPadding;
+      } else {
+        menuX = btnRect.left - containerRect.left - menuWidth - menuPadding;
+      }
+    } else {
+      if (spaceLeft >= menuWidth + menuPadding) {
+        menuX = btnRect.left - containerRect.left - menuWidth - menuPadding;
+      } else {
+        menuX = btnRect.right - containerRect.left + menuPadding;
+      }
+    }
+    
+    menuX = Math.max(menuPadding, menuX);
+    menuX = Math.min(containerRect.width - menuWidth - menuPadding, menuX);
+    
+    this.menuX = menuX;
+    this.menuY = menuY;
+  }
+
   private ensureActionPin() {
     if (!this._columnDefs) return;
     this._columnDefs.forEach((col) => {
@@ -418,5 +467,83 @@ export class GenericDataTableComponent implements OnChanges, OnInit, OnDestroy {
         col.pinned = this.isRtl ? 'left' : 'right';
       }
     });
+  }
+
+  trackByAction(index: number, action: any): string {
+    return action.action || index.toString();
+  }
+
+  getActionClasses(action: any): string {
+    let classes = 'context-menu-item';
+    
+    if (action.variant) {
+      classes += ` ${action.variant}`;
+    }
+    
+    if (action.disabled) {
+      classes += ' disabled';
+    }
+    
+    if (action.separator) {
+      classes += ' separator';
+    }
+    
+    return classes;
+  }
+
+  isActionDisabled(action: any): boolean {
+    return action.disabled === true;
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    if (!this.openMenuRowId) return;
+
+    switch (event.key) {
+      case 'Escape':
+        this.openMenuRowId = null;
+        event.preventDefault();
+        break;
+      case 'ArrowDown':
+        this.focusNextMenuItem();
+        event.preventDefault();
+        break;
+      case 'ArrowUp':
+        this.focusPreviousMenuItem();
+        event.preventDefault();
+        break;
+      case 'Enter':
+      case ' ':
+        const focusedButton = document.activeElement as HTMLButtonElement;
+        if (focusedButton && focusedButton.classList.contains('context-menu-item')) {
+          focusedButton.click();
+          event.preventDefault();
+        }
+        break;
+    }
+  }
+
+  private focusNextMenuItem(): void {
+    const menuItems = this.getMenuItems();
+    const currentIndex = this.getCurrentMenuItemIndex(menuItems);
+    const nextIndex = currentIndex < menuItems.length - 1 ? currentIndex + 1 : 0;
+    menuItems[nextIndex]?.focus();
+  }
+
+  private focusPreviousMenuItem(): void {
+    const menuItems = this.getMenuItems();
+    const currentIndex = this.getCurrentMenuItemIndex(menuItems);
+    const prevIndex = currentIndex > 0 ? currentIndex - 1 : menuItems.length - 1;
+    menuItems[prevIndex]?.focus();
+  }
+
+  private getMenuItems(): HTMLButtonElement[] {
+    const menu = this.el.nativeElement.querySelector('.context-menu');
+    return menu ? Array.from(menu.querySelectorAll('.context-menu-item')) : [];
+  }
+
+  private getCurrentMenuItemIndex(menuItems: HTMLButtonElement[]): number {
+    const activeElement = document.activeElement as HTMLButtonElement;
+    return menuItems.findIndex(item => item === activeElement);
   }
 }

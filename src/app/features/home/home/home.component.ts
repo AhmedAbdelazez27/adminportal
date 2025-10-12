@@ -16,6 +16,7 @@ import { LoginUAEPassDto } from '../../../core/dtos/uaepass.dto';
 import { AuthService } from '../../../core/services/auth.service';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { ChartSeriesData, ChartUtilsService } from '../../../../shared/services/chart-utils.service';
+import { HomeChartComponent } from '../../../../shared/charts/home-chart/home-chart.component';
 
 interface ChartDataItem {
   chartTitle: string;
@@ -32,7 +33,7 @@ interface ChartDataItem {
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, BarChartComponent, TranslateModule],
+  imports: [CommonModule, BarChartComponent, TranslateModule, HomeChartComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -99,6 +100,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    // Initialize current language
+    this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'en';
 
     this.route.queryParams.subscribe(params => {
       this.code = params['code'];
@@ -121,6 +124,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.requestSummaryData) {
         this.calculateCompletedPercentage();
       }
+      // Restart auto-scroll with new direction when language changes
+      this.stopAutoScroll();
+      this.startAutoScroll();
     });
   }
   leftExpanded = true;
@@ -368,6 +374,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.kpiCards = cards;
   }
   // slide kpi start 
+  currentKpiIndex: number = 0;
+  
   scrollKpi(direction: number): void {
     const container = this.kpiScroll?.nativeElement;
     if (!container) return;
@@ -375,15 +383,45 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const step = firstCard ? firstCard.offsetWidth + 16 : Math.ceil(container.clientWidth * 0.9);
     container.scrollBy({ left: direction * step, behavior: 'smooth' });
   }
+  
   autoScrollInterval: any;
   startAutoScroll(): void {
     this.autoScrollInterval = setInterval(() => {
-      let direction = this.currentLang == 'ar' ? -1 : 1
-      this.scrollKpi(direction);
+      const container = this.kpiScroll?.nativeElement;
+      if (!container) return;
+
+      // Get all cards and calculate positions
+      const cards = container.querySelectorAll('.kpi-modern__card');
+      const totalCards = cards.length;
+      
+      if (totalCards === 0) return;
+      
+      // دايماً نزود الـ index عشان نمشي من أول واحدة لآخر واحدة
+      this.currentKpiIndex = this.currentKpiIndex + 1;
+      
+      // لو وصلنا للنهاية، نرجع لأول واحدة (infinite loop)
+      if (this.currentKpiIndex >= totalCards) {
+        this.currentKpiIndex = 0;
+      }
+      
+      // Scroll to the specific card
+      const targetCard = cards[this.currentKpiIndex] as HTMLElement;
+      if (targetCard) {
+        const cardLeft = targetCard.offsetLeft;
+        container.scrollTo({ left: cardLeft, behavior: 'smooth' });
+      }
     }, 3000);
   }
   ngAfterViewInit(): void {
-    this.startAutoScroll();
+    // تأكد إن الـ scroll يبدأ من أول واحدة
+    setTimeout(() => {
+      const container = this.kpiScroll?.nativeElement;
+      if (container) {
+        container.scrollLeft = 0;
+        this.currentKpiIndex = 0;
+      }
+      this.startAutoScroll();
+    }, 100);
   }
   stopAutoScroll(): void {
     if (this.autoScrollInterval) {
@@ -470,9 +508,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       const mappedSeriesData: ChartSeriesData[] = [];
       result.seriesData.forEach((series, index) => {
         if (index === 0) {
-          mappedSeriesData.push({ ...series, name: 'Revenue' });
+          mappedSeriesData.push({ ...series, name: this.translate.instant('FinancialCharts.chartvalueNameforrevenue') });
         } else if (index === 1) {
-          mappedSeriesData.push({ ...series, name: 'Expense' });
+          mappedSeriesData.push({ ...series, name: this.translate.instant('FinancialCharts.chartvalueNameforexpenses') });
         }
       });
       return {
@@ -480,7 +518,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         chartType: chart.chartType,
         module: chart.module,
         categories: result.categories,
-        seriesData: mappedSeriesData,
+        seriesData: result.seriesData,
         originalData: chart.data
       };
     }).filter(chart => chart !== null);
@@ -551,10 +589,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           const redirectUri = window.location.origin + '/login';
 
           const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
+          const ProdUAEPassURL = 'https://id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
 
-          window.location.href = logoutURL;
+          window.location.href = ProdUAEPassURL;
 
-          window.location.href = `${logoutURL}`;
+          window.location.href = `${ProdUAEPassURL}`;
           this.spinnerService.hide();
         },
 

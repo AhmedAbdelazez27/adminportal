@@ -81,7 +81,7 @@
 
             <div class="col-xl-6 mb-3">
               <label for="departmentActions" class="form-label">{{ 'SERVICE_SETTING.DEPARTMENT_ACTION' | translate }}<span class="text-danger">*</span></label>
-              <ng-select [items]="departmentActionsSelect2" bindLabel="text" bindValue="value" [multiple]="false"
+              <ng-select [items]="departmentActionsSelect2" bindLabel="text" bindValue="id" [multiple]="false"
                          [class.is-invalid]="isFieldInvalid('departmentActionsSelect2')" (blur)="onFieldBlur('departmentActionsSelect2')"
                          formControlName="departmentAction" class="ng-select-custom" [disabled]="mode === 'view'">
               </ng-select>

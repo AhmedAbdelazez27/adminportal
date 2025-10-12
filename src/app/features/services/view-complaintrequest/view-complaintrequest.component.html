@@ -18,10 +18,10 @@
           <div class="w-100">
             <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
               <h4 class="title">{{ 'VIEW_COMPLAINTREQUEST.TITLE' | translate }}</h4>
-              <button *ngIf="targetWorkFlowStep && isEditMode  && workFlowQuery?.length" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
+              <!--<button *ngIf="targetWorkFlowStep && isEditMode  && workFlowQuery?.length" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
                 <i class="fas fa-plus me-2"></i>
                 {{ 'COMMON.ADD_COMMENT' | translate }}
-              </button>
+              </button>-->
             </div>
             <div class="row">
               <h6 class="fw-bold">{{ mainApplyService.service?.serviceName }}</h6>
@@ -80,7 +80,7 @@
                     <div class="step-header">
                       <div class="step-number">
                         <!-- {{ 'WORKFLOW.STEP' | translate }} {{step.stepOrder}} -->
-                          {{ step?.stepName || (('WORKFLOW.STEP' | translate) + ' ' + step?.stepOrder) }}
+                        {{ step?.stepName || (('WORKFLOW.STEP' | translate) + ' ' + step?.stepOrder) }}
                       </div>
                       <div class="step-status" [style.color]="getStatusColor(step.serviceStatus)">
                         <i [class]="getStatusIcon(step.serviceStatus)" class="me-1"></i>
@@ -89,9 +89,11 @@
                     </div>
                     <h6 class="department-name">{{step.departmentName}}</h6>
                     <button type="button" class="btn btn-link p-0"
-                      (click)="openHistoryModal(step.workFlowHistories || [])">
-                      <i class="bi bi-clock-history me-1"></i>{{ 'mainApplyServiceResourceName.WORKFLOW.VIEW_HISTORY' |
-                      translate }}
+                            (click)="openHistoryModal(step.workFlowHistories || [])">
+                      <i class="bi bi-clock-history me-1"></i>{{
+ 'mainApplyServiceResourceName.WORKFLOW.VIEW_HISTORY' |
+                      translate
+                      }}
                     </button>
 
                   </div>
@@ -135,7 +137,7 @@
                       {{ 'mainApplyServiceResourceName.disagree' | translate }}
                     </div>
 
-                    <div *ngIf="workFlowQuery[0].serviceStatus == 3" class="alert alert-warning text-center">
+                    <div *ngIf="workFlowQuery[0].serviceStatus == 7" class="alert alert-warning text-center">
                       <div class="popover__wrapper">
                         <a href="javascript:void(0);">
                           <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
@@ -146,7 +148,7 @@
                       </div>
                     </div>
 
-                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 3">
+                    <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1 && workFlowQuery[0].serviceStatus != 2 && workFlowQuery[0].serviceStatus != 7">
                       <ng-template #returnForModification>
                         <div class="alert alert-warning text-center">
                           <div class="popover__wrapper">
@@ -160,7 +162,7 @@
                         </div>
                       </ng-template>
 
-                      <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else returnForModification">
+                      <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else returnForModification">
                         <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
                           <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
@@ -206,7 +208,7 @@
                       </div>
                     </ng-template>
 
-                    <div *ngIf="mainApplyService.lastStatus != 'إرجاع الطلب للتعديل'; else noWorkflowReturn">
+                    <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else noWorkflowReturn">
                       <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
                         <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
@@ -509,7 +511,7 @@
 
       <div class="modal-body">
         <ng-container *ngIf="historyForModal?.length; else noHistory">
-          
+
           <div class="history-timeline">
             <div class="history-item" *ngFor="let h of historyForModal; let i = index">
               <div class="dot"></div>
@@ -545,8 +547,11 @@
                 </div>
 
                 <div class="mb-1" *ngIf="h.description">
-                  <small class="text-muted">{{ 'mainApplyServiceResourceName.WORKFLOW.DESCRIPTION' | translate
-                    }}:</small>
+                  <small class="text-muted">
+                    {{
+ 'mainApplyServiceResourceName.WORKFLOW.DESCRIPTION' | translate
+                    }}:
+                  </small>
                   <span>{{ h.description }}</span>
                 </div>
               </div>
@@ -565,6 +570,202 @@
         <button type="button" class="btn btn-outline-secondary" (click)="closeHistoryModal()">
           {{ 'COMMON.CLOSE' | translate }}
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--<div class="view-complaintrequest-container">
+  <section>
+    <div class="container services">
+
+
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/mainServices/services">{{ 'mainApplyServiceResourceName.navigateService' | translate }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ 'VIEW_COMPLAINTREQUEST.TITLE' | translate }}</li>
+        </ol>
+      </nav>
+
+      <div class="service-info-card mb-4">
+        <div class="w-100">
+          <h4 class="title">{{ 'VIEW_COMPLAINTREQUEST.TITLE' | translate }}</h4>
+          <div class="row">
+            <div class="col-xl-6">
+              <p class="mb-1">
+                <strong>{{ 'COMMON.APPLICATION_NO' | translate }}:</strong>
+                {{mainApplyService.applyNo}}
+              </p>
+            </div>
+            <div class="col-xl-6">
+              <p class="mb-1">
+                <strong>{{ 'COMMON.APPLICATION_DATE' | translate }}:</strong>
+                {{formatDate(mainApplyService.applyDate)}}
+              </p>
+            </div>
+            <div class="col-xl-6">
+              <p class="mb-0" *ngIf="mainApplyService.permitNumber">
+                <strong>{{ 'COMMON.PERMIT_NUMBER' | translate }}: </strong>
+                {{mainApplyService.permitNumber}}
+              </p>
+            </div>
+            <div class="col-xl-6">
+              <span class="badge bg-primary">{{mainApplyService.lastStatus}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!mainApplyService" class="text-center py-5">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">{{ 'COMMON.LOADING' | translate }}</span>
+        </div>
+        <p class="mt-3">{{ 'COMMON.LOADING_DATA' | translate }}</p>
+      </div>
+
+      <div *ngIf="mainApplyService" class="row">
+        <div class="col-lg-12 mb-4">
+          <div class="main-container">
+            <h4 class="gold mb-3">{{ 'REQUEST_COMPLAINT.DETAILS' | translate }}</h4>
+            <div class="row">
+              <div class="col-md-6">
+                <label class="form-label fw-bold"> {{'REQUEST_COMPLAINT.APPLICANT_NAME' | translate }} </label>
+                <p>{{ mainApplyService.requestComplaint?.applicantName || '-' }}</p>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold">{{ 'REQUEST_COMPLAINT.EMAIL' | translate }}</label>
+                <p>{{ mainApplyService.requestComplaint?.email || '-' }}</p>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold">{{ 'REQUEST_COMPLAINT.NOTES' | translate }}</label>
+                <p>{{ mainApplyService.requestComplaint?.notes || '-' }}</p>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold"> {{ 'REQUEST_COMPLAINT.REQUEST_DATE' | translate }} </label>
+                <p>{{ formatDateTime(mainApplyService.requestComplaint?.requestDate) }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>-->
+
+
+<div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="historyModalLabel" class="modal-title">
+          {{ 'mainApplyServiceResourceName.WORKFLOW.HISTORY' | translate }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeHistoryModal()" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <ng-container *ngIf="historyForModal?.length; else noHistory">
+
+          <div class="history-timeline">
+            <div class="history-item" *ngFor="let h of historyForModal; let i = index">
+              <div class="dot"></div>
+              <div class="content">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <div class="step-status" [style.color]="getStatusColor(h.serviceStatus)">
+                    <i [class]="getStatusIcon(h.serviceStatus)" class="me-1"></i>
+                    {{h.serviceStatusName || (getStatusLabel(h.serviceStatus) | translate)}}
+                  </div>
+                  <small class="text-muted">
+                    {{ h.historyDate | date:'medium' }}
+                  </small>
+                </div>
+
+                <div class="mb-1">
+                  <small class="text-muted">{{ 'mainApplyServiceResourceName.WORKFLOW.BY' | translate }}:</small>
+                  <span>{{ h.userName }}</span>
+                </div>
+
+                <div class="mb-1" *ngIf="h.fromDepartmentName">
+                  <small class="text-muted">{{ 'mainApplyServiceResourceName.WORKFLOW.FROM_DEPT' | translate }}:</small>
+                  <span>{{ h.fromDepartmentName }}</span>
+                </div>
+
+                <div class="mb-1" *ngIf="h.toDepartmentName">
+                  <small class="text-muted">{{ 'mainApplyServiceResourceName.WORKFLOW.TO_DEPT' | translate }}:</small>
+                  <span>{{ h.toDepartmentName }}</span>
+                </div>
+
+                <div class="mb-1" *ngIf="getHistoryNote(h)">
+                  <small class="text-muted">{{ 'mainApplyServiceResourceName.WORKFLOW.NOTE' | translate }}:</small>
+                  <span>{{ getHistoryNote(h) }}</span>
+                </div>
+
+                <div class="mb-1" *ngIf="h.description">
+                  <small class="text-muted">
+                    {{
+ 'mainApplyServiceResourceName.WORKFLOW.DESCRIPTION' | translate
+                    }}:
+                  </small>
+                  <span>{{ h.description }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #noHistory>
+          <div class="text-center text-muted py-4">
+            {{ 'mainApplyServiceResourceName.WORKFLOW.NO_HISTORY' | translate }}
+          </div>
+        </ng-template>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeHistoryModal()">
+          {{ 'COMMON.CLOSE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModalReturnModification" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl custom-modal-width">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editLabel">سبب ارجاع الطلب للتعديل</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z"
+                  fill="#5B5B5B" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="">
+          <form [formGroup]="returnModificationForm">
+            <div class="row">
+              <div class="col-xl-12 mb-3">
+                <label for="returnModificationreasonTxt" class="form-label">
+                  {{ 'mainApplyServiceResourceName.reason' | translate }}
+                </label>
+                <textarea id="returnModificationreasonTxt" class="form-control" rows="3"
+                          [ngClass]="{'is-invalid': returnModificationForm.get('returnModificationreasonTxt')?.invalid && (returnModificationForm.get('returnModificationreasonTxt')?.touched || submitted)}"
+                          formControlName="returnModificationreasonTxt"
+                          placeholder="{{ 'returnModificationreasonTxt' | translate }}"></textarea>
+                <div *ngIf="returnModificationForm.get('returnModificationreasonTxt')?.invalid && (returnModificationForm.get('returnModificationreasonTxt')?.touched || submitted)"
+                     class="invalid-feedback">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer mt-3">
+        <button type="button" class="btn btn-gold" (click)="returnModficationReasonSave()"> {{ 'Common.save' | translate }}</button>
+        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">{{ 'Common.Close' | translate }}</button>
       </div>
     </div>
   </div>

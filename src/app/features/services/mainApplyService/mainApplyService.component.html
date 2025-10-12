@@ -482,7 +482,7 @@
                       </div>
                     </div>
 
-                    <div *ngIf="workFlowQuery[0].serviceStatus == 3" style="width:100%">
+                    <div *ngIf="workFlowQuery[0].serviceStatus == 7" style="width:100%">
                       <div style="text-align:center" class="alert alert-warning" role="alert">
                         <div class="popover__wrapper">
                           <a href="javascript:void(0);">
@@ -497,9 +497,9 @@
 
                     <ng-container *ngIf="workFlowQuery[0].serviceStatus != 1
                         && workFlowQuery[0].serviceStatus != 2
-                        && workFlowQuery[0].serviceStatus != 3">
+                        && workFlowQuery[0].serviceStatus != 7">
 
-                      <div *ngIf="loadformData.lastStatus != 'إرجاع الطلب للتعديل'; else returnForModification">
+                      <div *ngIf="loadformData.lastStatus != 'إرجاع للتعديل'; else returnForModification">
 
                         <button type="button" (click)="acceptbtn()" class="btn btn-success">
                           {{ 'mainApplyServiceResourceName.accep' | translate }}
@@ -533,7 +533,7 @@
                   </div>
 
                   <ng-template #noWorkflow>
-                    <div *ngIf="loadformData.lastStatus != 'إرجاع الطلب للتعديل'; else noWorkflowReturn">
+                    <div *ngIf="loadformData.lastStatus != 'إرجاع للتعديل'; else noWorkflowReturn">
                       <div class="d-flex flex-wrap gap-2 justify-content-end">
 
                         <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">

@@ -10,6 +10,10 @@ import {
   GetAllServicesParameters,
   PagedResultDto,
 } from '../dtos/serviceSetting/serviceSetting.dto';
+import {
+  AttachmentsConfigDto,
+  CreateServiceAttachmentsConfigDto,
+} from '../dtos/attachments/attachments-config.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +37,7 @@ export class ServiceSettingService {
   getById(id: number): Observable<ServiceDto> {
     return this.http.post<ServiceDto>(
       `${this.BASE_URL}${ApiEndpoints.Services.GetById(id)}`,
-      {}
+      { serviceId: id }
     );
   }
 
@@ -57,12 +61,20 @@ export class ServiceSettingService {
     );
   }
 
-    // Get service by ID
+  // Get user service type from lookup
   getUserServiceType(): Observable<any> {
     return this.http.get<any>(
-      `${environment.apiBaseUrl}/Lookup/UserServiceType
-`,
-      {}
+      `${environment.apiBaseUrl}/Lookup/UserServiceType`
+    );
+  }
+
+  // Create service attachment config
+  createServiceAttachmentConfig(
+    dto: CreateServiceAttachmentsConfigDto
+  ): Observable<AttachmentsConfigDto> {
+    return this.http.post<AttachmentsConfigDto>(
+      `${this.BASE_URL}${ApiEndpoints.Services.CreateServiceAttachmentConfig}`,
+      dto
     );
   }
 }

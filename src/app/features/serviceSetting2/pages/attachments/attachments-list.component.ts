@@ -10,6 +10,7 @@ import {
 import {
   AttachmentsConfigDto,
   CreateAttachmentsConfigDto,
+  CreateServiceAttachmentsConfigDto,
   UpdateAttachmentsConfigDto,
 } from '../../../../core/dtos/attachments/attachments-config.dto';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
@@ -320,15 +321,15 @@ export class AttachmentsListComponent implements OnInit, OnDestroy {
         },
       });
     } else if (this.modalMode === 'add') {
-      const createDto: CreateAttachmentsConfigDto = {
+      const createDto: CreateServiceAttachmentsConfigDto = {
         name: formVal.name,
         nameEn: formVal.nameEn,
-        attachmentsConfigType: this.serviceId,
+        serviceId: this.serviceId,
         mendatory: formVal.mendatory,
         active: formVal.active,
       };
 
-      this.attachmentsConfigService.createAsync(createDto).subscribe({
+      this.serviceSettingService.createServiceAttachmentConfig(createDto).subscribe({
         next: (response) => {
           this.toastr.success(this.translate.instant('COMMON.CREATE_SUCCESS'));
           this.loadServiceDetails();

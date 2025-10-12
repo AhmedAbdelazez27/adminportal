@@ -86,6 +86,7 @@ export class ViewComplaintrequestComponent implements OnInit {
       next: (resp: any) => {
         this.mainApplyService = resp;  // تخزين البيانات القادمة من الـ API في mainApplyService
         let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+        this.workFlowSteps = this.mainApplyService?.workFlowSteps ?? [];
 
         const storedDeptIds = storeddepartmentId
           .replace(/"/g, '')
@@ -139,14 +140,15 @@ export class ViewComplaintrequestComponent implements OnInit {
             break;
           }
         }
-
+      
         this.workFlowQuery = selectedStep ? [selectedStep] : [];
 
         this.serviceDepartmentActions = (this.workFlowQuery ?? [])
           .map((s: any) => s.serviceDepartmentActions)
           .filter((x: any): x is number => typeof x === 'number');
 
-        this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;      },
+        this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;
+      },
       error: () => {
         this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_DATA'));
         this.router.navigate(['/']);
@@ -303,7 +305,7 @@ export class ViewComplaintrequestComponent implements OnInit {
           modal.hide();
         }
 
-        this.updateStatus("3", formData.reasonTxt);
+        this.updateStatus("7", formData.reasonTxt);
         this.spinnerService.hide();
       },
       error: () => {
@@ -342,7 +344,7 @@ export class ViewComplaintrequestComponent implements OnInit {
           const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
           modal.hide();
         }
-        this.updateStatus("3", formData.returnModificationreasonTxt);
+        this.updateStatus("7", formData.returnModificationreasonTxt);
         this.spinnerService.hide();
       },
       error: () => {
