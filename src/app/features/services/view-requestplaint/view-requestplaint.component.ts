@@ -101,6 +101,7 @@ export class ViewRequestplaintComponent implements OnInit {
   isEditMode: boolean = false;
   serviceDepartmentActions: number[] = [];
   private subscriptions: Subscription[] = [];
+  allApproved: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -206,14 +207,18 @@ export class ViewRequestplaintComponent implements OnInit {
             break;
           }
         }
+        console.log(this.workFlowSteps)
 
         this.workFlowQuery = selectedStep ? [selectedStep] : [];
-
+        this.workFlowQuery[0].serviceDepartmentActions = 1;
         this.serviceDepartmentActions = (this.workFlowQuery ?? [])
           .map((s: any) => s.serviceDepartmentActions)
           .filter((x: any): x is number => typeof x === 'number');
 
         this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;
+
+        this.allApproved = this.workFlowSteps.length > 0 &&
+          this.workFlowSteps.every(step => step.serviceStatus === 1);
         this.findTargetWorkFlowStep();
         if (this.targetWorkFlowStep) {
           this.loadWorkFlowComments();
@@ -717,5 +722,40 @@ export class ViewRequestplaintComponent implements OnInit {
         complete: () => this.spinnerService.hide()
       })
     );
+  }
+
+  historyForModal: any[] = [];
+  private historyModalInstance: any = null;
+
+  openHistoryModal(history: any[] = []): void {
+    this.historyForModal = (history || []).slice().sort((a, b) =>
+      new Date(b.historyDate).getTime() - new Date(a.historyDate).getTime()
+    );
+
+    const el = document.getElementById('historyModal');
+    if (el) {
+      if (this.historyModalInstance) {
+        this.historyModalInstance.dispose();
+      }
+      this.historyModalInstance = new (window as any).bootstrap.Modal(el, {
+        backdrop: 'static',
+        keyboard: false
+      });
+      this.historyModalInstance.show();
+    }
+  }
+
+  closeHistoryModal(): void {
+    if (this.historyModalInstance) {
+      this.historyModalInstance.hide();
+    }
+  }
+
+  getHistoryNote(h: any): string {
+    const lang = (this.translate?.currentLang || localStorage.getItem('lang') || 'ar').toLowerCase();
+    if (lang.startsWith('ar')) {
+      return h?.noteAr || h?.serviceStatusName || '';
+    }
+    return h?.noteEn || h?.serviceStatusName || '';
   }
 }

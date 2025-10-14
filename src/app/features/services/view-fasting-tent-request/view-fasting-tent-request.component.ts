@@ -130,6 +130,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   isEditMode: boolean = false;
   serviceDepartmentActions: number[] = [];
   userForm: FormGroup;
+  allApproved: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -377,6 +378,9 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
           .filter((x: any): x is number => typeof x === 'number');
 
         this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;
+
+        this.allApproved = this.workFlowSteps.length > 0 &&
+          this.workFlowSteps.every(step => step.serviceStatus === 1);
 
         this.findTargetWorkFlowStep();
         if (this.targetWorkFlowStep) {

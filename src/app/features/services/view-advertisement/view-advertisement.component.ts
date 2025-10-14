@@ -196,7 +196,8 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
   returnModificationForm: FormGroup;
 
   private subscriptions: Subscription[] = [];
-  
+  allApproved: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -442,7 +443,11 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
           .map((s: any) => s.serviceDepartmentActions)
           .filter((x: any): x is number => typeof x === 'number');
 
-        this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;        
+        this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;
+
+        this.allApproved = this.workFlowSteps.length > 0 &&
+          this.workFlowSteps.every(step => step.serviceStatus === 1);
+
         // Extract targets, methods, and locations from the nested structure
         if ((response as any).requestAdvertisement) {
           this.targets = (response as any).requestAdvertisement.requestAdvertisementTargets || [];
@@ -1051,7 +1056,7 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
       serviceStatus: Number(status),
       userId: localStorage.getItem('userId'),
       reason: reason,
-      notesForApproving: null,
+      notesForApproving: this.originalNotes,
       tentConstructDate: null,
       startDate: null,
       endDate: null
@@ -1434,4 +1439,38 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
     });
   }
 
+  historyForModal: any[] = [];
+  private historyModalInstance: any = null;
+
+  openHistoryModal(history: any[] = []): void {
+    this.historyForModal = (history || []).slice().sort((a, b) =>
+      new Date(b.historyDate).getTime() - new Date(a.historyDate).getTime()
+    );
+
+    const el = document.getElementById('historyModal');
+    if (el) {
+      if (this.historyModalInstance) {
+        this.historyModalInstance.dispose();
+      }
+      this.historyModalInstance = new (window as any).bootstrap.Modal(el, {
+        backdrop: 'static',
+        keyboard: false
+      });
+      this.historyModalInstance.show();
+    }
+  }
+
+  closeHistoryModal(): void {
+    if (this.historyModalInstance) {
+      this.historyModalInstance.hide();
+    }
+  }
+
+  getHistoryNote(h: any): string {
+    const lang = (this.translate?.currentLang || localStorage.getItem('lang') || 'ar').toLowerCase();
+    if (lang.startsWith('ar')) {
+      return h?.noteAr || h?.serviceStatusName || '';
+    }
+    return h?.noteEn || h?.serviceStatusName || '';
+  }
 }

@@ -48,6 +48,7 @@ export class ViewComplaintrequestComponent implements OnInit {
   commentForm!: FormGroup;
   isLoading = false;
   submitted = false;
+  allApproved: boolean = false;
 
 
 
@@ -76,6 +77,9 @@ export class ViewComplaintrequestComponent implements OnInit {
   // ===== Load =====
   private loadMainApplyServiceData(): void {
     const id = this.route.snapshot.paramMap.get('id');
+    const mode = sessionStorage.getItem('screenmode');
+    this.screenMode = mode === 'edit' ? 'edit' : 'view';
+    this.isEditMode = this.screenMode === 'edit';
     if (!id) {
       this.toastr.error(this.translate.instant('COMMON.INVALID_ID'));
       this.router.navigate(['/']);
@@ -96,13 +100,13 @@ export class ViewComplaintrequestComponent implements OnInit {
 
         storeddepartmentId = storeddepartmentId.replace(/"/g, '').trim();
 
-        this.workFlowSteps = this.workFlowSteps.map((step: any) => ({
+        this.workFlowSteps = (this.mainApplyService?.workFlowSteps ?? []).map((step: any) => ({
           ...step,
-          isMatched: storedDeptIds.includes(String(step?.deptId).trim())
+          isMatched: storedDeptIds.includes(String(step?.deptId ?? '').trim())
         }));
 
         const matchedIndices = this.workFlowSteps
-          .map((s, i) => (storedDeptIds.includes(String(s?.deptId).trim()) ? i : -1))
+          .map((s, i) => (storedDeptIds.includes(String(s?.deptId ?? '').trim()) ? i : -1))
           .filter(i => i !== -1);
 
         let selectedStep: any = null;
@@ -148,6 +152,16 @@ export class ViewComplaintrequestComponent implements OnInit {
           .filter((x: any): x is number => typeof x === 'number');
 
         this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;
+
+        this.allApproved = this.workFlowSteps.length > 0 &&
+          this.workFlowSteps.every(step => step.serviceStatus === 1);
+        console.log("workFlowSteps", this.workFlowSteps);
+        console.log("storedDeptIds", storedDeptIds);
+        console.log("matchedIndices", matchedIndices);
+        console.log("storeddepartmentId", storeddepartmentId);
+        console.log("workFlowQuery", this.workFlowQuery);
+        console.log("serviceDepartmentActions", this.serviceDepartmentActions);
+        console.log("originalworkFlowId", this.originalworkFlowId);
       },
       error: () => {
         this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_DATA'));
