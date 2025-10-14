@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { TranslationService } from '../../../core/services/translation.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
@@ -10,15 +10,16 @@ import { SpinnerService } from '../../../core/services/spinner.service';
 import { UserService } from '../../../core/services/user.service';
 import { confirmPasswordValidator } from '../../customValidators/confirmPasswordValidator';
 import { ExportToolbarComponent } from '../../../../shared/export-toolbar/export-toolbar.component';
+import { ProfileDbService } from '../../../core/services/profile-db.service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterModule, CommonModule, FormsModule, ReactiveFormsModule, TranslateModule , ExportToolbarComponent],
+  imports: [RouterModule, CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, ExportToolbarComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
   providers: [ToastrService]
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   open = false;
   private timeoutId: any;
   changePasswordForm: FormGroup;
@@ -27,12 +28,12 @@ export class NavbarComponent {
   showCPassword: boolean = false;
   submitted: boolean = false;
   currentLang: string = 'en';
-  userName : string = ""
+  userName: string = ""
 
   constructor(public translation: TranslationService, private authService: AuthService, private toastr: ToastrService, private fb: FormBuilder, private spinnerService: SpinnerService,
-    private translate: TranslateService, private userService: UserService) {
+    private translate: TranslateService, private userService: UserService, private profileDb: ProfileDbService, private router: Router) {
 
-    
+
     this.changePasswordForm = this.fb.group({
       currentPassword: ['', [Validators.required, Validators.minLength(1)]],
       newPassword: ['', [Validators.required, Validators.minLength(1)]],
@@ -47,7 +48,18 @@ export class NavbarComponent {
       this.currentLang = lang.lang;
     });
 
-    this.userName = localStorage.getItem('userName')|| '' ;
+  }
+  ngOnInit(): void {
+    this.profileDb.getProfile().then(cached => {
+      // console.log('cached profile from IndexedDB:', cached);
+      this.userName = cached?.userName ?? '';
+    });
+    const snap = this.authService.snapshot;
+    this.userName = snap?.userName ?? '';
+
+    this.authService.user$.subscribe(p => {
+      this.userName = p?.userName ?? '';
+    });
   }
 
   toggleLang() {
@@ -64,19 +76,25 @@ export class NavbarComponent {
       this.open = false;
     }, 200);
   }
-  hasPermission(permission: string): boolean {
-    const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
-    const result = permissions.includes(permission);
-  
-    return result;
+  // hasPermission(permission: string): boolean {
+  //   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
+  //   const result = permissions.includes(permission);
+
+  //   return result;
+  // }
+  // hasPagePermission(pagePermission: string): boolean {
+  //   const pages = JSON.parse(localStorage.getItem('pages') || '[]');
+  //   return pages.includes(pagePermission);
+  // }
+  hasPermission(code: string) {
+    return (this.authService.snapshot?.permissions ?? []).includes(code);
   }
-  hasPagePermission(pagePermission: string): boolean {
-    const pages = JSON.parse(localStorage.getItem('pages') || '[]');
-    return pages.includes(pagePermission);
+  hasPagePermission(code: string) {
+    return (this.authService.snapshot?.pages ?? []).includes(code);
   }
 
   hasAnyAuthenticationPermission(): boolean {
-    const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
+    // const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
     // console.log('Authentication permissions check:', {
     //   permissions: permissions,
     //   hasRoleView: this.hasPermission('Role.View'),
@@ -84,76 +102,95 @@ export class NavbarComponent {
     //   hasEntityView: this.hasPermission('Entity.View'),
     //   hasDepartmentsView: this.hasPermission('Departments.View')
     // });
-    return this.hasPermission('Role.View') || 
-           this.hasPermission('User.View') || 
-           this.hasPermission('Entity.View') || 
-           this.hasPermission('Departments.View') ||
-           this.hasPermission('DataTransLogs.View');
+    return this.hasPermission('Role.View') ||
+      this.hasPermission('User.View') ||
+      this.hasPermission('Entity.View') ||
+      this.hasPermission('Departments.View') ||
+      this.hasPermission('DataTransLogs.View');
   }
 
   hasAnyFinancialPermission(): boolean {
     return this.hasPermission('VwApInvoiceHd.View') ||
-           this.hasPermission('GlJeHeader.View') ||
-           this.hasPermission('ApMiscPaymentHeader.View') ||
-           this.hasPermission('ArMiscReciptHeader.View') ||
-           this.hasPermission('ApPaymentTransactionsHdr.View') ||
-           this.hasPermission('ApVendor.View') ||
-           this.hasAnyFinancialReportsPermission() ||
-           this.hasAnyFinancialChartsPermission();
+      this.hasPermission('GlJeHeader.View') ||
+      this.hasPermission('ApMiscPaymentHeader.View') ||
+      this.hasPermission('ArMiscReciptHeader.View') ||
+      this.hasPermission('ApPaymentTransactionsHdr.View') ||
+      this.hasPermission('ApVendor.View') ||
+      this.hasAnyFinancialReportsPermission() ||
+      this.hasAnyFinancialChartsPermission();
   }
 
   hasAnySponsorshipPermission(): boolean {
     return this.hasPermission('SpCasesPayment.View') ||
-           this.hasPermission('SpBeneficents.View') ||
-           this.hasPermission('SpContracts.View') ||
-           this.hasPermission('SpCases.View') ||
-           this.hasPermission('BeneficentsRpt.View') ||
-           this.hasPermission('CaseSearchRpt.View') ||
-           this.hasPermission('BenifcientTotalRpt.View') ||
-           this.hasPermission('CaseAidEntitiesRpt.View') ||
-           this.hasPermission('CaseSearchListRpt.View');
+      this.hasPermission('SpBeneficents.View') ||
+      this.hasPermission('SpContracts.View') ||
+      this.hasPermission('SpCases.View') ||
+      this.hasPermission('BeneficentsRpt.View') ||
+      this.hasPermission('CaseSearchRpt.View') ||
+      this.hasPermission('BenifcientTotalRpt.View') ||
+      this.hasPermission('CaseAidEntitiesRpt.View') ||
+      this.hasPermission('CaseSearchListRpt.View');
   }
 
   hasAnySocialCasesPermission(): boolean {
     return this.hasPermission('AidRequest.View') ||
-           this.hasPermission('SpCases.View') ||
-           this.hasPermission('OrdersListRpt.View') ||
-           this.hasPermission('CasesEntitiesRpt.View') ||
-           this.hasPermission('CaseAidEntitiesRpt.View');
+      this.hasPermission('SpCases.View') ||
+      this.hasPermission('OrdersListRpt.View') ||
+      this.hasPermission('CasesEntitiesRpt.View') ||
+      this.hasPermission('CaseAidEntitiesRpt.View');
   }
 
   hasAnyProjectsPermission(): boolean {
     return this.hasPermission('ScProject.View') ||
-           this.hasPermission('ProjectsHdr.View');
+      this.hasPermission('ProjectsHdr.View');
   }
 
   hasAnyServicesPermission(): boolean {
     return this.hasPermission('ServiceRequestsDetailsRpt.View') ||
-           this.hasPermission('TotalServiceRequestsRpt.View') ||
-           this.hasPermission('Services.View') ||
-           this.hasPermission('MainApplyRequestService.View');
+      this.hasPermission('TotalServiceRequestsRpt.View') ||
+      this.hasPermission('Services.View') ||
+      this.hasPermission('MainApplyRequestService.View');
   }
 
   hasAnyFinancialReportsPermission(): boolean {
     return this.hasPermission('CatchReceiptRpt.View') ||
-           this.hasPermission('GeneralGlJournalRpt.View') ||
-           this.hasPermission('BalanceReviewRpt.View') ||
-           this.hasPermission('ReceiptRpt.View') ||
-           this.hasPermission('VendorsPayRpt.View') ||
-           this.hasPermission('TotalBenDonationsRpt.View');
+      this.hasPermission('GeneralGlJournalRpt.View') ||
+      this.hasPermission('BalanceReviewRpt.View') ||
+      this.hasPermission('ReceiptRpt.View') ||
+      this.hasPermission('VendorsPayRpt.View') ||
+      this.hasPermission('TotalBenDonationsRpt.View');
   }
 
   hasAnyFinancialChartsPermission(): boolean {
     return this.hasPermission('FinancialCharts.View') ||
-           this.hasPermission('RevenueAndExpensesCharts.View') ||
-           this.hasPermission('ReceiptPaymentCharts.View') ||
-           this.hasPermission('ReceiptsAndPaymentsCharts.View') ||
-           this.hasPermission('RevenueComparisonCharts.View');
+      this.hasPermission('RevenueAndExpensesCharts.View') ||
+      this.hasPermission('ReceiptPaymentCharts.View') ||
+      this.hasPermission('ReceiptsAndPaymentsCharts.View') ||
+      this.hasPermission('RevenueComparisonCharts.View');
+  }
+
+  hasAnyGeneralSettingsPermission(): boolean {
+    return this.hasPermission('Attachment.View') ||
+      this.hasPermission('ContactInformation.View') ||
+      this.hasPermission('Initiative.View') ||
+      this.hasPermission('HeroSectionSetting.View') ||
+      this.hasPermission('AvailableNumber.View') ||
+      this.hasPermission('Location.View') ||
+      this.hasPermission('Region.View');
   }
 
   logout() {
-    this.authService.logout();
-    this.toastr.success('You have been logged out', 'Success');
+    this.authService.logout().subscribe({
+      next: (res) => {
+        console.log("reslogout  ___ ", res);
+
+        this.toastr.success('You have been logged out', 'Success');
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.toastr.error('Logout failed', 'Error');
+      }
+    });
   }
   // change password
   showPasswordMatch(): boolean {

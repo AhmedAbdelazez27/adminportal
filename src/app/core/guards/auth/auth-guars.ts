@@ -1,42 +1,47 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ProfileDbService } from '../../services/profile-db.service';
 
-export const authGuard: CanActivateFn = (route) => {
+export const authGuard: CanActivateFn = async (route) => {
   const auth = inject(AuthService);
   const router = inject(Router);
+  const profileDb = inject(ProfileDbService);
 
-  const token = auth.getToken();
+  let profile = auth.snapshot;
 
-  if (!token) {
-    router.navigate(['/login']);
-    return false;
+  if (!profile) {
+    profile = await profileDb.getProfile();
+    if (profile) {
+      auth.setProfile(profile);
+    }
   }
 
-  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
-  const permissionsPages = JSON.parse(localStorage.getItem('pages') || '[]');
-  const requiredPermission = route.data['permission'] || null;
-  const requiredpagePermission = route.data['pagePermission'] || null;
+  if (!profile || !profile.userId) {
+    return router.createUrlTree(['/login']);
+  }
 
-  if (requiredpagePermission) {
-    if (permissionsPages.includes(requiredpagePermission)) {
-      return true;
-    } else {
-      router.navigate(['/no-permission']);
-      return false;
-    }
-  } else if (requiredPermission == 'Main') {
+  const permissions = Array.isArray(profile.permissions) ? profile.permissions : [];
+  const permissionsPages = Array.isArray(profile.pages) ? profile.pages : [];
+
+  const requiredPermission = route.data?.['permission'] ?? null;
+  const requiredPagePermission = route.data?.['pagePermission'] ?? null;
+
+  if (requiredPagePermission) {
+    return permissionsPages.includes(requiredPagePermission)
+      ? true
+      : router.createUrlTree(['/no-permission']);
+  }
+
+  if (requiredPermission === 'Main') {
     return true;
-
-  } else if (requiredPermission) {
-
-    if (permissions.includes(requiredPermission)) {
-      return true;
-    } else {
-      router.navigate(['/no-permission']);
-      return false;
-    }
-  } else {
-    return false;
   }
+
+  if (requiredPermission) {
+    return permissions.includes(requiredPermission)
+      ? true
+      : router.createUrlTree(['/no-permission']);
+  }
+
+  return false;
 };

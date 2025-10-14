@@ -23,6 +23,11 @@ export class ApiEndpoints {
       'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=?',
     UAEPassLogInBaseURL:
       'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:4200&acr_values=urn:safelayer:tws:policies:authentication:level:low',
+    ResendVerifyTwoFactorOtp : '/Auth/ResendVerifyTwoFactorOtp'  ,
+    VerifyTwoFactor : '/Auth/VerifyTwoFactor'  ,
+    RefreshToken : '/Auth/RefreshToken'  ,
+    Logout : '/Logout'  ,
+
   };
 
   static readonly Roles = {
@@ -102,7 +107,7 @@ export class ApiEndpoints {
     GetAll: '/GetAll',
     GetById: '/GetDetailById',
     GetPaymentDetailsById: '/GetPaymentDetails',
-    GetPaymentLinesById: '/GetPaymentLines',
+    GetPaymentLinesById: '/GetPaymentLines'
   };
 
   static readonly ArMiscReceiptHeader = {
@@ -130,7 +135,7 @@ export class ApiEndpoints {
     GetAll: '/GetAll',
     GetById: '/GetGeneralJournalHeaderDetails',
     GetLineDetailsById: '/GetGLLines',
-    // GetById: (receiptId: string, entityId: string) =>`/GetGeneralJournalHeaderDetails/${receiptId}/${entityId}`,
+   // GetById: (receiptId: string, entityId: string) =>`/GetGeneralJournalHeaderDetails/${receiptId}/${entityId}`,
     //GetLineDetailsById: (receiptId: string, entityId: string) =>`/GetGLLines/${receiptId}/${entityId}`,
   };
 

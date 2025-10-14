@@ -18,7 +18,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'login', canActivate:[loginGuard],component: LoginComponent },
   { path: 'forgot-password', component: ForgetpasswordComponent },
-  { path: 'verify-otp', component: VerifyotpComponent },
+  { path: 'verify-otp', canActivate:[loginGuard], component: VerifyotpComponent },
   { path: 'reset-password', component: ResetpasswordComponent },
   { path: 'MainServices', component: MainApplyServiceComponent },
   { path: 'GlAccounts', component: GlAccountComponent },

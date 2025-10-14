@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -12,6 +12,14 @@ import { apiKeyInterceptor } from './core/interceptors/api-key.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { BundledJsonTranslateLoader } from './i18n/bundled-json-translate-loader';
+import { AuthService } from './core/services/auth.service';
+import { refreshInterceptor } from './core/interceptors/refresh.interceptor';
+
+function hydrateAuth() {
+  const auth = inject(AuthService);
+  // ارجع الـ Promise مباشرة (مش function ترجع Promise)
+  return auth.hydrateFromIndexedDb();
+}
 
 
 export const appConfig: ApplicationConfig = {
@@ -20,7 +28,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(
       withFetch(),
-      withInterceptors([apiKeyInterceptor, authInterceptor, errorInterceptor])
+      withInterceptors([apiKeyInterceptor,refreshInterceptor, errorInterceptor])
     ),
     provideAnimations(),
 
@@ -40,6 +48,8 @@ export const appConfig: ApplicationConfig = {
       closeButton: true,
       enableHtml: true,
       preventDuplicates: true
-    })
-  ]
+    }),
+
+    // to check if user login if true >> update value for the behavior subject
+    provideAppInitializer(hydrateAuth),]
 };

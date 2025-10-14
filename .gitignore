@@ -1,22 +1,18 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-.angular/
-# compiled output
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
 /dist
 /tmp
 /out-tsc
-# Only exists if Bazel was run
 /bazel-out
-# dependencies
+
+# Node
 /node_modules
-# profiling files
-chrome-profiler-events*.json
-speed-measure-plugin*.json
-.vs 
-.vs/
-.vscode
-.VSCode/
+npm-debug.log
+yarn-error.log
+
 # IDEs and editors
-/.idea
+.idea/
 .project
 .classpath
 .c9/
@@ -24,7 +20,7 @@ speed-measure-plugin*.json
 .settings/
 *.sublime-workspace
 
-# IDE - VSCode
+# Visual Studio Code
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -32,67 +28,15 @@ speed-measure-plugin*.json
 !.vscode/extensions.json
 .history/*
 
-# misc
-/.sass-cache
+# Miscellaneous
+/.angular/cache
+.sass-cache/
 /connect.lock
 /coverage
 /libpeerconnection.log
-npm-debug.log
-yarn-error.log
 testem.log
 /typings
 
-# System Files
+# System files
 .DS_Store
 Thumbs.db
-
-node_modules
-.angular/
-/dist
- 
-# Node modules
-node_modules/
- 
- 
-# IDEs and Editors
-.vscode/
-.idea/
-.vs/
-.vs
-# OS-specific files
-.DS_Store  # macOS
-Thumbs.db  # Windows
- 
-# Angular build output
-/dist
-out-tsc/
-/dist
-/dist-compressed
-./dist-compressed
-.history
-# npm logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
- 
-# TypeScript compiled files
-*.tsbuildinfo
- 
-# Environment-specific files (optional)
-.env
-.env.*  # .env.local, .env.production, etc.
- 
-# Angular CLI environment-specific files
-.angular/
- 
-# Temporary files
-*.swp
-*.swo
-*.bak
-*.tmp
- 
-# Others
-*.log
-
-# Dashboard directory
-dashboard/
