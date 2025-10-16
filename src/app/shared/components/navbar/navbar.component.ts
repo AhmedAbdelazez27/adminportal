@@ -168,7 +168,14 @@ export class NavbarComponent implements OnInit {
       this.hasPermission('ReceiptsAndPaymentsCharts.View') ||
       this.hasPermission('RevenueComparisonCharts.View');
   }
-
+  hasAnyFinancialComparisonChartsPermission(): boolean {
+    return this.hasPermission('ReceiptsComparisonCharts.View') ||
+      this.hasPermission('PaymentsComparisonCharts.View')
+  }
+  hasAnyFinancialExpensesRevenueComparisonChartsPermission(): boolean {
+    return this.hasPermission('RevenueComparisonCharts.View') ||
+      this.hasPermission('ExpensesComparisonCharts.View')
+  }
   hasAnyGeneralSettingsPermission(): boolean {
     return this.hasPermission('Attachment.View') ||
       this.hasPermission('ContactInformation.View') ||
