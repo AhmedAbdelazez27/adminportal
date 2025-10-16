@@ -163,8 +163,8 @@
   }
 }
 .page-input:focus {
-  outline: 2px solid #0d6efd;
-  border-color: #0d6efd;
+  outline: 2px solid #8d734d;
+  border-color: #8d734d;
 }
 
 .pagination-info-box {
@@ -296,7 +296,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  background: linear-gradient(135deg, #8d734d 0%, #8d734d 100%);
   opacity: 0;
   transition: opacity 0.15s ease;
   border-radius: 8px;
@@ -323,7 +323,7 @@
 }
 
 .context-menu-item:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid #8d734d;
   outline-offset: 2px;
 }
 

@@ -17,7 +17,7 @@ import { refreshInterceptor } from './core/interceptors/refresh.interceptor';
 
 function hydrateAuth() {
   const auth = inject(AuthService);
-  // ارجع الـ Promise مباشرة (مش function ترجع Promise)
+ 
   return auth.hydrateFromIndexedDb();
 }
 
