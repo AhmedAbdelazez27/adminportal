@@ -839,7 +839,7 @@
     "filterbymodule": "Filter by Module(s)",
     "UAEPassCancelRequest": "User cancelled the login",
     "notVerifiedUser": "Account is not verified",
-    "notVerifiedUserMessage": "You are not eligible to access this service. Your account is either not upgraded or you have a visitor account. Please contact Admin to access the services."
+    "notVerifiedUserMessage": "You are not eligible to access this service. Your account is either not upgraded or you have a visitor account."
   },
 
   "AuthenticationResorceName": {
@@ -910,7 +910,7 @@
     "entities": "Entities",
     "Departments": "Departments",
     "Dashboard": "Dashboard",
-    "notVerifieduserMessage": "You are not eligible to access this service. Your account is either not upgraded or you have a visitor account. Please contact Admin to access the services.",
+    "notVerifieduserMessage": "You are not eligible to access this service. Your account is either not upgraded or you have a visitor account.",
     "home": "Home",
     "loginuserName": "User Name",
     "passWord": "PassWord",
