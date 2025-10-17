@@ -11,6 +11,7 @@ import { UserService } from '../../../core/services/user.service';
 import { confirmPasswordValidator } from '../../customValidators/confirmPasswordValidator';
 import { ExportToolbarComponent } from '../../../../shared/export-toolbar/export-toolbar.component';
 import { ProfileDbService } from '../../../core/services/profile-db.service';
+import { ApiEndpoints } from '../../../core/constants/api-endpoints';
 
 @Component({
   selector: 'app-navbar',
@@ -192,7 +193,10 @@ export class NavbarComponent implements OnInit {
         console.log("reslogout  ___ ", res);
 
         this.toastr.success('You have been logged out', 'Success');
-        this.router.navigate(['/login']);
+        const redirectUri = window.location.origin + '/login';
+        const logoutURL = `${ApiEndpoints.UAE_PASS_CONFIG.baseUrl}/logout?redirect_uri=${encodeURIComponent(redirectUri)}`;
+        setTimeout(() => (window.location.href = logoutURL), 500);
+       // this.router.navigate(['/login']);
       },
       error: () => {
         this.toastr.error('Logout failed', 'Error');

@@ -13,7 +13,9 @@ import { takeUntil } from 'rxjs/operators';
 import { LoginUAEPassDto, ReturnUAEPassDto, UAEPassDto } from '../../../core/dtos/uaepass.dto';
 import { UserProfile } from '../../../core/dtos/user-profile';
 import { ProfileDbService } from '../../../core/services/profile-db.service';
+import { ApiEndpoints } from '../../../core/constants/api-endpoints';
 declare var bootstrap: any;
+type ModalMode = 'login';
 
 @Component({
   selector: 'app-login',
@@ -35,6 +37,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<boolean>();
   currentlang: any;
   lang: string | null = null;
+  modalMode: ModalMode = 'login';
+
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
@@ -59,31 +63,54 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.route.queryParams.subscribe(params => {
-      this.code = params['code'];
-      this.state = params['state'];
-
-      if (this.state != undefined || this.code != undefined) {
-        if (this.isValidCodeState(this.code, this.state)) {
-          this.uaepassCheckCode(this.code!, this.state!);
+      const code = params['code'];
+      const state = params['state'];
+      this.uaePassParams = { code, state, lang: this.lang };
+      if (code != undefined || state != undefined) {
+        if (this.isValidCodeState(this.uaePassParams)) {
+          this.spinnerService.show();
+          this.getUAEPassInfo(this.uaePassParams);
         } else {
-          const redirectUri = window.location.origin + '/login';
-          const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
-          const prodlogoutUrl = 'https://id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
+  
           this.translate
-            .get(['Common.UAEPassCancelRequest'])
+            .get(['COMMON.UAEPassCancelRequest'])
             .subscribe(translations => {
-              this.toastr.error(translations['Common.UAEPassCancelRequest']);
+              this.toastr.error(translations['COMMON.UAEPassCancelRequest']);
             });
 
           setTimeout(() => {
-            window.location.href = prodlogoutUrl;
+            this.redirectToLogout();
             this.spinnerService.hide();
           }, 2000);
         }
       }
     });
+
+    //this.route.queryParams.subscribe(params => {
+    //  this.code = params['code'];
+    //  this.state = params['state'];
+
+    //  if (this.state != undefined || this.code != undefined) {
+    //    if (this.isValidCodeState(this.code, this.state)) {
+    //      this.uaepassCheckCode(this.code!, this.state!);
+    //    } else {
+    //      const redirectUri = window.location.origin + '/login';
+    //      const logoutURL = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
+    //      const prodlogoutUrl = 'https://id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(redirectUri);
+    //      this.translate
+    //        .get(['Common.UAEPassCancelRequest'])
+    //        .subscribe(translations => {
+    //          this.toastr.error(translations['Common.UAEPassCancelRequest']);
+    //        });
+
+    //      setTimeout(() => {
+    //        window.location.href = prodlogoutUrl;
+    //        this.spinnerService.hide();
+    //      }, 2000);
+    //    }
+    //  }
+    //});
   }
 
   submit(): void {
@@ -168,107 +195,132 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.translation.toggleLanguage();
   }
 
-  isValidCodeState(code: string | null, state: string | null): boolean {
-    return !!(code && state && code.trim() !== '' && state.trim() !== '');
+  loginByUAEPass(): void {
+    this.modalMode = 'login';
+    this.redirectToUAEPass();
   }
 
-  loginByUAEPassURL(): void {
-    this.lang = localStorage.getItem('lang');
-    if (this.lang === "ar") {
-      this.currentlang = "ar";
-    } else {
-      this.currentlang = "en";
-    }
-    var UAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://compassint.ddns.net:2036/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-    var LocalUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:51336/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-    var ProdStgUAEPassURL = 'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=ccc_web_stg&scope=urn:uae:digitalid:profile:general&state=Q9pOTvlchYARcSFL&redirect_uri=https://192.168.51.130:2002/login&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-    var ProdUAEPassURL = 'https://id.uaepass.ae/idshub/authorize?response_type=code&client_id=ajm_ccc_web_prod&scope=urn:uae:digitalid:profile:general&state=PXr2q2Tu8AMbK7mT&redirect_uri=https://admin.ajmanccc.ae&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-  //  var ProdUAEPassURL = 'https://id.uaepass.ae/idshub/authorize?response_type=code&client_id=ajm_ccc_web_prod&scope=urn:uae:digitalid:profile:general&state=PXr2q2Tu8AMbK7mT&redirect_uri=https://ajmanccc.ae/home&acr_values=urn:safelayer:tws:policies:authentication:level:low';
-   // var ServiceProdUAEPassURL = 'https://id.uaepass.ae/idshub/authorize?response_type=code&client_id=ajm_ccc_web_prod&scope=urn:uae:digitalid:profile:general&state=PXr2q2Tu8AMbK7mT&redirect_uri=https://www.ajmanccc.ae/login&acr_values=urn:safelayer:tws:policies:authentication:level:high';
-
-    window.location.href = `${UAEPassURL}&ui_locales=${this.currentlang}`;
-  }
-
-
-
-  uaepassCheckCode(code: string, state: string) {
-    const params: LoginUAEPassDto = {
-      code: code,
-      state: state,
-      lang: localStorage.getItem('lang')
-    };
-
+  private redirectToUAEPass(): void {
     this.spinnerService.show();
 
+    const config = ApiEndpoints.UAE_PASS_CONFIG.getURLCredention;
+    const baseUrl = ApiEndpoints.UAE_PASS_CONFIG.baseUrl;
+
+    const uaePassURL =
+      `${baseUrl}/authorize` +
+      `?response_type=code` +
+      `&client_id=${config.clientId}` +
+      `&scope=urn:uae:digitalid:profile:general` +
+      `&state=${config.clientsecret}` +
+      `&redirect_uri=${encodeURIComponent(config.redirectUri)}` +
+      `&acr_values=urn:safelayer:tws:policies:authentication:level:low` +
+      `&ui_locales=${this.lang}`;
+
+    sessionStorage.setItem('uae_pass_mode', this.modalMode);
+    sessionStorage.setItem('uae_pass_state', config.clientsecret);
+
+    window.location.href = uaePassURL;
+  }
+
+  getUAEPassInfo(params: LoginUAEPassDto): void {
+    const storedState = sessionStorage.getItem('uae_pass_state');
+
+    if (storedState && storedState !== params.state) {
+      this.toastr.error('Security validation failed', 'Error');
+      this.spinnerService.hide();
+      return;
+    }
+
+    const storedMode = sessionStorage.getItem('uae_pass_mode') as ModalMode;
+    if (storedMode) this.modalMode = storedMode;
+
+    switch (this.modalMode) {
+      case 'login':
+        this.handleUAEPassLogin(params);
+        break;
+    }
+
+    sessionStorage.removeItem('uae_pass_mode');
+    sessionStorage.removeItem('uae_pass_state');
+  }
+
+  private handleUAEPassLogin(params: LoginUAEPassDto): void {
     this.auth.UAEPasslogin(params)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
-          this.auth.saveToken(res?.token);
-          const decodedData = this.auth.decodeToken();
-
-          if (decodedData) {
-            if (decodedData.Permissions) {
-              localStorage.setItem('permissions', JSON.stringify(decodedData.Permissions));
-              localStorage.setItem('pages', JSON.stringify(decodedData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']));
-              localStorage.setItem('userId', decodedData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']);
-            }
-
-            this.toastr.success(
-              this.translate.instant('LOGIN.SUCCESS'),
-              this.translate.instant('TOAST.TITLE.SUCCESS')
-            );
-
-            setTimeout(() => {
-              this.spinnerService.hide();
-              this.router.navigate(['/home']);
-            }, 1500);
-
-          } else {
-            this.showErrorAndRedirect('AUTH.MESSAGES.INVALID_TOKEN_ERROR');
-          }
+          this.handleLoginSuccess(res);
+          this.spinnerService.hide();
         },
         error: (err) => {
-          console.log('UAEPass Error:', err);
-
-          const notVerifiedText = this.translate.instant('Common.notVerifiedUser');
-          const errorMsg = err?.message || err?.reason || 'LOGIN.FAILED';
-
-          if (errorMsg === notVerifiedText) {
-            const modalElement = document.getElementById('notVerifiedUser');
-            if (modalElement) {
-              const modal = new bootstrap.Modal(modalElement);
-              modal.show();
-            }
-            this.spinnerService.hide();
-          } else {
-            this.showErrorAndRedirect(errorMsg);
-          }
+          this.handleUAEPassError(err);
+          this.spinnerService.hide();
         }
       });
   }
 
-  private showErrorAndRedirect(messageKey: string) {
-    this.toastr.error(
-      this.translate.instant(messageKey),
-      this.translate.instant('TOAST.TITLE.ERROR')
-    );
 
-    setTimeout(() => {
+  private handleLoginSuccess(res: any): void {
+    if (res?.isTwoFactorEnabled) {
+      localStorage.setItem('comeFromisTwoFactorEnabled', JSON.stringify({ isTwoFactorEnabled: true }))
+      this.router.navigate(['/verify-otp']);
       this.spinnerService.hide();
-      const redirectUri = window.location.origin + '/login';
-      const logoutURL = `https://stg-id.uaepass.ae/idshub/logout?redirect_uri=${encodeURIComponent(redirectUri)}`;
-      const ProdUAEPassURL = `https://id.uaepass.ae/idshub/logout?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    } else {
+      this.auth.GetMyProfile().subscribe({
+        next: async (profile: UserProfile) => {
+          await this.profileDb.saveProfile(profile);
+          this.auth.setProfile(profile);
 
-      window.location.href = ProdUAEPassURL;
-    }, 1500);
+          this.toastr.success(
+            this.translate.instant('OTP.VERIFY_SUCCESS'),
+            this.translate.instant('TOAST.TITLE.SUCCESS')
+          );
+          this.spinnerService.hide();
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          this.spinnerService.hide();
+          this.toastr.error(this.translate.instant('OTP.VERIFY_FAILED'), this.translate.instant('TOAST.TITLE.ERROR'));
+        }
+      });
+      this.toastr.success(this.translate.instant('LOGIN.SUCCESS'), this.translate.instant('TOAST.TITLE.SUCCESS'));
+      this.spinnerService.hide();
+      this.router.navigate(['/home']);
+    }
+    this.spinnerService.hide();
   }
 
 
+  private handleUAEPassError(err: any): void {
+    const notVerifiedText = this.translate.instant('Common.notVerifiedUser');
+    const message = err.message.message || err.backend.reason || 'UAE Pass authentication failed';
+
+    if (message === notVerifiedText) {
+      const modalElement = document.getElementById('notVerifiedUser');
+      if (modalElement) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+      }
+      this.spinnerService.hide();
+    } else {
+      this.toastr.error(this.translate.instant(message), this.translate.instant('TOAST.TITLE.ERROR'));
+      this.redirectToLogout();
+    }
+    this.spinnerService.hide();
+  }
+
+  private redirectToLogout(): void {
+    const redirectUri = window.location.origin + '/login';
+    const logoutURL = `${ApiEndpoints.UAE_PASS_CONFIG.baseUrl}/logout?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    setTimeout(() => (window.location.href = logoutURL), 2000);
+  }
+
   logout(): void {
-    const logoutUrl = 'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(window.location.origin + '/login');
-    const ProdUAEPassURL = 'https://id.uaepass.ae/idshub/logout?redirect_uri=' + encodeURIComponent(window.location.origin + '/login');
-    window.location.href = ProdUAEPassURL;
+    this.redirectToLogout();
+  }
+
+  isValidCodeState(params: any): boolean {
+    return !!(params.code && params.state && params.code.trim() !== '' && params.state.trim() !== '');
   }
 
   ngOnDestroy() {
