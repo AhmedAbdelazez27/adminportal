@@ -1851,13 +1851,43 @@ button.dropdown-item:hover {
   color: #525252;
   font-size: 14px;
 }
-
-.bg-danger {
-  padding: 5px !important;
-  background-color: #d95b5b !important;
-  margin-left: -10px;
-  margin-top: 10px;
+.btn-notification {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border-radius: 50px;
+  background: var(--Color-25, #8D734D);
+  border: none;
 }
+.btn-notification-action {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 5px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.badge-notification {
+  font-size: 12px;
+  padding: 0;
+  font-weight: 600;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;        /* ← يوسّط عمودي */
+  justify-content: center;    /* ← يوسّط أفقي */
+  line-height: 1;
+  text-align: center;
+}
+
+
 
 
 
@@ -2054,6 +2084,18 @@ button.dropdown-item:hover {
 
 
 .rtl {
+    .btn-notification {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 50px;
+    background: var(--Color-25, #8D734D);
+    border: none;
+  }
 
   .navbar {
     background-color: transparent;
@@ -2953,18 +2995,7 @@ button.dropdown-item:hover {
     gap: 8px;
   }
 
-  .btn-notification {
-    display: flex;
-    width: 44px;
-    height: 44px;
-    padding: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 10px;
-    background: var(--Color-21, #F7F7F7);
-    border: none;
-  }
+
 
   .btn-profile-img {
     background-image: url('./assets/images/pi.png');
@@ -2999,6 +3030,12 @@ button.dropdown-item:hover {
   }
 
   @media(max-width:991px) {
+        .btn-notification,
+    .btn-profile,
+    .btn-language {
+      margin-bottom: 24px;
+    }
+
     .header .logo {
       gap: 16px;
       display: flex;
@@ -3712,12 +3749,12 @@ button.dropdown-item:hover {
     font-size: 14px;
   }
 
-  .bg-danger {
-    padding: 5px !important;
-    background-color: #d95b5b !important;
-    margin-right: -10px;
-    margin-top: 10px;
-  }
+  // .bg-danger {
+  //   padding: 5px !important;
+  //   background-color: #d95b5b !important;
+  //   margin-right: -10px;
+  //   margin-top: 10px;
+  // }
 
 
 
@@ -4432,6 +4469,17 @@ button.dropdown-item:hover {
 }
 
 
+.badge-notification {
+  font-size: 12px;
+  padding: 4px 6px;
+  font-weight: 500;
+  min-width: 20px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  line-height: normal;
+  height: 20px;
+}
 
 // Badge Styles
 .badge {
@@ -5186,4 +5234,89 @@ td {
     zoom: 1;
   }
   
+}
+
+
+
+.notifications-list {
+  height: 76vh;
+  overflow: auto;
+  margin-bottom: 16px;
+
+}
+
+.notification-item {
+  padding: 16px;
+
+  border-bottom: 1px solid #DCDCDC;
+  background: var(--Color-29, #ffffff);
+  border-radius: 0 !important;
+}
+
+.notification-item.unread {
+  padding: 16px;
+
+  border-bottom: 1px solid #DCDCDC;
+  background: var(--Color-29, #F4F1ED);
+}
+
+.notification-title {
+  color: var(--Color-16, #000);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+  /* 16px */
+}
+
+.notification-message {
+  color: var(--Color-17, #252525);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  /* 14px */
+}
+
+.notification-time {
+  color: var(--Color-25, #8D734D);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  /* 12px */
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.btn-notification-action {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 5px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.offcanvas-end.show,
+.offcanvas-end {
+  width: max-content !important;
+}
+
+.message {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 200px;
+  margin-bottom: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.50) !important;
+  background-color: var(--Color-25, #8D734D) !important;
 }

@@ -432,8 +432,9 @@ export class ApiEndpoints {
     GetById: (id: string) => `/Notifications/Get/${id}`,
     Create: '/Notifications/Create',
     MarkAsSeen: (id: string) => `/Notifications/MarkAsSeen/${id}`,
-    GetUnseenCount: (userId: string) =>
-      `/Notifications/GetUnseenCount/${userId}`,
+    // GetUnseenCount: (userId: string) =>
+    //   `/Notifications/GetUnseenCount/${userId}`,
+     GetUnseenCount: '/GetUnseenCount',
     SendToDepartment: '/Notifications/SendToDepartment',
   };
 

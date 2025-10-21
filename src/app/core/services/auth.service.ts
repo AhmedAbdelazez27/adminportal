@@ -118,17 +118,17 @@ export class AuthService {
   }
 
   getUserId(): string | null {
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      return storedUserId;
-    }
+    // 1️⃣ من الذاكرة
+    const id = this.snapshot?.userId;
+    if (id) return id;
 
-    const decodedData = this.decodeToken();
-    if (decodedData) {
-      return this.extractUserIdFromToken(decodedData);
-    }
+    // 2️⃣ من التوكن (UAEPASS)
+    const decoded = this.decodeToken();
+    if (decoded) return this.extractUserIdFromToken(decoded);
 
-    return null;
+    // 3️⃣ legacy
+    const legacy = localStorage.getItem('userId');
+    return legacy ?? null;
   }
 
   getCurrentUser(): { id: string; name?: string } | null {

@@ -16,9 +16,9 @@ import { loginGuard } from './core/guards/auth/login.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'login', canActivate:[loginGuard],component: LoginComponent },
+  { path: 'login', canActivate: [loginGuard], component: LoginComponent },
   { path: 'forgot-password', component: ForgetpasswordComponent },
-  { path: 'verify-otp', canActivate:[loginGuard], component: VerifyotpComponent },
+  { path: 'verify-otp', canActivate: [loginGuard], component: VerifyotpComponent },
   { path: 'reset-password', component: ResetpasswordComponent },
   { path: 'MainServices', component: MainApplyServiceComponent },
   { path: 'GlAccounts', component: GlAccountComponent },
@@ -33,6 +33,8 @@ export const routes: Routes = [
         canActivate: [authGuard],
         data: { permission: 'Main' },
       },
+      { path: 'notifications', canMatch: [authGuard], data: { permission: 'Main' }, loadChildren: () => import('./features/notifications/notification-management/notification-management.routes').then(m => m.notificationManagementRoutes) },
+
 
       {
         path: 'authentication',
@@ -81,7 +83,7 @@ export const routes: Routes = [
                 (m) => m.DataTransLogsRoutes
               ),
             canActivate: [authGuard],
-            data: { permission: 'DataTransLogs.View' }, 
+            data: { permission: 'DataTransLogs.View' },
           },
         ],
       },
