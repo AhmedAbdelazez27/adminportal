@@ -118,15 +118,12 @@ export class AuthService {
   }
 
   getUserId(): string | null {
-    // 1️⃣ من الذاكرة
     const id = this.snapshot?.userId;
     if (id) return id;
 
-    // 2️⃣ من التوكن (UAEPASS)
     const decoded = this.decodeToken();
     if (decoded) return this.extractUserIdFromToken(decoded);
 
-    // 3️⃣ legacy
     const legacy = localStorage.getItem('userId');
     return legacy ?? null;
   }
