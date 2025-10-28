@@ -839,7 +839,8 @@
     "filterbymodule": "Filter by Module(s)",
     "UAEPassCancelRequest": "User cancelled the login",
     "notVerifiedUser": "Account is not verified",
-    "notVerifiedUserMessage": "You are not eligible to access this service. Your account is either not upgraded or you have a visitor account."
+    "notVerifiedUserMessage": "You are not eligible to access this service. Your account is either not upgraded or you have a visitor account.",
+    "UnknownSource": "Unknown source type"
   },
 
   "AuthenticationResorceName": {
@@ -2541,8 +2542,44 @@
         "INVALID_RANGE": "Coordinates outside valid ranges",
         "INVALID_UAE": "Location coordinates outside UAE bounds"
       }
+    },
+
+    "report": {
+      "title": "Field Permit Report",
+      "requestDate": "Request Date",
+      "requestNo": "Request No",
+      "permitNo": "Permit No",
+      "permitType": "Permit Type",
+      "fieldPermit": "Field Permit",
+      "finalPermit": "Final Permit",
+      "fastingTentPermit": "Permit for Tent Installation / Iftar Site",
+      "foundationName": "Foundation Name",
+      "foundationAddress": "Foundation Address",
+      "contactNumber": "Contact Number",
+      "permitStart": "Permit Start",
+      "permitEnd": "Permit End",
+      "region": "Region",
+      "streetName": "Street Name",
+      "locationDetails": "Location Details",
+      "noteInsideTent": "*Please place a copy of the permit inside the tent",
+      "ruleTitle": "Terms and Conditions",
+      "rule1": "Maintain the external appearance of the tent and provide a guard.",
+      "rule2": "Display the name of the executing entity and contact number outside in case of any remarks.",
+      "rule3": "The tent must be air-conditioned.",
+      "rule4": "It is not allowed to use the tent for purposes other than those permitted.",
+      "rule5": "Overnight stays or gatherings after iftar or prayers inside the tent are prohibited.",
+      "rule6": "The tent must have sufficient flexibility to meet the required safety conditions for occupants.",
+      "rule7": "The tent may not be used for storage.",
+      "rule8": "The use of any heat-generating equipment such as ovens, heaters, or cooking stoves inside the tents is prohibited.",
+      "rule9": "Air conditioning units must have their own electrical circuit breaker.",
+      "rule10": "Interior decorations and fabrics must be treated with flame-retardant materials, and the air handling unit should be placed outside the tent.",
+      "rule11": "Provide a sufficient number of 9-liter water-type portable fire extinguishers.",
+      "rule12": "At least one safety supervisor must be available from the responsible entity to monitor emergency cases, be trained in using fire extinguishers, understand emergency procedures, and have direct contact with civil defense.",
+      "rule13": "All electrical installations must be certified and accompanied by a test report.",
+      "rule14": "Tents are subject to inspection; if evacuation requirements are not met, the occupants may be required to evacuate."
     }
   },
+
   "glAccountResourceName": {
     "title": "GlAccounts",
     "accountCode": "Account Code",

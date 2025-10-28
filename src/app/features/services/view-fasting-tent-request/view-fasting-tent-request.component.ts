@@ -33,6 +33,7 @@ import { WorkFlowCommentsService } from '../../../core/services/mainApplyService
 import { AttachmentBase64Dto, CreateWorkFlowCommentDto, WorkflowCommentsType } from '../../../core/dtos/service/workFlowComments/workFlowComments.dto';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 // Service Status Enum (matching backend enum)
 declare var bootstrap: any;
@@ -144,6 +145,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private spinnerService: SpinnerService,
     private openStandardReportService: openStandardReportService,
+    private authService: AuthService,
   ) {
     this.initializeCommentForm();
     this.initializeMapIcon();
@@ -316,7 +318,10 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         this.workFlowSteps = response.workFlowSteps || [];
         this.partners = response.partners || [];
         this.attachments = response.attachments || [];
-        let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+        //  let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+
+        let profile = this.authService.snapshot;
+        let storeddepartmentId = profile?.departmentId ?? '';
 
         const storedDeptIds = storeddepartmentId
           .replace(/"/g, '')
@@ -379,8 +384,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
         this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;
 
-        this.allApproved = this.workFlowSteps.length > 0 &&
-          this.workFlowSteps.every(step => step.serviceStatus === 1);
+        this.allApproved = this.workFlowSteps.length > 0 && this.workFlowSteps.every(step => step.serviceStatus === 1);
 
         this.findTargetWorkFlowStep();
         if (this.targetWorkFlowStep) {

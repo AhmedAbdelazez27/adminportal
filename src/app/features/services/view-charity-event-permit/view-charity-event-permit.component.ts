@@ -365,7 +365,6 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
 
     const sub = this.mainApplyServiceService.getDetailById({ id }).subscribe({
       next: (resp: any) => {
-        console.log(resp);
         this.mainApplyService = resp;
         this.fastingTentService = resp.fastingTentService;
         this.charityEventPermit = resp.charityEventPermit || null;
@@ -373,7 +372,10 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
         this.partners = resp.partners || [];
         this.attachments = resp.attachments || [];
         this.attachments = resp.attachments || [];
-        let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+        //  let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+
+        let profile = this.authService.snapshot;
+        let storeddepartmentId = profile?.departmentId ?? '';
 
         const storedDeptIds = storeddepartmentId
           .replace(/"/g, '')

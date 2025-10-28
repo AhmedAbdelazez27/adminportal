@@ -148,7 +148,6 @@ export class RevenueGeneralComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        console.log(err);
       }
     });
   }

@@ -402,6 +402,9 @@ export class WorkflowComponent implements OnInit, OnDestroy, AfterViewInit {
     this.submitted = false;
     this.isSubmitting = false;
 
+    // Ensure form is enabled (might be disabled after view mode)
+    this.serviceDepartmentForm.enable();
+
     // Reset form to initial state
     this.serviceDepartmentForm.reset();
 

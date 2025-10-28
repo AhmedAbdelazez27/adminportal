@@ -234,10 +234,10 @@ export class ApiEndpoints {
     Base: '/SpContracts',
     GetAll: '/GetContractsRequests',
     GetContractByIdBase: '/SpContractCases',
-    GetContractById: (contractId: string, entityId: string) =>
-      `/GetSpContract/${contractId}/${entityId}`,
-    GetContractCasesById: (contractId: string, entityId: string) =>
-      `/Get/${contractId}/${entityId}`,
+   // GetContractById: (contractId: string, entityId: string) =>`/GetSpContract/${contractId}/${entityId}`,
+    GetContractById: '/GetSpContract',
+    GetContractCasesById: '/Get',
+   // GetContractCasesById: (contractId: string, entityId: string) =>`/Get/${contractId}/${entityId}`,
   };
 
   static readonly AidRequest = {
@@ -255,8 +255,8 @@ export class ApiEndpoints {
   static readonly SpCases = {
     Base: '/SpCases',
     GetAllGridData: '/GetAllGridData',
-    GetCaseDetails: (caseId: string, entityId: string) =>
-      `/Get/${caseId}/${entityId}`,
+   // GetCaseDetails: (caseId: string, entityId: string) =>`/Get/${caseId}/${entityId}`,
+    GetCaseDetails: '/Get',
   };
 
   static readonly SocialCasesReports = {
@@ -274,12 +274,12 @@ export class ApiEndpoints {
     GetContractDetailBase: '/SpContractCases',
     GetById: '/Get',
     GetCaseHistoryDetailsById: '/GetCasesHistory',
-    GetCasePaymentHdrDetailsById: (caseId: string, entityId: string) =>
-      `/Get/${caseId}/${entityId}`,
-    GetContractDetailById: (contractId: string, entityId: string) =>
-      `/GetSpContract/${contractId}/${entityId}`,
-    GetContractCasesDetailById: (contractId: string, entityId: string) =>
-      `/Get/${contractId}/${entityId}`,
+    //GetCasePaymentHdrDetailsById: (caseId: string, entityId: string) => `/Get/${caseId}/${entityId}`,
+    GetCasePaymentHdrDetailsById: '/Get',
+    GetContractDetailById: '/GetSpContract',
+    GetContractCasesDetailById: '/Get',
+   // GetContractDetailById: (contractId: string, entityId: string) =>`/GetSpContract/${contractId}/${entityId}`,
+   // GetContractCasesDetailById: (contractId: string, entityId: string) =>`/Get/${contractId}/${entityId}`,
   };
 
   static readonly ServiceRequestsReports = {
@@ -458,7 +458,7 @@ export class ApiEndpoints {
     getURLCredention: {
       clientId: 'sandbox_stage',
       //  redirectUri: 'http://compassint.ddns.net:2040/login'
-      redirectUri: 'https://localhost:4200/login',
+      redirectUri: 'https://localhost:51318/login',
       clientsecret: 'HnlHOJTkTb66Y5H'
     },
 

@@ -519,10 +519,6 @@ private buildChartOptions() {
               ? this.value
               : (this as unknown as { pos?: number }).pos ?? 0;
           const label = axis.categories?.[idx] ?? this.value;
-          console.log("label ",label);
-         
-          console.log("axis.categories?.[idx]",axis.categories?.[idx]);
-          console.log( this.value);
          
           return `<span style="display:inline-block;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;color:#333;${isRtl ? 'text-align:right;' : 'text-align:left;'}">
             ${escapeHtml(String(label ?? ''))}

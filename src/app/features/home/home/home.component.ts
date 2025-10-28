@@ -108,8 +108,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.state = params['state'];
       if (this.isValidCodeState(this.code, this.state)) {
         this.uaepassCheckCode(this.code!, this.state!);
-      } else {
-        console.log('Code or state is invalid. API call not made.');
       }
     });
     this.loadKpis();

@@ -58,8 +58,6 @@ export class ResetpasswordComponent {
     const sharedSecret = JSON.parse(localStorage.getItem('forgetpasswordData') || '{}').sharedSecret;
 
     if (!email || !sharedSecret) {
-      console.log(email , sharedSecret);
-      
       this.toastr.error(this.translate.instant('ERROR.NO_DATA'), this.translate.instant('TOAST.TITLE.ERROR'));
       return;
     }

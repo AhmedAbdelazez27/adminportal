@@ -4,7 +4,7 @@ import { environment } from '../../../../../environments/environment';
 import { Observable } from 'rxjs';
 import { ApiEndpoints } from '../../../constants/api-endpoints';
 import { PagedResult } from '../../../dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { filtercaseSearchDto, caseSearchDto, filtercaseSearchByIdDto, caseSearchPaymentHdrDto, getCasesHistoryDto, getSpContractCasesDto, getSpContractDto } from '../../../dtos/sponsorship/operations/caseSearch.dto';
+import { filtercaseSearchDto, caseSearchDto, filtercaseSearchByIdDto, caseSearchPaymentHdrDto, getCasesHistoryDto, getSpContractCasesDto, getSpContractDto, filtercaseSearchByIdsDto } from '../../../dtos/sponsorship/operations/caseSearch.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -27,19 +27,24 @@ export class caseSearchService {
   }
 
   getDetailById(params: filtercaseSearchByIdDto): Observable<caseSearchDto> {
-    if (!params.caseId || !params.entityId) {
+    const paramss: filtercaseSearchByIdsDto = {
+      caseId: params.caseId,
+      entityId: params.entityId,
+    };
+
+    if (!paramss.caseId || !paramss.entityId) {
       throw new Error('caseId and entityId must not be null');
     }
     const apiUrl = `${this.BASE_URL}${ApiEndpoints.caseSearch.GetById}`;
-    return this.http.post<caseSearchDto>(apiUrl, params);
+    return this.http.post<caseSearchDto>(apiUrl, paramss);
   }
 
   getCasePaymentHdrDetailsById(params: filtercaseSearchByIdDto): Observable<caseSearchPaymentHdrDto[]> {
     if (!params.caseId || !params.entityId) {
       throw new Error('caseId and entityId must not be null');
     }
-    const apiUrl = `${this.CasePaymentBASE_URL}${ApiEndpoints.caseSearch.GetCasePaymentHdrDetailsById(params.caseId, params.entityId)}`;
-    return this.http.get<caseSearchPaymentHdrDto[]>(apiUrl);
+    const apiUrl = `${this.CasePaymentBASE_URL}${ApiEndpoints.caseSearch.GetCasePaymentHdrDetailsById}`;
+    return this.http.post<caseSearchPaymentHdrDto[]>(apiUrl, params);
   }
 
   getCaseHistoryDetailsById(params: filtercaseSearchByIdDto): Observable<getCasesHistoryDto[]> {
@@ -54,15 +59,15 @@ export class caseSearchService {
     if (!params.contractId || !params.entityId) {
       throw new Error('contractId and entityId must not be null');
     }
-    const apiUrl = `${this.ContractBASE_URL}${ApiEndpoints.caseSearch.GetContractDetailById(params.contractId, params.entityId)}`;
-    return this.http.get<getSpContractDto>(apiUrl);
+    const apiUrl = `${this.ContractBASE_URL}${ApiEndpoints.caseSearch.GetContractDetailById}`;
+    return this.http.post<getSpContractDto>(apiUrl, params);
   }
 
   getContractCaseDetailsById(params: filtercaseSearchByIdDto): Observable<getSpContractCasesDto[]> {
     if (!params.contractId || !params.entityId) {
       throw new Error('contractId and entityId must not be null');
     }
-    const apiUrl = `${this.ContractBASE_URL}${ApiEndpoints.caseSearch.GetContractCasesDetailById(params.contractId, params.entityId)}`;
-    return this.http.get<getSpContractCasesDto[]>(apiUrl);
+    const apiUrl = `${this.ContractBASE_URL}${ApiEndpoints.caseSearch.GetContractCasesDetailById}`;
+    return this.http.post<getSpContractCasesDto[]>(apiUrl, params);
   }
 }

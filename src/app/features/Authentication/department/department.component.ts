@@ -194,8 +194,6 @@ export class DepartmentComponent implements OnInit {
 
     this.departmentService.getAllDepartments(parameters).subscribe({
       next: (data: any) => {
-        console.log('Department API Response:', data);
-
         // Handle different response formats
         let allData: DepartmentDto[] = [];
         let totalCount: number = 0;
@@ -459,10 +457,6 @@ export class DepartmentComponent implements OnInit {
 
     this.userDepartmentService.getUsersByDepartment(departmentId).subscribe({
       next: (response) => {
-        console.log(
-          'Users in Department API Response: check mohamed ',
-          response
-        );
         // Handle different response formats
         const responseAny = response as any;
         if (responseAny && responseAny.data) {
@@ -476,10 +470,6 @@ export class DepartmentComponent implements OnInit {
           this.usersInDepartment = [];
         }
 
-        console.log(
-          'Users in Department API Response: check mohamed ',
-          this.usersInDepartment
-        );
         this.isLoadingUsers = false;
       },
       error: (error) => {

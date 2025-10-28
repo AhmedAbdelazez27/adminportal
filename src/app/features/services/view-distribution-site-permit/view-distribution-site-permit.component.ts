@@ -29,6 +29,7 @@ import { WorkFlowCommentsService } from '../../../core/services/mainApplyService
 import { AttachmentBase64Dto, CreateWorkFlowCommentDto, WorkflowCommentsType } from '../../../core/dtos/service/workFlowComments/workFlowComments.dto';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 // Service Status Enum (matching backend enum)
 declare var bootstrap: any;
@@ -141,7 +142,8 @@ export class ViewDistributionSitePermitComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private cdr: ChangeDetectorRef,
     private spinnerService: SpinnerService,
-    private openStandardReportService: openStandardReportService
+    private openStandardReportService: openStandardReportService,
+    private authService:AuthService
   ) {
     this.initializeCommentForm();
     this.initializeMapIcon();
@@ -320,7 +322,10 @@ export class ViewDistributionSitePermitComponent implements OnInit, OnDestroy {
         this.partners = response.partners || [];
         this.attachments = response.attachments || [];
 
-        let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+        //  let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+
+        let profile = this.authService.snapshot;
+        let storeddepartmentId = profile?.departmentId ?? '';
 
         const storedDeptIds = storeddepartmentId
           .replace(/"/g, '')
@@ -385,13 +390,6 @@ export class ViewDistributionSitePermitComponent implements OnInit, OnDestroy {
 
         this.allApproved = this.workFlowSteps.length > 0 &&
           this.workFlowSteps.every(step => step.serviceStatus === 1);
-        console.log("workFlowSteps", this.workFlowSteps);
-        console.log("storedDeptIds", storedDeptIds);
-        console.log("matchedIndices", matchedIndices);
-        console.log("storeddepartmentId", storeddepartmentId);
-        console.log("workFlowQuery", this.workFlowQuery);
-        console.log("serviceDepartmentActions", this.serviceDepartmentActions);
-        console.log("originalworkFlowId", this.originalworkFlowId);
 
         this.findTargetWorkFlowStep();
         if (this.targetWorkFlowStep) {

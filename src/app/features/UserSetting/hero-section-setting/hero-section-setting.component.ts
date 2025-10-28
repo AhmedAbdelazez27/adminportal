@@ -966,8 +966,6 @@ export class HeroSectionSettingComponent implements OnInit, OnDestroy {
     );
     
     if (config) {
-    } else {
-      console.log('No hero section config found. Available configs:', this.attachmentConfigs);
     }
     
     return config;

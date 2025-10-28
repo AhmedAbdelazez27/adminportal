@@ -228,7 +228,6 @@ ngOnInit(): void {
   logout() {
     this.authService.logout().subscribe({
       next: (res) => {
-        console.log("reslogout  ___ ", res);
 
         this.toastr.success('You have been logged out', 'Success');
         const redirectUri = window.location.origin + '/login';
@@ -336,7 +335,6 @@ ngOnInit(): void {
       .pipe(takeUntil(this.destroy$))
       .subscribe(notifications => {
         this.notifications = notifications || [];
-        console.log("this.notifications ",this.notifications);
         
       });
 
@@ -346,7 +344,6 @@ ngOnInit(): void {
       .subscribe(count => {
         const previousCount = this.unseenCount;
         this.unseenCount = count || 0;
-        console.log("unseenCount = ", this.unseenCount);
         
       });
 

@@ -120,8 +120,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.auth.login(this.form.value).subscribe({
       next: (res) => {
-        
-        console.log("res = ", res);
         if (res?.isTwoFactorEnabled) {
           localStorage.setItem('comeFromisTwoFactorEnabled', JSON.stringify({ isTwoFactorEnabled: true}))
           this.router.navigate(['/verify-otp']);

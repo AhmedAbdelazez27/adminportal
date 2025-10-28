@@ -215,7 +215,6 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
 
       },
       error: (err: any) => {
-        console.log(err);
       }
     });
   }
@@ -232,7 +231,6 @@ export class SponsorshipChartsComponent implements OnInit, OnDestroy {
     } else if (this.defaultChartType == 'comparisonofCasesbyofficeoftheEntity') {
       this.comparisonId = this.selectedSponsorOffice;
     }
-    console.log(this.selectedYearId)
     if (!this.selectedYearId) return;
  
     if (typeChange == 'changeEntity') {

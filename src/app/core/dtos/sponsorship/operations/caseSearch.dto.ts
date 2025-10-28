@@ -217,6 +217,10 @@ export class filtercaseSearchByIdDto {
   entityId: string | null = null;
   contractId: string | null = null;
 }
+export class filtercaseSearchByIdsDto {
+  caseId: string | null = null;
+  entityId: string | null = null;
+}
 
 export class PagedResult<T> {
   items?: T[];

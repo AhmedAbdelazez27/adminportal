@@ -216,7 +216,7 @@ export enum ServiceStatus {
     ReactiveFormsModule,
     TranslateModule,
     RouterLink,
-    NgSelectModule
+    NgSelectModule,
   ],
   templateUrl: './view-requesteventpermit.component.html',
   styleUrls: ['./view-requesteventpermit.component.scss']
@@ -378,7 +378,9 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
         this.partners = resp.partners || [];
         this.attachments = resp.attachments || [];
 
-        let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+     //   let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+        let profile = this.authService.snapshot;
+        let storeddepartmentId = profile?.departmentId ?? ''
 
         const storedDeptIds = storeddepartmentId
           .replace(/"/g, '')
@@ -442,14 +444,6 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
           this.workFlowSteps.every(step => step.serviceStatus === 1);
 
         this.originalworkFlowId = this.workFlowQuery?.[0]?.id ?? null;
-        console.log("workFlowSteps", this.workFlowSteps);
-        console.log("storedDeptIds", storedDeptIds);
-        console.log("matchedIndices", matchedIndices);
-        console.log("storeddepartmentId", storeddepartmentId);
-        console.log("workFlowQuery", this.workFlowQuery);
-        console.log("serviceDepartmentActions", this.serviceDepartmentActions);
-        console.log("originalworkFlowId", this.originalworkFlowId);
-
         this.findTargetWorkFlowStep();
         if (this.targetWorkFlowStep) {
           this.loadWorkFlowComments();

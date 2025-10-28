@@ -173,7 +173,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
-          console.log("newItems", newItems);
           this.vendorSelect2 = [...this.vendorSelect2, ...newItems];
           this.loadingvendors = false;
         },

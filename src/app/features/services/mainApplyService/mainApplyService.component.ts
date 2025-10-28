@@ -8,7 +8,7 @@ import { catchError, debounceTime, map, takeUntil, tap } from 'rxjs/operators';
 import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../shared/generic-data-table/generic-data-table.component';
-import { FiltermainApplyServiceDto, FiltermainApplyServiceByIdDto, mainApplyServiceDto, AppUserDto, AttachmentDto, RequestAdvertisementTargetDto, RequestAdvertisementAdLocationDto, RequestAdvertisementAdMethodDto, RequestPlaintEvidenceDto, RequestPlaintJustificationDto, RequestPlaintReasonDto, WorkFlowCommentDto, UpdateStatusDto, DonationCollectionChannelDto } from '../../../core/dtos/mainApplyService/mainApplyService.dto';
+import { FiltermainApplyServiceDto, FiltermainApplyServiceByIdDto, mainApplyServiceDto, AppUserDto, AttachmentDto, RequestAdvertisementTargetDto, RequestAdvertisementAdLocationDto, RequestAdvertisementAdMethodDto, RequestPlaintEvidenceDto, RequestPlaintJustificationDto, RequestPlaintReasonDto, WorkFlowCommentDto, UpdateStatusDto, DonationCollectionChannelDto, printResultDto } from '../../../core/dtos/mainApplyService/mainApplyService.dto';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { Select2Service } from '../../../core/services/Select2.service';
 import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
@@ -19,6 +19,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EntityService } from '../../../core/services/entit.service';
 import { AttachmentGalleryComponent } from '../../../../shared/attachment-gallery/attachment-gallery.component';
 import { environment } from '../../../../environments/environment';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { QRCodeComponent } from 'angularx-qrcode';
+import QRCode from 'qrcode';
+import { AuthService } from '../../../core/services/auth.service';
+
 enum ServiceStatus {
   Accept = 1,
   Reject = 2,
@@ -33,7 +39,8 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-mainApplyService',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent, NgSelectModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent, NgSelectModule,
+    ReactiveFormsModule, QRCodeComponent],
   templateUrl: './mainApplyService.component.html',
   styleUrls: ['./mainApplyService.component.scss']
 })
@@ -85,6 +92,7 @@ export class MainApplyServiceComponent {
   loadgridData: mainApplyServiceDto[] = [];
   loadexcelData: mainApplyServiceDto[] = [];
   loadformData: mainApplyServiceDto = {} as mainApplyServiceDto;
+  reportData: mainApplyServiceDto = {} as mainApplyServiceDto;
   loaduserformData: AppUserDto = {} as AppUserDto;
   loaduserattachmentsListformData: AttachmentDto[] = [];
   loaduserattachmentsListServiceformData: AttachmentDto[] = [];
@@ -124,13 +132,16 @@ export class MainApplyServiceComponent {
 
   originalNotes: string | null = null;
   originalworkFlowId: number | null | undefined;
-
+  showReport: boolean = false;
+  qrCodeUrl: string | null = null;
+  currecntDept: string | null = null;
   constructor(
     private mainApplyService: MainApplyService,
     private toastr: ToastrService,
     private translate: TranslateService,
     private openStandardReportService: openStandardReportService,
     private spinnerService: SpinnerService,
+    private authService: AuthService,
     private Select2Service: Select2Service,
     private fb: FormBuilder,
     private router: Router,
@@ -153,12 +164,25 @@ export class MainApplyServiceComponent {
   ngOnInit(): void {
     this.buildColumnDefs();
     this.lang = this.translate.currentLang;
+   // let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+    let profile = this.authService.snapshot;
+    let storeddepartmentId = profile?.departmentId ?? '';
+
+    const storedDeptIds = storeddepartmentId
+      .replace(/"/g, '')
+      .split(',')
+      .map(x => x.trim())
+      .filter(x => x !== '');
+
+    this.currecntDept = storeddepartmentId.replace(/"/g, '').trim();
+
     this.rowActions = [
       { label: this.translate.instant('Common.applicantData'), icon: 'fas fa-address-card', action: 'onViewApplicantData' },
       //{ label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceConfirmationData' },
       //{ label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceInqueryData' },
       { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-edit', action: 'oneditServiceData' },
       { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceData' },
+      { label: this.translate.instant('Common.Print'), icon: 'fa fa-print', action: 'onPrintPDF' },
     ];
 
     this.serviceSearchInput$
@@ -1176,6 +1200,44 @@ export class MainApplyServiceComponent {
       this.getuserFormDatabyId(event.row.userId);
     }
 
+    if (event.action === 'onPrintPDF') {
+
+      if (!event?.row) return;
+
+      const serviceName = event.row.service?.serviceName ?? '';
+      const lastStatus = event.row.lastStatus ?? '';
+      const permitNumber = event.row.permitNumber ?? '';
+      const serviceId = event.row.serviceId ?? '';
+      const id = event.row.id ?? '';
+
+      if (serviceName === "تصريح خيمة / موقع إفطار" && lastStatus.includes("تمت الموافقة")) {
+        this.printDatabyId(id, serviceId, 'final');
+      }
+      else if (
+        serviceName === "تصريح خيمة / موقع إفطار" &&
+        permitNumber.trim() !== '' &&
+        ['2009', '2010', '2011'].some(d => this.currecntDept?.includes(d))
+      ) {
+        this.printDatabyId(id, serviceId, 'initial');
+      }
+      else if (lastStatus.includes("تمت الموافقة")) {
+        this.printDatabyId(id, serviceId, 'initial');
+      }
+      else {
+        this.printDatabyId(id, serviceId, 'initial');
+
+        //this.translate
+        //  .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
+        //  .subscribe(translations => {
+        //    this.toastr.error(
+        //      `${translations['mainApplyServiceResourceName.NoPermission']}`,
+        //    );
+        //  });
+        //return;
+      }
+    }
+
+    
     else if (event.action === 'onViewServiceConfirmationData') {
       window.open(`/mainServices/services/serviceconfirmation/${event.row.id}`, '_blank');
     }
@@ -1564,6 +1626,672 @@ export class MainApplyServiceComponent {
   }
 
 
+  //async printDatabyIdModule(id: string, serviceId: string, status: string): Promise<void> {
+  //  const params: FiltermainApplyServiceByIdDto = { id };
+  //  this.spinnerService.show();
+
+  //  forkJoin({
+  //    mischeaderdata: this.mainApplyService.getDetailById(params) as Observable<mainApplyServiceDto | mainApplyServiceDto[]>,
+  //  })
+  //    .pipe(takeUntil(this.destroy$))
+  //    .subscribe({
+  //      next: async (result) => {
+  //        try {
+  //          // ✅ Get report data
+  //          const data = Array.isArray(result.mischeaderdata)
+  //            ? result.mischeaderdata[0] ?? ({} as mainApplyServiceDto)
+  //            : result.mischeaderdata;
+
+  //          // ✅ Generate QR code as Base64
+  //          const qrUrl = `${environment.apiBaseUrl}login/PrintD?no=${id}&status=${status}`;
+  //          const qrCodeBase64 = await QRCode.toDataURL(qrUrl, {
+  //            errorCorrectionLevel: 'M',
+  //            width: 120,
+  //          });
+
+  //          // ✅ Build HTML manually with your data injected
+  //          const baseUrl = window.location.origin;
+  //          const imageUrl = `${baseUrl}/assets/images/mainApplyServiceReports.png`;
+
+  //          const reportHtml = `
+  //          <html dir="rtl" lang="ar">
+  //            <head>
+  //              <title>تقرير تصريح ميداني</title>
+  //              <style>
+  //                body {
+  //                  font-family: 'Arial', sans-serif;
+  //                  background: #fff;
+  //                  direction: rtl;
+  //                  margin: 0;
+  //                  padding: 20px;
+  //                  text-align: center;
+  //                }
+  //                .report-wrapper {
+  //                  position: relative;
+  //                  width: 800px;
+  //                  height: 1130px;
+  //                  margin: auto;
+  //                  border: 1px solid #ccc;
+  //                  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  //                  overflow: hidden;
+  //                }
+  //                .report-wrapper img.bg {
+  //                  position: absolute;
+  //                  top: 0;
+  //                  left: 0;
+  //                  width: 100%;
+  //                  height: 100%;
+  //                  z-index: 0;
+  //                }
+  //                .text-field {
+  //                  position: absolute;
+  //                  color: brown;
+  //                  font-size: 13px;
+  //                  z-index: 2;
+  //                }
+  //                .qr-code {
+  //                  position: absolute;
+  //                  top: 70px;
+  //                  left: 90px;
+  //                  width: 100px;
+  //                  height: 100px;
+  //                  z-index: 2;
+  //                }
+  //                .print-btn {
+  //                  position: fixed;
+  //                  top: 10px;
+  //                  left: 10px;
+  //                  background-color: #007bff;
+  //                  color: white;
+  //                  border: none;
+  //                  border-radius: 5px;
+  //                  padding: 6px 12px;
+  //                  cursor: pointer;
+  //                  font-size: 14px;
+  //                }
+  //                .print-btn:hover {
+  //                  background-color: #0056b3;
+  //                }
+  //              </style>
+  //            </head>
+  //            <body>
+  //              <button class="print-btn" onclick="window.print()">🖨️ طباعة</button>
+  //              <div class="report-wrapper">
+  //                <img src="${imageUrl}" class="bg" alt="Report Background"/>
+
+  //                <div class="text-field" style="top: 180px; right: 180px; font-weight: bold; font-size: 14px;">
+  //                  ${data?.permitNumber ?? ''}
+  //                </div>
+  //                <div class="text-field" style="top: 260px; right: 330px;">
+  //                  ${data?.user?.foundationName ?? ''}
+  //                </div>
+  //                <div class="text-field" style="top: 290px; right: 330px;">
+  //                  ${data?.fastingTentService?.address ?? ''}
+  //                </div>
+  //                <div class="text-field" style="top: 320px; right: 330px;">
+  //                  ${data?.requestEventPermit?.lkpRequestTypeName ?? ''}
+  //                </div>
+  //                <div class="text-field" style="top: 350px; right: 330px;">
+  //                  ${data?.user?.telNumber ?? ''}
+  //                </div>
+  //                <div class="text-field" style="top: 380px; right: 330px;">
+  //                  ${data?.fastingTentService?.startDate
+  //              ? new Date(data.fastingTentService.startDate).toLocaleDateString('ar-EG')
+  //              : ''}
+  //                </div>
+  //                <div class="text-field" style="top: 410px; right: 330px;">
+  //                  ${data?.fastingTentService?.endDate
+  //              ? new Date(data.fastingTentService.endDate).toLocaleDateString('ar-EG')
+  //              : ''}
+  //                </div>
+
+  //                <img src="${qrCodeBase64}" class="qr-code" alt="QR Code"/>
+  //              </div>
+  //            </body>
+  //          </html>
+  //        `;
+
+  //          // ✅ Open in new tab
+  //          const newWin = window.open('', '_blank', 'width=900,height=1200,scrollbars=yes');
+  //          if (!newWin) {
+  //            throw new Error('Popup blocked — please allow popups for this site.');
+  //          }
+  //          newWin.document.open();
+  //          newWin.document.write(reportHtml);
+  //          newWin.document.close();
+  //        } catch (error) {
+  //          console.error('Error showing report:', error);
+  //        } finally {
+  //          this.spinnerService.hide();
+  //        }
+  //      },
+  //      error: (err) => {
+  //        console.error('Error fetching data:', err);
+  //        this.spinnerService.hide();
+  //      },
+  //    });
+  //}
+
+
+  async printDatabyId(id: string, serviceId: number, status: string): Promise<void> {
+    const reportWindow = window.open('', '_blank');
+    if (!reportWindow) {
+      alert('Please allow pop-ups for this site.');
+      return;
+    }
+
+    // Show loading message immediately
+    reportWindow.document.write('<p style="font-family:Arial">Loading report...</p>');
+
+    this.spinnerService.show();
+
+    const params: FiltermainApplyServiceByIdDto = { id };
+    const qrUrl = `${environment.apiBaseUrl}login/PrintD?no=${id}&status=${status}`;
+
+    let qrCodeBase64 = '';
+
+    try {
+      // Try to generate QR with retry and timeout
+      qrCodeBase64 = await this.generateQRCodeWithRetry(qrUrl, 2, 3000); // 2 retries, 3s timeout each
+    } catch {
+      console.warn('QR generation failed, using fallback QR');
+      qrCodeBase64 = await QRCode.toDataURL('Fallback QR', { width: 120 });
+    }
+
+    forkJoin({
+      mischeaderdata: this.mainApplyService.getDetailById(params) as Observable<mainApplyServiceDto | mainApplyServiceDto[]>,
+    })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result) => {
+          try {
+            const reportDatas = Array.isArray(result.mischeaderdata)
+              ? result.mischeaderdata[0] ?? ({} as mainApplyServiceDto)
+              : result.mischeaderdata;
+
+            const baseUrl = window.location.origin;
+
+           //const reportHeader = `${baseUrl}/assets/images/reportHeader.png`;
+            const reportHeader = `${baseUrl}/assets/images/council-logo.png`;
+            const reportFooter = `${baseUrl}/assets/images/reportFooter.png`;
+            const reportHeaderIcon = `${baseUrl}/assets/images/reportHeaderIcon.png`;
+
+            const params: printResultDto =
+            {
+              id:id,
+              responseData: reportDatas,
+              reportHeader: reportHeader,
+              reportFooter: reportFooter,
+              reportWindow: reportWindow,
+              qrCodeBase64: qrCodeBase64 
+            }
+            if (serviceId === 1) {
+              if (status === 'final') {
+                this.finalReportHtml(params);
+              } else if (status === 'initial') {
+                this.initialreportHtml(params);
+              }
+            } else {
+              params.reportHeader = reportHeaderIcon;
+              this.reportHtml(params);
+            }
+          } catch (error) {
+            console.error('Error showing report:', error);
+          } finally {
+            this.spinnerService.hide();
+          }
+        },
+        error: (err) => {
+          console.error('Error fetching data:', err);
+          this.spinnerService.hide();
+        },
+      });
+  }
+
+  // Helper function to retry QR generation
+  private async generateQRCodeWithRetry(url: string, retries: number, timeout: number): Promise<string> {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        const qrPromise = QRCode.toDataURL(url, {
+          errorCorrectionLevel: 'M',
+          width: 120,
+        });
+
+        const result = await Promise.race<string>([
+          qrPromise as Promise<string>, // ✅ Explicitly tell TS it's a string promise
+          new Promise<string>((_, reject) => setTimeout(() => reject('timeout'), timeout)),
+        ]);
+
+        return result; // ✅ Type is now known as string
+      } catch (error) {
+        console.warn(`QR generation attempt ${attempt + 1} failed:`, error);
+        if (attempt === retries) throw error;
+      }
+    }
+    throw new Error('QR generation failed after retries');
+  }
+
+
+
+  finalReportHtml(data: any) {
+
+    this.reportData = data.responseData;
+
+    const reportHtml = `
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>${this.translate.instant('mainApplyServiceResourceName.report.title')}</title>
+  <style>
+    body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; }
+    #report { width: 800px; margin: auto; border: 1px solid #ccc; background: #fff; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    td { border: 1px solid #ccc; padding: 5px; vertical-align: top; }
+    strong { color: #000; }
+    span { color: brown; }
+  </style>
+</head>
+<body>
+  <div id="report">
+    <!-- Header -->
+    <div style="width: 100%; text-align: center;">
+      <img src="${data.reportHeader}" alt="Header" style="width: 90%; height: auto;">
+    </div>
+
+    <!-- QR Code -->
+    <div style="width: 90%; text-align: left; padding: 10px 30px;">
+      <img src="${data.qrCodeBase64}" alt="QR Code" style="width: 100px; height: 100px;">
+    </div>
+
+    <div style="padding: 10px 50px 10px 50px;">
+
+      <!-- Application Info -->
+      <table>
+        <tr>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.requestDate')} :
+            <span style="color:black;">${this.openStandardReportService.formatDate(this.reportData?.applyDate ?? null)}</span>
+          </td>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.requestNo')} :
+            <span style="color:black;">${this.reportData?.applyNo ?? ''}</span>
+          </td>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.permitNo')} :
+            <span style="color:black;">${this.reportData?.applyNo ?? ''}</span>
+          </td>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.permitType')}</td>
+        </tr>
+      </table>
+
+      <div style="padding: 10px; text-align: left;">
+  <span style="background:#28a745;color:#fff;padding:3px 10px;border-radius:5px;font-weight:bold;">
+    ${this.translate.instant('mainApplyServiceResourceName.report.finalPermit')}
+  </span>
+</div>
+
+
+      <div style="text-align:center;background:#f5f5f5;border:1px solid #ccc;padding:6px;font-weight:bold;font-size:15px;margin-top:5px;">
+        ${this.translate.instant('mainApplyServiceResourceName.report.fastingTentPermit')}
+      </div>
+
+      <!-- Foundation Info -->
+      <table>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.foundationName')} : </strong>
+          <span style="color:black;">${this.reportData?.user?.foundationName ?? ''}</span></td>
+        </tr>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.foundationAddress')} : </strong>
+          <span style="color:black;">${this.reportData?.fastingTentService?.address ?? ''}</span></td>
+        </tr>
+      </table>
+
+      <table>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.permitType')} : </strong>
+          <span style="color:black;">${this.reportData?.requestEventPermit?.lkpRequestTypeName ?? ''}</span></td>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.contactNumber')} : </strong>
+          <span style="color:black;">${this.reportData?.user?.telNumber ?? ''}</span></td>
+        </tr>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.permitEnd')} : </strong>
+          <span style="color:black;">${this.openStandardReportService.formatDate(this.reportData?.fastingTentService?.endDate ?? null)}</span></td>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.permitStart')} : </strong>
+          <span style="color:black;">${this.openStandardReportService.formatDate(this.reportData?.fastingTentService?.startDate ?? null)}</span></td>
+        </tr>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.region')}: </strong>
+          <span style="color:black;">${this.reportData?.fastingTentService?.regionName ?? ''}</span></td>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.streetName')} : </strong>
+          <span style="color:black;">${this.reportData?.fastingTentService?.streetName ?? ''}</span></td>
+        </tr>
+      </table>
+
+      <div style="border:1px solid #ccc;border-top:none;padding:6px;font-size:13px;">
+        <strong>${this.translate.instant('mainApplyServiceResourceName.report.locationDetails')} : </strong>
+        <span style="color:black;">${this.reportData?.fastingTentService?.streetName ?? ''}</span>
+      </div>
+
+      <p style="color:red;font-weight:bold;font-size:12px;margin-top:10px;">
+        *${this.translate.instant('mainApplyServiceResourceName.report.noteInsideTent')}
+      </p>
+
+      <!-- Rules -->
+      <h4>${this.translate.instant('mainApplyServiceResourceName.report.ruleTitle')}</h4>
+      <ol style="font-size:13px;line-height:1.6;padding-right:20px;color:#333;">
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule1')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule2')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule3')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule4')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule5')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule6')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule7')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule8')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule9')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule10')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule11')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule12')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule13')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule14')}</li>
+      </ol>
+    </div>
+
+    <!-- Footer -->
+    <div style="width:100%;">
+      <img src="${data.reportFooter}" alt="Footer" style="width:100%;height:auto;">
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+
+    // ✅ Write and open the new tab content
+    data.reportWindow.document.open();
+    data.reportWindow.document.write(reportHtml);
+    data.reportWindow.document.close();
+  }
+
+  initialreportHtml(data: any) {
+
+    this.reportData = data.responseData;
+
+    const reportHtml = `
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>${this.translate.instant('mainApplyServiceResourceName.report.title')}</title>
+  <style>
+    body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; }
+    #report { width: 800px; margin: auto; border: 1px solid #ccc; background: #fff; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    td { border: 1px solid #ccc; padding: 5px; vertical-align: top; }
+    strong { color: #000; }
+    span { color: brown; }
+  </style>
+</head>
+<body>
+  <div id="report">
+    <!-- Header -->
+    <div style="width: 90%; text-align: center;">
+      <img src="${data.reportHeader}" alt="Header" style="width: 90%; height: auto;">
+    </div>
+
+    <!-- QR Code -->
+    <div style="width: 90%; text-align: left; padding: 10px 30px;">
+      <img src="${data.qrCodeBase64}" alt="QR Code" style="width: 100px; height: 100px;">
+    </div>
+
+    <div style="padding: 10px 50px 10px 50px;">
+
+      <!-- Application Info -->
+      <table>
+        <tr>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.requestDate')} :
+            <span style="color:black;">${this.openStandardReportService.formatDate(this.reportData?.applyDate ?? null)}</span>
+          </td>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.requestNo')} :
+            <span style="color:black;">${this.reportData?.applyNo ?? ''}</span>
+          </td>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.permitNo')} :
+            <span style="color:black;">${this.reportData?.applyNo ?? ''}</span>
+          </td>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.permitType')}</td>
+        </tr>
+      </table>
+
+          <div style="padding: 10px; text-align: left;">
+          <span style="background:#d8b45b;color:#fff;padding:3px 10px;border-radius:5px;font-weight:bold;">
+        ${this.translate.instant('mainApplyServiceResourceName.report.fieldPermit')}
+      </span>
+            </div>
+
+      <div style="text-align:center;background:#f5f5f5;border:1px solid #ccc;padding:6px;font-weight:bold;font-size:15px;margin-top:5px;">
+        ${this.translate.instant('mainApplyServiceResourceName.report.fastingTentPermit')}
+      </div>
+
+      <!-- Foundation Info -->
+      <table>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.foundationName')} : </strong>
+          <span style="color:black;">${this.reportData?.user?.foundationName ?? ''}</span></td>
+        </tr>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.foundationAddress')} : </strong>
+          <span style="color:black;">${this.reportData?.fastingTentService?.address ?? ''}</span></td>
+        </tr>
+      </table>
+
+      <table>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.permitType')} : </strong>
+          <span style="color:black;">${this.reportData?.requestEventPermit?.lkpRequestTypeName ?? ''}</span></td>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.contactNumber')} : </strong>
+          <span style="color:black;">${this.reportData?.user?.telNumber ?? ''}</span></td>
+        </tr>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.permitEnd')} : </strong>
+          <span style="color:black;">${this.openStandardReportService.formatDate(this.reportData?.fastingTentService?.endDate ?? null)}</span></td>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.permitStart')} : </strong>
+          <span style="color:black;">${this.openStandardReportService.formatDate(this.reportData?.fastingTentService?.startDate ?? null)}</span></td>
+        </tr>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.region')}: </strong>
+          <span style="color:black;">${this.reportData?.fastingTentService?.regionName ?? ''}</span></td>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.streetName')} : </strong>
+          <span style="color:black;">${this.reportData?.fastingTentService?.streetName ?? ''}</span></td>
+        </tr>
+      </table>
+
+      <div style="border:1px solid #ccc;border-top:none;padding:6px;font-size:13px;">
+        <strong>${this.translate.instant('mainApplyServiceResourceName.report.locationDetails')} : </strong>
+        <span style="color:black;">${this.reportData?.fastingTentService?.streetName ?? ''}</span>
+      </div>
+
+      <p style="color:red;font-weight:bold;font-size:12px;margin-top:10px;">
+        *${this.translate.instant('mainApplyServiceResourceName.report.noteInsideTent')}
+      </p>
+
+      <!-- Rules -->
+      <h4>${this.translate.instant('mainApplyServiceResourceName.report.ruleTitle')}</h4>
+      <ol style="font-size:13px;line-height:1.6;padding-right:20px;color:#333;">
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule1')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule2')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule3')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule4')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule5')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule6')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule7')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule8')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule9')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule10')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule11')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule12')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule13')}</li>
+        <li>${this.translate.instant('mainApplyServiceResourceName.report.rule14')}</li>
+      </ol>
+    </div>
+
+    <!-- Footer -->
+    <div style="width:100%;">
+      <img src="${data.reportFooter}" alt="Footer" style="width:100%;height:auto;">
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+
+    // ✅ Write and open the new tab content
+    data.reportWindow.document.open();
+    data.reportWindow.document.write(reportHtml);
+    data.reportWindow.document.close();
+  }
+
+  reportHtml(data: any) {
+
+    this.reportData = data.responseData;
+
+    const reportHtml = `
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>${this.translate.instant('mainApplyServiceResourceName.report.title')}</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #report {
+      width: 800px;
+      margin: auto;
+      border: 1px solid #ccc;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    td {
+      border: 1px solid #ccc;
+      padding: 5px;
+      vertical-align: top;
+    }
+    strong {
+      color: #000;
+    }
+    span {
+      color: brown;
+    }
+    .event-name {
+      text-align: center;
+      padding: 35px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .event-id {
+      text-align: right;
+      padding-right: 35px;
+      padding-top: 20px;  /* creates gap above ID */
+      font-size: 14px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="report">
+    <!-- Header -->
+    <div style="width: 100%; text-align: center;">
+      <img src="${data.reportHeader}" alt="Header" style="width: 50%; height: 50%;">
+    </div>
+
+    <!-- Event Name -->
+    <div class="event-name">
+      <p id="eventName">${this.reportData?.requestEventPermit?.eventName ?? ''}</p>
+    </div>
+
+    <!-- Gap (approx 2-row space) -->
+    <div style="height: 30px;"></div>
+
+    <!-- Event ID -->
+    <div class="event-id">
+      <p id="eventId">${data.id}</p>
+    </div>
+
+      <table>
+        <tr>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.requestDate')} :
+            <span style="color:black;">${this.openStandardReportService.formatDate(this.reportData?.applyDate ?? null)}</span>
+          </td>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.requestNo')} :
+            <span style="color:black;">${this.reportData?.applyNo ?? ''}</span>
+          </td>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.permitNo')} :
+            <span style="color:black;">${this.reportData?.applyNo ?? ''}</span>
+          </td>
+          <td>${this.translate.instant('mainApplyServiceResourceName.report.permitType')}</td>
+        </tr>
+      </table>
+
+
+      <div style="text-align:center;background:#f5f5f5;border:1px solid #ccc;padding:6px;font-weight:bold;font-size:15px;margin-top:5px;">
+        ${this.translate.instant('mainApplyServiceResourceName.report.fastingTentPermit')}
+      </div>
+
+      <!-- Foundation Info -->
+      <table>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.foundationName')} : </strong>
+          <span style="color:black;">${this.reportData?.user?.foundationName ?? ''}</span></td>
+        </tr>
+      </table>
+
+      <table>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.permitType')} : </strong>
+          <span style="color:black;">${this.reportData?.requestEventPermit?.lkpRequestTypeName ?? ''}</span></td>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.contactNumber')} : </strong>
+          <span style="color:black;">${this.reportData?.user?.telNumber ?? ''}</span></td>
+        </tr>
+        <tr>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.permitEnd')} : </strong>
+          <span style="color:black;">${this.openStandardReportService.formatDate(this.reportData?.requestEventPermit?.endDate ?? null)}</span></td>
+          <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.permitStart')} : </strong>
+          <span style="color:black;">${this.openStandardReportService.formatDate(this.reportData?.requestEventPermit?.startDate ?? null)}</span></td>
+        </tr>
+       
+      </table>
+      <table>
+       <tr>
+       <td><strong>${this.translate.instant('mainApplyServiceResourceName.report.region')}: </strong>
+       <span style="color:black;">${this.reportData?.requestEventPermit?.eventLocation ?? ''}</span></td>
+       </tr>
+      </table>
+  </div>
+</body>
+</html>
+`;
+
+
+
+    // ✅ Write and open the new tab content
+    data.reportWindow.document.open();
+    data.reportWindow.document.write(reportHtml);
+    data.reportWindow.document.close();
+  }
+
+  downloadPDF() {
+
+    const DATA: any = document.getElementById('report');
+    html2canvas(DATA).then(canvas => {
+      const FILEURI = canvas.toDataURL('image/png');
+      let PDF = new jsPDF('p', 'mm', 'a4');
+      const width = PDF.internal.pageSize.getWidth();
+      const height = (canvas.height * width) / canvas.width;
+      PDF.addImage(FILEURI, 'PNG', 0, 0, width, height);
+      PDF.save('report.pdf');
+    });
+  }
 
   printExcel(): void {
     this.spinnerService.show();;

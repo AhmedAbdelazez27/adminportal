@@ -8,8 +8,6 @@ export const loginGuard: CanActivateFn = () : boolean | UrlTree => {
   let isLogin ;
  auth.user$.subscribe(p => {
       isLogin = p?.userId ? true : false ;
-      console.log(p,isLogin,"ttt");
-      
     });
 
   if (!isLogin) return true;

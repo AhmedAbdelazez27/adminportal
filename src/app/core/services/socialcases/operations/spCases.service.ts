@@ -14,6 +14,7 @@ import {
   CAidRequestDto
 } from '../../../dtos/socialcases/operations/spCases.dto';
 import { aidRequestsDto } from '../../../dtos/socialcases/operations/aidRequests.dto';
+import { filtercaseSearchByIdsDto } from '../../../dtos/sponsorship/operations/caseSearch.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -31,11 +32,15 @@ export class SpCasesService {
   }
 
   getCaseDetails(caseId: string, entityId: string): Observable<CasesSearchDto> {
+    const paramss: filtercaseSearchByIdsDto = {
+      caseId: caseId,
+      entityId: entityId,
+    };
     if (!caseId || !entityId) {
       throw new Error('caseId and entityId must not be null');
     }
-    const apiUrl = `${this.BASE_URL}${ApiEndpoints.SpCases.GetCaseDetails(caseId, entityId)}`;
-    return this.http.get<CasesSearchDto>(apiUrl);
+    const apiUrl = `${this.BASE_URL}${ApiEndpoints.SpCases.GetCaseDetails}`;
+    return this.http.post<CasesSearchDto>(apiUrl, paramss);
   }
 
   getAidRequestsForCase(params: SpCasesAidRequestsFilterDto): Observable<PagedResult<aidRequestsDto>> {

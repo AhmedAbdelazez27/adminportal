@@ -116,7 +116,6 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
         this.spinnerService.forceHide();
       },
       error: (err: any) => {
-        console.log(err);
         this.spinnerService.forceHide();
       }
     });
@@ -139,7 +138,6 @@ export class ComparisonsRevenueseExpensesComponent implements OnInit {
     };
     this._ChartsService.getExpensesRevenuesComparison(payload,this.typeService).subscribe({
       next: (res) => {
-        console.log(res);
         if (typeChange == 1) {
           this.parseChartData(res, 'categoriees', 'seriesData', this.selectedYeartext, '',);
            this.onYearChange(2);

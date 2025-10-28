@@ -551,3 +551,13 @@ export class UpdateStatusDto {
   endDate: Date| null = null;
   endDatestr?: string | null = null;
 }
+
+export class printResultDto {
+  responseData?: mainApplyServiceDto | null = null;
+  id?: string | null = null;
+  status?: string | null = null;
+  reportWindow?: Window | null = null;
+  qrCodeBase64?: string | null = null;
+  reportHeader?: string | null = null;
+  reportFooter: string | null = null;
+}

@@ -47,6 +47,6 @@ export class projectsService {
       throw new Error('projectId and entityId must not be null');
     }
     const apiUrl = `${this.BASEURL}${ApiEndpoints.ScProject.GetProjectImplement}`;
-    return this.http.post<projectImplementDto[]>(apiUrl,param);
+    return this.http.post<projectImplementDto[]>(apiUrl, params);
   }
 }

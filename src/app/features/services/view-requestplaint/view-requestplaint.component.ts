@@ -15,6 +15,7 @@ import { GenericDataTableComponent } from '../../../../shared/generic-data-table
 import { Observable, tap, catchError, throwError, EMPTY, Subscription } from 'rxjs';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 declare var bootstrap: any;
 
@@ -114,6 +115,7 @@ export class ViewRequestplaintComponent implements OnInit {
     private translate: TranslateService,
     private spinnerService: SpinnerService,
     private openStandardReportService: openStandardReportService,
+    private authService: AuthService
   ) {
     this.rejectResonsForm = this.fb.group({
       reasonTxt: [[], Validators.required]
@@ -153,7 +155,10 @@ export class ViewRequestplaintComponent implements OnInit {
         this.partners = resp.partners || [];
         this.attachments = resp.attachments || [];
 
-        let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+        //  let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+
+        let profile = this.authService.snapshot;
+        let storeddepartmentId = profile?.departmentId ?? '';
 
         const storedDeptIds = storeddepartmentId
           .replace(/"/g, '')
@@ -207,7 +212,6 @@ export class ViewRequestplaintComponent implements OnInit {
             break;
           }
         }
-        console.log(this.workFlowSteps)
 
         this.workFlowQuery = selectedStep ? [selectedStep] : [];
         this.workFlowQuery[0].serviceDepartmentActions = 1;

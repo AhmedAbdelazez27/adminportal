@@ -226,22 +226,17 @@
                         <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else returnForModification">
                           <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
-                            <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
+                            <div *ngIf="serviceDepartmentActions && serviceDepartmentActions.length > 0"
+                                 class="d-flex flex-wrap gap-2 justify-content-center">
+
                               <button type="button" (click)="acceptbtn()" class="btn btn-success">
                                 {{ 'mainApplyServiceResourceName.accep' | translate }}
                               </button>
+
                               <button type="button" (click)="rejectbtn()" class="btn btn-danger">
                                 {{ 'mainApplyServiceResourceName.refu' | translate }}
                               </button>
-                            </div>
 
-                            <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
-                              <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
-                                {{ 'SERVICE_SETTING.DEPARTMENT_ACTION_REVIEW' | translate }}
-                              </button>
-                            </div>
-
-                            <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
                               <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
                                 {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
                               </button>
@@ -271,23 +266,17 @@
 
                       <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else noWorkflowReturn">
                         <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
+                          <div *ngIf="serviceDepartmentActions && serviceDepartmentActions.length > 0"
+                               class="d-flex flex-wrap gap-2 justify-content-center">
 
-                          <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
                             <button type="button" (click)="acceptbtn()" class="btn btn-success">
                               {{ 'mainApplyServiceResourceName.accep' | translate }}
                             </button>
+
                             <button type="button" (click)="rejectbtn()" class="btn btn-danger">
                               {{ 'mainApplyServiceResourceName.refu' | translate }}
                             </button>
-                          </div>
 
-                          <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
-                            <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
-                              {{ 'SERVICE_SETTING.DEPARTMENT_ACTION_REVIEW' | translate }}
-                            </button>
-                          </div>
-
-                          <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
                             <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
                               {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
                             </button>
@@ -754,23 +743,17 @@
 
                         <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else returnForModification">
                           <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
+                            <div *ngIf="serviceDepartmentActions && serviceDepartmentActions.length > 0"
+                                 class="d-flex flex-wrap gap-2 justify-content-center">
 
-                            <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
                               <button type="button" (click)="acceptbtn()" class="btn btn-success">
                                 {{ 'mainApplyServiceResourceName.accep' | translate }}
                               </button>
+
                               <button type="button" (click)="rejectbtn()" class="btn btn-danger">
                                 {{ 'mainApplyServiceResourceName.refu' | translate }}
                               </button>
-                            </div>
 
-                            <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
-                              <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
-                                {{ 'SERVICE_SETTING.DEPARTMENT_ACTION_REVIEW' | translate }}
-                              </button>
-                            </div>
-
-                            <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
                               <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
                                 {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
                               </button>
@@ -801,27 +784,21 @@
                       <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else noWorkflowReturn">
                         <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
-                          <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
+                          <div *ngIf="serviceDepartmentActions && serviceDepartmentActions.length > 0"
+                               class="d-flex flex-wrap gap-2 justify-content-center">
+
                             <button type="button" (click)="acceptbtn()" class="btn btn-success">
                               {{ 'mainApplyServiceResourceName.accep' | translate }}
                             </button>
+
                             <button type="button" (click)="rejectbtn()" class="btn btn-danger">
                               {{ 'mainApplyServiceResourceName.refu' | translate }}
                             </button>
-                          </div>
 
-                          <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
-                            <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
-                              {{ 'SERVICE_SETTING.DEPARTMENT_ACTION_REVIEW' | translate }}
-                            </button>
-                          </div>
-
-                          <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
                             <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
                               {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
                             </button>
                           </div>
-
                           <div *ngIf="!hasActionButtons" class="d-flex flex-wrap gap-2 justify-content-center">
                           </div>
 

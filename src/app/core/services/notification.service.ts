@@ -122,12 +122,8 @@ export class NotificationService {
     // Subscribe to FCM token changes with enhanced validation
     this.firebaseNotificationService.getFCMTokenObservable().subscribe(token => {
       if (token) {
-        console.log("rrrrrrrrrrrrrrrrrrr",token,"ttttttttt");
-        
         this.syncFCMTokenWithBackend(userId, token);
       } else {
-        console.log("no token getten");
-        
         // Token is null - might need renewal
         this.handleTokenRenewal(userId);
       }
@@ -801,8 +797,6 @@ export class NotificationService {
       const newToken = await this.firebaseNotificationService.forceRefreshToken();
       
       if (newToken) {
-        console.log("newToken ",newToken);
-        
         await this.syncFCMTokenWithBackend(userId, newToken);
       }
     } catch (error) {

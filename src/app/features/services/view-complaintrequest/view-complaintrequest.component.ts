@@ -9,6 +9,7 @@ import { UpdateStatusDto, WorkFlowCommentDto, WorkFlowStepDto, mainApplyServiceD
 import { Observable, tap, catchError, throwError, EMPTY } from 'rxjs';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 declare var bootstrap: any;
 
@@ -60,6 +61,7 @@ export class ViewComplaintrequestComponent implements OnInit {
     private translate: TranslateService,
     private fb: FormBuilder,
     private spinnerService: SpinnerService,
+    private authService:AuthService,
     private openStandardReportService: openStandardReportService
   ) {
     this.rejectResonsForm = this.fb.group({
@@ -89,7 +91,10 @@ export class ViewComplaintrequestComponent implements OnInit {
     const sub = this.mainApplyServiceService.getDetailById({ id }).subscribe({
       next: (resp: any) => {
         this.mainApplyService = resp;  // تخزين البيانات القادمة من الـ API في mainApplyService
-        let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+        //  let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+
+        let profile = this.authService.snapshot;
+        let storeddepartmentId = profile?.departmentId ?? '';
         this.workFlowSteps = this.mainApplyService?.workFlowSteps ?? [];
 
         const storedDeptIds = storeddepartmentId
@@ -155,13 +160,6 @@ export class ViewComplaintrequestComponent implements OnInit {
 
         this.allApproved = this.workFlowSteps.length > 0 &&
           this.workFlowSteps.every(step => step.serviceStatus === 1);
-        console.log("workFlowSteps", this.workFlowSteps);
-        console.log("storedDeptIds", storedDeptIds);
-        console.log("matchedIndices", matchedIndices);
-        console.log("storeddepartmentId", storeddepartmentId);
-        console.log("workFlowQuery", this.workFlowQuery);
-        console.log("serviceDepartmentActions", this.serviceDepartmentActions);
-        console.log("originalworkFlowId", this.originalworkFlowId);
       },
       error: () => {
         this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_DATA'));

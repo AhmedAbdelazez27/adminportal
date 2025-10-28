@@ -603,7 +603,6 @@ export class aidRequestsComponent {
 
 
   getStudyDetailsFormDatabyId(source: string, entityId: string, studyId: string): void {
-    console.log("source", source);
     const params: filteraidRequestsByIdDto = {
       entityId: entityId,
       studyId: studyId,
@@ -611,7 +610,6 @@ export class aidRequestsComponent {
       caseCode: null,
       caseId:null
     };
-    console.log("params", params);
 
     this.spinnerService.show();
     if (source == '1') {
@@ -699,6 +697,8 @@ export class aidRequestsComponent {
       this.spinnerService.hide();
       return;
     }
+    this.spinnerService.hide();
+
   }
 
   public buildColumnDefs(): void {

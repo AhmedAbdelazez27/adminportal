@@ -943,6 +943,7 @@ export class SpCasesComponent {
       this.spinnerService.hide();
       this.toastr.error(this.translate.instant('Common.UnknownSource') || 'Unknown source type');
     }
+    this.spinnerService.hide();
   }
 
   // Excel Export

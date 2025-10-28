@@ -28,15 +28,15 @@ export class spContractsService {
     if (!params.contractId || !params.entityId) {
       throw new Error('paymentId and entityId must not be null');
     }
-    const apiUrl = `${this.ContractsBASE_URL}${ApiEndpoints.spContracts.GetContractById(params.contractId, params.entityId)}`;
-    return this.http.get<spContractsDto>(apiUrl);
+    const apiUrl = `${this.ContractsBASE_URL}${ApiEndpoints.spContracts.GetContractById}`;
+    return this.http.post<spContractsDto>(apiUrl, params);
   }
 
   getContractCasesById(params: filterspContractsByIdDto): Observable<spContractsCasesDto[]> {
     if (!params.contractId || !params.entityId) {
       throw new Error('paymentId and entityId must not be null');
     }
-    const apiUrl = `${this.ContractsBASE_URL}${ApiEndpoints.spContracts.GetContractCasesById(params.contractId, params.entityId)}`;
-    return this.http.get<spContractsCasesDto[]>(apiUrl);
+    const apiUrl = `${this.ContractsBASE_URL}${ApiEndpoints.spContracts.GetContractCasesById}`;
+    return this.http.post<spContractsCasesDto[]>(apiUrl, params);
   }
 }

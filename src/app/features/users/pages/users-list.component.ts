@@ -1143,7 +1143,6 @@ export class UsersListComponent implements OnInit {
       .pipe(
         takeUntil(this.destroy$),
         tap((detail: any) => {
-          console.log('User details:', detail);
           this.user = detail;
           this.attachment = detail.attachments;
 

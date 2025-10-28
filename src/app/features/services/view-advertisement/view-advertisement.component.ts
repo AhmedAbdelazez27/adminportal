@@ -367,7 +367,10 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
         this.requestAdvertisement = this.processAdvertisementData(response);
         this.workFlowSteps = response.workFlowSteps || [];
         this.attachments = response.attachments || [];
-        let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+      //  let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
+
+        let profile = this.authService.snapshot;
+        let storeddepartmentId = profile?.departmentId ?? '';
 
         const storedDeptIds = storeddepartmentId
           .replace(/"/g, '')
