@@ -1,11 +1,11 @@
 export const environment = {
   production: false,
 
-//  apiBaseUrl: 'http://compassint.ddns.net:2041/api',
+  // apiBaseUrl: 'https://compassint.ddns.net:2041/api',
   apiBaseUrl: 'https://localhost:7156/api',
-// apiBaseUrl: 'https://192.168.51.130/api',
+  // apiBaseUrl: 'https://192.168.51.130/api',
   // apiBaseUrl: 'https://Api.Ajmanccc.ae/api',
-    firebase: {
+  firebase: {
     apiKey: 'AIzaSyAB3FKe70tGitiH23qLJY7jU_gLAxzjWhc',
     authDomain: 'ccc-serevices.firebaseapp.com',
     projectId: 'ccc-serevices',
@@ -17,6 +17,3 @@ export const environment = {
       'BHJbNjl2Io--NZvY5t48mKArUmzHW-hLRXroW5KjbyqR9Ey8KruI03aBW9Xq2k1fJEifMF_7T30LWeSoJExom6M',
   },
 };
-
-
-

@@ -91,24 +91,39 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     );
   }
 
-  async markAllAsSeen(): Promise<void> {
-    if (!this.notifications) {
-      return;
-    }
+  // async markAllAsSeen(): Promise<void> {
+  //   if (!this.notifications) {
+  //     return;
+  //   }
 
-    const unseenNotifications = this.notifications.filter(n => !n.isSeen);
+  //   const unseenNotifications = this.notifications.filter(n => !n.isSeen);
 
-    for (const notification of unseenNotifications) {
-      try {
-        const notificationId = notification.notificationId || notification.id;
-        if (notificationId) {
-          await this.notificationService.markAsSeen(notificationId);
-        }
-      } catch (error) {
-        // Error marking notification as seen
-      }
-    }
+  //   for (const notification of unseenNotifications) {
+  //     try {
+  //       const notificationId = notification.notificationId || notification.id;
+  //       if (notificationId) {
+  //         await this.notificationService.markAsSeen(notificationId);
+  //       }
+  //     } catch (error) {
+  //       // Error marking notification as seen
+  //     }
+  //   }
+  // }
+
+  async markAllAsSeen() {
+    const isAr = (localStorage.getItem('lang') ?? 'en') === 'ar';
+  try {
+    await this.notificationService.markAllAsSeen();
+    this.toastr.success(
+  isAr ? 'تم تعليم جميع الإشعارات كمقروءة' : 'All notifications marked as seen'
+);
+  } catch (err) {
+    this.toastr.error(
+  isAr ? 'فشل في تعليم جميع الإشعارات' : 'Failed to mark all notifications'
+);
+
   }
+}
 
   /**
    * ✅ OPTIMIZED: Manual refresh triggered by user action (bypasses cache)
@@ -129,13 +144,13 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
   getNotificationTitle(notification: NotificationDto): string {
     // Return Arabic or English title based on current language
-    const currentLang = localStorage.getItem('currentLang') || 'en';
+    const currentLang = localStorage.getItem('lang') || 'en';
     return currentLang === 'ar' ? notification.titleAr : notification.titleEn;
   }
 
   getNotificationMessage(notification: NotificationDto): string {
     // Return Arabic or English message based on current language
-    const currentLang = localStorage.getItem('currentLang') || 'en';
+    const currentLang = localStorage.getItem('lang') || 'en';
     const message = currentLang === 'ar' ? notification.messageAr : notification.messageEn;
     return message || '';
   }
@@ -149,17 +164,25 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
     const diffInHours = Math.floor(diffInMinutes / 60);
     const diffInDays = Math.floor(diffInHours / 24);
-
+      const currentLang = localStorage.getItem('lang') || 'en';
     if (diffInMinutes < 1) {
-      return 'Just now';
+      return currentLang === 'ar' ? 'الآن' : 'Just now';
     } else if (diffInMinutes < 60) {
-      return `${diffInMinutes} minutes ago`;
+      return currentLang === 'ar'
+        ? `منذ ${diffInMinutes} دقيقة`
+        : `${diffInMinutes} minutes ago`;
     } else if (diffInHours < 24) {
-      return `${diffInHours} hours ago`;
+      return currentLang === 'ar'
+        ? `منذ ${diffInHours} ساعة`
+        : `${diffInHours} hours ago`;
     } else if (diffInDays < 7) {
-      return `${diffInDays} days ago`;
+      return currentLang === 'ar'
+        ? `منذ ${diffInDays} يوم`
+        : `${diffInDays} days ago`;
     } else {
-      return notificationDate.toLocaleDateString();
+      return notificationDate.toLocaleDateString(
+        currentLang === 'ar' ? 'ar-EG' : 'en-US'
+      );
     }
   }
 

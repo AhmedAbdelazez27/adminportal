@@ -6,9 +6,9 @@ import { NotificationApiService } from './notification-api.service';
 import { AuthService } from './auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { ApiEndpoints } from '../constants/api-endpoints';
-import { 
-  NotificationDto, 
-  UpdateFCMTokenDto, 
+import {
+  NotificationDto,
+  UpdateFCMTokenDto,
   GetAllNotificationRequestDto,
   PagedResultDto,
   CreateNotificationDto,
@@ -60,13 +60,13 @@ export class NotificationService {
           return;
         }
       }
-      
+
       // Wait for Firebase initialization
       await this.firebaseNotificationService.initializeNotifications();
-      
+
       // Setup Firebase message listener for real-time updates
       this.setupFirebaseMessageListener();
-      
+
       this.initializationCompleteSubject.next(true);
       this.isSystemInitialized = true;
     } catch (error) {
@@ -79,7 +79,7 @@ export class NotificationService {
    */
   public async initializeUserSession(): Promise<void> {
     const userId = this.authService.getUserId();
-    
+
     if (!userId) {
       return;
     }
@@ -91,13 +91,13 @@ export class NotificationService {
 
     try {
       this.currentUserId = userId;
-      
+
       // Setup FCM token synchronization for this user
       this.setupFCMTokenSync();
-      
+
       // Load initial notifications for this user
       await this.loadInitialNotifications();
-      
+
       this.sessionInitializedSubject.next(true);
     } catch (error) {
       // User session initialization error
@@ -114,7 +114,7 @@ export class NotificationService {
     }
 
     const userId = this.authService.getUserId();
-    
+
     if (!userId) {
       return;
     }
@@ -139,7 +139,7 @@ export class NotificationService {
   private async handleTokenRenewal(userId: string): Promise<void> {
     try {
       const newToken = await this.firebaseNotificationService.refreshToken();
-      
+
       if (newToken) {
         await this.syncFCMTokenWithBackend(userId, newToken);
       }
@@ -156,7 +156,7 @@ export class NotificationService {
     setInterval(async () => {
       try {
         const tokenInfo = this.firebaseNotificationService.getTokenLifecycleInfo();
-        
+
         if (tokenInfo.isStale || tokenInfo.isExpired) {
           await this.handleTokenRenewal(userId);
         } else if (!tokenInfo.currentToken) {
@@ -203,10 +203,10 @@ export class NotificationService {
 
       // Add to current notifications
       this.addNewNotification(newNotification);
-      
+
       // Update unseen count
       this.incrementUnseenCount();
-      
+
       // Always show toast notification for real-time Firebase messages
       // (regardless of first load status)
       this.showNotificationToast(newNotification);
@@ -219,10 +219,10 @@ export class NotificationService {
   private addNewNotification(notification: NotificationDto): void {
     const currentNotifications = this.notificationsSubject.value || [];
     const updatedNotifications = [notification, ...currentNotifications];
-    
+
     // Keep only the latest 30 notifications for navbar
     const limitedNotifications = updatedNotifications.slice(0, 30);
-    
+
     this.notificationsSubject.next(limitedNotifications);
   }
 
@@ -240,7 +240,7 @@ export class NotificationService {
   private showNotificationToast(notification: NotificationDto): void {
     const title = this.getNotificationTitle(notification);
     const message = this.getNotificationMessage(notification);
-    
+
     this.toastr.info(message, title, {
       timeOut: 5000,
       closeButton: true,
@@ -301,7 +301,7 @@ export class NotificationService {
   public refreshOnEvent(eventType: 'focus' | 'userAction' | 'newMessage' = 'userAction'): void {
     const now = Date.now();
     const timeSinceLastRefresh = now - this.lastRefreshTime;
-    
+
     // Only refresh if cache is stale (older than 5 minutes) or it's a new message
     if (eventType === 'newMessage' || timeSinceLastRefresh > this.CACHE_DURATION) {
       this.refreshNotifications();
@@ -337,17 +337,17 @@ export class NotificationService {
     const userId = this.authService.getUserId();
     if (userId) {
       this.loadingSubject.next(true);
-      
+
       try {
         // Temporarily disable toast notifications for refresh
         const wasFirstLoad = this.isFirstLoad;
         this.isFirstLoad = true;
-        
+
         await Promise.all([
           this.loadNavbarNotifications(userId).toPromise(),
           this.loadUnseenCount(userId).toPromise()
         ]);
-        
+
         // Restore the original first load status
         this.isFirstLoad = wasFirstLoad;
         this.lastRefreshTime = Date.now();
@@ -368,25 +368,25 @@ export class NotificationService {
     if (this.isFirstLoad) {
       return;
     }
-    
+
     const previousNotifications = this.notificationsSubject.value || [];
-    
+
     // Find new notifications (not in previous list)
-    const newNotifications = currentNotifications.filter(current => 
-      !previousNotifications.some(prev => 
+    const newNotifications = currentNotifications.filter(current =>
+      !previousNotifications.some(prev =>
         prev.notificationId === current.notificationId || prev.id === current.id
       )
     );
-    
+
     // Show toast for each new notification
     if (newNotifications.length > 0) {
       // Play notification sound for new notifications
       this.playNotificationSound();
-      
+
       newNotifications.forEach(notification => {
         const title = this.getNotificationTitle(notification);
         const message = this.getNotificationMessage(notification);
-        
+
         this.toastr.info(message, title, {
           timeOut: 5000,
           closeButton: true,
@@ -435,7 +435,7 @@ export class NotificationService {
    */
   private loadNotifications(userId: string, skip: number = 0, take: number = 30): Observable<PagedResultDto<NotificationDto>> {
     this.loadingSubject.next(true);
-    
+
     const request: GetAllNotificationRequestDto = {
       skip: skip,
       take: take
@@ -453,7 +453,7 @@ export class NotificationService {
       switchMap(result => {
         // Handle both 'items' and 'data' properties from API response
         const notificationsArray = result?.data || (result as any)?.items || [];
-        
+
         // Process notifications to ensure they have the correct structure
         const processedNotifications = notificationsArray.map((notification: any) => {
           // Ensure the notification has both notificationId and id for compatibility
@@ -470,26 +470,26 @@ export class NotificationService {
             isSeen: notification.isSeen ?? false
           };
         });
-        
+
         // Sort notifications by date (newest first) and take only the requested amount
         const sortedNotifications = processedNotifications
           .sort((a: any, b: any) => new Date(b.notificationDate).getTime() - new Date(a.notificationDate).getTime())
           .slice(0, take);
-        
+
         // Check for new notifications and show toast (only for navbar notifications)
         if (take <= 30) {
           this.checkForNewNotifications(sortedNotifications);
         }
-        
+
         // Emit notifications to subscribers
         this.notificationsSubject.next(sortedNotifications);
-        
+
         this.loadingSubject.next(false);
         return [result];
       }),
       catchError(error => {
         // Try with registerId as fallback
-        return this.notificationApiService.getAllNotifications({...requestWithRegisterId}).pipe(
+        return this.notificationApiService.getAllNotifications({ ...requestWithRegisterId }).pipe(
           switchMap(result => {
             // Handle both 'items' and 'data' properties from API response
             const notificationsArray = result?.data || (result as any)?.items || [];
@@ -507,11 +507,11 @@ export class NotificationService {
                 isSeen: notification.isSeen ?? false
               };
             });
-            
+
             const sortedNotifications = processedNotifications
               .sort((a: any, b: any) => new Date(b.notificationDate).getTime() - new Date(a.notificationDate).getTime())
               .slice(0, take);
-            
+
             this.notificationsSubject.next(sortedNotifications);
             this.loadingSubject.next(false);
             return [result];
@@ -538,7 +538,7 @@ export class NotificationService {
    */
   private loadPaginatedNotifications(userId: string, skip: number, take: number, isSeen?: boolean): Observable<PagedResultDto<NotificationDto>> {
     this.loadingSubject.next(true);
-    
+
     const request: GetAllNotificationRequestDto = {
       isSeen: isSeen,
       skip: skip,
@@ -604,16 +604,16 @@ export class NotificationService {
   async markAsSeen(notificationId: string): Promise<void> {
     try {
       await this.notificationApiService.markNotificationAsSeen(notificationId).toPromise();
-      
+
       // Update local state
       const currentNotifications = this.notificationsSubject.value || [];
-      const updatedNotifications = currentNotifications.map(notification => 
+      const updatedNotifications = currentNotifications.map(notification =>
         (notification.id === notificationId || notification.notificationId === notificationId)
           ? { ...notification, isSeen: true }
           : notification
       );
       this.notificationsSubject.next(updatedNotifications);
-      
+
       // Update unseen count
       const userId = this.authService.getUserId();
       if (userId) {
@@ -628,6 +628,44 @@ export class NotificationService {
       }
     } catch (error) {
       throw error;
+    }
+  }
+
+  /**
+ * Mark ALL notifications as seen (optimistic update + server sync)
+ * POST https://localhost:7156/api/Notifications/MarkAllSeen
+ */
+  private isMarkingAll = false;
+
+  async markAllAsSeen(): Promise<void> {
+    if (this.isMarkingAll) return;
+    this.isMarkingAll = true;
+
+    const prevList = [...(this.notificationsSubject.value || [])];
+    const prevUnseen = this.unseenCountSubject.value || 0;
+
+    try {
+      // 1️⃣ تحديث محلي سريع (optimistic update)
+      if (prevUnseen > 0 || prevList.some(n => !n.isSeen)) {
+        const updated = prevList.map(n => ({ ...n, isSeen: true }));
+        this.notificationsSubject.next(updated);
+        this.unseenCountSubject.next(0);
+      }
+
+      // 2️⃣ استدعاء الـ API
+      await this.notificationApiService.markAllNotificationsAsSeen().toPromise();
+
+      // 3️⃣ حفظ وقت آخر تحديث
+      this.lastRefreshTime = Date.now();
+
+    } catch (err) {
+      // رجّع الحالة القديمة لو حصل خطأ
+      this.notificationsSubject.next(prevList);
+      this.unseenCountSubject.next(prevUnseen);
+      this.toastr.error('فشل في تعليم كل الإشعارات كمقروءة');
+      throw err;
+    } finally {
+      this.isMarkingAll = false;
     }
   }
 
@@ -777,7 +815,7 @@ export class NotificationService {
         fcmToken: tokenToUse,
         userId: userId
       };
-      
+
       await this.notificationApiService.updateFCMToken(updateData).toPromise();
     } catch (error) {
       // Manual FCM token sync failed
@@ -795,7 +833,7 @@ export class NotificationService {
 
     try {
       const newToken = await this.firebaseNotificationService.forceRefreshToken();
-      
+
       if (newToken) {
         await this.syncFCMTokenWithBackend(userId, newToken);
       }
@@ -882,4 +920,5 @@ export class NotificationService {
   areToastNotificationsEnabled(): boolean {
     return !this.isFirstLoad;
   }
+
 }
