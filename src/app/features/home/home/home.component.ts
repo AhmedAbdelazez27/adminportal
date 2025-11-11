@@ -17,6 +17,8 @@ import { AuthService } from '../../../core/services/auth.service';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { ChartSeriesData, ChartUtilsService } from '../../../../shared/services/chart-utils.service';
 import { HomeChartComponent } from '../../../../shared/charts/home-chart/home-chart.component';
+import { NotificationApiService } from '../../../core/services/notification-api.service';
+import { NotificationDto, GetAllNotificationRequestDto } from '../../../core/dtos/notifications/notification.dto';
 
 interface ChartDataItem {
   chartTitle: string;
@@ -79,6 +81,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   requestSummaryList: HomeRequestSummaryDto[] = [];
   isLoadingRequestSummary = false;
 
+  // Notifications properties
+  latestNotifications: NotificationDto[] = [];
+  isLoadingNotifications = false;
+
   code: string | null = null;
   state: string | null = null;
   destroy$ = new Subject<boolean>();
@@ -96,7 +102,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private toastr: ToastrService,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-    private chartUtils: ChartUtilsService
+    private chartUtils: ChartUtilsService,
+    private notificationApiService: NotificationApiService
   ) { }
 
   ngOnInit(): void {
@@ -114,18 +121,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadCharts();
     this.loadShortcuts();
     this.loadRequestSummary();
+    this.loadLatestNotifications();
 
-    this.translate.onLangChange.subscribe(ev => {
-      this.currentLang = ev.lang || this.currentLang;
-      this.buildKpiCards();
-      // Recalculate completed percentage when language changes
-      if (this.requestSummaryData) {
-        this.calculateCompletedPercentage();
-      }
-      // Restart auto-scroll with new direction when language changes
-      this.stopAutoScroll();
-      this.startAutoScroll();
-    });
+    this.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(ev => {
+        this.currentLang = ev.lang || this.currentLang;
+        this.buildKpiCards();
+        // Recalculate completed percentage when language changes
+        if (this.requestSummaryData) {
+          this.calculateCompletedPercentage();
+        }
+        // Restart auto-scroll with new direction when language changes
+        this.stopAutoScroll();
+        this.startAutoScroll();
+      });
   }
   leftExpanded = true;
 
@@ -428,6 +438,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.stopAutoScroll();
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
   // slide kpi end
 
@@ -546,6 +558,36 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isValidCodeState(code: string | null, state: string | null): boolean {
     return !!(code && state && code.trim() !== '' && state.trim() !== '');
+  }
+
+  private loadLatestNotifications(): void {
+    this.isLoadingNotifications = true;
+    const request: GetAllNotificationRequestDto = {
+      skip: 0,
+      take: 5
+    };
+
+    this.notificationApiService.getAllNotifications(request)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result) => {
+          this.latestNotifications = result.data || [];
+          this.isLoadingNotifications = false;
+        },
+        error: (error) => {
+          this.isLoadingNotifications = false;
+          this.latestNotifications = [];
+        }
+      });
+  }
+
+  getNotificationTitle(notification: NotificationDto): string {
+    return this.currentLang === 'ar' ? notification.titleAr : notification.titleEn;
+  }
+
+  getNotificationMessage(notification: NotificationDto): string {
+    const message = this.currentLang === 'ar' ? notification.messageAr : notification.messageEn;
+    return message || '';
   }
 
   uaepassCheckCode(code: string, state: string) {
