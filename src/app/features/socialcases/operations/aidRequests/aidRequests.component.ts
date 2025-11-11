@@ -1,6 +1,12 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  NgForm,
+  Validators,
+} from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, Subject } from 'rxjs';
@@ -8,8 +14,23 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
-import { Pagination, FndLookUpValuesSelect2RequestDto, SelectdropdownResultResults, Select2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { aidRequestsDto, aidRequestsShowDetailsDto, aidRequestsStudyDetailsDto, filteraidRequestsByIdDto, filteraidRequestsDto } from '../../../../core/dtos/socialcases/operations/aidRequests.dto';
+import {
+  Pagination,
+  FndLookUpValuesSelect2RequestDto,
+  SelectdropdownResultResults,
+  Select2RequestDto,
+  SelectdropdownResult,
+  reportPrintConfig,
+} from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import {
+  aidRequestsDto,
+  aidRequestsShowDetailsDto,
+  aidRequestsStudyDetailsDto,
+  aidRequestsZakatDto,
+  filteraidRequestsByIdDto,
+  filteraidRequestsDto,
+  quotationHeaderDto,
+} from '../../../../core/dtos/socialcases/operations/aidRequests.dto';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../../core/services/openStandardReportService.service';
 import { Select2Service } from '../../../../core/services/Select2.service';
@@ -17,18 +38,23 @@ import { aidRequestsService } from '../../../../core/services/socialcases/operat
 
 declare var bootstrap: any;
 
-
 @Component({
   selector: 'app-aidRequests',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    NgSelectComponent,
+    GenericDataTableComponent,
+  ],
   templateUrl: './aidRequests.component.html',
-  styleUrls: ['./aidRequests.component.scss']
+  styleUrls: ['./aidRequests.component.scss'],
 })
-
 export class aidRequestsComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
-  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
+  @ViewChild(GenericDataTableComponent)
+  genericTable!: GenericDataTableComponent;
 
   private destroy$ = new Subject<void>();
   userEntityForm!: FormGroup;
@@ -40,8 +66,7 @@ export class aidRequestsComponent {
   gridOptions: GridOptions = { pagination: false };
   searchText: string = '';
   columnHeaderMap: { [key: string]: string } = {};
-  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
-
+  rowActions: Array<{ label: string; icon?: string; action: string }> = [];
 
   searchParams = new filteraidRequestsDto();
   searchSelect2Params = new FndLookUpValuesSelect2RequestDto();
@@ -49,7 +74,10 @@ export class aidRequestsComponent {
 
   loadgridData: aidRequestsDto[] = [];
   loadformData: aidRequestsShowDetailsDto = {} as aidRequestsShowDetailsDto;
-  loadstudydetailformData: aidRequestsStudyDetailsDto = {} as aidRequestsStudyDetailsDto;
+  loadstudydetailformData: aidRequestsStudyDetailsDto =
+    {} as aidRequestsStudyDetailsDto;
+  loadZakatdetailformData: aidRequestsZakatDto = {} as aidRequestsZakatDto;
+  loadQuotationDetailFormData: quotationHeaderDto = {} as quotationHeaderDto;
 
   entitySelect2: SelectdropdownResultResults[] = [];
   loadingentity = false;
@@ -108,17 +136,24 @@ export class aidRequestsComponent {
     private Select2Service: Select2Service,
     private fb: FormBuilder
   ) {
-
     this.userEntityForm = this.fb.group({
-      entityIds: [[], Validators.required]
+      entityIds: [[], Validators.required],
     });
   }
 
   ngOnInit(): void {
     this.buildColumnDefs();
     this.rowActions = [
-      { label: this.translate.instant('Common.ViewInfo'), icon: 'icon-frame-view', action: 'onViewInfo' },
-      { label: this.translate.instant('Common.StudyDetails'), icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' },
+      {
+        label: this.translate.instant('Common.ViewInfo'),
+        icon: 'icon-frame-view',
+        action: 'onViewInfo',
+      },
+      {
+        label: this.translate.instant('Common.StudyDetails'),
+        icon: 'icon-frame-view',
+        action: 'onViewStudyDetailsInfo',
+      },
     ];
 
     this.entitySearchInput$
@@ -189,13 +224,14 @@ export class aidRequestsComponent {
     this.searchSelect2Params.take = this.entitysearchParams.take;
 
     this.Select2Service.getEntitySelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.entitySelect2 = [...this.entitySelect2, ...newItems];
           this.loadingentity = false;
         },
-        error: () => this.loadingentity = false
+        error: () => (this.loadingentity = false),
       });
   }
 
@@ -230,13 +266,14 @@ export class aidRequestsComponent {
     this.searchSelect2Params.take = this.caseNamesearchParams.take;
 
     this.Select2Service.getNameSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.caseNameSelect2 = [...this.caseNameSelect2, ...newItems];
           this.loadingcaseName = false;
         },
-        error: () => this.loadingcaseName = false
+        error: () => (this.loadingcaseName = false),
       });
   }
 
@@ -271,13 +308,14 @@ export class aidRequestsComponent {
     this.searchSelect2Params.take = this.branchsearchParams.take;
 
     this.Select2Service.getCasesBranchSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.branchSelect2 = [...this.branchSelect2, ...newItems];
           this.loadingbranch = false;
         },
-        error: () => this.loadingbranch = false
+        error: () => (this.loadingbranch = false),
       });
   }
 
@@ -312,13 +350,14 @@ export class aidRequestsComponent {
     this.searchSelect2Params.take = this.aidTypesearchParams.take;
 
     this.Select2Service.getRequestTypeSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.aidTypeSelect2 = [...this.aidTypeSelect2, ...newItems];
           this.loadingaidType = false;
         },
-        error: () => this.loadingaidType = false
+        error: () => (this.loadingaidType = false),
       });
   }
 
@@ -353,13 +392,14 @@ export class aidRequestsComponent {
     this.searchSelect2Params.take = this.nationalitysearchParams.take;
 
     this.Select2Service.getNationalitySelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.nationalitySelect2 = [...this.nationalitySelect2, ...newItems];
           this.loadingnationality = false;
         },
-        error: () => this.loadingnationality = false
+        error: () => (this.loadingnationality = false),
       });
   }
 
@@ -394,13 +434,14 @@ export class aidRequestsComponent {
     this.searchSelect2Params.take = this.citysearchParams.take;
 
     this.Select2Service.getCitySelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.citySelect2 = [...this.citySelect2, ...newItems];
           this.loadingcity = false;
         },
-        error: () => this.loadingcity = false
+        error: () => (this.loadingcity = false),
       });
   }
 
@@ -435,14 +476,15 @@ export class aidRequestsComponent {
     this.searchSelect2Params.take = this.gendersearchParams.take;
 
     this.Select2Service.getGenderSelect2Array(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResultResults[]) => {
           const newItems = response || [];
           this.genderSelect2 = [...this.genderSelect2, ...newItems];
 
           this.loadinggender = false;
         },
-        error: () => this.loadinggender = false
+        error: () => (this.loadinggender = false),
       });
   }
 
@@ -450,7 +492,6 @@ export class aidRequestsComponent {
     if (selected) {
       this.searchParams.gender = selected.id?.toString() ?? null;
       this.searchParams.genderstr = selected.text;
-
     } else {
       this.searchParams.gender = null;
       this.searchParams.genderstr = null;
@@ -478,13 +519,14 @@ export class aidRequestsComponent {
     this.searchSelect2Params.take = this.sourcesearchParams.take;
 
     this.Select2Service.getAidRequestSourceSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.sourceSelect2 = [...this.sourceSelect2, ...newItems];
           this.loadingsource = false;
         },
-        error: () => this.loadingsource = false
+        error: () => (this.loadingsource = false),
       });
   }
 
@@ -504,7 +546,10 @@ export class aidRequestsComponent {
   onPageChange(event: { pageNumber: number; pageSize: number }): void {
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
-    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+    this.getLoadDataGrid({
+      pageNumber: event.pageNumber,
+      pageSize: event.pageSize,
+    });
   }
 
   onTableSearch(text: string): void {
@@ -531,41 +576,35 @@ export class aidRequestsComponent {
   }
 
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
-    if (!this.searchParams.entityId) {
-      this.translate
-        .get(['AidRequestsResourceName.entityId', 'Common.Required'])
-        .subscribe(translations => {
-          this.toastr.warning(
-            `${translations['AidRequestsResourceName.entityId']} ${translations['Common.Required']}`,
-            'Warning'
-          );
-        });
-      return;
-    }
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;
     this.searchParams.skip = skip;
-    this.searchParams.take = event.pageSize;    
+    this.searchParams.take = event.pageSize;
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
     this.spinnerService.show();
-    this.aidRequestsService.getAll(cleanedFilters)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+    this.aidRequestsService
+      .getAll(cleanedFilters)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: any) => {
           this.loadgridData = response.data || [];
           this.loadgridData.forEach((c) => {
-            c.comitY_DATEstr = this.openStandardReportService.formatDate(c.comitY_DATE ?? null);
+            c.comityDateStr = this.openStandardReportService.formatDate(
+              c.comityDate ?? null
+            );
           });
           this.pagination.totalCount = response.data[0]?.rowsCount || 0;
           this.spinnerService.hide();
         },
         error: () => {
           this.spinnerService.hide();
-        }
+        },
       });
   }
 
-  getFormDatabyId(caseCode: string, entityId: string, caseid:string): void {
+  getFormDatabyId(caseCode: string, entityId: string, caseid: string): void {
+    console.log('caseCode', caseCode);
     const params: filteraidRequestsByIdDto = {
       entityId: entityId,
       caseCode: caseCode,
@@ -576,249 +615,448 @@ export class aidRequestsComponent {
 
     this.spinnerService.show();
     forkJoin({
-      showdetailheaderdata: this.aidRequestsService.getShowDetailById(params) as Observable<aidRequestsShowDetailsDto | aidRequestsShowDetailsDto[]>,
+      showdetailheaderdata: this.aidRequestsService.getShowDetailById(
+        params
+      ) as Observable<aidRequestsShowDetailsDto | aidRequestsShowDetailsDto[]>,
     })
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (result) => {
           this.loadformData = Array.isArray(result.showdetailheaderdata)
-            ? result.showdetailheaderdata[0] ?? ({} as aidRequestsShowDetailsDto)
+            ? result.showdetailheaderdata[0] ??
+              ({} as aidRequestsShowDetailsDto)
             : result.showdetailheaderdata;
-          this.loadformData.aiD_REQUEST_DATEstr = this.openStandardReportService.formatDate(this.loadformData.aiD_REQUEST_DATE ?? null);
-          this.loadformData.casE_BIRTH_DATEstr = this.openStandardReportService.formatDate(this.loadformData.casE_BIRTH_DATE ?? null);
-          this.loadformData.iD_END_DATEstr = this.openStandardReportService.formatDate(this.loadformData.iD_END_DATE ?? null);
-          this.loadformData.wifeiD_END_DATEstr = this.openStandardReportService.formatDate(this.loadformData.wifeiD_END_DATE ?? null);
-          const modalElement = document.getElementById('viewdetails');;
+          this.loadformData.aidRequestDateStr =
+            this.openStandardReportService.formatDate(
+              this.loadformData.aidRequestDate ?? null
+            );
+          this.loadformData.caseBirthDateStr =
+            this.openStandardReportService.formatDate(
+              this.loadformData.caseBirthDate ?? null
+            );
+          this.loadformData.idEndDateStr =
+            this.openStandardReportService.formatDate(
+              this.loadformData.idEndDate ?? null
+            );
+          this.loadformData.wifeIdEndDateStr =
+            this.openStandardReportService.formatDate(
+              this.loadformData.wifeIdEndDate ?? null
+            );
+          const modalElement = document.getElementById('viewdetails');
           if (modalElement) {
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
-          };
+          }
 
           this.spinnerService.hide();
         },
         error: (err) => {
           this.spinnerService.hide();
-        }
+        },
       });
   }
 
-
-  getStudyDetailsFormDatabyId(source: string, entityId: string, studyId: string): void {
+  getStudyDetailsFormDatabyId(
+    source: string,
+    entityId: string,
+    studyId: string,
+    headerId: string
+  ): void {
     const params: filteraidRequestsByIdDto = {
       entityId: entityId,
       studyId: studyId,
-      headerId: null,
+      headerId: headerId,
       caseCode: null,
-      caseId:null
+      caseId: null,
     };
 
     this.spinnerService.show();
     if (source == '1') {
       forkJoin({
-        showstudydetaildata: this.aidRequestsService.getAidRequestsStudyById(params) as Observable<aidRequestsStudyDetailsDto | aidRequestsStudyDetailsDto[]>,
+        showstudydetaildata: this.aidRequestsService.getAidRequestsStudyById(
+          params
+        ) as Observable<
+          aidRequestsStudyDetailsDto | aidRequestsStudyDetailsDto[]
+        >,
       })
-        .pipe(takeUntil(this.destroy$)).subscribe({
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
           next: (result) => {
-            this.loadstudydetailformData = Array.isArray(result.showstudydetaildata)
-              ? result.showstudydetaildata[0] ?? ({} as aidRequestsStudyDetailsDto)
+            this.loadstudydetailformData = Array.isArray(
+              result.showstudydetaildata
+            )
+              ? result.showstudydetaildata[0] ??
+                ({} as aidRequestsStudyDetailsDto)
               : result.showstudydetaildata;
 
-            const modalElement = document.getElementById('viewstudydetails');;
+            const modalElement = document.getElementById('viewstudydetails');
             if (modalElement) {
               const modal = new bootstrap.Modal(modalElement);
               modal.show();
-            };
+            }
 
             this.spinnerService.hide();
           },
           error: (err) => {
             this.toastr.info(this.translate.instant(err.error.reason));
             this.spinnerService.hide();
-          }
+          },
         });
-    }
-
-    else if (source == '5') {
+    } else if (source == '5') {
       forkJoin({
-        showstudydetaildata: this.aidRequestsService.getQuotationHeaderDetailById(params) as Observable<aidRequestsStudyDetailsDto | aidRequestsStudyDetailsDto[]>,
+        showquotationDetailData:
+          this.aidRequestsService.getQuotationHeaderDetailById(
+            params
+          ) as Observable<quotationHeaderDto | quotationHeaderDto[]>,
       })
-        .pipe(takeUntil(this.destroy$)).subscribe({
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
           next: (result) => {
-            this.loadstudydetailformData = Array.isArray(result.showstudydetaildata)
-              ? result.showstudydetaildata[0] ?? ({} as aidRequestsStudyDetailsDto)
-              : result.showstudydetaildata;
+            this.loadQuotationDetailFormData = Array.isArray(
+              result.showquotationDetailData
+            )
+              ? result.showquotationDetailData[0] ?? ({} as quotationHeaderDto)
+              : result.showquotationDetailData;
 
-            const modalElement = document.getElementById('viewquotationdetails');;
+            const modalElement = document.getElementById(
+              'viewquotationdetails'
+            );
             if (modalElement) {
               const modal = new bootstrap.Modal(modalElement);
               modal.show();
-            };
+            }
 
             this.spinnerService.hide();
           },
           error: (err) => {
             this.toastr.info(this.translate.instant(err.error.reason));
             this.spinnerService.hide();
-          }
+          },
         });
-    }
-
-    else if (source == '6') {
+    } else if (source == '6') {
       forkJoin({
-        showstudydetaildata: this.aidRequestsService.getZakatStudyDetailById(params) as Observable<aidRequestsStudyDetailsDto | aidRequestsStudyDetailsDto[]>,
+        showZakatdetaildata: this.aidRequestsService.getZakatStudyDetailById(
+          params
+        ) as Observable<aidRequestsZakatDto | aidRequestsZakatDto[]>,
       })
-        .pipe(takeUntil(this.destroy$)).subscribe({
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
           next: (result) => {
-            this.loadstudydetailformData = Array.isArray(result.showstudydetaildata)
-              ? result.showstudydetaildata[0] ?? ({} as aidRequestsStudyDetailsDto)
-              : result.showstudydetaildata;
+            this.loadZakatdetailformData = Array.isArray(
+              result.showZakatdetaildata
+            )
+              ? result.showZakatdetaildata[0] ?? ({} as aidRequestsZakatDto)
+              : result.showZakatdetaildata;
 
-            const modalElement = document.getElementById('viewzakatdetails');;
+            const modalElement = document.getElementById('viewzakatdetails');
             if (modalElement) {
               const modal = new bootstrap.Modal(modalElement);
               modal.show();
-            };
+            }
 
             this.spinnerService.hide();
           },
           error: (err) => {
             this.spinnerService.hide();
-          }
+          },
         });
-    }
-
-    else {
+    } else {
       this.translate
-        .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
-        .subscribe(translations => {
-          this.toastr.error(
-            `${translations['mainApplyServiceResourceName.NoPermission']}`,
-          );
+        .get(['InvalidSourceError', 'Common.Required'])
+        .subscribe((translations) => {
+          this.toastr.warning(`${translations['InvalidSourceError']}`);
         });
       this.spinnerService.hide();
       return;
     }
     this.spinnerService.hide();
-
   }
 
   public buildColumnDefs(): void {
-    this.translate.get([
-      'AidRequestsResourceName.entitY_NAME',
-      'AidRequestsResourceName.namE_AR',
-      'AidRequestsResourceName.source',
-      'AidRequestsResourceName.aiD_TYPE',
-      'AidRequestsResourceName.comitY_DATE',
-      'AidRequestsResourceName.requesT_TYPE_DESC',
-      'AidRequestsResourceName.status',
-      'AidRequestsResourceName.caseNo',
-      'AidRequestsResourceName.amount'
-    ]).subscribe(translations => {
-      this.columnDefs = [
-        { headerName: translations['AidRequestsResourceName.entitY_NAME'], field: 'entitY_NAME', width: 200 },
-        { headerName: translations['AidRequestsResourceName.namE_AR'], field: 'namE_AR', width: 200 },
-        { headerName: translations['AidRequestsResourceName.source'], field: 'sourcE_DESC', width: 200 },
-        { headerName: translations['AidRequestsResourceName.aiD_TYPE'], field: 'aiD_TYPE', width: 200 },
-        { headerName: translations['AidRequestsResourceName.comitY_DATE'], field: 'comitY_DATEstr', width: 200 },
-        { headerName: translations['AidRequestsResourceName.requesT_TYPE_DESC'], field: 'requesT_TYPE_DESC', width: 200 },
-        { headerName: translations['AidRequestsResourceName.status'], field: 'statuS_DESC', width: 200 },
-        { headerName: translations['AidRequestsResourceName.caseNo'], field: 'casE_NO', width: 200 },
-        { headerName: translations['AidRequestsResourceName.amount'], field: 'amount', width: 200 },
-      ];
-    });
+    this.translate
+      .get([
+        'AidRequestsResourceName.entitY_NAME',
+        'AidRequestsResourceName.namE_AR',
+        'AidRequestsResourceName.source',
+        'AidRequestsResourceName.aiD_TYPE',
+        'AidRequestsResourceName.comitY_DATE',
+        'AidRequestsResourceName.requesT_TYPE_DESC',
+        'AidRequestsResourceName.status',
+        'AidRequestsResourceName.caseNo',
+        'AidRequestsResourceName.amount',
+      ])
+      .subscribe((translations) => {
+        this.columnDefs = [
+          {
+            headerName: translations['AidRequestsResourceName.entitY_NAME'],
+            field: 'entityName',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.namE_AR'],
+            field: 'nameAr',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.source'],
+            field: 'sourceDesc',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.aiD_TYPE'],
+            field: 'aidType',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.comitY_DATE'],
+            field: 'comityDateStr',
+            width: 200,
+          },
+          {
+            headerName:
+              translations['AidRequestsResourceName.requesT_TYPE_DESC'],
+            field: 'reqTypeDesc',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.status'],
+            field: 'statDesc',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.caseNo'],
+            field: 'caseNo',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.amount'],
+            field: 'amount',
+            width: 200,
+          },
+        ];
+      });
   }
 
-  onTableAction(event: { action: string, row: any }) {
+  onTableAction(event: { action: string; row: any }) {
     var data = event.row.composeKey.split(',');
     var source = data[0];
     var studyId = data[1];
-    var caseCode = data[2];
-    var entityId = data[3];
-    var caseid = data[4];
+    var caseCode = event.row.caseCode;
+    var entityId = event.row.entityId;
+    var caseid = event.row.caseId;
+    var headerId = event.row.headerId;
 
     if (event.action === 'onViewInfo') {
       this.getFormDatabyId(caseCode, entityId, caseid);
     }
     if (event.action === 'onViewStudyDetailsInfo') {
-      this.getStudyDetailsFormDatabyId(source, entityId, studyId);
+      this.getStudyDetailsFormDatabyId(source, entityId, studyId, headerId);
     }
   }
 
-
   printExcel(): void {
-    if (!this.searchParams.entityId) {
-      this.translate.get(['AidRequestsResourceName.entityId', 'Common.Required'])
-        .subscribe(translations => {
-          this.toastr.warning(`${translations['AidRequestsResourceName.entityId']} ${translations['Common.Required']}`, 'Warning');
-        });
-      return;
-    }
     this.spinnerService.show();
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
 
-    this.aidRequestsService.getAll({ ...cleanedFilters, skip: 0, take: 1 })
+    this.aidRequestsService
+      .getAll({ ...cleanedFilters, skip: 0, take: 1 })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse.data[0]?.rowsCount || initialResponse?.data?.length || 0;
+          const totalCount =
+            initialResponse.data[0]?.rowsCount ||
+            initialResponse?.data?.length ||
+            0;
 
-          this.aidRequestsService.getAll({ ...cleanedFilters, skip: 0, take: totalCount })
+          this.aidRequestsService
+            .getAll({ ...cleanedFilters, skip: 0, take: totalCount })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
                 const data = response?.data || [];
 
                 const reportConfig: reportPrintConfig = {
-                  title: this.translate.instant('AidRequestsResourceName.Title'),
-                  reportTitle: this.translate.instant('AidRequestsResourceName.Title'),
-                  fileName: `${this.translate.instant('AidRequestsResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  title: this.translate.instant(
+                    'AidRequestsResourceName.Title'
+                  ),
+                  reportTitle: this.translate.instant(
+                    'AidRequestsResourceName.Title'
+                  ),
+                  fileName: `${this.translate.instant(
+                    'AidRequestsResourceName.Title'
+                  )}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
-                    { label: this.translate.instant('AidRequestsResourceName.entityId'), value: this.searchParams.entityIdstr },
-                    { label: this.translate.instant('AidRequestsResourceName.caseName'), value: this.searchParams.caseNamestr },
-                    { label: this.translate.instant('AidRequestsResourceName.branch'), value: this.searchParams.branchstr },
-                    { label: this.translate.instant('AidRequestsResourceName.aidType'), value: this.searchParams.aidTypestr },
-                    { label: this.translate.instant('AidRequestsResourceName.nationality'), value: this.searchParams.nationalitystr },
-                    { label: this.translate.instant('AidRequestsResourceName.city'), value: this.searchParams.citystr },
-                    { label: this.translate.instant('AidRequestsResourceName.gender'), value: this.searchParams.genderstr },
-                    { label: this.translate.instant('AidRequestsResourceName.source'), value: this.searchParams.sourcestr },
-                    { label: this.translate.instant('AidRequestsResourceName.caseIdNo'), value: this.searchParams.caseIdNo },
-                    { label: this.translate.instant('AidRequestsResourceName.wifeIdNo'), value: this.searchParams.wifeIdNo },
-                    { label: this.translate.instant('AidRequestsResourceName.phone'), value: this.searchParams.phone },
-                    { label: this.translate.instant('AidRequestsResourceName.dateFrom'), value: this.searchParams.dateFrom ? new Date(this.searchParams.dateFrom).toLocaleDateString() : '' },
-                    { label: this.translate.instant('AidRequestsResourceName.dateTo'), value: this.searchParams.dateTo ? new Date(this.searchParams.dateTo).toLocaleDateString() : '' },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.entityId'
+                      ),
+                      value: this.searchParams.entityIdstr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.caseName'
+                      ),
+                      value: this.searchParams.caseNamestr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.branch'
+                      ),
+                      value: this.searchParams.branchstr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.aidType'
+                      ),
+                      value: this.searchParams.aidTypestr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.nationality'
+                      ),
+                      value: this.searchParams.nationalitystr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.city'
+                      ),
+                      value: this.searchParams.citystr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.gender'
+                      ),
+                      value: this.searchParams.genderstr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.source'
+                      ),
+                      value: this.searchParams.sourcestr,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.caseIdNo'
+                      ),
+                      value: this.searchParams.caseIdNo,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.wifeIdNo'
+                      ),
+                      value: this.searchParams.wifeIdNo,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.phone'
+                      ),
+                      value: this.searchParams.phone,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.dateFrom'
+                      ),
+                      value: this.searchParams.dateFrom
+                        ? new Date(
+                            this.searchParams.dateFrom
+                          ).toLocaleDateString()
+                        : '',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.dateTo'
+                      ),
+                      value: this.searchParams.dateTo
+                        ? new Date(
+                            this.searchParams.dateTo
+                          ).toLocaleDateString()
+                        : '',
+                    },
                   ],
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },
-                    { label: this.translate.instant('AidRequestsResourceName.entitY_NAME'), key: 'entitY_NAME' },
-                    { label: this.translate.instant('AidRequestsResourceName.namE_AR'), key: 'namE_AR' },
-                    { label: this.translate.instant('AidRequestsResourceName.sourcE_DESC'), key: 'sourcE_DESC' },
-                    { label: this.translate.instant('AidRequestsResourceName.aiD_TYPE'), key: 'aiD_TYPE' },
-                    { label: this.translate.instant('AidRequestsResourceName.comitY_DATE'), key: 'comitY_DATEstr' },
-                    { label: this.translate.instant('AidRequestsResourceName.casE_ID_NUMBER'), key: 'casE_ID_NUMBER' },
-                    { label: this.translate.instant('AidRequestsResourceName.requesT_TYPE_DESC'), key: 'requesT_TYPE_DESC' },
-                    { label: this.translate.instant('AidRequestsResourceName.statuS_DESC'), key: 'statuS_DESC' },
-                    { label: this.translate.instant('AidRequestsResourceName.casE_NO'), key: 'casE_NO' },
-                    { label: this.translate.instant('AidRequestsResourceName.amount'), key: 'amountstr' },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.entitY_NAME'
+                      ),
+                      key: 'entitY_NAME',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.namE_AR'
+                      ),
+                      key: 'namE_AR',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.sourcE_DESC'
+                      ),
+                      key: 'sourcE_DESC',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.aiD_TYPE'
+                      ),
+                      key: 'aiD_TYPE',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.comitY_DATE'
+                      ),
+                      key: 'comitY_DATEstr',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.casE_ID_NUMBER'
+                      ),
+                      key: 'casE_ID_NUMBER',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.requesT_TYPE_DESC'
+                      ),
+                      key: 'requesT_TYPE_DESC',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.statuS_DESC'
+                      ),
+                      key: 'statuS_DESC',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.casE_NO'
+                      ),
+                      key: 'casE_NO',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'AidRequestsResourceName.amount'
+                      ),
+                      key: 'amountstr',
+                    },
                   ],
                   data: data.map((item: any, index: number) => ({
                     ...item,
-                    rowNo: index + 1
+                    rowNo: index + 1,
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: ['amountstr']
+                  totalKeys: ['amountstr'],
                 };
 
-                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.openStandardReportService.openStandardReportExcel(
+                  reportConfig
+                );
                 this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();
-              }
+              },
             });
         },
         error: () => {
           this.spinnerService.hide();
-        }
+        },
       });
   }
 }
-

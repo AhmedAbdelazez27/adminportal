@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { catchError, EMPTY, forkJoin, Observable, Subscription, tap, throwError } from 'rxjs';
+import { catchError, EMPTY, finalize, forkJoin, Observable, Subscription, tap, throwError } from 'rxjs';
 import { ColDef } from 'ag-grid-community';
 import { MainApplyService } from '../../../core/services/mainApplyService/mainApplyService.service';
 import { WorkFlowCommentsService } from '../../../core/services/mainApplyService/workFlowComments.service';
@@ -21,6 +21,7 @@ import { AdvertisementsService } from '../../../core/services/mainApplyService/a
 import { environment } from '../../../../environments/environment';
 import { arrayMinLength, dateRangeValidator } from '../../../shared/customValidators';
 import { SpinnerService } from '../../../core/services/spinner.service';
+import { MainApplyServiceReportService } from '../../../core/services/mainApplyService/mainApplyService.reports';
 
 declare var bootstrap: any;
 
@@ -211,7 +212,8 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private spinnerService: SpinnerService
+    private spinnerService: SpinnerService,
+    private mainApplyServiceReportService: MainApplyServiceReportService
   ) {
     this.initializeCommentForm();
     this.userForm = this.fb.group({
@@ -240,6 +242,33 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
+
+  ngAfterViewInit(): void {
+    const modalEl = document.getElementById('addcommentsModal');
+    if (modalEl) {
+      modalEl.addEventListener('hidden.bs.modal', () => {
+        this.resetForm();
+      });
+    }
+
+    const modalReturnModificationEl = document.getElementById('myModalReturnModification');
+    if (modalReturnModificationEl) {
+      modalReturnModificationEl.addEventListener('hidden.bs.modal', () => {
+        this.resetModificationForm();
+      });
+    }
+  }
+
+  resetForm(): void {
+    this.userForm.reset();
+    this.submitted = false;
+  }
+
+  resetModificationForm(): void {
+    this.returnModificationForm.reset();
+    this.submitted = false;
+  }
+
   
   private initializeColumns(): void {
     this.workFlowCommentsColumns = [
@@ -961,24 +990,38 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
     }
 
     const formData = this.returnModificationForm.value;
+    this.spinnerService.show();
 
     this.submitModficationReasonComment().subscribe({
       next: () => {
         this.returnModificationForm.reset();
         this.submitted = false;
+
         const modalElement = document.getElementById('myModalReturnModification');
         if (modalElement) {
           const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
           modal.hide();
         }
-        this.updateStatus("7", formData.returnModificationreasonTxt);
-        this.spinnerService.hide();
+
+        // Wait for updateStatus to complete before hiding spinner
+        this.updateStatus("7", formData.returnModificationreasonTxt).subscribe({
+          next: () => {
+            this.spinnerService.hide();
+          },
+          error: () => {
+            this.spinnerService.hide();
+            this.toastr.error(this.translate.instant('TOAST.SAVE_FAILED'));
+          }
+        });
       },
       error: () => {
+        this.spinnerService.hide();
         this.toastr.error(this.translate.instant('TOAST.SAVE_FAILED'));
       }
     });
   }
+
+
 
 
   submitRejectComment(): Observable<any> {
@@ -1050,7 +1093,7 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
   }
 
 
-  updateStatus(status: string, reason: string): void {
+  updateStatus(status: string, reason: string): Observable<any> {
     this.spinnerService.show();
 
     const param: UpdateStatusDto = {
@@ -1065,9 +1108,10 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
       endDate: null
     };
 
-    this.mainApplyServiceService.update(param).subscribe({
-      next: (res: any) => {
-        if (res == "UpdateServiceStatusSuccess") {
+    // ✅ Return the observable instead of subscribing here
+    return this.mainApplyServiceService.update(param).pipe(
+      tap((res: any) => {
+        if (res === "UpdateServiceStatusSuccess") {
           let msg = '';
           switch (status) {
             case '1': msg = this.translate.instant('mainApplyServiceResourceName.agree'); break;
@@ -1084,15 +1128,17 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
         } else {
           this.toastr.warning(this.translate.instant('Common.ERROR'));
         }
-        this.spinnerService.hide();
-      },
-      error: (err) => {
+      }),
+      catchError((err) => {
         this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
+        return throwError(() => err);
+      }),
+      finalize(() => {
         this.spinnerService.hide();
-      }
-    });
+      })
+    );
   }
-  
+
   // Comment management methods
   addWorkFlowComment(): void {
     if (!this.commentForm.get('comment')?.value?.trim() || !this.targetWorkFlowStep?.id) {
@@ -1433,6 +1479,10 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
         this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
         this.spinnerService.hide();
         this.loadMainApplyServiceData();
+        this.userForm.reset();
+        const modalElement = document.getElementById('addcommentsModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        modalInstance?.hide();
       },
       error: (err) => {
         this.toastr.error(this.translate.instant('COMMON.ERROR_SAVING_DATA'));
@@ -1475,5 +1525,38 @@ export class ViewAdvertisementComponent implements OnInit, OnDestroy {
       return h?.noteAr || h?.serviceStatusName || '';
     }
     return h?.noteEn || h?.serviceStatusName || '';
+  }
+
+  get isApproved(): boolean {
+    const lang = (this.translate?.currentLang || localStorage.getItem('lang') || 'ar').toLowerCase();
+
+    if (lang.startsWith('ar')) {
+      return this.mainApplyService?.serviceStatusName?.includes('معتمد') ?? false;
+    }
+    else {
+      return this.mainApplyService?.serviceStatusName?.includes('Approved') ?? false;
+    }
+  }
+
+
+  printReport(): void {
+    const serviceId = this.mainApplyService?.serviceId ?? 0;
+    const id = this.mainApplyService?.id ?? '';
+    var serviceStatusName = null
+    const lang = (this.translate?.currentLang || localStorage.getItem('lang') || 'ar').toLowerCase();
+    if (lang.startsWith('ar')) {
+      serviceStatusName =
+        (this.mainApplyService?.serviceStatusName?.includes("معتمد") ?? false)
+          ? 'final'
+          : 'initial';
+    }
+    else {
+      serviceStatusName =
+        (this.mainApplyService?.serviceStatusName?.includes("Approved") ?? false)
+          ? 'final'
+          : 'initial';
+    }
+
+    this.mainApplyServiceReportService.printDatabyId(id.toString(), serviceId, serviceStatusName)
   }
 }

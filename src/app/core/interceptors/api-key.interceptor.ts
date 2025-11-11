@@ -7,10 +7,11 @@ export const apiKeyInterceptor: HttpInterceptorFn = (req, next) => {
   const clonedReq = req.clone({
     withCredentials: true,
     setHeaders: {
-      ApiKey: 'Apikeytest' ,
-      'Accept-Language':language
-    }
+      ApiKey: 'Apikeytest',
+      'Accept-Language': language,
+      
+    },
   });
 
-  return next(clonedReq); 
+  return next(clonedReq);
 };

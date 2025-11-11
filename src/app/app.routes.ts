@@ -22,6 +22,7 @@ export const routes: Routes = [
   { path: 'reset-password', component: ResetpasswordComponent },
   { path: 'MainServices', component: MainApplyServiceComponent },
   { path: 'GlAccounts', component: GlAccountComponent },
+  { path: 'report-view/:id/:serviceId/:status', loadComponent: () => import('./pages/report-viewer/report-viewer.component').then(m => m.ReportViewerComponent) },
 
   {
     path: '',

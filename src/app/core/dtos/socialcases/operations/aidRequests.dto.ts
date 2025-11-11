@@ -1,5 +1,3 @@
-
-
 export class filteraidRequestsDto {
   aidType: string | null = null;
   aidTypestr: string | null = null;
@@ -33,108 +31,136 @@ export class filteraidRequestsDto {
 }
 
 export class aidRequestsDto {
-  aiD_TYPE?: string | null = null;
-  amount?: string | null = null;
-  amountstr?: string | null = null;
-  brancH_DESC?: string | null = null;
-  casE_BIRTH_DATE?: Date | null = null;
-  casE_BIRTH_DATEstr?: string | null = null;
-  casE_ID_NUMBER?: string | null = null;
-  casE_NO?: string | null = null;
-  citY_DESC?: string | null = null;
-  comitY_DATE?: Date | null = null;
-  comitY_DATEstr?: string | null = null;
   composeKey?: string | null = null;
-  entitY_NAME?: string | null = null;
-  entity_ID?: string | null = null;
-  gendeR_DESC?: string | null = null;
-  namE_AR?: string | null = null;
-  nationalitY_DESC?: string | null = null;
-  requesT_TYPE_DESC?: string | null = null;
-  rowsCount?: string | null = null;
-  sourcE_DESC?: string | null = null;
-  statuS_DESC?: string | null = null;
-}
-
-export class aidRequestsShowDetailsDto {
-  aiD_REQUEST_DATE?: Date | null = null;
-  aiD_REQUEST_DATEstr?: string | null = null;
-  branchE_CODE?: string | null = null;
-  branchE_NAME?: string | null = null;
-  casE_BIRTH_DATE?: Date | null = null;
-  casE_BIRTH_DATEstr?: string | null = null;
-  casE_ID?: string | null = null;
-  casE_ID_NUMBER?: string | null = null;
-  casE_CODE?: string | null = null;
-  casE_SIGNATURE?: string | null = null;
-  casE_SIGNATURE_DESC?: string | null = null;
-  citY_DESC?: string | null = null;
-  citY_ID?: string | null = null;
-  familY_PERS_NO?: string | null = null;
-  gendeR_DESC?: string | null = null;
-  gender?: string | null = null;
-  healtH_STATUS_DESC?: string | null = null;
+  studyId?: string | null = null;
+  caseNo?: string | null = null;
+  caseCode?: string | null = null;
+  entityId?: string | null = null;
+  entityName?: string | null = null;
+  caseId?: string | null = null;
+  nameAr?: string | null = null;
+  caseBirthDate?: Date | null = null;
+  genderDesc?: string | null = null;
+  nationalityDesc?: string | null = null;
+  caseIdNumber?: string | null = null;
+  brandDesc?: string | null = null;
+  reqTypeDesc?: string | null = null;
+  cityDesc?: string | null = null;
+  sourceDesc?: string | null = null;
+  statDesc?: string | null = null;
+  comityDate?: Date | null = null;
+  amount?: number | null = null;
+  aidType?: string | null = null;
   htel?: string | null = null;
-  iD_END_DATE?: Date | null = null;
-  iD_END_DATEstr?: string | null = null;
+  caseBirthDateStr?: string | null = null;
+  comityDateStr?: string | null = null;
+  amountStr?: string | null = null;
+}
+export class aidRequestsShowDetailsDto {
+  caseCode?: string | null = null;
+  entityId?: string | null = null;
+  referenceNumber?: string | null = null;
+  aidRequestDate?: Date | null = null;
+  aidRequestDateStr?: string | null = null;
+  requestType?: string | null = null;
+  requestTypeDesc?: string | null = null;
+  nameAr?: string | null = null;
+  nationalityDesc?: string | null = null;
+  gender?: string | null = null;
+  genderDesc?: string | null = null;
+  caseBirthDate?: Date | null = null;
+  caseBirthDateStr?: string | null = null;
+  jobDesc?: string | null = null;
+  healthStatusDesc?: string | null = null;
+  maritalStatusDesc?: string | null = null;
+  caseIdNumber?: string | null = null;
+  idEndDate?: Date | null = null;
+  idEndDateStr?: string | null = null;
   incomes?: string | null = null;
-  joB_DESC?: string | null = null;
-  maritaL_STATUS_DESC?: string | null = null;
+
+  htel?: string | null = null;
   mtel?: string | null = null;
-  mteL2?: string | null = null;
-  namE_AR?: string | null = null;
-  nationalitY_DESC?: string | null = null;
-  referencenumber?: string | null = null;
-  requesT_TYPE?: string | null = null;
-  requesT_TYPE_DESC?: string | null = null;
-  statuscode?: string | null = null;
-  statuscodE_DESC?: string | null = null;
-  toT_DUTIES?: string | null = null;
-  toT_INCOME?: string | null = null;
-  wifE_ID?: string | null = null;
-  wifE_NAME?: string | null = null;
-  wifeiD_END_DATE?: Date | null = null;
-  wifeiD_END_DATEstr?: string | null = null;
-  entitY_ID?: string | null = null;
+  mtel2?: string | null = null;
+  familyPersNo?: string | null = null;
+  totIncome?: number | null = null;
+  totDuties?: number | null = null;
+  statusCode?: string | null = null;
+  statusCodeDesc?: string | null = null;
+  wifeId?: string | null = null;
+  wifeName?: string | null = null;
+  wifeIdEndDate?: Date | null = null;
+  wifeIdEndDateStr?: string | null = null;
+  caseId?: string | null = null;
+  brancheCode?: number | null = null;
+  brancheName?: string | null = null;
+  cityId?: string | null = null;
+  cityDesc?: string | null = null;
 }
 
 export class aidRequestsStudyDetailsDto {
-  amount?: string | null = null;
-  amountstr?: string | null = null;
-  categorY_DESC?: string | null = null;
-  casE_CODE?: string | null = null;
-  casE_DESCRIPTION?: string | null = null;
-  casE_ID?: string | null = null;
-  casE_INFO_BREIF?: string | null = null;
-  casE_SIGNATURE?: string | null = null;
-  casE_SIGNATURE_DESC?: string | null = null;
-  datA_ENTRY?: string | null = null;
-  entitY_ID?: string | null = null;
-  entitY_NAME?: string | null = null;
-  entitY_NAME_EN?: string | null = null;
-  headeR_DATE?: Date | null = null;
-  headeR_DATEstr?: string | null = null;
-  headeR_ID?: string | null = null;
-  headeR_NO?: string | null = null;
-  mgR_DECEISION?: string | null = null;
-  namE_AR?: string | null = null;
-  notes?: string | null = null;
-  quotatioN_DATE?: Date | null = null;
-  quotatioN_DATEstr?: string | null = null;
-  quotatioN_NUMBER?: string | null = null;
+  studyId?: string | null = null;
+  entityId?: string | null = null;
+  txDate?: Date | null = null;
+  txDateStr?: string | null = null;
+  dataEntry?: string | null = null;
+  researcherName?: string | null = null;
+  caseInfoBreif?: string | null = null;
+  caseDescription?: string | null = null;
+  mgrDecision?: string | null = null;
+  caseSignature?: string | null = null;
+  caseSignatureDesc?: string | null = null;
+  caseCode?: string | null = null;
+  caseId?: string | null = null;
+  studyNo?: string | null = null;
   refrenceNo?: string | null = null;
-  researcheR_DESC?: string | null = null;
-  researcheR_NAME?: string | null = null;
-  statuS_DESC?: string | null = null;
+  nameAr?: string | null = null;
+  entityName?: string | null = null;
+  entityNameEn?: string | null = null;
+  amount?: number | null = null;
+  amountStr?: string | null = null;
+  categoryDesc?: string | null = null;
+  headerDate?: Date | null = null;
+  headerDateStr?: string | null = null;
+  headerId?: string | null = null;
+  headerNo?: string | null = null;
+  notes?: string | null = null;
+  quotationDate?: Date | null = null;
+  quotationDateStr?: string | null = null;
+  quotationNumber?: string | null = null;
+  researcherDesc?: string | null = null;
+  statusDesc?: string | null = null;
   status?: string | null = null;
-  studY_ID?: string | null = null;
-  studY_NO?: string | null = null;
-  tX_DATE?: Date | null = null;
-  tX_DATEstr?: string | null = null;
-  vendoR_NAME?: string | null = null;
+  vendorName?: string | null = null;
 }
-
-
+export class aidRequestsZakatDto {
+  headerId?: string | null = null;
+  entityId?: string | null = null;
+  headerNo?: string | null = null;
+  statusDesc?: string | null = null;
+  caseCode?: string | null = null;
+  researcherDesc?: string | null = null;
+  categoryDesc?: string | null = null;
+  amount?: number | null = null;
+  amountStr?: string | null = null;
+  notes?: string | null = null;
+  refrenceNo?: string | null = null;
+  nameAr?: string | null = null;
+  headerDate?: Date | null = null;
+  headerDateStr?: string | null = null;
+}
+export class quotationHeaderDto {
+  headerId?: string | null = null;
+  entityId?: string | null = null;
+  quotationNumber?: string | null = null;
+  quotationDate?: Date | null = null;
+  quotationDateStr?: string | null = null;
+  status?: string | null = null;
+  statusDesc?: string | null = null;
+  caseCode?: string | null = null;
+  vendorName?: string | null = null;
+  refrenceNo?: string | null = null;
+  nameAr?: string | null = null;
+}
 export class filteraidRequestsByIdDto {
   headerId: string | null = null;
   studyId: string | null = null;
@@ -142,5 +168,3 @@ export class filteraidRequestsByIdDto {
   caseCode: string | null = null;
   caseId: string | null = null;
 }
-
-

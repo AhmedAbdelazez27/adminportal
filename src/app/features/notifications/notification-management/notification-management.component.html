@@ -162,7 +162,8 @@
 
           <!-- Title Section -->
           <div class="row mb-4">
-            <div class="col-md-6">
+            <!-- English Title -->
+            <div class="col-12" *ngIf="!isArabicLanguage()">
               <div class="detail-section">
                 <label class="form-label">{{ 'NOTIFICATIONS.FIELDS.TITLE' | translate }} (English)</label>
                 <div class="detail-value">
@@ -172,7 +173,8 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <!-- Arabic Title -->
+            <div class="col-12" *ngIf="isArabicLanguage()">
               <div class="detail-section">
                 <label class="form-label">{{ 'NOTIFICATIONS.FIELDS.TITLE' | translate }} (Arabic)</label>
                 <div class="detail-value">
@@ -186,7 +188,8 @@
 
           <!-- Message Section -->
           <div class="row mb-4">
-            <div class="col-md-6">
+            <!-- English Message -->
+            <div class="col-12" *ngIf="!isArabicLanguage()">
               <div class="detail-section">
                 <label class="form-label">{{ 'NOTIFICATIONS.FIELDS.MESSAGE' | translate }} (English)</label>
                 <div class="detail-value">
@@ -196,7 +199,8 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <!-- Arabic Message -->
+            <div class="col-12" *ngIf="isArabicLanguage()">
               <div class="detail-section">
                 <label class="form-label">{{ 'NOTIFICATIONS.FIELDS.MESSAGE' | translate }} (Arabic)</label>
                 <div class="detail-value">

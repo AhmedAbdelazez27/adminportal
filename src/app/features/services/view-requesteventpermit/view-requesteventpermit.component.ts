@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { catchError, EMPTY, forkJoin, Observable, Subscription, tap, throwError } from 'rxjs';
+import { catchError, EMPTY, forkJoin, Observable, of, Subscription, tap, throwError } from 'rxjs';
 import { RequestPlaintAttachmentDto } from '../../../core/dtos/service/RequestPlaint/request-plaint.dto';
 import { arrayMinLength, dateRangeValidator } from '../../../shared/customValidators';
 import { AuthService } from '../../../core/services/auth.service';
@@ -23,6 +23,7 @@ import { AdvertisementsService } from '../../../core/services/mainApplyService/a
 import { environment } from '../../../../environments/environment';
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
+import { MainApplyServiceReportService } from '../../../core/services/mainApplyService/mainApplyService.reports';
 
 declare var bootstrap: any;
 
@@ -332,6 +333,7 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
     private _AdvertisementsService: AdvertisementsService,
     private spinnerService: SpinnerService,
     private openStandardReportService: openStandardReportService,
+    private mainApplyServiceReportService: MainApplyServiceReportService
   ) {
     this.commentForm = this.fb.group({ comment: [''] });
     this.initAdvertisementForm();
@@ -356,6 +358,33 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
+
+  ngAfterViewInit(): void {
+    const modalEl = document.getElementById('addcommentsModal');
+    if (modalEl) {
+      modalEl.addEventListener('hidden.bs.modal', () => {
+        this.resetForm();
+      });
+    }
+
+    const modalReturnModificationEl = document.getElementById('myModalReturnModification');
+    if (modalReturnModificationEl) {
+      modalReturnModificationEl.addEventListener('hidden.bs.modal', () => {
+        this.resetModificationForm();
+      });
+    }
+  }
+
+  resetForm(): void {
+    this.userForm.reset();
+    this.submitted = false;
+  }
+
+  resetModificationForm(): void {
+    this.returnModificationForm.reset();
+    this.submitted = false;
+  }
+
 
   private loadMainApplyServiceData(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -1389,105 +1418,119 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
     }
 
     const formData = this.returnModificationForm.value;
+    this.spinnerService.show();
 
     this.submitModficationReasonComment().subscribe({
       next: () => {
         this.returnModificationForm.reset();
         this.submitted = false;
+
         const modalElement = document.getElementById('myModalReturnModification');
         if (modalElement) {
           const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
           modal.hide();
         }
-        this.updateStatus("7", formData.returnModificationreasonTxt);
-        this.spinnerService.hide();
+
+        // Wait for updateStatus to complete before hiding spinner
+        this.updateStatus("7", formData.returnModificationreasonTxt).subscribe({
+          next: () => {
+            this.spinnerService.hide();
+          },
+          error: () => {
+            this.spinnerService.hide();
+            this.toastr.error(this.translate.instant('TOAST.SAVE_FAILED'));
+          }
+        });
       },
       error: () => {
+        this.spinnerService.hide();
         this.toastr.error(this.translate.instant('TOAST.SAVE_FAILED'));
       }
     });
   }
 
-
   onNotesChange(newValue: string) {
     this.originalNotes = newValue;
   }
 
-  updateStatus(status: string, reason: string): void {
+  updateStatus(status: string, reason: string): Observable<any> {
     const tentDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.tentDate ?? null);
     const startDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.startDate ?? null);
     const endDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.endDate ?? null);
 
-    //if (status === "1" && !tentDate && this.firstLevel && this.mainApplyService?.serviceId === 1) {
-    //  this.toastr.warning(this.translate.instant('VALIDATION.TENT_DATE_REQUIRED'));
-    //  return;
-    //}
-
     if (status === "1" && !endDate && this.mainApplyService?.serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.END_DATE_REQUIRED'));
-      return;
+      return of(null); // return empty observable to keep signature consistent
     }
+
     if (status === "1" && !startDate && this.mainApplyService?.serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.START_DATE_REQUIRED'));
-      return;
+      return of(null);
     }
+
     this.spinnerService.show();
 
-    this.saveNotesForApproving().subscribe({
-      next: () => {
-        const param: UpdateStatusDto = {
-          mainApplyServiceId: Number(this.mainApplyService?.id),
-          workFlowId: this.originalworkFlowId,
-          serviceStatus: Number(status),
-          userId: localStorage.getItem('userId'),
-          reason: reason,
-          notesForApproving: this.originalNotes,
-          tentConstructDate: this.addReason.fastingTentService?.tentConstructDate ?? null,
-          startDate: this.addReason.fastingTentService?.startDate ?? null,
-          endDate: this.addReason.fastingTentService?.endDate ?? null
-        };
+    return new Observable((observer) => {
+      this.saveNotesForApproving().subscribe({
+        next: () => {
+          const param: UpdateStatusDto = {
+            mainApplyServiceId: Number(this.mainApplyService?.id),
+            workFlowId: this.originalworkFlowId,
+            serviceStatus: Number(status),
+            userId: localStorage.getItem('userId'),
+            reason: reason,
+            notesForApproving: this.originalNotes,
+            tentConstructDate: this.addReason.fastingTentService?.tentConstructDate ?? null,
+            startDate: this.addReason.fastingTentService?.startDate ?? null,
+            endDate: this.addReason.fastingTentService?.endDate ?? null
+          };
 
-        this.mainApplyServiceService.update(param).subscribe({
-          next: (res: any) => {
-            if (res == "UpdateServiceStatusSuccess") {
-              let msg = '';
-              switch (res.name) {
-                case '1': msg = this.translate.instant('mainApplyServiceResourceName.agree'); break;
-                case '2': msg = this.translate.instant('mainApplyServiceResourceName.disagree'); break;
-                case '3': msg = this.translate.instant('mainApplyServiceResourceName.disagreereas'); break;
-                case '7': msg = this.translate.instant('mainApplyServiceResourceName.ReturnForModifications'); break;
-                case '4': msg = this.translate.instant('mainApplyServiceResourceName.can'); break;
-                case '5': msg = this.translate.instant('mainApplyServiceResourceName.res'); break;
-                default: msg = this.translate.instant('mainApplyServiceResourceName.uploadsuccess');
-              }
+          this.mainApplyServiceService.update(param).subscribe({
+            next: (res: any) => {
+              if (res == "UpdateServiceStatusSuccess") {
+                let msg = '';
+                switch (status) {
+                  case '1': msg = this.translate.instant('mainApplyServiceResourceName.agree'); break;
+                  case '2': msg = this.translate.instant('mainApplyServiceResourceName.disagree'); break;
+                  case '3': msg = this.translate.instant('mainApplyServiceResourceName.disagreereas'); break;
+                  case '7': msg = this.translate.instant('mainApplyServiceResourceName.ReturnForModifications'); break;
+                  case '4': msg = this.translate.instant('mainApplyServiceResourceName.can'); break;
+                  case '5': msg = this.translate.instant('mainApplyServiceResourceName.res'); break;
+                  default: msg = this.translate.instant('mainApplyServiceResourceName.uploadsuccess');
+                }
 
-              this.toastr.success(msg);
+                this.toastr.success(msg);
 
-              if (status != "5") {
-                this.spinnerService.hide();
-                this.loadMainApplyServiceData();
+                if (status != "5") {
+                  this.loadMainApplyServiceData();
+                } else {
+                  this.handleStatus5();
+                  this.loadMainApplyServiceData();
+                }
+
+                observer.next(res);
+                observer.complete();
               } else {
-                this.handleStatus5();
-                this.loadMainApplyServiceData();
+                this.toastr.warning(this.translate.instant('Common.ERROR'));
+                observer.error(res);
               }
-            } else {
-              this.toastr.warning(this.translate.instant('Common.ERROR'));
-              this.spinnerService.hide();
-            }
-          },
-          error: (err) => {
-            this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
-            this.spinnerService.hide();
-          },
-          complete: () => this.spinnerService.hide()
-        });
-      },
-      error: () => {
-        this.spinnerService.hide();
-        this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
-      }
+            },
+            error: (err) => {
+              this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
+              observer.error(err);
+            },
+            complete: () => this.spinnerService.hide()
+          });
+        },
+        error: (err) => {
+          this.spinnerService.hide();
+          this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
+          observer.error(err);
+        }
+      });
     });
   }
+
 
   saveNotesForApproving(): Observable<any> {
     this.submitted = true;
@@ -1609,6 +1652,10 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
         this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
         this.spinnerService.hide();
         this.loadMainApplyServiceData();
+        this.userForm.reset();
+        const modalElement = document.getElementById('addcommentsModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        modalInstance?.hide();
       },
       error: (err) => {
         this.toastr.error(this.translate.instant('COMMON.ERROR_SAVING_DATA'));
@@ -1655,6 +1702,38 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
     return h?.noteEn || h?.serviceStatusName || '';
   }
 
+  get isApproved(): boolean {
+    const lang = (this.translate?.currentLang || localStorage.getItem('lang') || 'ar').toLowerCase();
+
+    if (lang.startsWith('ar')) {
+      return this.mainApplyService?.serviceStatusName?.includes('معتمد') ?? false;
+    }
+    else {
+      return this.mainApplyService?.serviceStatusName?.includes('Approved') ?? false;
+    }
+  }
+
+
+  printReport(): void {
+    const serviceId = this.mainApplyService?.serviceId ?? 0;
+    const id = this.mainApplyService?.id ?? '';
+    var serviceStatusName = null
+    const lang = (this.translate?.currentLang || localStorage.getItem('lang') || 'ar').toLowerCase();
+    if (lang.startsWith('ar')) {
+      serviceStatusName =
+        (this.mainApplyService?.serviceStatusName?.includes("معتمد") ?? false)
+          ? 'final'
+          : 'initial';
+    }
+    else {
+      serviceStatusName =
+        (this.mainApplyService?.serviceStatusName?.includes("Approved") ?? false)
+          ? 'final'
+          : 'initial';
+    }
+
+    this.mainApplyServiceReportService.printDatabyId(id.toString(), serviceId, serviceStatusName)
+  }
 }
 
 

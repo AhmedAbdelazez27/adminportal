@@ -5,13 +5,15 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { EMPTY, Observable, Subscription, catchError, tap, throwError } from 'rxjs';
-import * as L from 'leaflet';
+import { EMPTY, Observable, Subscription, catchError, of, tap, throwError } from 'rxjs';
 import { ColDef } from 'ag-grid-community';
 import { environment } from '../../../../environments/environment';
 
+declare var google: any;
+
 import { MainApplyService } from '../../../core/services/mainApplyService/mainApplyService.service';
 import { AttachmentService } from '../../../core/services/attachments/attachment.service';
+declare var bootstrap: any;
 
 import {
   mainApplyServiceDto,
@@ -34,6 +36,7 @@ import { AttachmentBase64Dto, CreateWorkFlowCommentDto, WorkflowCommentsType } f
 import { SpinnerService } from '../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../core/services/openStandardReportService.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { MainApplyServiceReportService } from '../../../core/services/mainApplyService/mainApplyService.reports';
 
 // Service Status Enum (matching backend enum)
 declare var bootstrap: any;
@@ -98,8 +101,8 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   // Map variables
   map: any;
   markers: any[] = [];
-  customIcon: any;
   mapLoadError: boolean = false;
+  isGoogleMapsLoaded: boolean = false;
 
   // Comment form
   commentForm!: FormGroup;
@@ -132,6 +135,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   serviceDepartmentActions: number[] = [];
   userForm: FormGroup;
   allApproved: boolean = false;
+  lang: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -146,9 +150,9 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     private spinnerService: SpinnerService,
     private openStandardReportService: openStandardReportService,
     private authService: AuthService,
+    private mainApplyServiceReportService: MainApplyServiceReportService
   ) {
     this.initializeCommentForm();
-    this.initializeMapIcon();
     this.rejectResonsForm = this.fb.group({
       reasonTxt: [[], Validators.required]
     });
@@ -162,7 +166,13 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadMainApplyServiceData();
+    this.loadGoogleMapsScript().then(() => {
+      this.isGoogleMapsLoaded = true;
+      this.loadMainApplyServiceData();
+    }).catch(() => {
+      this.mapLoadError = true;
+      this.toastr.error(this.translate.instant('COMMON.GOOGLE_MAPS_LOAD_ERROR'));
+    });
     this.loadCommentAttachmentConfigs();
 
     // Add window resize listener for map responsiveness
@@ -170,12 +180,15 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
     // Add window focus listener to refresh map when tab becomes active
     window.addEventListener('focus', this.onWindowFocus.bind(this));
+    this.lang = localStorage.getItem('lang');
+
+    console.log("this.lang", this.lang);
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
     if (this.map) {
-      this.map.remove();
+      this.cleanupMap();
     }
 
     // Remove window resize listener
@@ -185,12 +198,39 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     window.removeEventListener('focus', this.onWindowFocus.bind(this));
   }
 
+  ngAfterViewInit(): void {
+    const modalEl = document.getElementById('addcommentsModal');
+    if (modalEl) {
+      modalEl.addEventListener('hidden.bs.modal', () => {
+        this.resetForm();
+      });
+    }
+
+    const modalReturnModificationEl = document.getElementById('myModalReturnModification');
+    if (modalReturnModificationEl) {
+      modalReturnModificationEl.addEventListener('hidden.bs.modal', () => {
+        this.resetModificationForm();
+      });
+    }
+  }
+
+  resetForm(): void {
+    this.userForm.reset();
+    this.submitted = false;
+  }
+
+  resetModificationForm(): void {
+    this.returnModificationForm.reset();
+    this.submitted = false;
+  }
+
+
   private onWindowResize(): void {
     if (this.map) {
       // Small delay to ensure DOM has updated
       setTimeout(() => {
-        if (this.map) {
-          this.map.invalidateSize();
+        if (this.map && google && google.maps) {
+          google.maps.event.trigger(this.map, 'resize');
         }
       }, 100);
     }
@@ -200,8 +240,8 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     // Refresh map when window gains focus (e.g., when switching back to tab)
     if (this.fastingTentService?.location?.locationCoordinates) {
       setTimeout(() => {
-        if (this.map) {
-          this.map.invalidateSize();
+        if (this.map && google && google.maps) {
+          google.maps.event.trigger(this.map, 'resize');
         } else {
           this.initializeMap();
         }
@@ -213,7 +253,13 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   refreshMap(): void {
     if (this.fastingTentService?.location?.locationCoordinates) {
       this.cleanupMap();
-      setTimeout(() => this.initializeMap(), 100);
+      setTimeout(() => {
+        if (this.map && google && google.maps) {
+          google.maps.event.trigger(this.map, 'resize');
+        } else {
+          this.initializeMap();
+        }
+      }, 100);
     }
   }
 
@@ -223,13 +269,37 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     });
   }
 
-  private initializeMapIcon(): void {
-    this.customIcon = L.divIcon({
-      className: 'custom-marker',
-      html: '<div style="background-color: #ff4444; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); position: relative;"><div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid #ff4444;"></div></div>',
-      iconSize: [20, 28],
-      iconAnchor: [10, 28],
-      popupAnchor: [0, -28],
+  private loadGoogleMapsScript(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (typeof google !== 'undefined' && google.maps) {
+        resolve();
+        return;
+      }
+
+      if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+        const checkInterval = setInterval(() => {
+          if (typeof google !== 'undefined' && google.maps) {
+            clearInterval(checkInterval);
+            resolve();
+          }
+        }, 100);
+
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          if (typeof google === 'undefined' || !google.maps) {
+            reject(new Error('Google Maps failed to load'));
+          }
+        }, 10000);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}&libraries=places`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Failed to load Google Maps'));
+      document.head.appendChild(script);
     });
   }
 
@@ -486,14 +556,17 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     if (this.map) {
       // Remove all markers
       this.markers.forEach(marker => {
-        if (marker && marker.remove) {
-          marker.remove();
+        if (marker && marker.setMap) {
+          marker.setMap(null);
         }
       });
       this.markers = [];
 
-      // Remove map
-      this.map.remove();
+      // Clear map container
+      const mapElement = document.getElementById('viewMap');
+      if (mapElement) {
+        mapElement.innerHTML = '';
+      }
       this.map = null;
     }
 
@@ -507,27 +580,36 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
   // Map initialization for location display
   private initializeMap(): void {
+    if (!this.isGoogleMapsLoaded) {
+      this.loadGoogleMapsScript().then(() => {
+        this.isGoogleMapsLoaded = true;
+        this.initializeMap();
+      }).catch(() => {
+        this.mapLoadError = true;
+        this.toastr.error(this.translate.instant('COMMON.GOOGLE_MAPS_LOAD_ERROR'));
+      });
+      return;
+    }
 
     if (!this.fastingTentService?.location?.locationCoordinates) {
-      this.toastr.warning('No location coordinates available to display on map');
+      this.toastr.warning(this.translate.instant('COMMON.NO_COORDINATES_AVAILABLE'));
       return;
     }
 
     // Use a longer timeout and multiple checks to ensure DOM is ready
     let attempts = 0;
-    const maxAttempts = 20; // Increased max attempts
+    const maxAttempts = 20;
 
     const checkAndInitialize = () => {
       const mapElement = document.getElementById('viewMap');
       attempts++;
 
       if (mapElement) {
-        // Check if map container has proper dimensions
         if (mapElement.offsetWidth === 0 || mapElement.offsetHeight === 0) {
           if (attempts < maxAttempts) {
             setTimeout(checkAndInitialize, 500);
           } else {
-            this.toastr.error('Map container has no dimensions after multiple attempts');
+            this.toastr.error(this.translate.instant('COMMON.MAP_CONTAINER_NO_DIMENSIONS'));
           }
           return;
         }
@@ -536,7 +618,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       } else if (attempts < maxAttempts) {
         setTimeout(checkAndInitialize, 200);
       } else {
-        this.toastr.error('Failed to initialize map: map container not found');
+        this.toastr.error(this.translate.instant('COMMON.MAP_CONTAINER_NOT_FOUND'));
       }
     };
 
@@ -608,13 +690,13 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         }
       }
 
+      // Clean up existing map
       if (this.map) {
-        this.map.remove();
-        this.map = null;
+        this.cleanupMap();
       }
 
       if (!this.fastingTentService?.location?.locationCoordinates) {
-        this.toastr.error('No location coordinates available');
+        this.toastr.error(this.translate.instant('COMMON.NO_LOCATION_COORDINATES'));
         this.mapLoadError = true;
         return;
       }
@@ -654,7 +736,6 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         } else if (coordString.includes('\t')) {
           coordinates = coordString.split('\t');
         } else {
-          // Try fallback parsing as last resort
           this.toastr.error(this.translate.instant('FASTING_TENT.INVALID_COORDINATES_SEPARATOR', { 0: coordString }));
           this.mapLoadError = true;
           return;
@@ -670,11 +751,8 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       const lat = parseFloat(coordinates[0].trim());
       const lng = parseFloat(coordinates[1].trim());
 
-
-
       // Check if coordinates are valid numbers
       if (isNaN(lat) || isNaN(lng)) {
-
         this.toastr.error(this.translate.instant('FASTING_TENT.INVALID_COORDINATES_NUMBERS'));
         this.mapLoadError = true;
         return;
@@ -682,13 +760,11 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
       // Check if coordinates are reasonable (not 0,0 which is usually invalid)
       if (lat === 0 && lng === 0) {
-
         this.toastr.warning(this.translate.instant('FASTING_TENT.INVALID_COORDINATES_ZERO'));
       }
 
       // Check if coordinates are within reasonable ranges
       if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-
         this.toastr.error(this.translate.instant('FASTING_TENT.INVALID_COORDINATES_RANGE'));
         this.mapLoadError = true;
         return;
@@ -696,68 +772,59 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
       // Validate coordinate ranges (roughly UAE bounds)
       if (lat < 22 || lat > 27 || lng < 51 || lng > 57) {
-
         this.toastr.warning(this.translate.instant('FASTING_TENT.INVALID_COORDINATES_UAE'));
       }
 
       try {
-        this.map = L.map('viewMap').setView([lat, lng], 15);
+        // Initialize Google Map
+        const mapOptions = {
+          center: { lat: lat, lng: lng },
+          zoom: 15,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          zoomControl: true,
+          mapTypeControl: false,
+          scaleControl: true,
+          streetViewControl: false,
+          rotateControl: false,
+          fullscreenControl: true
+        };
+
+        this.map = new google.maps.Map(mapElement, mapOptions);
+
+        // Add marker for the location
+        const marker = new google.maps.Marker({
+          position: { lat: lat, lng: lng },
+          map: this.map,
+          title: this.fastingTentService.location.locationName || this.translate.instant('FASTING_TENT.SELECTED_LOCATION')
+        });
+
+        // Add info window
+        const infoWindow = new google.maps.InfoWindow({
+          content: this.fastingTentService.location.locationName || this.translate.instant('FASTING_TENT.SELECTED_LOCATION')
+        });
+
+        marker.addListener('click', () => {
+          infoWindow.open(this.map, marker);
+        });
+
+        // Open info window by default
+        infoWindow.open(this.map, marker);
+
+        this.markers = [marker];
+
+        // Force map refresh after a short delay
+        setTimeout(() => {
+          if (this.map) {
+            google.maps.event.trigger(this.map, 'resize');
+          }
+        }, 1000);
+
+        this.mapLoadError = false;
       } catch (mapError) {
         this.toastr.error(this.translate.instant('FASTING_TENT.MAP_CREATION_FAILED'));
         this.mapLoadError = true;
         return;
       }
-
-      // Add tile layer with fallback
-      try {
-        const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors',
-          maxZoom: 19,
-          minZoom: 5,
-          crossOrigin: true,
-        });
-
-        // Add error handler for tile loading issues
-        tileLayer.on('tileerror', (error) => {
-          // Fallback to alternative tile server
-          this.addFallbackTileLayer();
-        });
-
-        tileLayer.addTo(this.map);
-      } catch (tileError) {
-        this.toastr.error(this.translate.instant('FASTING_TENT.MAP_TILES_FAILED'));
-        this.mapLoadError = true;
-        return;
-      }
-
-      // Add marker for the location
-      try {
-        const marker = L.marker([lat, lng], { icon: this.customIcon })
-          .addTo(this.map)
-          .bindPopup(this.fastingTentService.location.locationName || this.translate.instant('FASTING_TENT.SELECTED_LOCATION'))
-          .openPopup();
-
-        this.markers = [marker];
-      } catch (markerError) {
-        this.toastr.error('Failed to add location marker');
-        this.mapLoadError = true;
-        return;
-      }
-
-      // Force map refresh after a short delay to ensure proper rendering
-      setTimeout(() => {
-        if (this.map) {
-          this.map.invalidateSize();
-
-          // Check if tiles are loaded
-          const tileLayersLoaded = this.checkTileLayersLoaded();
-          if (!tileLayersLoaded) {
-            this.addFallbackTileLayer();
-          }
-        }
-      }, 1000);
-
-      this.mapLoadError = false;
 
     } catch (error) {
       this.toastr.error('Failed to initialize map');
@@ -765,39 +832,6 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     }
   }
 
-  private addFallbackTileLayer(): void {
-    // Remove existing tile layers first
-    this.map.eachLayer((layer: any) => {
-      if (layer instanceof L.TileLayer) {
-        this.map.removeLayer(layer);
-      }
-    });
-
-    // Add alternative tile layer
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors (fallback)',
-      maxZoom: 19,
-      minZoom: 5,
-    }).addTo(this.map);
-
-    this.toastr.info('Using fallback map tiles');
-  }
-
-  private checkTileLayersLoaded(): boolean {
-    try {
-      const mapContainer = document.getElementById('viewMap');
-      if (!mapContainer) return false;
-
-      const leafletTiles = mapContainer.querySelectorAll('.leaflet-tile');
-      const loadedTiles = mapContainer.querySelectorAll('.leaflet-tile-loaded');
-
-
-      // If we have some tiles and at least 50% are loaded, consider it successful
-      return leafletTiles.length > 0 && (loadedTiles.length / leafletTiles.length) >= 0.5;
-    } catch (error) {
-      return false;
-    }
-  }
 
   // Comment attachment configuration loading
   loadCommentAttachmentConfigs(): void {
@@ -1430,99 +1464,116 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     }
 
     const formData = this.returnModificationForm.value;
+    this.spinnerService.show();
 
     this.submitModficationReasonComment().subscribe({
       next: () => {
         this.returnModificationForm.reset();
         this.submitted = false;
+
         const modalElement = document.getElementById('myModalReturnModification');
         if (modalElement) {
           const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
           modal.hide();
         }
-        this.updateStatus("7", formData.returnModificationreasonTxt);
-        this.spinnerService.hide();
+
+        // Wait for updateStatus to complete before hiding spinner
+        this.updateStatus("7", formData.returnModificationreasonTxt).subscribe({
+          next: () => {
+            this.spinnerService.hide();
+          },
+          error: () => {
+            this.spinnerService.hide();
+            this.toastr.error(this.translate.instant('TOAST.SAVE_FAILED'));
+          }
+        });
       },
       error: () => {
+        this.spinnerService.hide();
         this.toastr.error(this.translate.instant('TOAST.SAVE_FAILED'));
       }
     });
   }
 
-
   onNotesChange(newValue: string) {
     this.originalNotes = newValue;
   }
 
-  updateStatus(status: string, reason: string): void {
+  updateStatus(status: string, reason: string): Observable<any> {
     const tentDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.tentDate ?? null);
     const startDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.startDate ?? null);
     const endDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.endDate ?? null);
 
     if (status === "1" && !endDate && this.mainApplyService?.serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.END_DATE_REQUIRED'));
-      return;
+      return of(null); // return empty observable to keep signature consistent
     }
+
     if (status === "1" && !startDate && this.mainApplyService?.serviceId === 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.START_DATE_REQUIRED'));
-      return;
+      return of(null);
     }
 
     this.spinnerService.show();
 
-    this.saveNotesForApproving().subscribe({
-      next: () => {
-        const param: UpdateStatusDto = {
-          mainApplyServiceId: Number(this.mainApplyService?.id),
-          workFlowId: this.originalworkFlowId,
-          serviceStatus: Number(status),
-          userId: localStorage.getItem('userId'),
-          reason: reason,
-          notesForApproving: this.originalNotes,
-          tentConstructDate: this.addReason.fastingTentService?.tentConstructDate ?? null,
-          startDate: this.addReason.fastingTentService?.startDate ?? null,
-          endDate: this.addReason.fastingTentService?.endDate ?? null
-        };
+    return new Observable((observer) => {
+      this.saveNotesForApproving().subscribe({
+        next: () => {
+          const param: UpdateStatusDto = {
+            mainApplyServiceId: Number(this.mainApplyService?.id),
+            workFlowId: this.originalworkFlowId,
+            serviceStatus: Number(status),
+            userId: localStorage.getItem('userId'),
+            reason: reason,
+            notesForApproving: this.originalNotes,
+            tentConstructDate: this.addReason.fastingTentService?.tentConstructDate ?? null,
+            startDate: this.addReason.fastingTentService?.startDate ?? null,
+            endDate: this.addReason.fastingTentService?.endDate ?? null
+          };
 
-        this.mainApplyServiceService.update(param).subscribe({
-          next: (res: any) => {
-            if (res == "UpdateServiceStatusSuccess") {
-              let msg = '';
-              switch (res.name) {
-                case '1': msg = this.translate.instant('mainApplyServiceResourceName.agree'); break;
-                case '2': msg = this.translate.instant('mainApplyServiceResourceName.disagree'); break;
-                case '3': msg = this.translate.instant('mainApplyServiceResourceName.disagreereas'); break;
-                case '7': msg = this.translate.instant('mainApplyServiceResourceName.ReturnForModifications'); break;
-                case '4': msg = this.translate.instant('mainApplyServiceResourceName.can'); break;
-                case '5': msg = this.translate.instant('mainApplyServiceResourceName.res'); break;
-                default: msg = this.translate.instant('mainApplyServiceResourceName.uploadsuccess');
-              }
+          this.mainApplyServiceService.update(param).subscribe({
+            next: (res: any) => {
+              if (res == "UpdateServiceStatusSuccess") {
+                let msg = '';
+                switch (status) {
+                  case '1': msg = this.translate.instant('mainApplyServiceResourceName.agree'); break;
+                  case '2': msg = this.translate.instant('mainApplyServiceResourceName.disagree'); break;
+                  case '3': msg = this.translate.instant('mainApplyServiceResourceName.disagreereas'); break;
+                  case '7': msg = this.translate.instant('mainApplyServiceResourceName.ReturnForModifications'); break;
+                  case '4': msg = this.translate.instant('mainApplyServiceResourceName.can'); break;
+                  case '5': msg = this.translate.instant('mainApplyServiceResourceName.res'); break;
+                  default: msg = this.translate.instant('mainApplyServiceResourceName.uploadsuccess');
+                }
 
-              this.toastr.success(msg);
+                this.toastr.success(msg);
 
-              if (status != "5") {
-                this.spinnerService.hide();
-                this.loadMainApplyServiceData();
+                if (status != "5") {
+                  this.loadMainApplyServiceData();
+                } else {
+                  this.handleStatus5();
+                  this.loadMainApplyServiceData();
+                }
+
+                observer.next(res);
+                observer.complete();
               } else {
-                this.handleStatus5();
-                this.loadMainApplyServiceData();
+                this.toastr.warning(this.translate.instant('Common.ERROR'));
+                observer.error(res);
               }
-            } else {
-              this.toastr.warning(this.translate.instant('Common.ERROR'));
-              this.spinnerService.hide();
-            }
-          },
-          error: (err) => {
-            this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
-            this.spinnerService.hide();
-          },
-          complete: () => this.spinnerService.hide()
-        });
-      },
-      error: () => {
-        this.spinnerService.hide();
-        this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
-      }
+            },
+            error: (err) => {
+              this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
+              observer.error(err);
+            },
+            complete: () => this.spinnerService.hide()
+          });
+        },
+        error: (err) => {
+          this.spinnerService.hide();
+          this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
+          observer.error(err);
+        }
+      });
     });
   }
 
@@ -1646,6 +1697,10 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
         this.spinnerService.hide();
         this.loadMainApplyServiceData();
+        this.userForm.reset();
+        const modalElement = document.getElementById('addcommentsModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        modalInstance?.hide();
       },
       error: (err) => {
         this.toastr.error(this.translate.instant('COMMON.ERROR_SAVING_DATA'));
@@ -1692,4 +1747,36 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     return h?.noteEn || h?.serviceStatusName || '';
   }
 
+  get isApproved(): boolean {
+    const lang = (this.translate?.currentLang || localStorage.getItem('lang') || 'ar').toLowerCase();
+
+    if (lang.startsWith('ar')) {
+      return this.mainApplyService?.serviceStatusName?.includes('معتمد') ?? false;
+    }
+    else {
+      return this.mainApplyService?.serviceStatusName?.includes('Approved') ?? false;
+    }
+  }
+
+
+  printReport(): void {
+    const serviceId = this.mainApplyService?.serviceId ?? 0;
+    const id = this.mainApplyService?.id ?? '';
+    var serviceStatusName = null
+    const lang = (this.translate?.currentLang || localStorage.getItem('lang') || 'ar').toLowerCase();
+    if (lang.startsWith('ar')) {
+      serviceStatusName =
+        (this.mainApplyService?.serviceStatusName?.includes("معتمد") ?? false)
+          ? 'final'
+          : 'initial';
+    }
+    else {
+      serviceStatusName =
+        (this.mainApplyService?.serviceStatusName?.includes("Approved") ?? false)
+          ? 'final'
+          : 'initial';
+    }
+    
+    this.mainApplyServiceReportService.printDatabyId(id.toString(), serviceId, serviceStatusName)
+  }
 }

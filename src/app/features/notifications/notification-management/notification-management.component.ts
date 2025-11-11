@@ -42,8 +42,8 @@ export class NotificationManagementComponent implements OnInit, OnDestroy {
   columnDefs: ColDef[] = [];
   columnHeaderMap: { [key: string]: string } = {};
   rowActions = [
-    { label: 'View Details', icon: 'fas fa-eye', action: 'view' },
-    { label: 'Mark as Seen', icon: 'fas fa-check', action: 'markSeen' }
+    { label: 'عرض التفاصيل', icon: 'fas fa-eye', action: 'view' },
+    { label: 'مقروءة كمشاهدة', icon: 'fas fa-check', action: 'markSeen' }
   ];
 
   constructor(

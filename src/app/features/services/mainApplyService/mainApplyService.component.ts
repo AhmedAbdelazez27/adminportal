@@ -1074,13 +1074,14 @@ export class MainApplyServiceComponent {
   public buildColumnDefs(): void {
     this.columnDefs = [
       { headerName: this.translate.instant('mainApplyServiceResourceName.RequestNo'), field: 'applyNo', width: 200 },
-      { headerName: this.translate.instant('mainApplyServiceResourceName.applydate'), field: 'applyDate', width: 200 },
+      { headerName: this.translate.instant('mainApplyServiceResourceName.applydate'), field: 'applyDate', width: 200,
+        valueFormatter: (p: any) => this.formatDateTimeDisplay(p?.value) },
       { headerName: this.translate.instant('mainApplyServiceResourceName.sevicet'), field: this.lang == 'ar' ? 'service.serviceName' : 'service.serviceNameEn', width: 200 },
       { headerName: this.translate.instant('mainApplyServiceResourceName.username'), field: this.lang == 'ar' ? 'user.nameEn' : 'user.name', width: 200 },
       { headerName: this.translate.instant('mainApplyServiceResourceName.userName'), field: 'entityName', width: 200 },
       {
         headerName: this.translate.instant('mainApplyServiceResourceName.statues'),
-        field: this.lang == 'ar' ? 'lastStatus' : 'lastStatusEN',
+        field: 'serviceStatusName',
         width: 200,
         cellRenderer: (params: any) => {
           const statusClass = this.getStatusClassForGrid(params.data.serviceStatus);
@@ -1175,6 +1176,22 @@ export class MainApplyServiceComponent {
     ];
   }
 
+  public formatDateTimeDisplay(value: any): string {
+    if (!value) return '';
+    try {
+      // Handle numeric ticks, Date, or ISO strings
+      const candidate = typeof value === 'number' ? new Date(value)
+                        : (value instanceof Date ? value : new Date(value));
+      if (!isNaN(candidate.getTime())) {
+        return candidate.toLocaleString();
+      }
+      // If already a formatted string (e.g., dd/MM/yyyy), return as is
+      return String(value);
+    } catch (e) {
+      return String(value);
+    }
+  }
+
   //onTableAction(event: { action: string, row: any }) {
   //  if (event.action === 'onViewApplicantData') {
   //    this.getuserFormDatabyId(event.row.userId);
@@ -1206,39 +1223,85 @@ export class MainApplyServiceComponent {
 
 
     else if (event.action === 'onPrintPDF') {
-
       if (!event?.row) return;
 
       const serviceName = event.row.service?.serviceName ?? '';
+      const serviceStatusName = event.row.serviceStatusName ?? '';
       const lastStatus = event.row.lastStatus ?? '';
-      const permitNumber = event.row.permitNumber ?? '';
       const serviceId = event.row.serviceId ?? '';
       const id = event.row.id ?? '';
-
-      if (serviceName === "تصريح خيمة / موقع إفطار" && lastStatus.includes("تمت الموافقة")) {
-        this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'final');
-      }
-      else if (serviceName === "تصريح خيمة / موقع إفطار" && permitNumber.trim() !== '' && ['2009', '2010', '2011'].some(d => this.currecntDept?.includes(d))) {
-        this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'initial');
-      }
-      else if (lastStatus.includes("تمت الموافقة")) {
-        this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'initial');
+      if (this.translate?.currentLang === 'ar') {
+        if (serviceId === 1) {
+          if (serviceStatusName.includes("معتمد")) {
+            this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'final');
+          }
+          else {
+            this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'initial');
+          }
+        }
+        else if (serviceId != 1) {
+          if (serviceStatusName.includes("معتمد")) {
+            this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'final');
+          }
+          else {
+            this.translate
+              .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
+              .subscribe(translations => {
+                this.toastr.error(
+                  `${translations['mainApplyServiceResourceName.NoPermission']}`,
+                );
+              });
+            return;
+          }
+        }
+        else {
+          this.translate
+            .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
+            .subscribe(translations => {
+              this.toastr.error(
+                `${translations['mainApplyServiceResourceName.NoPermission']}`,
+              );
+            });
+          return;
+        }
       }
       else {
-       // this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'initial');
-
-        this.translate
-          .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
-          .subscribe(translations => {
-            this.toastr.error(
-              `${translations['mainApplyServiceResourceName.NoPermission']}`,
-            );
-          });
-        return;
+        if (serviceId === 1) {
+          if (serviceStatusName.includes("Approved")) {
+            this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'final');
+          }
+          else {
+            this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'initial');
+          }
+        }
+        else if (serviceId != 1) {
+          if (serviceStatusName.includes("Approved")) {
+            this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'final');
+          }
+          else {
+            this.translate
+              .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
+              .subscribe(translations => {
+                this.toastr.error(
+                  `${translations['mainApplyServiceResourceName.NoPermission']}`,
+                );
+              });
+            return;
+          }
+        }
+        else {
+          this.translate
+            .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
+            .subscribe(translations => {
+              this.toastr.error(
+                `${translations['mainApplyServiceResourceName.NoPermission']}`,
+              );
+            });
+          return;
+        }
       }
     }
 
-    
     else if (event.action === 'onViewServiceConfirmationData') {
       window.open(`/mainServices/services/serviceconfirmation/${event.row.id}`, '_blank');
     }

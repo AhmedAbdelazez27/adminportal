@@ -1,6 +1,12 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  NgForm,
+  Validators,
+} from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, Subject } from 'rxjs';
@@ -8,9 +14,31 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { GenericDataTableComponent } from '../../../../../shared/generic-data-table/generic-data-table.component';
-import { Pagination, FndLookUpValuesSelect2RequestDto, SelectdropdownResultResults, Select2RequestDto, SelectdropdownResult, reportPrintConfig } from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
-import { GetGridDataParametersDto, SpCasesDto, CasesSearchDto, GetParamtersDto, SpCasesAidRequestsFilterDto, GetAidRequestGridDataParametersDto, CAidRequestDto } from '../../../../core/dtos/socialcases/operations/spCases.dto';
-import { aidRequestsDto, filteraidRequestsByIdDto, aidRequestsShowDetailsDto, aidRequestsStudyDetailsDto } from '../../../../core/dtos/socialcases/operations/aidRequests.dto';
+import {
+  Pagination,
+  FndLookUpValuesSelect2RequestDto,
+  SelectdropdownResultResults,
+  Select2RequestDto,
+  SelectdropdownResult,
+  reportPrintConfig,
+} from '../../../../core/dtos/FndLookUpValuesdtos/FndLookUpValues.dto';
+import {
+  GetGridDataParametersDto,
+  SpCasesDto,
+  CasesSearchDto,
+  GetParamtersDto,
+  SpCasesAidRequestsFilterDto,
+  GetAidRequestGridDataParametersDto,
+  CAidRequestDto,
+} from '../../../../core/dtos/socialcases/operations/spCases.dto';
+import {
+  aidRequestsDto,
+  filteraidRequestsByIdDto,
+  aidRequestsShowDetailsDto,
+  aidRequestsStudyDetailsDto,
+  aidRequestsZakatDto,
+  quotationHeaderDto,
+} from '../../../../core/dtos/socialcases/operations/aidRequests.dto';
 import { SpinnerService } from '../../../../core/services/spinner.service';
 import { openStandardReportService } from '../../../../core/services/openStandardReportService.service';
 import { Select2Service } from '../../../../core/services/Select2.service';
@@ -22,13 +50,20 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-spCases',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    NgSelectComponent,
+    GenericDataTableComponent,
+  ],
   templateUrl: './spCases.component.html',
-  styleUrls: ['./spCases.component.scss']
+  styleUrls: ['./spCases.component.scss'],
 })
 export class SpCasesComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
-  @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
+  @ViewChild(GenericDataTableComponent)
+  genericTable!: GenericDataTableComponent;
 
   private destroy$ = new Subject<void>();
   userEntityForm!: FormGroup;
@@ -40,7 +75,7 @@ export class SpCasesComponent {
   gridOptions: GridOptions = { pagination: false };
   searchText: string = '';
   columnHeaderMap: { [key: string]: string } = {};
-  rowActions: Array<{ label: string, icon?: string, action: string }> = [];
+  rowActions: Array<{ label: string; icon?: string; action: string }> = [];
 
   // Main grid data and filters
   searchParams = new GetAidRequestGridDataParametersDto();
@@ -55,16 +90,30 @@ export class SpCasesComponent {
   aidRequestsSearchParams = new SpCasesAidRequestsFilterDto();
   aidRequestsPagination = new Pagination();
   aidRequestsColumnDefs: ColDef[] = [];
-  aidRequestsRowActions: Array<{ label: string, icon?: string, action: string }> = [];
-  filteredAidRequestsRowActions: Array<{ label: string, icon?: string, action: string }> = [];
-  
+  aidRequestsRowActions: Array<{
+    label: string;
+    icon?: string;
+    action: string;
+  }> = [];
+  filteredAidRequestsRowActions: Array<{
+    label: string;
+    icon?: string;
+    action: string;
+  }> = [];
+
   // Separate property specifically for Aid Requests modal to avoid any conflicts
-  aidRequestsModalActions: Array<{ label: string, icon?: string, action: string }> = [];
+  aidRequestsModalActions: Array<{
+    label: string;
+    icon?: string;
+    action: string;
+  }> = [];
 
   // Details modals data
   loadformData: aidRequestsShowDetailsDto = {} as aidRequestsShowDetailsDto;
-  loadstudydetailformData: aidRequestsStudyDetailsDto = {} as aidRequestsStudyDetailsDto;
-
+  loadstudydetailformData: aidRequestsStudyDetailsDto =
+    {} as aidRequestsStudyDetailsDto;
+  loadZakatdetailformData: aidRequestsZakatDto = {} as aidRequestsZakatDto;
+  loadQuotationDetailFormData: quotationHeaderDto = {} as quotationHeaderDto;
   // Entity Select2
   entitySelect2: SelectdropdownResultResults[] = [];
   loadingentity = false;
@@ -132,34 +181,50 @@ export class SpCasesComponent {
     private fb: FormBuilder
   ) {
     this.userEntityForm = this.fb.group({
-      entityIds: [[], Validators.required]
+      entityIds: [[], Validators.required],
     });
   }
 
   ngOnInit(): void {
     this.buildColumnDefs();
     this.buildAidRequestsColumnDefs();
-    
+
     // Main grid actions (includes Show More)
     this.rowActions = [
-      { label: this.translate.instant('Common.Show'), icon: 'icon-frame-view', action: 'onShowMore' }
+      {
+        label: this.translate.instant('Common.Show'),
+        icon: 'icon-frame-view',
+        action: 'onShowMore',
+      },
     ];
 
     // Aid Requests grid actions - completely separate array (only Show Details and Study Details)
     this.aidRequestsRowActions = [
       { label: 'Show', icon: 'icon-frame-view', action: 'onViewInfo' },
-      { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
+      {
+        label: 'Study Details',
+        icon: 'icon-frame-view',
+        action: 'onViewStudyDetailsInfo',
+      },
     ];
-    
+
     // Create completely separate arrays to ensure no reference issues
     this.filteredAidRequestsRowActions = [
       { label: 'Show', icon: 'icon-frame-view', action: 'onViewInfo' },
-      { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
+      {
+        label: 'Study Details',
+        icon: 'icon-frame-view',
+        action: 'onViewStudyDetailsInfo',
+      },
     ];
-    
+
     this.aidRequestsModalActions = [
       { label: 'Show', icon: 'icon-frame-view', action: 'onViewInfo' },
-      { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
+      {
+        label: 'Study Details',
+        icon: 'icon-frame-view',
+        action: 'onViewStudyDetailsInfo',
+      },
     ];
 
     // Setup search inputs with debounce
@@ -237,13 +302,14 @@ export class SpCasesComponent {
     this.searchSelect2Params.take = this.entitysearchParams.take;
 
     this.Select2Service.getEntitySelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.entitySelect2 = [...this.entitySelect2, ...newItems];
           this.loadingentity = false;
         },
-        error: () => this.loadingentity = false
+        error: () => (this.loadingentity = false),
       });
   }
 
@@ -277,13 +343,14 @@ export class SpCasesComponent {
     this.searchSelect2Params.take = this.caseNamesearchParams.take;
 
     this.Select2Service.getNameSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.caseNameSelect2 = [...this.caseNameSelect2, ...newItems];
           this.loadingcaseName = false;
         },
-        error: () => this.loadingcaseName = false
+        error: () => (this.loadingcaseName = false),
       });
   }
 
@@ -317,13 +384,14 @@ export class SpCasesComponent {
     this.searchSelect2Params.take = this.nationalitysearchParams.take;
 
     this.Select2Service.getNationalitySelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.nationalitySelect2 = [...this.nationalitySelect2, ...newItems];
           this.loadingnationality = false;
         },
-        error: () => this.loadingnationality = false
+        error: () => (this.loadingnationality = false),
       });
   }
 
@@ -357,13 +425,14 @@ export class SpCasesComponent {
     this.searchSelect2Params.take = this.citysearchParams.take;
 
     this.Select2Service.getCitySelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.citySelect2 = [...this.citySelect2, ...newItems];
           this.loadingcity = false;
         },
-        error: () => this.loadingcity = false
+        error: () => (this.loadingcity = false),
       });
   }
 
@@ -397,13 +466,14 @@ export class SpCasesComponent {
     this.searchSelect2Params.take = this.gendersearchParams.take;
 
     this.Select2Service.getGenderSelect2Array(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResultResults[]) => {
           const newItems = response || [];
           this.genderSelect2 = [...this.genderSelect2, ...newItems];
           this.loadinggender = false;
         },
-        error: () => this.loadinggender = false
+        error: () => (this.loadinggender = false),
       });
   }
 
@@ -437,13 +507,14 @@ export class SpCasesComponent {
     this.searchSelect2Params.take = this.branchsearchParams.take;
 
     this.Select2Service.getCasesBranchSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.branchSelect2 = [...this.branchSelect2, ...newItems];
           this.loadingbranch = false;
         },
-        error: () => this.loadingbranch = false
+        error: () => (this.loadingbranch = false),
       });
   }
 
@@ -477,13 +548,14 @@ export class SpCasesComponent {
     this.searchSelect2Params.take = this.aidTypesearchParams.take;
 
     this.Select2Service.getRequestTypeSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.aidTypeSelect2 = [...this.aidTypeSelect2, ...newItems];
           this.loadingaidType = false;
         },
-        error: () => this.loadingaidType = false
+        error: () => (this.loadingaidType = false),
       });
   }
 
@@ -517,13 +589,14 @@ export class SpCasesComponent {
     this.searchSelect2Params.take = this.sourcesearchParams.take;
 
     this.Select2Service.getAidRequestSourceSelect2(this.searchSelect2Params)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: SelectdropdownResult) => {
           const newItems = response?.results || [];
           this.sourceSelect2 = [...this.sourceSelect2, ...newItems];
           this.loadingsource = false;
         },
-        error: () => this.loadingsource = false
+        error: () => (this.loadingsource = false),
       });
   }
 
@@ -543,7 +616,10 @@ export class SpCasesComponent {
   onPageChange(event: { pageNumber: number; pageSize: number }): void {
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
-    this.getLoadDataGrid({ pageNumber: event.pageNumber, pageSize: event.pageSize });
+    this.getLoadDataGrid({
+      pageNumber: event.pageNumber,
+      pageSize: event.pageSize,
+    });
   }
 
   onTableSearch(text: string): void {
@@ -575,19 +651,29 @@ export class SpCasesComponent {
     const skip = (event.pageNumber - 1) * event.pageSize;
     this.searchParams.skip = skip;
     this.searchParams.take = event.pageSize;
-    
+
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
     this.spinnerService.show();
-    
-    this.spCasesService.getAllAidRequestGridData(cleanedFilters)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+
+    this.spCasesService
+      .getAllAidRequestGridData(cleanedFilters)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: any) => {
           this.loadgridData = response.data || [];
           this.loadgridData.forEach((c) => {
-            c.appDatestr = this.openStandardReportService.formatDate(c.appDate ?? null);
-            c.caseBirthDatestr = this.openStandardReportService.formatDate(c.caseBirthDate ?? null);
-            c.resdEndDatestr = this.openStandardReportService.formatDate(c.resdEndDate ?? null);
-            c.idEndDatestr = this.openStandardReportService.formatDate(c.idEndDate ?? null);
+            c.appDatestr = this.openStandardReportService.formatDate(
+              c.appDate ?? null
+            );
+            c.caseBirthDatestr = this.openStandardReportService.formatDate(
+              c.caseBirthDate ?? null
+            );
+            c.resdEndDatestr = this.openStandardReportService.formatDate(
+              c.resdEndDate ?? null
+            );
+            c.idEndDatestr = this.openStandardReportService.formatDate(
+              c.idEndDate ?? null
+            );
             c.totIncomestr = c.totIncome ? c.totIncome.toString() : null;
             c.totDutiesstr = c.totDuties ? c.totDuties.toString() : null;
           });
@@ -596,7 +682,7 @@ export class SpCasesComponent {
         },
         error: () => {
           this.spinnerService.hide();
-        }
+        },
       });
   }
 
@@ -605,10 +691,13 @@ export class SpCasesComponent {
     // Explicitly reset Aid Requests actions to ensure they're correct
     this.setAidRequestsActions();
     // Close any open menu in the main grid to avoid lingering 'Show More' overlay
-    if (this.genericTable && typeof (this.genericTable as any).closeActionMenu === 'function') {
+    if (
+      this.genericTable &&
+      typeof (this.genericTable as any).closeActionMenu === 'function'
+    ) {
       (this.genericTable as any).closeActionMenu();
     }
-    
+
     this.getCaseDetails(caseId, entityId);
     this.loadAidRequestsForCase(entityId, caseId); // Pass caseId as caseName parameter
   }
@@ -617,47 +706,79 @@ export class SpCasesComponent {
   private setAidRequestsActions(): void {
     this.aidRequestsRowActions = [
       { label: 'Show ', icon: 'icon-frame-view', action: 'onViewInfo' },
-      { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
+      {
+        label: 'Study Details',
+        icon: 'icon-frame-view',
+        action: 'onViewStudyDetailsInfo',
+      },
     ];
-    
+
     this.filteredAidRequestsRowActions = [
       { label: 'Show ', icon: 'icon-frame-view', action: 'onViewInfo' },
-      { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
+      {
+        label: 'Study Details',
+        icon: 'icon-frame-view',
+        action: 'onViewStudyDetailsInfo',
+      },
     ];
-    
+
     this.aidRequestsModalActions = [
       { label: 'Show ', icon: 'icon-frame-view', action: 'onViewInfo' },
-      { label: 'Study Details', icon: 'icon-frame-view', action: 'onViewStudyDetailsInfo' }
+      {
+        label: 'Study Details',
+        icon: 'icon-frame-view',
+        action: 'onViewStudyDetailsInfo',
+      },
     ];
   }
 
   getCaseDetails(caseId: string, entityId: string): void {
     this.spinnerService.show();
-    
-    this.spCasesService.getCaseDetails(caseId, entityId)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+
+    this.spCasesService
+      .getCaseDetails(caseId, entityId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (result: CasesSearchDto) => {
           this.loadCaseDetailsData = result;
-          
+
           // Format dates - using the correct field names from API response
-          this.loadCaseDetailsData.birthdatEstr = this.openStandardReportService.formatDate(this.loadCaseDetailsData.birthdate ?? null);
-          this.loadCaseDetailsData.startdatEstr = this.openStandardReportService.formatDate(this.loadCaseDetailsData.startdate ?? null);
-          this.loadCaseDetailsData.conT_END_DATEstr = this.openStandardReportService.formatDate(this.loadCaseDetailsData.conT_END_DATE ?? null);
-          this.loadCaseDetailsData.diseaS_DATEstr = this.openStandardReportService.formatDate(this.loadCaseDetailsData.diseaS_DATE ?? null);
-          this.loadCaseDetailsData.fatherdeathdatEstr = this.openStandardReportService.formatDate(this.loadCaseDetailsData.fatherdeathdate ?? null);
-          this.loadCaseDetailsData.motherdeatHstr = this.openStandardReportService.formatDate(this.loadCaseDetailsData.motherdeath ?? null);
-          
+          this.loadCaseDetailsData.birthdatEstr =
+            this.openStandardReportService.formatDate(
+              this.loadCaseDetailsData.birthdate ?? null
+            );
+          this.loadCaseDetailsData.startdatEstr =
+            this.openStandardReportService.formatDate(
+              this.loadCaseDetailsData.startdate ?? null
+            );
+          this.loadCaseDetailsData.conT_END_DATEstr =
+            this.openStandardReportService.formatDate(
+              this.loadCaseDetailsData.conT_END_DATE ?? null
+            );
+          this.loadCaseDetailsData.diseaS_DATEstr =
+            this.openStandardReportService.formatDate(
+              this.loadCaseDetailsData.diseaS_DATE ?? null
+            );
+          this.loadCaseDetailsData.fatherdeathdatEstr =
+            this.openStandardReportService.formatDate(
+              this.loadCaseDetailsData.fatherdeathdate ?? null
+            );
+          this.loadCaseDetailsData.motherdeatHstr =
+            this.openStandardReportService.formatDate(
+              this.loadCaseDetailsData.motherdeath ?? null
+            );
+
           const modalElement = document.getElementById('viewCaseDetails');
           if (modalElement) {
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
           }
-          
+
           this.spinnerService.hide();
         },
         error: () => {
           this.spinnerService.hide();
-        }
+        },
       });
   }
 
@@ -689,82 +810,144 @@ export class SpCasesComponent {
       skip: this.aidRequestsSearchParams.skip,
       source: null,
       sourcestr: null,
-      take: this.aidRequestsPagination.take
+      take: this.aidRequestsPagination.take,
     };
-    
-    this.spCasesService.getAidRequestsForCase(requestBody)
-      .pipe(takeUntil(this.destroy$)).subscribe({
+
+    this.spCasesService
+      .getAidRequestsForCase(requestBody)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (response: any) => {
           this.aidRequestsGridData = response.data || [];
           this.aidRequestsGridData.forEach((c) => {
-            c.comitY_DATEstr = this.openStandardReportService.formatDate(c.comitY_DATE ?? null);
+            c.comityDateStr = this.openStandardReportService.formatDate(
+              c.comityDate ?? null
+            );
           });
-          this.aidRequestsPagination.totalCount = response.data[0]?.rowsCount || 0;
+          this.aidRequestsPagination.totalCount =
+            response.data[0]?.rowsCount || 0;
         },
         error: () => {
           // Handle error
-        }
+        },
       });
   }
 
-  onAidRequestsPageChange(event: { pageNumber: number; pageSize: number }): void {
+  onAidRequestsPageChange(event: {
+    pageNumber: number;
+    pageSize: number;
+  }): void {
     this.aidRequestsPagination.currentPage = event.pageNumber;
     this.aidRequestsPagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;
     this.aidRequestsSearchParams.skip = skip;
     this.aidRequestsSearchParams.take = event.pageSize;
-    
+
     // Maintain the caseName (which is the caseId) when paginating
-    this.loadAidRequestsForCase(this.aidRequestsSearchParams.entityId!, this.aidRequestsSearchParams.caseName);
+    this.loadAidRequestsForCase(
+      this.aidRequestsSearchParams.entityId!,
+      this.aidRequestsSearchParams.caseName
+    );
   }
 
   // Column Definitions
   public buildColumnDefs(): void {
-    this.translate.get([
-      // 'SpCasesResourceName.entityName',
-      'SpCasesResourceName.caseName',
-      'SpCasesResourceName.caseNo',
-      'SpCasesResourceName.nationalityDesc',
-      'SpCasesResourceName.genderDesc',
-      'SpCasesResourceName.birthLocation',
-      'SpCasesResourceName.city',
-      'SpCasesResourceName.phone',
-      // 'SpCasesResourceName.appDate',
-      'SpCasesResourceName.branchDesc',
-      'SpCasesResourceName.appTypeDesc',
-      'SpCasesResourceName.wifeName',
-      'SpCasesResourceName.maritalStatusDesc',
-      'SpCasesResourceName.healthStatusDesc',
-      // 'SpCasesResourceName.jobDesc',
-      // 'SpCasesResourceName.requestStatusDesc'
-    ]).subscribe(translations => {
-      this.columnDefs = [
-        // { headerName: translations['SpCasesResourceName.entityName'], field: 'entityId', width: 200 },
-        { headerName: translations['SpCasesResourceName.caseName'], field: 'nameAr', width: 200 },
-        { headerName: translations['SpCasesResourceName.caseNo'], field: 'caseNo', width: 150 },
-        { headerName: translations['SpCasesResourceName.nationalityDesc'], field: 'nationalityDesc', width: 150 },
-        { headerName: translations['SpCasesResourceName.genderDesc'], field: 'genderDesc', width: 120 },
-        { headerName: translations['SpCasesResourceName.birthLocation'], field: 'regionName', width: 150 },
-        { headerName: translations['SpCasesResourceName.city'], field: 'cityDesc', width: 150 },
-        { headerName: translations['SpCasesResourceName.phone'], field: 'htel', width: 150 },
-        // { headerName: translations['SpCasesResourceName.appDate'], field: 'appDatestr', width: 150 },
-        { headerName: translations['SpCasesResourceName.branchDesc'], field: 'branchDesc', width: 150 },
-        { headerName: translations['SpCasesResourceName.appTypeDesc'], field: 'appTypeDesc', width: 150 },
-        { headerName: translations['SpCasesResourceName.wifeName'], field: 'wifeName', width: 150 },
-        { headerName: translations['SpCasesResourceName.maritalStatusDesc'], field: 'maritalStatusDesc', width: 150 },
-        { headerName: translations['SpCasesResourceName.healthStatusDesc'], field: 'healthStatusDesc', width: 150 },
-        // { headerName: translations['SpCasesResourceName.jobDesc'], field: 'jobDesc', width: 150 },
-        // { headerName: translations['SpCasesResourceName.requestStatusDesc'], field: 'requestStatusDesc', width: 150 },
-      ];
-    });
+    this.translate
+      .get([
+        // 'SpCasesResourceName.entityName',
+        'SpCasesResourceName.caseName',
+        'SpCasesResourceName.caseNo',
+        'SpCasesResourceName.nationalityDesc',
+        'SpCasesResourceName.genderDesc',
+        'SpCasesResourceName.birthLocation',
+        'SpCasesResourceName.city',
+        'SpCasesResourceName.phone',
+        // 'SpCasesResourceName.appDate',
+        'SpCasesResourceName.branchDesc',
+        'SpCasesResourceName.appTypeDesc',
+        'SpCasesResourceName.wifeName',
+        'SpCasesResourceName.maritalStatusDesc',
+        'SpCasesResourceName.healthStatusDesc',
+        // 'SpCasesResourceName.jobDesc',
+        // 'SpCasesResourceName.requestStatusDesc'
+      ])
+      .subscribe((translations) => {
+        this.columnDefs = [
+          // { headerName: translations['SpCasesResourceName.entityName'], field: 'entityId', width: 200 },
+          {
+            headerName: translations['SpCasesResourceName.caseName'],
+            field: 'nameAr',
+            width: 200,
+          },
+          {
+            headerName: translations['SpCasesResourceName.caseNo'],
+            field: 'caseNo',
+            width: 150,
+          },
+          {
+            headerName: translations['SpCasesResourceName.nationalityDesc'],
+            field: 'nationalityDesc',
+            width: 150,
+          },
+          {
+            headerName: translations['SpCasesResourceName.genderDesc'],
+            field: 'genderDesc',
+            width: 120,
+          },
+          {
+            headerName: translations['SpCasesResourceName.birthLocation'],
+            field: 'regionName',
+            width: 150,
+          },
+          {
+            headerName: translations['SpCasesResourceName.city'],
+            field: 'cityDesc',
+            width: 150,
+          },
+          {
+            headerName: translations['SpCasesResourceName.phone'],
+            field: 'htel',
+            width: 150,
+          },
+          // { headerName: translations['SpCasesResourceName.appDate'], field: 'appDatestr', width: 150 },
+          {
+            headerName: translations['SpCasesResourceName.branchDesc'],
+            field: 'branchDesc',
+            width: 150,
+          },
+          {
+            headerName: translations['SpCasesResourceName.appTypeDesc'],
+            field: 'appTypeDesc',
+            width: 150,
+          },
+          {
+            headerName: translations['SpCasesResourceName.wifeName'],
+            field: 'wifeName',
+            width: 150,
+          },
+          {
+            headerName: translations['SpCasesResourceName.maritalStatusDesc'],
+            field: 'maritalStatusDesc',
+            width: 150,
+          },
+          {
+            headerName: translations['SpCasesResourceName.healthStatusDesc'],
+            field: 'healthStatusDesc',
+            width: 150,
+          },
+          // { headerName: translations['SpCasesResourceName.jobDesc'], field: 'jobDesc', width: 150 },
+          // { headerName: translations['SpCasesResourceName.requestStatusDesc'], field: 'requestStatusDesc', width: 150 },
+        ];
+      });
   }
 
   // Helper method to get entity name based on current language
   private getEntityDisplayName(entity: any): string {
     if (!entity) return '';
-    
-    const currentLang = this.translate.currentLang || this.translate.defaultLang;
-    
+
+    const currentLang =
+      this.translate.currentLang || this.translate.defaultLang;
+
     if (currentLang === 'ar') {
       return entity.entitY_NAME || entity.entitY_NAME_EN || '';
     } else {
@@ -772,53 +955,88 @@ export class SpCasesComponent {
     }
   }
 
-
   public buildAidRequestsColumnDefs(): void {
-    this.translate.get([
-      // 'AidRequestsResourceName.entitY_NAME',
-      'AidRequestsResourceName.namE_AR',
-      'AidRequestsResourceName.source',
-      'AidRequestsResourceName.aiD_TYPE',
-      'AidRequestsResourceName.comitY_DATE',
-      'AidRequestsResourceName.requesT_TYPE_DESC',
-      'AidRequestsResourceName.status',
-      'AidRequestsResourceName.caseNo',
-      'AidRequestsResourceName.amount'
-    ]).subscribe(translations => {
-      this.aidRequestsColumnDefs = [
-        // { headerName: translations['AidRequestsResourceName.entitY_NAME'], field: 'entitY_NAME', width: 200 },
-        { headerName: translations['AidRequestsResourceName.namE_AR'], field: 'namE_AR', width: 200 },
-        { headerName: translations['AidRequestsResourceName.source'], field: 'sourcE_DESC', width: 200 },
-        { headerName: translations['AidRequestsResourceName.aiD_TYPE'], field: 'aiD_TYPE', width: 200 },
-        { headerName: translations['AidRequestsResourceName.comitY_DATE'], field: 'comitY_DATEstr', width: 200 },
-        { headerName: translations['AidRequestsResourceName.requesT_TYPE_DESC'], field: 'requesT_TYPE_DESC', width: 200 },
-        { headerName: translations['AidRequestsResourceName.status'], field: 'statuS_DESC', width: 200 },
-        { headerName: translations['AidRequestsResourceName.caseNo'], field: 'casE_NO', width: 200 },
-        { headerName: translations['AidRequestsResourceName.amount'], field: 'amount', width: 200 },
-      ];
-    });
+    this.translate
+      .get([
+        // 'AidRequestsResourceName.entitY_NAME',
+        'AidRequestsResourceName.namE_AR',
+        'AidRequestsResourceName.source',
+        'AidRequestsResourceName.aiD_TYPE',
+        'AidRequestsResourceName.comitY_DATE',
+        'AidRequestsResourceName.requesT_TYPE_DESC',
+        'AidRequestsResourceName.status',
+        'AidRequestsResourceName.caseNo',
+        'AidRequestsResourceName.amount',
+      ])
+      .subscribe((translations) => {
+        this.aidRequestsColumnDefs = [
+          // { headerName: translations['AidRequestsResourceName.entitY_NAME'], field: 'entitY_NAME', width: 200 },
+          {
+            headerName: translations['AidRequestsResourceName.namE_AR'],
+            field: 'nameAr',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.source'],
+            field: 'sourceDesc',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.aiD_TYPE'],
+            field: 'aidType',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.comitY_DATE'],
+            field: 'comityDateStr',
+            width: 200,
+          },
+          {
+            headerName:
+              translations['AidRequestsResourceName.requesT_TYPE_DESC'],
+            field: 'reqTypeDesc',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.status'],
+            field: 'statDesc',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.caseNo'],
+            field: 'caseNo',
+            width: 200,
+          },
+          {
+            headerName: translations['AidRequestsResourceName.amount'],
+            field: 'amount',
+            width: 200,
+          },
+        ];
+      });
   }
 
   // Table Actions
-  onTableAction(event: { action: string, row: any }) {
+  onTableAction(event: { action: string; row: any }) {
     if (event.action === 'onShowMore') {
       this.onShowMore(event.row.caseId, event.row.entityId);
     }
   }
 
-  onAidRequestsTableAction(event: { action: string, row: any }) {
+  onAidRequestsTableAction(event: { action: string; row: any }) {
     var data = event.row.composeKey.split(',');
     var source = data[0];
     var studyId = data[1];
-    var caseCode = data[2];
-    var entityId = data[3];
-    var caseid = data[4];
+    var caseCode = event.row.caseCode;
+    var entityId = event.row.entityId;
+    var caseid = event.row.caseId;
+    var headerId = event.row.headerId;
 
     if (event.action === 'onViewInfo') {
       this.getFormDatabyId(caseCode, entityId, caseid);
     }
     if (event.action === 'onViewStudyDetailsInfo') {
-      this.getStudyDetailsFormDatabyId(source, entityId, studyId);
+      this.getStudyDetailsFormDatabyId(source, entityId, studyId, headerId);
     }
   }
 
@@ -834,18 +1052,34 @@ export class SpCasesComponent {
 
     this.spinnerService.show();
     forkJoin({
-      showdetailheaderdata: this.aidRequestsService.getShowDetailById(params) as Observable<aidRequestsShowDetailsDto | aidRequestsShowDetailsDto[]>,
+      showdetailheaderdata: this.aidRequestsService.getShowDetailById(
+        params
+      ) as Observable<aidRequestsShowDetailsDto | aidRequestsShowDetailsDto[]>,
     })
-      .pipe(takeUntil(this.destroy$)).subscribe({
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (result) => {
           this.loadformData = Array.isArray(result.showdetailheaderdata)
-            ? result.showdetailheaderdata[0] ?? ({} as aidRequestsShowDetailsDto)
+            ? result.showdetailheaderdata[0] ??
+              ({} as aidRequestsShowDetailsDto)
             : result.showdetailheaderdata;
-          this.loadformData.aiD_REQUEST_DATEstr = this.openStandardReportService.formatDate(this.loadformData.aiD_REQUEST_DATE ?? null);
-          this.loadformData.casE_BIRTH_DATEstr = this.openStandardReportService.formatDate(this.loadformData.casE_BIRTH_DATE ?? null);
-          this.loadformData.iD_END_DATEstr = this.openStandardReportService.formatDate(this.loadformData.iD_END_DATE ?? null);
-          this.loadformData.wifeiD_END_DATEstr = this.openStandardReportService.formatDate(this.loadformData.wifeiD_END_DATE ?? null);
-          
+          this.loadformData.aidRequestDateStr =
+            this.openStandardReportService.formatDate(
+              this.loadformData.aidRequestDate ?? null
+            );
+          this.loadformData.caseBirthDateStr =
+            this.openStandardReportService.formatDate(
+              this.loadformData.caseBirthDate ?? null
+            );
+          this.loadformData.idEndDateStr =
+            this.openStandardReportService.formatDate(
+              this.loadformData.idEndDate ?? null
+            );
+          this.loadformData.wifeIdEndDateStr =
+            this.openStandardReportService.formatDate(
+              this.loadformData.wifeIdEndDate ?? null
+            );
+
           const modalElement = document.getElementById('viewdetails');
           if (modalElement) {
             const modal = new bootstrap.Modal(modalElement);
@@ -855,29 +1089,41 @@ export class SpCasesComponent {
         },
         error: (err) => {
           this.spinnerService.hide();
-        }
+        },
       });
   }
 
-  getStudyDetailsFormDatabyId(source: string, entityId: string, studyId: string): void {
+  getStudyDetailsFormDatabyId(
+    source: string,
+    entityId: string,
+    studyId: string,
+    headerId: string
+  ): void {
     const params: filteraidRequestsByIdDto = {
       entityId: entityId,
       studyId: studyId,
-      headerId: null,
+      headerId: headerId,
       caseCode: null,
-      caseId: null
+      caseId: null,
     };
 
     this.spinnerService.show();
-    
     if (source == '1') {
       forkJoin({
-        showstudydetaildata: this.aidRequestsService.getAidRequestsStudyById(params) as Observable<aidRequestsStudyDetailsDto | aidRequestsStudyDetailsDto[]>,
+        showstudydetaildata: this.aidRequestsService.getAidRequestsStudyById(
+          params
+        ) as Observable<
+          aidRequestsStudyDetailsDto | aidRequestsStudyDetailsDto[]
+        >,
       })
-        .pipe(takeUntil(this.destroy$)).subscribe({
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
           next: (result) => {
-            this.loadstudydetailformData = Array.isArray(result.showstudydetaildata)
-              ? result.showstudydetaildata[0] ?? ({} as aidRequestsStudyDetailsDto)
+            this.loadstudydetailformData = Array.isArray(
+              result.showstudydetaildata
+            )
+              ? result.showstudydetaildata[0] ??
+                ({} as aidRequestsStudyDetailsDto)
               : result.showstudydetaildata;
 
             const modalElement = document.getElementById('viewstudydetails');
@@ -885,63 +1131,80 @@ export class SpCasesComponent {
               const modal = new bootstrap.Modal(modalElement);
               modal.show();
             }
+
             this.spinnerService.hide();
           },
           error: (err) => {
             this.toastr.info(this.translate.instant(err.error.reason));
             this.spinnerService.hide();
-          }
+          },
         });
-    }
-    else if (source == '5') {
+    } else if (source == '5') {
       forkJoin({
-        showstudydetaildata: this.aidRequestsService.getQuotationHeaderDetailById(params) as Observable<aidRequestsStudyDetailsDto | aidRequestsStudyDetailsDto[]>,
+        showquotationDetailData:
+          this.aidRequestsService.getQuotationHeaderDetailById(
+            params
+          ) as Observable<quotationHeaderDto | quotationHeaderDto[]>,
       })
-        .pipe(takeUntil(this.destroy$)).subscribe({
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
           next: (result) => {
-            this.loadstudydetailformData = Array.isArray(result.showstudydetaildata)
-              ? result.showstudydetaildata[0] ?? ({} as aidRequestsStudyDetailsDto)
-              : result.showstudydetaildata;
+            this.loadQuotationDetailFormData = Array.isArray(
+              result.showquotationDetailData
+            )
+              ? result.showquotationDetailData[0] ?? ({} as quotationHeaderDto)
+              : result.showquotationDetailData;
 
-            const modalElement = document.getElementById('viewquotationdetails');
+            const modalElement = document.getElementById(
+              'viewquotationdetails'
+            );
             if (modalElement) {
               const modal = new bootstrap.Modal(modalElement);
               modal.show();
             }
+
             this.spinnerService.hide();
           },
           error: (err) => {
             this.toastr.info(this.translate.instant(err.error.reason));
             this.spinnerService.hide();
-          }
+          },
         });
-    }
-    else if (source == '6') {
+    } else if (source == '6') {
       forkJoin({
-        showstudydetaildata: this.aidRequestsService.getZakatStudyDetailById(params) as Observable<aidRequestsStudyDetailsDto | aidRequestsStudyDetailsDto[]>,
+        showZakatdetaildata: this.aidRequestsService.getZakatStudyDetailById(
+          params
+        ) as Observable<aidRequestsZakatDto | aidRequestsZakatDto[]>,
       })
-        .pipe(takeUntil(this.destroy$)).subscribe({
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
           next: (result) => {
-            this.loadstudydetailformData = Array.isArray(result.showstudydetaildata)
-              ? result.showstudydetaildata[0] ?? ({} as aidRequestsStudyDetailsDto)
-              : result.showstudydetaildata;
+            this.loadZakatdetailformData = Array.isArray(
+              result.showZakatdetaildata
+            )
+              ? result.showZakatdetaildata[0] ?? ({} as aidRequestsZakatDto)
+              : result.showZakatdetaildata;
 
             const modalElement = document.getElementById('viewzakatdetails');
             if (modalElement) {
               const modal = new bootstrap.Modal(modalElement);
               modal.show();
             }
+
             this.spinnerService.hide();
           },
           error: (err) => {
             this.spinnerService.hide();
-          }
+          },
         });
-    }
-    else {
-      // Handle unknown source values - hide spinner and show error message
+    } else {
+      this.translate
+        .get(['InvalidSourceError', 'Common.Required'])
+        .subscribe((translations) => {
+          this.toastr.warning(`${translations['InvalidSourceError']}`);
+        });
       this.spinnerService.hide();
-      this.toastr.error(this.translate.instant('Common.UnknownSource') || 'Unknown source type');
+      return;
     }
     this.spinnerService.hide();
   }
@@ -951,13 +1214,20 @@ export class SpCasesComponent {
     this.spinnerService.show();
     const cleanedFilters = this.cleanFilterObject(this.searchParams);
 
-    this.spCasesService.getAllAidRequestGridData({ ...cleanedFilters, skip: 0, take: 1 })
+    this.spCasesService
+      .getAllAidRequestGridData({ ...cleanedFilters, skip: 0, take: 1 })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (initialResponse: any) => {
-          const totalCount = initialResponse.totalCount || initialResponse?.data?.length || 0;
+          const totalCount =
+            initialResponse.totalCount || initialResponse?.data?.length || 0;
 
-          this.spCasesService.getAllAidRequestGridData({ ...cleanedFilters, skip: 0, take: totalCount })
+          this.spCasesService
+            .getAllAidRequestGridData({
+              ...cleanedFilters,
+              skip: 0,
+              take: totalCount,
+            })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (response: any) => {
@@ -965,60 +1235,177 @@ export class SpCasesComponent {
 
                 const reportConfig: reportPrintConfig = {
                   title: this.translate.instant('SpCasesResourceName.Title'),
-                  reportTitle: this.translate.instant('SpCasesResourceName.Title'),
-                  fileName: `${this.translate.instant('SpCasesResourceName.Title')}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+                  reportTitle: this.translate.instant(
+                    'SpCasesResourceName.Title'
+                  ),
+                  fileName: `${this.translate.instant(
+                    'SpCasesResourceName.Title'
+                  )}_${new Date().toISOString().slice(0, 10)}.xlsx`,
                   fields: [
                     // { label: this.translate.instant('SpCasesResourceName.entityId'), value: this.searchParams.entityId },
-                    { label: this.translate.instant('SpCasesResourceName.caseId'), value: this.searchParams.caseId },
-                    { label: this.translate.instant('SpCasesResourceName.caseNo'), value: this.searchParams.caseNo },
-                    { label: this.translate.instant('SpCasesResourceName.nationality'), value: this.searchParams.nationality },
-                    { label: this.translate.instant('SpCasesResourceName.city'), value: this.searchParams.city },
-                    { label: this.translate.instant('SpCasesResourceName.gender'), value: this.searchParams.gender },
-                    { label: this.translate.instant('SpCasesResourceName.caseIdNo'), value: this.searchParams.caseIdNo },
-                    { label: this.translate.instant('SpCasesResourceName.wifeIdNo'), value: this.searchParams.wifeIdNo },
-                    { label: this.translate.instant('SpCasesResourceName.phone'), value: this.searchParams.phone },
-                    { label: this.translate.instant('SpCasesResourceName.branch'), value: this.searchParams.branch },
-                    { label: this.translate.instant('SpCasesResourceName.aidType'), value: this.searchParams.aidType },
-                    { label: this.translate.instant('SpCasesResourceName.source'), value: this.searchParams.source },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.caseId'
+                      ),
+                      value: this.searchParams.caseId,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.caseNo'
+                      ),
+                      value: this.searchParams.caseNo,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.nationality'
+                      ),
+                      value: this.searchParams.nationality,
+                    },
+                    {
+                      label: this.translate.instant('SpCasesResourceName.city'),
+                      value: this.searchParams.city,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.gender'
+                      ),
+                      value: this.searchParams.gender,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.caseIdNo'
+                      ),
+                      value: this.searchParams.caseIdNo,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.wifeIdNo'
+                      ),
+                      value: this.searchParams.wifeIdNo,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.phone'
+                      ),
+                      value: this.searchParams.phone,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.branch'
+                      ),
+                      value: this.searchParams.branch,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.aidType'
+                      ),
+                      value: this.searchParams.aidType,
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.source'
+                      ),
+                      value: this.searchParams.source,
+                    },
                   ],
                   columns: [
                     { label: '#', key: 'rowNo', title: '#' },
                     // { label: this.translate.instant('SpCasesResourceName.entityName'), key: 'entityId' },
-                    { label: this.translate.instant('SpCasesResourceName.caseName'), key: 'nameAr' },
-                    { label: this.translate.instant('SpCasesResourceName.caseNo'), key: 'caseNo' },
-                    { label: this.translate.instant('SpCasesResourceName.nationalityDesc'), key: 'nationalityDesc' },
-                    { label: this.translate.instant('SpCasesResourceName.genderDesc'), key: 'genderDesc' },
-                    { label: this.translate.instant('SpCasesResourceName.birthLocation'), key: 'regionName' },
-                    { label: this.translate.instant('SpCasesResourceName.city'), key: 'cityDesc' },
-                    { label: this.translate.instant('SpCasesResourceName.phone'), key: 'htel' },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.caseName'
+                      ),
+                      key: 'nameAr',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.caseNo'
+                      ),
+                      key: 'caseNo',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.nationalityDesc'
+                      ),
+                      key: 'nationalityDesc',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.genderDesc'
+                      ),
+                      key: 'genderDesc',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.birthLocation'
+                      ),
+                      key: 'regionName',
+                    },
+                    {
+                      label: this.translate.instant('SpCasesResourceName.city'),
+                      key: 'cityDesc',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.phone'
+                      ),
+                      key: 'htel',
+                    },
                     // { label: this.translate.instant('SpCasesResourceName.appDate'), key: 'appDatestr' },
-                    { label: this.translate.instant('SpCasesResourceName.branchDesc'), key: 'branchDesc' },
-                    { label: this.translate.instant('SpCasesResourceName.appTypeDesc'), key: 'appTypeDesc' },
-                    { label: this.translate.instant('SpCasesResourceName.wifeName'), key: 'wifeName' },
-                    { label: this.translate.instant('SpCasesResourceName.maritalStatusDesc'), key: 'maritalStatusDesc' },
-                    { label: this.translate.instant('SpCasesResourceName.healthStatusDesc'), key: 'healthStatusDesc' },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.branchDesc'
+                      ),
+                      key: 'branchDesc',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.appTypeDesc'
+                      ),
+                      key: 'appTypeDesc',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.wifeName'
+                      ),
+                      key: 'wifeName',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.maritalStatusDesc'
+                      ),
+                      key: 'maritalStatusDesc',
+                    },
+                    {
+                      label: this.translate.instant(
+                        'SpCasesResourceName.healthStatusDesc'
+                      ),
+                      key: 'healthStatusDesc',
+                    },
                     // { label: this.translate.instant('SpCasesResourceName.jobDesc'), key: 'jobDesc' },
                     // { label: this.translate.instant('SpCasesResourceName.requestStatusDesc'), key: 'requestStatusDesc' },
                   ],
                   data: data.map((item: any, index: number) => ({
                     ...item,
-                    rowNo: index + 1
+                    rowNo: index + 1,
                   })),
                   totalLabel: this.translate.instant('Common.Total'),
-                  totalKeys: []
+                  totalKeys: [],
                 };
 
-                this.openStandardReportService.openStandardReportExcel(reportConfig);
+                this.openStandardReportService.openStandardReportExcel(
+                  reportConfig
+                );
                 this.spinnerService.hide();
               },
               error: () => {
                 this.spinnerService.hide();
-              }
+              },
             });
         },
         error: () => {
           this.spinnerService.hide();
-        }
+        },
       });
   }
 }

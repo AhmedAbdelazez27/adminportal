@@ -77,13 +77,14 @@
                 <div class="col-xl-6">
                   <p class="mb-1">
                     <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
-                    {{formatDate(mainApplyService.applyDate)}}
+                    {{formatDateTime(mainApplyService.applyDate)}}
                   </p>
                 </div>
+
                 <div class="col-xl-6">
                   <p class="mb-1">
-                    <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
-                    {{mainApplyService.userName}}
+                    <strong>{{ 'mainApplyServiceResourceName.entityName' | translate }}: </strong>
+                    {{mainApplyService.entityName}}
                   </p>
                 </div>
                 <div class="col-xl-6">
@@ -93,7 +94,14 @@
                   </p>
                 </div>
                 <div class="col-xl-6">
-                  <span class="badge bg-primary">{{ mainApplyService.serviceStatusName || mainApplyService.lastStatus }}</span>
+                  <span class="badge bg-primary">{{ mainApplyService.serviceStatusName }}</span>
+                </div>
+                <div class="col-xl-6" *ngIf="isApproved">
+                  <button type="button"
+                          class="btn btn-outline-secondary"
+                          (click)="printReport()">
+                    {{ 'Common.Print' | translate }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -131,6 +139,10 @@
                         </div>
                       </div>
                       <h6 class="department-name">{{step.departmentName}}</h6>
+                      <small class="text-muted d-block mb-2" *ngIf="step.lastModified">
+                        <i class="bi bi-calendar3 me-1"></i>
+                        {{ formatDate(step.lastModified) }}
+                      </small>
                       <button type="button" class="btn btn-link p-0"
                               (click)="openHistoryModal(step.workFlowHistories || [])">
                         <i class="bi bi-clock-history me-1"></i>{{
@@ -783,7 +795,7 @@
 
 
 <div class="modal fade" id="addcommentsModal" tabindex="-1" aria-labelledby="addcommentsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl custom-modal-width">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="addcommentsModalLabel">{{ 'Common.AddComment' | translate }}</h5>
@@ -795,11 +807,11 @@
           <form [formGroup]="userForm">
             <div class="row">
               <div class="col-xl-12 mb-3">
-                <label for="comment" class="form-label">{{ 'mainApplyServiceResourceName.Comments' | translate }}</label>
+                <label for="comment" class="form-label">{{ 'mainApplyServiceResourceName.WORKFLOW.COMMENTS' | translate }}</label>
                 <textarea id="comment" class="form-control" rows="3"
                           [ngClass]="{'is-invalid': userForm.get('comment')?.invalid && (userForm.get('comment')?.touched || submitted)}"
                           formControlName="comment"
-                          placeholder="{{ 'comment' | translate }}"></textarea>
+                          placeholder="{{ 'mainApplyServiceResourceName.WORKFLOW.COMMENTS' | translate }}"></textarea>
                 <div *ngIf="userForm.get('comment')?.invalid && (userForm.get('comment')?.touched || submitted)"
                      class="invalid-feedback">
                 </div>
@@ -811,8 +823,8 @@
                         [ngClass]="{'is-invalid': userForm.get('commentTypeId')?.invalid && (userForm.get('commentTypeId')?.touched || submitted)}"
                         formControlName="commentTypeId">
                   <option [ngValue]="null">{{ 'SELECT' | translate }}</option>
-                  <option [ngValue]=1>{{ 'Internal' | translate }}</option>
-                  <option [ngValue]=2>{{ 'External' | translate }}</option>
+                  <option [ngValue]=1>{{ 'mainApplyServiceResourceName.Internal' | translate }}</option>
+                  <option [ngValue]=2>{{ 'mainApplyServiceResourceName.External' | translate }}</option>
                 </select>
               </div>
             </div>
@@ -893,7 +905,7 @@
 </div>
 
 <div class="modal fade" id="myModalReject" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl custom-modal-width">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="editLabel">{{ 'mainApplyServiceResourceName.refusereason' | translate }}</h1>
@@ -943,7 +955,7 @@
 </div>
 
 <div class="modal fade" id="myModalReturnModification" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl custom-modal-width">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="editLabel">سبب ارجاع الطلب للتعديل</h1>
@@ -969,7 +981,7 @@
                 <textarea id="returnModificationreasonTxt" class="form-control" rows="3"
                           [ngClass]="{'is-invalid': returnModificationForm.get('returnModificationreasonTxt')?.invalid && (returnModificationForm.get('returnModificationreasonTxt')?.touched || submitted)}"
                           formControlName="returnModificationreasonTxt"
-                          placeholder="{{ 'returnModificationreasonTxt' | translate }}"></textarea>
+                          placeholder="{{ 'mainApplyServiceResourceName.returnModificationreasonTxt' | translate }}"></textarea>
                 <div *ngIf="returnModificationForm.get('returnModificationreasonTxt')?.invalid && (returnModificationForm.get('returnModificationreasonTxt')?.touched || submitted)"
                      class="invalid-feedback">
                 </div>

@@ -5320,3 +5320,14 @@ td {
   border: 3px solid rgba(255, 255, 255, 0.50) !important;
   background-color: var(--Color-25, #8D734D) !important;
 }
+
+html[dir="rtl"] .breadcrumb {
+  direction: rtl;
+}
+
+html[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
+  float: right;
+  padding-left: 0.5rem;
+  padding-right: 0;
+  content: "/";
+}

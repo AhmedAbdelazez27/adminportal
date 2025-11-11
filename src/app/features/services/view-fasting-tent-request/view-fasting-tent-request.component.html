@@ -47,13 +47,14 @@
                 <div class="col-xl-6">
                   <p class="mb-1">
                     <strong>{{ 'mainApplyServiceResourceName.applyDate' | translate }}:</strong>
-                    {{formatDate(mainApplyService.applyDate)}}
+                    {{formatDateTime(mainApplyService.applyDate)}}
                   </p>
                 </div>
+
                 <div class="col-xl-6">
                   <p class="mb-1">
-                    <strong>{{ 'mainApplyServiceResourceName.userName' | translate }}: </strong>
-                    {{mainApplyService.userName}}
+                    <strong>{{ 'mainApplyServiceResourceName.entityName' | translate }}: </strong>
+                    {{mainApplyService.entityName}}
                   </p>
                 </div>
                 <div class="col-xl-6">
@@ -63,7 +64,15 @@
                   </p>
                 </div>
                 <div class="col-xl-6">
-                  <span class="badge bg-primary">{{ mainApplyService.serviceStatusName || mainApplyService.lastStatus }}</span>
+                  <span class="badge bg-primary">{{ mainApplyService.serviceStatusName }}</span>
+                </div>
+
+                <div class="col-xl-6">
+                  <button type="button"
+                          class="btn btn-outline-secondary"
+                          (click)="printReport()">
+                    {{ 'Common.Print' | translate }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -96,12 +105,18 @@
                         <!-- {{ 'WORKFLOW.STEP' | translate }} {{step.stepOrder}} -->
                         {{ step?.stepName || (('WORKFLOW.STEP' | translate) + ' ' + step?.stepOrder) }}
                       </div>
-                      <div class="step-status" [style.color]="getStatusColor(step.serviceStatus)">
+                      <div class="step-status" [style.color]="getStatusColor(step.serviceStatus)" *ngIf="lang === 'ar'">
                         <i [class]="getStatusIcon(step.serviceStatus)" class="me-1"></i>
                         {{step.serviceStatusName || (getStatusLabel(step.serviceStatus) | translate)}}
                       </div>
+
+                    
                     </div>
                     <h6 class="department-name">{{step.departmentName}}</h6>
+                    <small class="text-muted d-block mb-2" *ngIf="step.lastModified">
+                      <i class="bi bi-calendar3 me-1"></i>
+                      {{ formatDate(step.lastModified) }}
+                    </small>
                     <button type="button" class="btn btn-link p-0"
                             (click)="openHistoryModal(step.workFlowHistories || [])">
                       <i class="bi bi-clock-history me-1"></i>{{
@@ -152,7 +167,7 @@
                     <ng-template #readonlyNotes>
                       <div class="form-group mb-3">
                         <label for="NotesForApproving" class="control-label col-md-12">
-                          {{ 'mainApplyServiceResourceName.notes' | translate }}
+                          {{ 'mainApplyServiceResourceName.notesConsent' | translate }}
                         </label>
                         <textarea id="NotesForApproving" class="form-control" readonly> {{ mainApplyService.notesForApproving }}</textarea>
                       </div>
@@ -169,8 +184,11 @@
 
                       <div *ngIf="workFlowQuery[0].serviceStatus == 7" class="alert alert-warning text-center">
                         <div class="popover__wrapper">
-                          <a href="javascript:void(0);">
+                          <a href="javascript:void(0);" *ngIf="lang === 'ar'">
                             <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
+                          </a>
+                          <a href="javascript:void(0);" *ngIf="lang === 'en'">
+                            <span class="btn btn-info">{{ mainApplyService.lastStatusEN }}</span>
                           </a>
                           <div class="popover__content w-60">
                             <p class="popover__message">{{ workFlowQuery[0].refuseReason }}</p>
@@ -182,8 +200,11 @@
                         <ng-template #returnForModification>
                           <div class="alert alert-warning text-center">
                             <div class="popover__wrapper">
-                              <a href="javascript:void(0);">
+                              <a href="javascript:void(0);" *ngIf="lang === 'ar'">
                                 <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
+                              </a>
+                              <a href="javascript:void(0);" *ngIf="lang === 'en'">
+                                <span class="btn btn-info">{{ mainApplyService.lastStatusEN }}</span>
                               </a>
                               <div class="popover__content w-60">
                                 <p class="popover__message">{{ mainApplyService.reasonForModification }}</p>
@@ -212,25 +233,25 @@
 
 
                             <!--<div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
-    <button type="button" (click)="acceptbtn()" class="btn btn-success">
-      {{ 'mainApplyServiceResourceName.accep' | translate }}
-    </button>
-    <button type="button" (click)="rejectbtn()" class="btn btn-danger">
-      {{ 'mainApplyServiceResourceName.refu' | translate }}
-    </button>
-  </div>
+                              <button type="button" (click)="acceptbtn()" class="btn btn-success">
+                                {{ 'mainApplyServiceResourceName.accep' | translate }}
+                              </button>
+                              <button type="button" (click)="rejectbtn()" class="btn btn-danger">
+                                {{ 'mainApplyServiceResourceName.refu' | translate }}
+                              </button>
+                            </div>
 
-  <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
-    <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
-      {{ 'SERVICE_SETTING.DEPARTMENT_ACTION_REVIEW' | translate }}
-    </button>
-  </div>
+                            <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
+                              <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
+                                {{ 'SERVICE_SETTING.DEPARTMENT_ACTION_REVIEW' | translate }}
+                              </button>
+                            </div>
 
-  <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
-    <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
-      {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
-    </button>
-  </div>-->
+                            <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
+                              <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
+                                {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
+                              </button>
+                            </div>-->
 
                             <div *ngIf="!hasActionButtons" class="d-flex flex-wrap gap-2 justify-content-center">
                             </div>
@@ -244,8 +265,11 @@
                       <ng-template #noWorkflowReturn>
                         <div class="alert alert-warning text-center">
                           <div class="popover__wrapper">
-                            <a href="javascript:void(0);">
+                            <a href="javascript:void(0);" *ngIf="lang === 'ar'">
                               <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
+                            </a>
+                            <a href="javascript:void(0);" *ngIf="lang === 'en'">
+                              <span class="btn btn-info">{{ mainApplyService.lastStatusEN }}</span>
                             </a>
                             <div class="popover__content w-60">
                               <p class="popover__message">{{ mainApplyService.reasonForModification }}</p>
@@ -257,22 +281,17 @@
                       <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else noWorkflowReturn">
                         <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
-                          <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
+                          <div *ngIf="serviceDepartmentActions && serviceDepartmentActions.length > 0"
+                               class="d-flex flex-wrap gap-2 justify-content-center">
+
                             <button type="button" (click)="acceptbtn()" class="btn btn-success">
                               {{ 'mainApplyServiceResourceName.accep' | translate }}
                             </button>
+
                             <button type="button" (click)="rejectbtn()" class="btn btn-danger">
                               {{ 'mainApplyServiceResourceName.refu' | translate }}
                             </button>
-                          </div>
 
-                          <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
-                            <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
-                              {{ 'SERVICE_SETTING.DEPARTMENT_ACTION_REVIEW' | translate }}
-                            </button>
-                          </div>
-
-                          <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
                             <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
                               {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
                             </button>
@@ -334,10 +353,7 @@
                         <div class="form-control-plaintext">{{fastingTentService?.location?.locationName || '-'}}</div>
                       </div>
 
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">{{ 'VIEW_FASTING_TENT.LOCATION_OWNER' | translate }}</label>
-                        <div class="form-control-plaintext">{{fastingTentService?.location?.locationOwner || '-'}}</div>
-                      </div>
+                  
 
                       <div class="col-md-12 mb-3">
                         <label class="form-label fw-bold">{{ 'VIEW_FASTING_TENT.LOCATION_ADDRESS' | translate }}</label>
@@ -354,10 +370,7 @@
                         <div class="form-control-plaintext">{{fastingTentService?.streetName || '-'}}</div>
                       </div>
 
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">{{ 'VIEW_FASTING_TENT.GROUND_NO' | translate }}</label>
-                        <div class="form-control-plaintext">{{fastingTentService?.groundNo || '-'}}</div>
-                      </div>
+                  
                     </div>
 
                     <div *ngIf="fastingTentService?.location?.locationCoordinates" class="mb-4">
@@ -410,36 +423,14 @@
                     </div>
                   </div>
 
-                  <div class="row">
-                    <div class="col-xl-6 mb-3">
-                      <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" [checked]="fastingTentService?.tentIsSetUp"
-                               disabled id="tentIsSetUpView">
-                        <label class="form-check-label" for="tentIsSetUpView">
-                          {{ 'VIEW_FASTING_TENT.TENT_IS_SET_UP' | translate }}
-                        </label>
-                      </div>
-                    </div>
-                    <div class="col-xl-6 mb-3">
-                      <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox"
-                               [checked]="fastingTentService?.isConsultantApprovedFromPolice" disabled
-                               id="consultantApprovedView">
-                        <label class="form-check-label" for="consultantApprovedView">
-                          {{ 'VIEW_FASTING_TENT.CONSULTANT_APPROVED_FROM_POLICE' | translate }}
-                        </label>
-                      </div>
-                    </div>
-                    <div class="col-xl-6 mb-3">
-                      <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox"
-                               [checked]="fastingTentService?.isConsultantFromAjman" disabled id="consultantFromAjmanView">
-                        <label class="form-check-label" for="consultantFromAjmanView">
-                          {{ 'VIEW_FASTING_TENT.CONSULTANT_FROM_AJMAN' | translate }}
-                        </label>
-                      </div>
-                    </div>
-                  </div>
+               
+
+
+
+
+
+
+
                 </div>
               </div>
             </div>
@@ -592,8 +583,11 @@
 
                       <div *ngIf="workFlowQuery[0].serviceStatus == 7" class="alert alert-warning text-center">
                         <div class="popover__wrapper">
-                          <a href="javascript:void(0);">
+                          <a href="javascript:void(0);" *ngIf="lang === 'ar'">
                             <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
+                          </a>
+                          <a href="javascript:void(0);" *ngIf="lang === 'en'">
+                            <span class="btn btn-info">{{ mainApplyService.lastStatusEN }}</span>
                           </a>
                           <div class="popover__content w-60">
                             <p class="popover__message">{{ workFlowQuery[0].refuseReason }}</p>
@@ -605,8 +599,11 @@
                         <ng-template #returnForModification>
                           <div class="alert alert-warning text-center">
                             <div class="popover__wrapper">
-                              <a href="javascript:void(0);">
+                              <a href="javascript:void(0);" *ngIf="lang === 'ar'">
                                 <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
+                              </a>
+                              <a href="javascript:void(0);" *ngIf="lang === 'en'">
+                                <span class="btn btn-info">{{ mainApplyService.lastStatusEN }}</span>
                               </a>
                               <div class="popover__content w-60">
                                 <p class="popover__message">{{ mainApplyService.reasonForModification }}</p>
@@ -618,22 +615,17 @@
                         <div *ngIf="mainApplyService.lastStatus != 'إرجاع للتعديل'; else returnForModification">
                           <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
-                            <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
+                            <div *ngIf="serviceDepartmentActions && serviceDepartmentActions.length > 0"
+                                 class="d-flex flex-wrap gap-2 justify-content-center">
+
                               <button type="button" (click)="acceptbtn()" class="btn btn-success">
                                 {{ 'mainApplyServiceResourceName.accep' | translate }}
                               </button>
+
                               <button type="button" (click)="rejectbtn()" class="btn btn-danger">
                                 {{ 'mainApplyServiceResourceName.refu' | translate }}
                               </button>
-                            </div>
 
-                            <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
-                              <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
-                                {{ 'SERVICE_SETTING.DEPARTMENT_ACTION_REVIEW' | translate }}
-                              </button>
-                            </div>
-
-                            <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
                               <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
                                 {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
                               </button>
@@ -651,8 +643,11 @@
                       <ng-template #noWorkflowReturn>
                         <div class="alert alert-warning text-center">
                           <div class="popover__wrapper">
-                            <a href="javascript:void(0);">
+                            <a href="javascript:void(0);" *ngIf="lang === 'ar'">
                               <span class="btn btn-info">{{ mainApplyService.lastStatus }}</span>
+                            </a>
+                            <a href="javascript:void(0);" *ngIf="lang === 'en'">
+                              <span class="btn btn-info">{{ mainApplyService.lastStatusEN }}</span>
                             </a>
                             <div class="popover__content w-60">
                               <p class="popover__message">{{ mainApplyService.reasonForModification }}</p>
@@ -665,26 +660,22 @@
                         <div *ngIf="isEditMode" class="d-flex flex-wrap gap-2 justify-content-center">
 
                           <div *ngIf="serviceDepartmentActions?.includes(1)" class="d-flex flex-wrap gap-2 justify-content-center">
-                            <button type="button" (click)="acceptbtn()" class="btn btn-success">
-                              {{ 'mainApplyServiceResourceName.accep' | translate }}
-                            </button>
-                            <button type="button" (click)="rejectbtn()" class="btn btn-danger">
-                              {{ 'mainApplyServiceResourceName.refu' | translate }}
-                            </button>
-                          </div>
+                            <div *ngIf="serviceDepartmentActions && serviceDepartmentActions.length > 0"
+                                 class="d-flex flex-wrap gap-2 justify-content-center">
 
-                          <div *ngIf="serviceDepartmentActions?.includes(2)" class="d-flex flex-wrap gap-2 justify-content-center">
-                            <button type="submit" (click)="custombtn()" class="btn btn-outline-secondary">
-                              {{ 'SERVICE_SETTING.DEPARTMENT_ACTION_REVIEW' | translate }}
-                            </button>
-                          </div>
+                              <button type="button" (click)="acceptbtn()" class="btn btn-success">
+                                {{ 'mainApplyServiceResourceName.accep' | translate }}
+                              </button>
 
-                          <div *ngIf="serviceDepartmentActions?.includes(3)" class="d-flex flex-wrap gap-2 justify-content-center">
-                            <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
-                              {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
-                            </button>
-                          </div>
+                              <button type="button" (click)="rejectbtn()" class="btn btn-danger">
+                                {{ 'mainApplyServiceResourceName.refu' | translate }}
+                              </button>
 
+                              <button type="submit" (click)="returnForModificationsbtn()" class="btn btn-outline-secondary">
+                                {{ 'mainApplyServiceResourceName.ReturnForModifications' | translate }}
+                              </button>
+                            </div>
+                          </div>
                           <div *ngIf="!hasActionButtons" class="d-flex flex-wrap gap-2 justify-content-center">
                           </div>
 
@@ -822,7 +813,7 @@
 
 
 <div class="modal fade" id="addcommentsModal" tabindex="-1" aria-labelledby="addcommentsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl custom-modal-width">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="addcommentsModalLabel">{{ 'Common.AddComment' | translate }}</h5>
@@ -836,12 +827,12 @@
               <div class="col-xl-12 mb-3">
                 <label for="comment" class="form-label">
                   {{
- 'mainApplyServiceResourceName.Comments' | translate
+ 'mainApplyServiceResourceName.WORKFLOW.COMMENTS' | translate
                   }}
                 </label>
                 <textarea id="comment" class="form-control" rows="3"
                           [ngClass]="{'is-invalid': userForm.get('comment')?.invalid && (userForm.get('comment')?.touched || submitted)}"
-                          formControlName="comment" placeholder="{{ 'comment' | translate }}"></textarea>
+                          formControlName="comment" placeholder="{{ 'mainApplyServiceResourceName.WORKFLOW.COMMENTS' | translate }}"></textarea>
                 <div *ngIf="userForm.get('comment')?.invalid && (userForm.get('comment')?.touched || submitted)"
                      class="invalid-feedback">
                 </div>
@@ -857,8 +848,8 @@
                         [ngClass]="{'is-invalid': userForm.get('commentTypeId')?.invalid && (userForm.get('commentTypeId')?.touched || submitted)}"
                         formControlName="commentTypeId">
                   <option [ngValue]="null">{{ 'SELECT' | translate }}</option>
-                  <option [ngValue]=1>{{ 'Internal' | translate }}</option>
-                  <option [ngValue]=2>{{ 'External' | translate }}</option>
+                  <option [ngValue]=1>{{ 'mainApplyServiceResourceName.Internal' | translate }}</option>
+                  <option [ngValue]=2>{{ 'mainApplyServiceResourceName.External' | translate }}</option>
                 </select>
               </div>
             </div>
@@ -1085,7 +1076,7 @@
 </div>
 
 <div class="modal fade" id="myModalReturnModification" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl custom-modal-width">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="editLabel">سبب ارجاع الطلب للتعديل</h1>
@@ -1108,7 +1099,7 @@
                 <textarea id="returnModificationreasonTxt" class="form-control" rows="3"
                           [ngClass]="{'is-invalid': returnModificationForm.get('returnModificationreasonTxt')?.invalid && (returnModificationForm.get('returnModificationreasonTxt')?.touched || submitted)}"
                           formControlName="returnModificationreasonTxt"
-                          placeholder="{{ 'returnModificationreasonTxt' | translate }}"></textarea>
+                          placeholder="{{ 'mainApplyServiceResourceName.returnModificationreasonTxt' | translate }}"></textarea>
                 <div *ngIf="returnModificationForm.get('returnModificationreasonTxt')?.invalid && (returnModificationForm.get('returnModificationreasonTxt')?.touched || submitted)"
                      class="invalid-feedback">
                 </div>
