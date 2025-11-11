@@ -39,6 +39,7 @@ export class mainApplyServiceDto {
   parentId?: number | null = null;
   lastStatus?: string | null = null;
   lastStatusEN?: string | null = null;
+  serviceStatusName?: string | null = null;
   permitNumber?: string | null = null;
   entityName: string | null = null;
   notesForApproving?: string | null = null;

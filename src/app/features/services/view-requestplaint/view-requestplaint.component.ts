@@ -36,6 +36,22 @@ type MainApplyServiceView = {
   partners: PartnerDto[];
   charityEventPermit: CharityEventPermitDto | null;
 };
+
+type WorkFlowCommentDtos = {
+  paymentId?: string | null;
+  id?: number | null;
+  empId?: string | null;
+  empName?: string | null;
+  employeeDepartmentName?: string | null;
+  workFlowStepsId?: number | null;
+  comment?: string | null;
+  lastModified?: Date | null;
+  lastModifiedstr?: string | null;
+  commentTypeId?: number | null;
+  commentTypeName?: string | null;
+}
+
+
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule,RouterLink],
@@ -103,6 +119,7 @@ export class ViewRequestplaintComponent implements OnInit {
   serviceDepartmentActions: number[] = [];
   private subscriptions: Subscription[] = [];
   allApproved: boolean = false;
+  userForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -122,6 +139,10 @@ export class ViewRequestplaintComponent implements OnInit {
     });
     this.returnModificationForm = this.fb.group({
       returnModificationreasonTxt: [[], Validators.required]
+    });
+    this.userForm = this.fb.group({
+      comment: ['', [Validators.required, Validators.minLength(1)]],
+      commentTypeId: [null, Validators.required],
     });
 }
 
@@ -373,13 +394,14 @@ export class ViewRequestplaintComponent implements OnInit {
   }
 
   // Workflow comment attachments
-    onTableCellClick(event: any) {
-      const btn = event.event?.target?.closest?.('.attachment-btn');
-      if (btn) {
-        const id = parseInt(btn.getAttribute('data-comment-id'), 10);
-        if (id) this.fetchAndViewCommentAttachments(id);
-      }
-    }
+  onTableCellClick(event: any, id: any) {
+    // const btn = event.event?.target?.closest?.('.attachment-btn');
+    // if (btn) {
+    //   const id = parseInt(btn.getAttribute('data-comment-id'), 10);
+    //   if (id) this.fetchAndViewCommentAttachments(id);
+    // }
+    if (id) this.fetchAndViewCommentAttachments(id);
+  }
     onCommentsTableAction(_: { action: string; row: any }) { /* hook جاهز */ }
   
     fetchAndViewCommentAttachments(commentId: number) {
@@ -761,5 +783,40 @@ export class ViewRequestplaintComponent implements OnInit {
       return h?.noteAr || h?.serviceStatusName || '';
     }
     return h?.noteEn || h?.serviceStatusName || '';
+  }
+
+
+  submitComment(): void {
+    this.submitted = true;
+
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      this.toastr.error(this.translate.instant('TOAST.VALIDATION_ERROR'));
+      return;
+    }
+
+    const formData = this.userForm.value;
+
+    const params: WorkFlowCommentDtos = {
+      id: null,
+      empId: localStorage.getItem('userId'),
+      workFlowStepsId: this.originalworkFlowId,
+      comment: formData.comment,
+      commentTypeId: formData.commentTypeId,
+    };
+
+    this.spinnerService.show();
+    this.mainApplyServiceService.saveComment(params).subscribe({
+      next: (res) => {
+        this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
+        this.spinnerService.hide();
+        this.loadMainApplyServiceData();
+      },
+      error: (err) => {
+        this.toastr.error(this.translate.instant('COMMON.ERROR_SAVING_DATA'));
+        this.spinnerService.hide();
+      },
+      complete: () => this.spinnerService.hide(),
+    });
   }
 }

@@ -59,10 +59,10 @@
           <div class="w-100">
             <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
               <h4 class="title ">{{ 'ADVERTISEMENT.VIEW_TITLE' | translate }}</h4>
-              <!--<button *ngIf="targetWorkFlowStep && isEditMode && workFlowQuery?.length" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
+              <button *ngIf="isEditMode && workFlowQuery?.length" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
                 <i class="fas fa-plus me-2"></i>
-                {{ 'COMMON.ADD_COMMENT' | translate }}
-              </button>-->
+                {{ 'Common.AddComment' | translate }}
+              </button>
             </div>
 
             <div class="row">
@@ -93,7 +93,7 @@
                   </p>
                 </div>
                 <div class="col-xl-6">
-                  <span class="badge bg-primary">{{mainApplyService.lastStatus}}</span>
+                  <span class="badge bg-primary">{{ mainApplyService.serviceStatusName || mainApplyService.lastStatus }}</span>
                 </div>
               </div>
             </div>
@@ -460,6 +460,7 @@
                     </div>
                   </div>
                 </div>
+
                 <div class="accordion-item  mb-4">
                   <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -472,12 +473,12 @@
                        data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                       <div class="step-content">
-                        <!--<div class="d-flex justify-content-end align-items-center mb-4">
-                          <button *ngIf="targetWorkFlowStep && isEditMode" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
+                        <div class="d-flex justify-content-end align-items-center mb-4">
+                          <button *ngIf="isEditMode && workFlowQuery?.length" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
                             <i class="fas fa-plus me-2"></i>
-                            {{ 'COMMON.ADD_COMMENT' | translate }}
+                            {{ 'Common.AddComment' | translate }}
                           </button>
-                        </div>-->
+                        </div>
 
                         <div *ngIf="isLoadingComments" class="text-center py-5">
                           <div class="spinner-border spinner-border-sm" role="status">
@@ -685,7 +686,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="commentModalLabel">{{ 'COMMON.ADD_COMMENT' | translate }}</h5>
+        <h5 class="modal-title" id="commentModalLabel">{{ 'Common.AddComment' | translate }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-4">
@@ -773,7 +774,7 @@
         <button type="button" class="btn btn-gold" (click)="addWorkFlowComment()"
                 [disabled]="!commentForm.get('comment')?.value?.trim() || isSavingComment">
           <span *ngIf="isSavingComment" class="spinner-border spinner-border-sm me-2" role="status"></span>
-          {{ 'COMMON.ADD_COMMENT' | translate }}
+          {{ 'Common.AddComment' | translate }}
         </button>
       </div>
     </div>
@@ -785,7 +786,7 @@
   <div class="modal-dialog modal-xl custom-modal-width">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addcommentsModalLabel">{{ 'COMMON.ADD_COMMENT' | translate }}</h5>
+        <h5 class="modal-title" id="addcommentsModalLabel">{{ 'Common.AddComment' | translate }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 

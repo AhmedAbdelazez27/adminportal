@@ -840,7 +840,8 @@
     "UAEPassCancelRequest": "User cancelled the login",
     "notVerifiedUser": "Account is not verified",
     "notVerifiedUserMessage": "You are not eligible to access this service. Your account is either not upgraded or you have a visitor account.",
-    "UnknownSource": "Unknown source type"
+    "UnknownSource": "Unknown source type",
+    "AddComment": "Add Comment"
   },
 
   "AuthenticationResorceName": {

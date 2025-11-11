@@ -30,11 +30,10 @@
           <div class="w-100">
             <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
               <h4 class="title mb-2">{{ 'VIEW_FASTING_TENT.VIEW_TITLE' | translate }}</h4>
-              <!--<button *ngIf="targetWorkFlowStep && isEditMode  && workFlowQuery?.length" type="button"
-                      class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
+              <button *ngIf="isEditMode  && (workFlowQuery?.length || workFlowQuery[0]?.ServiceStatus === 4 || workFlowQuery[0]?.ServiceStatus === 5)" type="button" class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addcommentsModal">
                 <i class="fas fa-plus me-2"></i>
-                {{ 'COMMON.ADD_COMMENT' | translate }}
-              </button>-->
+                {{ 'Common.AddComment' | translate }}
+              </button>
             </div>
             <div class="row">
               <h6 class="fw-bold">{{ mainApplyService.service?.serviceName }}</h6>
@@ -64,7 +63,7 @@
                   </p>
                 </div>
                 <div class="col-xl-6">
-                  <span class="badge bg-primary">{{mainApplyService.lastStatus}}</span>
+                  <span class="badge bg-primary">{{ mainApplyService.serviceStatusName || mainApplyService.lastStatus }}</span>
                 </div>
               </div>
             </div>
@@ -445,190 +444,101 @@
               </div>
             </div>
 
-            <div id="detailsInfo">
-              <div class="accordion" id="fastingTentAccordion">
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="partnersHeader">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#partnersSection" aria-expanded="true" aria-controls="partnersSection">
-                      {{ 'VIEW_FASTING_TENT.PARTNERS' | translate }}
-                    </button>
-                  </h2>
-                  <div id="partnersSection" class="accordion-collapse collapse show" aria-labelledby="partnersHeader"
-                       data-bs-parent="#fastingTentAccordion">
-                    <div class="accordion-body">
-                      <div class="step-content">
-                        <div *ngIf="partners && partners.length > 0">
-                          <div class="table-responsive">
-                            <table class="table table-bordered">
-                              <thead class="table-light">
-                                <tr>
-                                  <th>{{ 'VIEW_FASTING_TENT.PARTNER_NAME' | translate }}</th>
-                                  <th>{{ 'VIEW_FASTING_TENT.PARTNER_TYPE' | translate }}</th>
-                                  <th>{{ 'VIEW_FASTING_TENT.LICENSE_NUMBER' | translate }}</th>
-                                  <th>{{ 'VIEW_FASTING_TENT.LICENSE_ISSUER' | translate }}</th>
-                                  <th>{{ 'VIEW_FASTING_TENT.LICENSE_EXPIRY_DATE' | translate }}</th>
-                                  <th>{{ 'VIEW_FASTING_TENT.CONTACT_DETAILS' | translate }}</th>
-                                  <th>{{ 'COMMON.ATTACHMENTS' | translate }}</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr *ngFor="let partner of partners">
-                                  <td>{{partner.name || '-'}}</td>
-                                  <td>{{partner.typeName || getPartnerTypeName(partner.type)}}</td>
-                                  <td>{{partner.licenseNumber || '-'}}</td>
-                                  <td>{{partner.licenseIssuer || '-'}}</td>
-                                  <td>{{formatDate(partner.licenseExpiryDate) || '-'}}</td>
-                                  <td>{{partner.contactDetails || '-'}}</td>
-                                  <td class="text-center">
-                                    <button *ngIf="partner.attachments && partner.attachments.length > 0"
-                                            class="btn btn-next-style" data-bs-toggle="modal"
-                                            data-bs-target="#partnerAttachmentModal"
-                                            (click)="viewPartnerAttachments(partner)">
-                                      <i class="fas fa-eye me-1"></i>
-                                      {{ 'COMMON.VIEW' | translate }} ({{partner.attachments.length}})
-                                    </button>
-                                    <button *ngIf="!partner.attachments || partner.attachments.length === 0"
-                                            class="btn btn-next-style" data-bs-toggle="modal"
-                                            data-bs-target="#partnerAttachmentModal"
-                                            (click)="fetchPartnerAttachments(partner)">
-                                      <i class="fas fa-eye me-1"></i>
-                                      {{ 'COMMON.VIEW' | translate }}
-                                    </button>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                        <div *ngIf="!partners || partners.length === 0" class="alert alert-info">
-                          {{ 'VIEW_FASTING_TENT.NO_PARTNERS' | translate }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <!-- ACCORDION ITEM 2: Partners -->
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="partnersHeader">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#partnersSection" aria-expanded="false" aria-controls="partnersSection">
+                    {{ 'CHARITY_EVENT_PERMIT.PARTNERS' | translate }}
+                  </button>
+                </h2>
+                <div id="partnersSection" class="accordion-collapse collapse" aria-labelledby="partnersHeader"
+                  data-bs-parent="#charitySectionsAccordion">
+                  <div class="accordion-body">
+                    <!-- Section: Partners (original content preserved) -->
 
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="attachmentsHeader">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#attachmentsSection" aria-expanded="false" aria-controls="attachmentsSection">
-                      {{ 'VIEW_FASTING_TENT.ATTACHMENTS' | translate }}
-                    </button>
-                  </h2>
-                  <div id="attachmentsSection" class="accordion-collapse collapse" aria-labelledby="attachmentsHeader"
-                       data-bs-parent="#fastingTentAccordion">
-                    <div class="accordion-body">
-                      <div class="step-content">
-                        <div *ngIf="attachments && attachments.length > 0">
-                          <div class="row">
-                            <div class="col-xl-4 col-lg-6 mb-4" *ngFor="let attachment of attachments">
-                              <div class="attachment-box">
-                                <h6 class="card-title">
-                                  {{
- attachment.attachmentTitle || ('COMMON.ATTACHMENT' |
-                                  translate)
-                                  }}
-                                </h6>
-                                <p class="mb-4">
-                                  {{ 'COMMON.UPLOADED_ON' | translate }}:
-                                  {{formatDateTime(attachment.lastModified)}}
-                                </p>
-                                <div class="d-flex justify-content-between mt-auto">
-                                  <button class="btn btn-next-style me-2" (click)="viewAttachment(attachment)">
-                                    <i class="fas fa-eye me-1"></i>
-                                    {{ 'COMMON.VIEW' | translate }}
-                                  </button>
-                                  <button class="btn btn-download-style" (click)="downloadAttachment(attachment)">
-                                    <i class="fas fa-download me-1"></i>
-                                    {{ 'COMMON.DOWNLOAD' | translate }}
-                                  </button>
+                    <div class="step-content">
+
+                      <ng-container *ngIf="partners?.length; else noPartners">
+                        <div class="accordion" id="partnersAccordion">
+                          <div class="accordion-item"
+                               *ngFor="let partner of partners; let i = index">
+                            <h2 class="accordion-header" [id]="'partnerHeading' + i">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                      [attr.data-bs-target]="'#partnerCollapse' + i" aria-expanded="false"
+                                      [attr.aria-controls]="'partnerCollapse' + i">
+                                <div class="d-flex flex-column">
+                                  <div>
+                                    {{ i + 1 }} — {{ partner.name || '-' }}
+                                  </div>
+                                  <div class="text-muted pt-1" style="font-weight: normal; font-size: 14px;">
+                                    {{ partner.typeName || partner.type || '-' }}
+                                  </div>
+                                </div>
+                              </button>
+                            </h2>
+                            <div [id]="'partnerCollapse' + i" class="accordion-collapse collapse"
+                                 [attr.aria-labelledby]="'partnerHeading' + i" data-bs-parent="#partnersAccordion">
+                              <div class="accordion-body">
+                                <div class="row">
+                                  <div class="col-md-4 mb-2">
+                                    <label class="form-label fw-bold">{{ 'COMMON.NAME' | translate }}</label>
+                                    <div class="form-control-plaintext">{{ partner.name || '-' }}</div>
+                                  </div>
+                                  <div class="col-md-4 mb-2">
+                                    <label class="form-label fw-bold">{{ 'COMMON.TYPE' | translate }}</label>
+                                    <div class="form-control-plaintext">{{ partner.typeName || partner.type || '-' }}</div>
+                                  </div>
+                                  <div class="col-md-4 mb-2">
+                                    <label class="form-label fw-bold">{{ 'COMMON.LICENSE_NUMBER' | translate }}</label>
+                                    <div class="form-control-plaintext">{{ partner.licenseNumber || '-' }}</div>
+                                  </div>
+                                  <div class="col-md-4 mb-2">
+                                    <label class="form-label fw-bold">{{ 'COMMON.LICENSE_ISSUER' | translate }}</label>
+                                    <div class="form-control-plaintext">{{ partner.licenseIssuer || '-' }}</div>
+                                  </div>
+                                  <div class="col-md-4 mb-2">
+                                    <label class="form-label fw-bold">{{ 'COMMON.LICENSE_EXPIRY' | translate }}</label>
+                                    <div class="form-control-plaintext">{{ formatDate(partner.licenseExpiryDate) || '-' }}</div>
+                                  </div>
+                                  <div class="col-md-4 mb-2">
+                                    <label class="form-label fw-bold">{{ 'COMMON.CONTACT_DETAILS' | translate }}</label>
+                                    <div class="form-control-plaintext">{{ partner.contactDetails || '-' }}</div>
+                                  </div>
+                                  <div class="col-md-12 mb-2">
+                                    <label class="form-label fw-bold">{{ 'COMMON.ATTACHMENTS' | translate }}</label>
+                                    <div class="form-control-plaintext">
+                                      <button *ngIf="partner.attachments && partner.attachments.length > 0"
+                                        class="btn btn-next-style" data-bs-toggle="modal"
+                                        data-bs-target="#partnerAttachmentModal"
+                                        (click)="viewPartnerAttachments(partner)">
+                                  <i class="fas fa-eye me-1"></i>
+                                  {{ 'COMMON.VIEW' | translate }} ({{partner.attachments.length}})
+                                </button>
+                                <button *ngIf="!partner.attachments || partner.attachments.length === 0"
+                                        class="btn btn-next-style" data-bs-toggle="modal"
+                                        data-bs-target="#partnerAttachmentModal"
+                                        (click)="fetchPartnerAttachments(partner)">
+                                  <i class="fas fa-eye me-1"></i>
+                                  {{ 'COMMON.VIEW' | translate }}
+                                </button>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
+                      </ng-container>
 
-                        <div *ngIf="!attachments || attachments.length === 0" class="alert alert-info">
-                          {{ 'VIEW_FASTING_TENT.NO_ATTACHMENTS' | translate }}
-                        </div>
-                      </div>
+                      <ng-template #noPartners>
+                        <div class="alert alert-info">{{ 'CHARITY_EVENT_PERMIT.NO_PARTNERS' | translate }}</div>
+                      </ng-template>
                     </div>
-                  </div>
-                </div>
 
-                <div class="accordion-item mb-4">
-                  <h2 class="accordion-header" id="wfHeader">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#wfComments" aria-expanded="false" aria-controls="wfComments">
-                      {{ 'COMMON.WORKFLOW_COMMENTS' | translate }}
-                    </button>
-                  </h2>
-                  <div id="wfComments" class="accordion-collapse collapse" aria-labelledby="wfHeader"
-                       data-bs-parent="#fastingTentAccordion">
-                    <div class="accordion-body">
-                      <div class="step-content">
-
-                        <!--<div *ngIf="isEditMode  && workFlowQuery?.length"
-                   class="d-flex justify-content-end align-items-center mb-4">
-                <button *ngIf="targetWorkFlowStep" type="button" class="btn btn-gold" data-bs-toggle="modal"
-                        data-bs-target="#addcommentsModal">
-                  <i class="fas fa-plus me-2"></i>
-                  {{ 'COMMON.ADD_COMMENT' | translate }}
-                </button>
-              </div>-->
-
-                        <div *ngIf="isLoadingComments" class="text-center py-5">
-                          <div class="spinner-border spinner-border-sm" role="status">
-                            <span class="visually-hidden">{{ 'COMMON.LOADING' | translate }}</span>
-                          </div>
-                          <span class="ms-2">{{ 'COMMON.LOADING_COMMENTS' | translate }}</span>
-                        </div>
-
-                        <div class="comments-container">
-                          <div class="comment-item" *ngFor="let comment of allWorkFlowComments">
-                            <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
-                              <div>
-                                <h5 class="mb-0">{{ comment.employeeDepartmentName || 'N/A' }}</h5>
-                                <small class="text-muted">
-                                  {{ comment.lastModified | date:'dd/MM/yyyy' }}
-                                </small>
-                              </div>
-                            </div>
-                            <div class="comment-area">
-                              {{ comment.comment }}
-                            </div>
-                            <div>
-                              <button class="btn btn-view-attachment mt-2" data-comment-id="${comment.id}"
-                                      data-row-index="${p.node.rowIndex}" (click)="onTableCellClick($event,comment?.id)">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
-                                     fill="none">
-                                  <g clip-path="url(#clip0_560_1674)">
-                                    <path d="M19.3923 7.84858C18.0998 5.74358 15.1598 2.21191 9.9998 2.21191C4.8398 2.21191 1.8998 5.74358 0.607299 7.84858C0.207739 8.49484 -0.00390625 9.23962 -0.00390625 9.99941C-0.00390625 10.7592 0.207739 11.504 0.607299 12.1502C1.8998 14.2552 4.8398 17.7869 9.9998 17.7869C15.1598 17.7869 18.0998 14.2552 19.3923 12.1502C19.7919 11.504 20.0035 10.7592 20.0035 9.99941C20.0035 9.23962 19.7919 8.49484 19.3923 7.84858V7.84858ZM17.9715 11.2777C16.8615 13.0827 14.349 16.1202 9.9998 16.1202C5.65063 16.1202 3.13813 13.0827 2.02813 11.2777C1.79074 10.8936 1.66501 10.451 1.66501 9.99941C1.66501 9.54785 1.79074 9.10521 2.02813 8.72108C3.13813 6.91608 5.65063 3.87858 9.9998 3.87858C14.349 3.87858 16.8615 6.91275 17.9715 8.72108C18.2089 9.10521 18.3346 9.54785 18.3346 9.99941C18.3346 10.451 18.2089 10.8936 17.9715 11.2777V11.2777Z"
-                                          fill="#374957" />
-                                    <path d="M10.0007 5.83301C9.17656 5.83301 8.37098 6.07738 7.68578 6.53522C7.00057 6.99306 6.46652 7.6438 6.15115 8.40516C5.83579 9.16652 5.75328 10.0043 5.91405 10.8126C6.07482 11.6208 6.47166 12.3632 7.05437 12.946C7.63709 13.5287 8.37952 13.9255 9.18778 14.0863C9.99603 14.2471 10.8338 14.1645 11.5952 13.8492C12.3565 13.5338 13.0073 12.9998 13.4651 12.3146C13.9229 11.6293 14.1673 10.8238 14.1673 9.99967C14.166 8.89501 13.7266 7.83597 12.9455 7.05486C12.1644 6.27374 11.1053 5.83433 10.0007 5.83301V5.83301ZM10.0007 12.4997C9.5062 12.4997 9.02285 12.3531 8.61173 12.0783C8.2006 11.8036 7.88017 11.4132 7.69095 10.9564C7.50173 10.4996 7.45223 9.9969 7.54869 9.51195C7.64515 9.027 7.88325 8.58154 8.23289 8.23191C8.58252 7.88228 9.02797 7.64417 9.51293 7.54771C9.99788 7.45125 10.5005 7.50076 10.9574 7.68998C11.4142 7.87919 11.8046 8.19963 12.0793 8.61075C12.354 9.02187 12.5007 9.50522 12.5007 9.99967C12.5007 10.6627 12.2373 11.2986 11.7684 11.7674C11.2996 12.2363 10.6637 12.4997 10.0007 12.4997Z"
-                                          fill="#374957" />
-                                  </g>
-                                  <defs>
-                                    <clipPath id="clip0_560_1674">
-                                      <rect width="20" height="20" fill="white" />
-                                    </clipPath>
-                                  </defs>
-                                </svg>
-                                {{ 'COMMON.VIEW' | translate}}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        <div *ngIf="!targetWorkFlowStep" class="alert alert-warning">
-                          {{ 'COMMON.NO_WORKFLOW_STEP_FOUND' | translate }}
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
             <div id="statusInfo">
               <div class="main-container mb-4">
@@ -807,7 +717,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="commentModalLabel">{{ 'COMMON.ADD_COMMENT' | translate }}</h5>
+        <h5 class="modal-title" id="commentModalLabel">{{ 'Common.AddComment' | translate }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-4">
@@ -903,7 +813,7 @@
         <button type="button" class="btn btn-gold" (click)="addWorkFlowComment()"
                 [disabled]="!newCommentText.trim() || isSavingComment">
           <span *ngIf="isSavingComment" class="spinner-border spinner-border-sm me-2" role="status"></span>
-          {{ 'COMMON.ADD_COMMENT' | translate }}
+          {{ 'Common.AddComment' | translate }}
         </button>
       </div>
     </div>
@@ -915,7 +825,7 @@
   <div class="modal-dialog modal-xl custom-modal-width">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addcommentsModalLabel">{{ 'COMMON.ADD_COMMENT' | translate }}</h5>
+        <h5 class="modal-title" id="addcommentsModalLabel">{{ 'Common.AddComment' | translate }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 

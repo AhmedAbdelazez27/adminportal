@@ -24,6 +24,7 @@ import jsPDF from 'jspdf';
 import { QRCodeComponent } from 'angularx-qrcode';
 import QRCode from 'qrcode';
 import { AuthService } from '../../../core/services/auth.service';
+import { MainApplyServiceReportService } from '../../../core/services/mainApplyService/mainApplyService.reports';
 
 enum ServiceStatus {
   Accept = 1,
@@ -39,8 +40,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-mainApplyService',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent, NgSelectModule,
-    ReactiveFormsModule, QRCodeComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, NgSelectComponent, GenericDataTableComponent, NgSelectModule,ReactiveFormsModule, QRCodeComponent],
   templateUrl: './mainApplyService.component.html',
   styleUrls: ['./mainApplyService.component.scss']
 })
@@ -48,6 +48,9 @@ declare var bootstrap: any;
 export class MainApplyServiceComponent {
   @ViewChild('filterForm') filterForm!: NgForm;
   @ViewChild(GenericDataTableComponent) genericTable!: GenericDataTableComponent;
+  @ViewChild('reportComp') mainApplyServiceComponentReports!: MainApplyServiceReportService;
+
+
   userForm: FormGroup;
   submitted: boolean = false;
   firstLevel: boolean = false;
@@ -147,6 +150,7 @@ export class MainApplyServiceComponent {
     private router: Router,
     private route: ActivatedRoute,
     private entityService: EntityService,
+    private mainApplyServiceReportService: MainApplyServiceReportService,
 
   ) {
     this.rejectResonsForm = this.fb.group({
@@ -1200,7 +1204,8 @@ export class MainApplyServiceComponent {
       this.getuserFormDatabyId(event.row.userId);
     }
 
-    if (event.action === 'onPrintPDF') {
+
+    else if (event.action === 'onPrintPDF') {
 
       if (!event?.row) return;
 
@@ -1211,29 +1216,25 @@ export class MainApplyServiceComponent {
       const id = event.row.id ?? '';
 
       if (serviceName === "تصريح خيمة / موقع إفطار" && lastStatus.includes("تمت الموافقة")) {
-        this.printDatabyId(id, serviceId, 'final');
+        this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'final');
       }
-      else if (
-        serviceName === "تصريح خيمة / موقع إفطار" &&
-        permitNumber.trim() !== '' &&
-        ['2009', '2010', '2011'].some(d => this.currecntDept?.includes(d))
-      ) {
-        this.printDatabyId(id, serviceId, 'initial');
+      else if (serviceName === "تصريح خيمة / موقع إفطار" && permitNumber.trim() !== '' && ['2009', '2010', '2011'].some(d => this.currecntDept?.includes(d))) {
+        this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'initial');
       }
       else if (lastStatus.includes("تمت الموافقة")) {
-        this.printDatabyId(id, serviceId, 'initial');
+        this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'initial');
       }
       else {
-        this.printDatabyId(id, serviceId, 'initial');
+       // this.mainApplyServiceReportService.printDatabyId(id, serviceId, 'initial');
 
-        //this.translate
-        //  .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
-        //  .subscribe(translations => {
-        //    this.toastr.error(
-        //      `${translations['mainApplyServiceResourceName.NoPermission']}`,
-        //    );
-        //  });
-        //return;
+        this.translate
+          .get(['mainApplyServiceResourceName.NoPermission', 'Common.Required'])
+          .subscribe(translations => {
+            this.toastr.error(
+              `${translations['mainApplyServiceResourceName.NoPermission']}`,
+            );
+          });
+        return;
       }
     }
 
