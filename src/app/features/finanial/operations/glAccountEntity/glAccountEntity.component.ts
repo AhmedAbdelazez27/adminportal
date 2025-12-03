@@ -491,11 +491,7 @@ onentityIdSelect2ChangeNew(selected: any): void {
   }
 
   getLoadDataGrid(event: { pageNumber: number; pageSize: number }): void {
-     if (!this.searchParams.entityId) {
-      this.loadgridData = [];
-      this.pagination.totalCount = 0;
-      return;
-    }
+    
     this.pagination.currentPage = event.pageNumber;
     this.pagination.take = event.pageSize;
     const skip = (event.pageNumber - 1) * event.pageSize;

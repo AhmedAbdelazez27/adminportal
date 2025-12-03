@@ -43,7 +43,6 @@ export class MainApplyServiceReportService {
   currecntDept: string | null = null;
   private destroy$ = new Subject<void>();
   reportData: mainApplyServiceDto = {} as mainApplyServiceDto;
-  reportWindow = window.open('', '_blank');
 
   isArabic : boolean | null = null;
   direction : string | null = null;

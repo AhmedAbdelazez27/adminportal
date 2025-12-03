@@ -455,18 +455,32 @@ export class ApiEndpoints {
     baseUrl: 'https://stg-id.uaepass.ae/idshub',
     //baseUrl: 'https://id.uaepass.ae/idshub',
 
+    //For Local URL
+
+   // getURLCredention: {
+    //  clientId: 'sandbox_stage',
+      //  redirectUri: 'http://compassint.ddns.net:2040/login'   
+     // redirectUri: 'https://localhost:4200/login',
+     // clientsecret: 'HnlHOJTkTb66Y5H'
+    //},
+
+    //For Compass URL
+
     getURLCredention: {
-      clientId: 'sandbox_stage',
-      //  redirectUri: 'http://compassint.ddns.net:2040/login'
-      redirectUri: 'https://localhost:51318/login',
-      clientsecret: 'HnlHOJTkTb66Y5H'
-    },
+      clientId: 'ccc_wadm_stg',
+      clientsecret: 'QhD8MndpfZRy1PFA',
+      redirectUri: 'https://compassint.ddns.net:2036/login'
+    }
+
+    //For Live URL
 
     //getURLCredention: {
     //  clientId: 'ccc_web_stg',
     //  clientsecret: 'Q9pOTvlchYARcSFL',
     //  redirectUri: 'https://192.168.51.130:2001/login'
     //}
+
+    //For Live URL
 
     //getURLCredention: {
     //  clientId: 'ajm_ccc_web_prod',

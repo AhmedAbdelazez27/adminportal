@@ -261,6 +261,15 @@ export class GlAccountComponent implements OnInit, OnDestroy {
       });
   }
 
+  limitNatureOfAccount(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length > 1) {
+      input.value = input.value.charAt(0);  // keep only first character
+      this.glAccountForm.get('natureOfAccount')?.setValue(input.value);
+    }
+  }
+
+
 
   onSubmit(): void {
     this.submitted = true;
@@ -502,7 +511,8 @@ openAddNew(): void {
         this.spinnerService.hide();
       }
     });
-}
+  }
+
 
 
 // ✅ Mapping function for jsTree
@@ -585,6 +595,118 @@ createJSTreeForm(data: any): void {
     } else if (event.action === 'onEditInfo') {
       this.getFormDatabyId(event.row.accountCode, 'edit');
     }
+  }
+
+
+
+  opentree(): void {
+    this.currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'ar';
+
+    this.spinnerService.show();
+    const params = new FilterGlAccountDto();
+
+    this.glAccountService.geGlAccountsTree(params)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result) => {
+          this.jstreeData = this.mapToJsTreeData(result);
+
+          const modalElement = document.getElementById('opentreemodals');
+          if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+          }
+          this.createJsTreeInNewModal(this.jstreeData);
+
+          this.spinnerService.hide();
+        },
+        error: () => this.spinnerService.hide()
+      });
+  }
+
+
+  createJsTreeInNewModal(data: any[]): void {
+    setTimeout(() => {
+      const treeElement: any = $('#jstreeOpenTree');
+
+      if (treeElement && treeElement.jstree(true)) {
+        treeElement.jstree('destroy');
+      }
+
+      treeElement.jstree({
+        core: {
+          check_callback: true,
+          themes: { responsive: false },
+          data
+        },
+        plugins: ['wholerow', 'checkbox', 'types', 'search'],
+        checkbox: {
+          keep_selected_style: false,
+          cascade: 'none',
+          three_state: false
+        },
+        types: {
+          default: { icon: 'fa fa-folder text-secondary fa-lg' },
+          file: { icon: 'fa fa-file text-secondary fa-lg' }
+        },
+        search: {
+          case_sensitive: false,
+          show_only_matches: true
+        }
+      });
+
+      const $searchInput = $('#openTreeSearch');
+      let searchTimeout: any = null;
+
+      $searchInput.off('input.jstreeSearch');
+
+      $searchInput.on('input.jstreeSearch', (e: { currentTarget: HTMLInputElement; }) => {
+        const input = e.currentTarget as HTMLInputElement; 
+        const value = input.value;
+
+        if (searchTimeout) clearTimeout(searchTimeout);
+
+        searchTimeout = setTimeout(() => {
+          const treeInst = treeElement.jstree(true);
+          if (treeInst) {
+            treeInst.search(value);
+          }
+        }, 200);
+      });
+    }, 200);
+  }
+
+
+  expandAll(): void {
+    $('#jstreeOpenTree').jstree('open_all');
+  }
+
+  collapseAll(): void {
+    $('#jstreeOpenTree').jstree('close_all');
+  }
+
+
+  ngAfterViewInit(): void {
+    const modalElement = document.getElementById('opentreemodal');
+
+    if (modalElement) {
+      modalElement.addEventListener('hidden.bs.modal', () => {
+        this.resetOpenTreeModal();
+      });
+    }
+  }
+
+  resetOpenTreeModal(): void {
+    $('#openTreeSearch').val('');
+
+    const tree = $('#jstreeOpenTree');
+    if (tree && tree.jstree(true)) {
+      tree.jstree('destroy');
+    }
+
+    $('#openTreeSearch').off('input.jstreeSearch');
+
+    this.jstreeData = [];
   }
 
 

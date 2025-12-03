@@ -1,0 +1,125 @@
+.tree-container {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  padding: 20px;
+}
+
+.tree-search-container .input-group .form-control {
+  box-shadow: none !important;
+}
+
+.tree-box {
+  max-height: 650px;
+  overflow-y: auto;
+  border: 1px solid #eaeaea;
+  padding: 12px;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+/* jstree styles */
+#jstreeOpenTree .jstree-anchor {
+  font-size: 15px;
+  padding: 6px 4px !important;
+  border-radius: 5px;
+}
+
+#jstreeOpenTree .jstree-hovered {
+  background: #e9f5ff !important;
+  border-radius: 5px;
+}
+
+#jstreeOpenTree .jstree-clicked {
+  background: #d8ebff !important;
+  color: #0d6efd !important;
+  font-weight: 600;
+  border-radius: 5px;
+}
+
+#jstreeOpenTree .fa-folder {
+  color: #6c757d !important;
+}
+
+#jstreeOpenTree .fa-file {
+  color: #a0a0a0 !important;
+}
+
+.modal-content {
+  border-radius: 15px !important;
+}
+#jstreeOpenTree li {
+  transition: all 0.2s ease-in-out;
+}
+.tree-box {
+  max-height: 650px;
+  overflow-y: auto;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  background: #fafafa;
+  padding: 12px;
+}
+
+/* Right panel */
+.detail-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.detail-title {
+  font-weight: 600;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ececec;
+  padding-bottom: 5px;
+}
+
+.detail-line {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+/* Level colors */
+#jstreeOpenTree li {
+  transition: 0.15s;
+}
+
+#jstreeOpenTree li[data-level="1"] > a {
+  color: #0d6efd;
+  font-weight: 600;
+}
+
+#jstreeOpenTree li[data-level="2"] > a {
+  color: #198754;
+}
+
+#jstreeOpenTree li[data-level="3"] > a {
+  color: #6f42c1;
+}
+
+/* Hover & selected */
+#jstreeOpenTree .jstree-hovered {
+  background: #e7f3ff !important;
+  border-radius: 5px;
+}
+
+#jstreeOpenTree .jstree-clicked {
+  background: #d6e8ff !important;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+/* Breadcrumb */
+.breadcrumb-container {
+  background: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  font-size: 14px;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}

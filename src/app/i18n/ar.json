@@ -643,7 +643,7 @@
     "totalRequestsReportTitle": "اجمالي الطلبات المقدمه",
     "mainServices": "الطلبات المقدمه",
     "glAccountTitle": "شجرة الحسابات",
-    "glAccountEntityTitle": "شجرة الحسابات",
+    "glAccountEntityTitle": "شجرة حسابات الجمعيات",
     "generalSetting": "  الإعدادات العامة "
   },
   "dataTransLogs": {
@@ -2241,8 +2241,8 @@
 
   "glAccountResourceName": {
     "title": "شجرة الحسابات",
-    "accountCode": "رقم الحساب",
-    "parentCode": "الاب",
+    "accountCode": " رقم حساب الجمعية ",
+    "parentCode": "رقم حساب المجلس",
     "accountDescription": "الاسم لاتيني",
     "arabicDescription": "الاسم",
     "isDisabled": "مقفل",
@@ -2250,17 +2250,22 @@
     "trialBalance": "ميزان المراجعة",
     "profitLoss": "الارباح والخسائر",
     "balanceSheet": "ميزانيه",
-    "commentDate": "تاريخ التعليق"
+    "commentDate": "تاريخ التعليق",
+    "expandAll": "توسيع الكل",
+    "collapseAll": "انهيار الكل",
+    "openTree": "شجرة مفتوحة"
   },
+
+
   "glAccountEntityResourceName": {
-    "title": "شجرة الحسابات",
-    "parentId": "الاب",
+    "title": "شجرة حسابات الجمعيات",
+    "parentId": "رقم حساب المجلس",
     "entityId": "الجمعيه",
     "accountStatus": "الحاله",
     "mappedAccountCode": "Mapped Account Code",
     "accountId": "الحساب",
-    "accountCode": "رقم الحساب",
-    "parentCode": "الاب",
+    "accountCode": " رقم حساب الجمعية ",
+    "parentCode": "رقم حساب المجلس",
     "accountDescription": "الاسم لاتيني",
     "arabicDescription": "الاسم",
     "isDisabled": "مقفل",

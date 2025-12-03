@@ -2595,7 +2595,10 @@
     "natureOfAccount": "nature of Account",
     "trialBalance": "Trial Balance",
     "profitLoss": "Fit Loss",
-    "balanceSheet": "Balance Sheet"
+    "balanceSheet": "Balance Sheet",
+    "expandAll": "Expand All",
+    "collapseAll": "Collapse All",
+    "openTree": "Open Tree"
   },
   "glAccountEntityResourceName": {
     "title": "GlAccountsEntity",
