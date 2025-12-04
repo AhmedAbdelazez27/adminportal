@@ -1511,19 +1511,19 @@ export class ViewDistributionSitePermitComponent implements OnInit, OnDestroy {
   }
 
   acceptbtn(): void {
-    this.updateStatus("1", '');
+    this.updateStatus("1", '').subscribe();
   }
 
   rejectbtn(): void {
-    this.updateStatus("2", '');
+    this.updateStatus("2", '').subscribe();
   }
 
   cancelcustombtn(): void {
-    this.updateStatus("4", '');
+    this.updateStatus("4", '').subscribe();
   }
 
   custombtn(): void {
-    this.updateStatus("5", '');
+    this.updateStatus("5", '').subscribe();
   }
 
   rejectWithReasonbtn(): void {
@@ -1628,11 +1628,15 @@ export class ViewDistributionSitePermitComponent implements OnInit, OnDestroy {
     const endDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.endDate ?? null);
 
     if (status === "1" && !endDate && this.mainApplyService?.serviceId === 1) {
+      console.log("test end date");
+      
       this.toastr.warning(this.translate.instant('VALIDATION.END_DATE_REQUIRED'));
       return of(null); // return empty observable to keep signature consistent
     }
 
     if (status === "1" && !startDate && this.mainApplyService?.serviceId === 1) {
+
+      console.log("test start date");
       this.toastr.warning(this.translate.instant('VALIDATION.START_DATE_REQUIRED'));
       return of(null);
     }
@@ -1640,6 +1644,8 @@ export class ViewDistributionSitePermitComponent implements OnInit, OnDestroy {
     this.spinnerService.show();
 
     return new Observable((observer) => {
+      console.log("rrrrrrr");
+      
       this.saveNotesForApproving().subscribe({
         next: () => {
           const param: UpdateStatusDto = {
