@@ -23,11 +23,10 @@ export class ApiEndpoints {
       'https://stg-id.uaepass.ae/idshub/logout?redirect_uri=?',
     UAEPassLogInBaseURL:
       'https://stg-id.uaepass.ae/idshub/authorize?response_type=code&client_id=sandbox_stage&scope=urn:uae:digitalid:profile:general&state=HnlHOJTkTb66Y5H&redirect_uri=http://localhost:4200&acr_values=urn:safelayer:tws:policies:authentication:level:low',
-    ResendVerifyTwoFactorOtp : '/Auth/ResendVerifyTwoFactorOtp'  ,
-    VerifyTwoFactor : '/Auth/VerifyTwoFactor'  ,
-    RefreshToken : '/Auth/RefreshToken'  ,
-    Logout : '/Logout'  ,
-
+    ResendVerifyTwoFactorOtp: '/Auth/ResendVerifyTwoFactorOtp',
+    VerifyTwoFactor: '/Auth/VerifyTwoFactor',
+    RefreshToken: '/Auth/RefreshToken',
+    Logout: '/Logout',
   };
 
   static readonly Roles = {
@@ -107,7 +106,7 @@ export class ApiEndpoints {
     GetAll: '/GetAll',
     GetById: '/GetDetailById',
     GetPaymentDetailsById: '/GetPaymentDetails',
-    GetPaymentLinesById: '/GetPaymentLines'
+    GetPaymentLinesById: '/GetPaymentLines',
   };
 
   static readonly ArMiscReceiptHeader = {
@@ -135,7 +134,7 @@ export class ApiEndpoints {
     GetAll: '/GetAll',
     GetById: '/GetGeneralJournalHeaderDetails',
     GetLineDetailsById: '/GetGLLines',
-   // GetById: (receiptId: string, entityId: string) =>`/GetGeneralJournalHeaderDetails/${receiptId}/${entityId}`,
+    // GetById: (receiptId: string, entityId: string) =>`/GetGeneralJournalHeaderDetails/${receiptId}/${entityId}`,
     //GetLineDetailsById: (receiptId: string, entityId: string) =>`/GetGLLines/${receiptId}/${entityId}`,
   };
 
@@ -234,10 +233,10 @@ export class ApiEndpoints {
     Base: '/SpContracts',
     GetAll: '/GetContractsRequests',
     GetContractByIdBase: '/SpContractCases',
-   // GetContractById: (contractId: string, entityId: string) =>`/GetSpContract/${contractId}/${entityId}`,
+    // GetContractById: (contractId: string, entityId: string) =>`/GetSpContract/${contractId}/${entityId}`,
     GetContractById: '/GetSpContract',
     GetContractCasesById: '/Get',
-   // GetContractCasesById: (contractId: string, entityId: string) =>`/Get/${contractId}/${entityId}`,
+    // GetContractCasesById: (contractId: string, entityId: string) =>`/Get/${contractId}/${entityId}`,
   };
 
   static readonly AidRequest = {
@@ -255,7 +254,7 @@ export class ApiEndpoints {
   static readonly SpCases = {
     Base: '/SpCases',
     GetAllGridData: '/GetAllGridData',
-   // GetCaseDetails: (caseId: string, entityId: string) =>`/Get/${caseId}/${entityId}`,
+    // GetCaseDetails: (caseId: string, entityId: string) =>`/Get/${caseId}/${entityId}`,
     GetCaseDetails: '/Get',
   };
 
@@ -278,8 +277,8 @@ export class ApiEndpoints {
     GetCasePaymentHdrDetailsById: '/Get',
     GetContractDetailById: '/GetSpContract',
     GetContractCasesDetailById: '/Get',
-   // GetContractDetailById: (contractId: string, entityId: string) =>`/GetSpContract/${contractId}/${entityId}`,
-   // GetContractCasesDetailById: (contractId: string, entityId: string) =>`/Get/${contractId}/${entityId}`,
+    // GetContractDetailById: (contractId: string, entityId: string) =>`/GetSpContract/${contractId}/${entityId}`,
+    // GetContractCasesDetailById: (contractId: string, entityId: string) =>`/Get/${contractId}/${entityId}`,
   };
 
   static readonly ServiceRequestsReports = {
@@ -434,7 +433,7 @@ export class ApiEndpoints {
     MarkAsSeen: (id: string) => `/Notifications/MarkAsSeen/${id}`,
     // GetUnseenCount: (userId: string) =>
     //   `/Notifications/GetUnseenCount/${userId}`,
-     GetUnseenCount: '/GetUnseenCount',
+    GetUnseenCount: '/GetUnseenCount',
     SendToDepartment: '/Notifications/SendToDepartment',
   };
 
@@ -452,25 +451,25 @@ export class ApiEndpoints {
   };
 
   static readonly UAE_PASS_CONFIG = {
-    baseUrl: 'https://stg-id.uaepass.ae/idshub',
-    //baseUrl: 'https://id.uaepass.ae/idshub',
+    //baseUrl: 'https://stg-id.uaepass.ae/idshub',
+    baseUrl: 'https://id.uaepass.ae/idshub',
 
     //For Local URL
 
-   // getURLCredention: {
+    // getURLCredention: {
     //  clientId: 'sandbox_stage',
-      //  redirectUri: 'http://compassint.ddns.net:2040/login'   
-     // redirectUri: 'https://localhost:4200/login',
-     // clientsecret: 'HnlHOJTkTb66Y5H'
+    //  redirectUri: 'http://compassint.ddns.net:2040/login'
+    // redirectUri: 'https://localhost:4200/login',
+    // clientsecret: 'HnlHOJTkTb66Y5H'
     //},
 
     //For Compass URL
 
-    getURLCredention: {
-      clientId: 'ccc_wadm_stg',
-      clientsecret: 'QhD8MndpfZRy1PFA',
-      redirectUri: 'https://compassint.ddns.net:2036/login'
-    }
+    //getURLCredention: {
+    //  clientId: 'ccc_wadm_stg',
+    //  clientsecret: 'QhD8MndpfZRy1PFA',
+    //  redirectUri: 'https://compassint.ddns.net:2036/login',
+    //},
 
     //For Live URL
 
@@ -482,10 +481,10 @@ export class ApiEndpoints {
 
     //For Live URL
 
-    //getURLCredention: {
-    //  clientId: 'ajm_ccc_web_prod',
-    //  clientsecret: 'PXr2q2Tu8AMbK7mT',
-    //  redirectUri: 'https://ajmanccc.ae/login'
-    //}
+     getURLCredention: {
+       clientId: 'ccca_web_prod',
+       clientsecret: 'PDrNAyXHTeDXZzCj',
+       redirectUri: 'https://admin.ajmanccc.ae/login',
+     },
   };
 }
