@@ -24,35 +24,61 @@
   }
 }
 
-.notification-management-header {
+// Header styles matching mainApplyService
+.bg-light {
   .title {
-     
     color: #8D734D;
-    font-family: "Expo Arabic";
+    font-family: "Expo Arabic Book";
     font-size: 32px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     text-transform: capitalize;
+    margin-bottom: 0.5rem;
     
     i {
       font-size: 1.8rem;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+
+      i {
+        font-size: 1.4rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      font-size: 20px;
+
+      i {
+        font-size: 1.2rem;
+      }
     }
   }
  
   .text-muted {
     color: var(--Gray-6, #625F68);
-    font-family: "Expo Arabic";
+    font-family: "Expo Arabic Book";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 24px;
+
+    @media (max-width: 576px) {
+      font-size: 12px;
+      line-height: 20px;
+    }
   }
 }
 
 // Statistics Cards Container
 .statistics-cards-container {
   margin-bottom: 2rem;
+
+  @media (max-width: 576px) {
+    margin-bottom: 1.5rem;
+  }
 }
 
 .statistics-cards-row {
@@ -61,6 +87,11 @@
   justify-content: flex-start;
   align-items: stretch;
   flex-wrap: wrap;
+
+  // RTL Support
+  [dir="rtl"] & {
+    justify-content: flex-end;
+  }
 }
 
 // Statistics Cards (Matching the image design)
@@ -69,7 +100,7 @@
   border: none;
   transition: all 0.3s ease;
   color: var(--Color-16, #000);
-  font-family: "Expo Arabic";
+  font-family: "Expo Arabic Book";
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -78,12 +109,24 @@
   min-height: 120px;
   flex: 0 0 auto;
   
+  // RTL Support
+  &[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  &[dir="ltr"] {
+    direction: ltr;
+    text-align: left;
+  }
+  
   &:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     
     .stat-card-icon {
       transform: scale(1.1);
+      margin-top: -20px; // تتحرك قليلاً للأعلى عند hover
     }
   }
   
@@ -94,13 +137,18 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    gap: 0.5rem;
   }
   
   .stat-card-content {
     text-align: center;
     width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   
   .stat-card-title {
@@ -109,9 +157,22 @@
     margin-bottom: 8px;
     text-transform: uppercase;
     line-height: 1.2;
-    font-family: "Expo Arabic";
+    font-family: "Expo Arabic Book";
     text-align: center;
     letter-spacing: 0.5px;
+    
+    // RTL Support
+    .stat-card[dir="rtl"] & {
+      font-family: "Expo Arabic Book";
+      direction: rtl;
+      text-align: center;
+    }
+    
+    .stat-card[dir="ltr"] & {
+      font-family: "Expo Arabic Book", sans-serif;
+      direction: ltr;
+      text-align: center;
+    }
   }
   
   .stat-card-number {
@@ -119,14 +180,27 @@
     font-weight: 700;
     margin-bottom: 0;
     line-height: 1.1;
-    font-family: "Expo Arabic";
+    font-family: "Expo Arabic Book", "Arial", sans-serif;
     text-align: center;
+    direction: ltr; // Numbers always LTR
+    unicode-bidi: embed;
+    display: inline-block;
+    
+    // Ensure numbers display correctly in both directions
+    .stat-card[dir="rtl"] & {
+      direction: ltr;
+      unicode-bidi: embed;
+      text-align: center;
+    }
+    
+    .stat-card[dir="ltr"] & {
+      direction: ltr;
+      text-align: center;
+    }
   }
   
   .stat-card-icon {
-    position: absolute;
-    top: 12px;
-    right: 12px;
+    position: relative;
     display: flex;
     padding: 8px;
     align-items: center;
@@ -135,6 +209,15 @@
     transition: all 0.3s ease;
     width: 36px;
     height: 36px;
+    margin-top: -18px; // نصف الأيقونة خارج الكارد من الأعلى
+    margin-bottom: 0.5rem;
+    flex-shrink: 0;
+    
+    // Works for both RTL and LTR - centered at top
+    .stat-card[dir="rtl"] &,
+    .stat-card[dir="ltr"] & {
+      align-self: center;
+    }
     
     i {
       font-size: 16px;
@@ -203,9 +286,19 @@
 
 // Table Container
 .notification-table-container {
+  margin-bottom: 2rem;
+
+  @media (max-width: 576px) {
+    margin-bottom: 1.5rem;
+  }
+
   .card {
     border-radius: 1.5rem;
     overflow: hidden;
+    
+    @media (max-width: 576px) {
+      border-radius: 12px;
+    }
     
     .card-header {
       background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
@@ -214,6 +307,21 @@
       .card-title {
         color: #495057;
         font-weight: 600;
+      }
+    }
+  }
+
+  // Desktop pagination spacing
+  ::ng-deep {
+    app-generic-data-table {
+      > div:last-child {
+        margin-left: 6px;
+        margin-right: 6px;
+        padding: 16px 0;
+        background: transparent;
+        border-radius: 0;
+        border: none;
+        margin-top: 1rem;
       }
     }
   }
@@ -823,10 +931,170 @@
   height: 3rem;
 }
 
+// Mobile Cards View Styles
+.mobile-cards-view {
+  display: none;
+}
+
+.notification-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .card-header-section {
+    padding: 16px;
+    border-bottom: 1px solid #e9ecef;
+    background: #f8f9fa;
+
+    h6 {
+      font-size: 16px;
+      color: #495057;
+      margin: 0;
+      flex: 1;
+    }
+  }
+
+  .card-body-section {
+    padding: 16px;
+  }
+
+  .card-field {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.card-field-actions {
+      border-top: 1px solid #e9ecef;
+      margin-top: 8px;
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    .td-title {
+      display: block;
+      font-weight: 600;
+      color: #626262;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0;
+      flex: 0 0 auto;
+      min-width: 120px;
+    }
+
+    .field-value {
+      color: #495057;
+      font-size: 14px;
+      line-height: 1.5;
+      flex: 1;
+      text-align: left;
+
+      &.text-end {
+        text-align: right;
+        flex: 0 0 auto;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .badge {
+        font-size: 12px;
+        padding: 6px 12px;
+        border-radius: 6px;
+      }
+
+      .table-more {
+        background: transparent;
+        border: none;
+        padding: 4px 8px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background: #e9ecef;
+        }
+      }
+    }
+  }
+}
+
+.mobile-pagination {
+  margin-top: 24px;
+  margin-left: 6px;
+  margin-right: 6px;
+  padding: 16px 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+
+  .page-info {
+    font-weight: 500;
+    color: #495057;
+    padding: 0 12px;
+  }
+
+  .btn {
+    border-radius: 8px;
+    padding: 6px 12px;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    transition: all 0.2s;
+    min-width: 40px;
+
+    &:hover:not(:disabled) {
+      background: #e9ecef;
+      border-color: #adb5bd;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .form-select {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+  }
+}
+
+// Desktop Table View - Hide on mobile
+.desktop-table-view {
+  display: block;
+}
+
 // Responsive Design (matching services-list)
-@media (max-width: 768px) {
+@media (max-width: 991px) {
+  // Hide desktop table, show mobile cards
+  .desktop-table-view {
+    display: none !important;
+  }
+
+  .mobile-cards-view {
+    display: block !important;
+  }
+
   .notification-management-header {
-    .page-title {
+    .title {
       font-size: 24px;
       margin-bottom: 0.5rem;
     }
@@ -872,6 +1140,30 @@
       }
     }
   }
+
+  .notification-table-container {
+    .card {
+      border-radius: 12px;
+    }
+
+    .card-header {
+      padding: 12px 16px !important;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      .card-title {
+        font-size: 16px;
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+    }
+  }
   
   .modal {
     .modal-dialog {
@@ -904,16 +1196,15 @@
   }
 }
 
-@media (max-width: 991px) {
-  .stat-card {
-    margin-bottom: 16px;
-  }
-}
 
 @media (max-width: 576px) {
   .notification-management-header {
-    .page-title {
-      font-size: 1.25rem;
+    .title {
+      font-size: 20px;
+    }
+
+    .text-muted {
+      font-size: 12px;
     }
   }
   
@@ -950,8 +1241,75 @@
       }
     }
   }
+
+  .notification-card {
+    .card-header-section {
+      padding: 12px;
+
+      h6 {
+        font-size: 14px;
+      }
+    }
+
+    .card-body-section {
+      padding: 12px;
+    }
+
+    .card-field {
+      margin-bottom: 12px;
+
+      .td-title {
+        font-size: 11px;
+      }
+
+      .field-value {
+        font-size: 13px;
+      }
+    }
+  }
+
+  .notification-table-container {
+    .card-header {
+      padding: 10px 12px !important;
+      flex-direction: column;
+      align-items: flex-start !important;
+      gap: 12px;
+
+      .card-title {
+        font-size: 14px;
+        width: 100%;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 8px 12px;
+        font-size: 13px;
+        justify-content: center;
+      }
+    }
+  }
+
+  .mobile-pagination {
+    padding: 12px;
+    flex-direction: column;
+    gap: 12px !important;
+
+    > div {
+      width: 100%;
+      justify-content: center !important;
+    }
+
+    .form-select {
+      width: 100% !important;
+      min-width: 100% !important;
+    }
+  }
   
   .modal {
+    .modal-dialog {
+      margin: 0.5rem;
+    }
+
     .modal-body {
       padding: 1rem;
       
@@ -1065,7 +1423,7 @@
     border: 1px solid #ddd;
     padding: 0.75rem 1rem;
     transition: all 0.3s ease;
-    font-family: 'Expo Arabic Book', sans-serif;
+    font-family: 'Expo Arabic Book Book', sans-serif;
     
     &:focus {
       border-color: #8d734d;
@@ -1091,6 +1449,6 @@
     font-weight: 500;
     color: #333;
     margin-bottom: 0.5rem;
-    font-family: 'Expo Arabic Book', sans-serif;
+    font-family: 'Expo Arabic Book';
   }
 }
