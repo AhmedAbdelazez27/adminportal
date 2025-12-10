@@ -243,6 +243,7 @@ export class VerifyotpComponent implements OnInit, AfterViewInit, OnDestroy {
             this.translate.instant('OTP.VERIFY_FAILED'),
             this.translate.instant('TOAST.TITLE.ERROR')
           );
+          this.spinnerService.hide();
         },
       });
     } else {
@@ -260,8 +261,10 @@ export class VerifyotpComponent implements OnInit, AfterViewInit, OnDestroy {
               this.translate.instant('TOAST.TITLE.ERROR')
             );
           }
+          this.spinnerService.hide();
         },
         error: () => {
+          this.spinnerService.hide();
           this.toastr.error(
             this.translate.instant('OTP.VERIFY_FAILED'),
             this.translate.instant('TOAST.TITLE.ERROR')
