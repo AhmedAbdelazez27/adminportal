@@ -107,7 +107,7 @@ export class RolesListComponent {
         this.rowActions = [
             { label: this.translate.instant('Common.users'), icon: 'icon-frame-user', action: 'onUsersInfo' },
             { label: this.translate.instant('Common.screens'), icon: 'icon-frame-screens', action: 'onScreensInfo' },
-            { label: this.translate.instant('Common.entities'), icon: 'icon-frame-entities', action: 'onEntitiesInfo' },
+            // { label: this.translate.instant('Common.entities'), icon: 'icon-frame-entities', action: 'onEntitiesInfo' },
             { label: this.translate.instant('Common.edit'), icon: 'icon-frame-edit', action: 'onEditInfo' },
             { label: this.translate.instant('Common.deletd'), icon: 'icon-frame-delete', action: 'onDeletdInfo' },
         ];

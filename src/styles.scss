@@ -5331,3 +5331,13 @@ html[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
   padding-right: 0;
   content: "/";
 }
+
+.login-logo{
+  height: 90px;
+}
+
+@media(max-width:991px){
+  .login-logo{
+  height: 60px;
+}
+}

@@ -16,7 +16,12 @@
 </div> -->
 
 <div class="container">
-  <div class="row mt-5">
+  <div class="d-flex gap-4 justify-content-center mb-6">
+      <!-- <img src="./../../../../assets/images/login-logo.png" class="login-logo"/> -->
+      <img src="./../../../assets/images/council-logo.png" class="login-logo" />
+    </div>
+
+  <div class="row mt-1">
     <div class="col-xl-3"></div>
     <div class="col-xl-6 ">
       <div class="main-container mt-5 login-box" style="padding:64px 50px;">
@@ -24,10 +29,9 @@
                 [attr.aria-label]="currentLang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'">
           {{ currentLang === 'ar' ? 'English' : 'عربي' }}
         </button>
-        <div class="d-lg-flex justify-content-center align-items-center gap-2 mb-5 text-center">
-          <!-- <img src="./../../../../assets/images/logo.png" style="width: 150px;"/> -->
+        <!-- <div class="d-lg-flex justify-content-center align-items-center gap-2 mb-5 text-center">
           <img src="./../../../../assets/images/council-logo.png" style="width: 250px;" />
-        </div>
+        </div> -->
         <form [formGroup]="form" (ngSubmit)="submit()">
           <div class="mb-4">
             <label for="userName" class="form-label">{{ 'LOGIN.USERNAME_LABEL' | translate }}</label>

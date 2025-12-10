@@ -238,8 +238,7 @@ export class UsersListComponent implements OnInit {
       });
 
 
-    this.filterUserCriteria.userStatus = UserStatus.New;
-    this.filterUserCriteria.userType = UserType.Admin;
+    // No default values for filters - load all users initially
     this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
     this.buildColumnDefs();
 
@@ -409,7 +408,7 @@ export class UsersListComponent implements OnInit {
       this.userService.createUser(formData).subscribe({
         next: (res) => {
           this.toastr.success(this.translate.instant('TOAST.USER_CREATED'));
-          this.getUsers(1);
+          this.getLoadDataGrid({ pageNumber: 1, pageSize: this.pagination.take });
           this.closeModal();
         },
         error: (err) => {
@@ -422,7 +421,7 @@ export class UsersListComponent implements OnInit {
       this.userService.updateUser(formData).subscribe({
         next: (res) => {
           this.toastr.success(this.translate.instant('TOAST.USER_UPDATED'));
-          this.getUsers(this.currentPage);
+          this.getLoadDataGrid({ pageNumber: this.pagination.currentPage, pageSize: this.pagination.take });
           this.closeModal();
         },
         error: (err) => {
