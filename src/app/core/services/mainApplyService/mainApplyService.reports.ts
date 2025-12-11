@@ -111,6 +111,26 @@ export class MainApplyServiceReportService {
 
             const a4Style = `
 <style>
+@font-face {
+  font-family: 'Janna LT';
+  src: url('${baseUrl}/assets/fonts/JannaLT-Regular.ttf') format('truetype');
+  font-weight: normal;
+  unicode-range: U+0600-06FF;
+}
+
+@font-face {
+  font-family: 'Janna LT';
+  src: url('${baseUrl}/assets/fonts/JannaLT-Bold.ttf') format('truetype');
+  font-weight: bold;
+  unicode-range: U+0600-06FF;
+}
+
+html, body {
+  font-family: ${isArabic ? '"Janna LT", sans-serif' : '"Arial", sans-serif'} !important;
+  -webkit-font-smoothing: antialiased !important;
+  font-smooth: always !important;
+}
+
   @page {
     size: A4 portrait;
     margin: 10mm;
@@ -132,7 +152,7 @@ export class MainApplyServiceReportService {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    font-family: ${isArabic ? '"DIN Next LT Arabic Regular", "Tahoma", sans-serif' : '"Arial", sans-serif'} !important;
+    font-family: ${isArabic ? '"Janna LT", sans-serif' : '"Arial", sans-serif'} !important;
     direction: ${isArabic ? 'rtl' : 'ltr'};
     text-align: ${isArabic ? 'right' : 'left'};
   }
@@ -384,6 +404,13 @@ export class MainApplyServiceReportService {
 
             const a4Style = `
 <style>
+  @font-face {
+    font-family: 'Janna LT';
+    src: url('${baseUrl}/assets/fonts/JannaLT-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
   @page {
     size: A4 portrait;
     margin: 10mm;
@@ -405,7 +432,7 @@ export class MainApplyServiceReportService {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    font-family: ${isArabic ? '"DIN Next LT Arabic Regular", "Tahoma", sans-serif' : '"Arial", sans-serif'} !important;
+    font-family: ${isArabic ? '"Janna LT", "Tahoma", sans-serif' : '"Arial", sans-serif'} !important;
     direction: ${isArabic ? 'rtl' : 'ltr'};
     text-align: ${isArabic ? 'right' : 'left'};
   }
@@ -1009,7 +1036,16 @@ export class MainApplyServiceReportService {
           <td><strong>${this.translate.instant('mainApplyServiceReportsResourceName.CHARITY_EVENT_PERMIT_REPORT.ADVERTISEMENT')}: </strong>
           <span style="color:black;">${this.reportData?.charityEventPermit?.advertisementTypeName ?? ''}</span></td>
           <td><strong>${this.translate.instant('mainApplyServiceReportsResourceName.CHARITY_EVENT_PERMIT_REPORT.DONATION_CHANNELS')} : </strong>
-          <span style="color:black;">${this.reportData?.charityEventPermit?.donationCollectionChannels?.[0].nameAr ?? ''}</span></td>
+            <span style="color:black;">
+            ${
+      this.reportData?.charityEventPermit?.donationCollectionChannels
+      && Array.isArray(this.reportData.charityEventPermit.donationCollectionChannels)
+      && this.reportData.charityEventPermit.donationCollectionChannels.length > 0
+      ? this.reportData.charityEventPermit.donationCollectionChannels[0].nameAr
+      : ''
+            }
+            </span>
+
         </tr>
       </table>
 
@@ -1138,7 +1174,16 @@ export class MainApplyServiceReportService {
 
       <div style="border:1px solid #ccc;border-top:none;padding:6px;font-size:13px;">
         <strong>${this.translate.instant('mainApplyServiceReportsResourceName.DONATION_CAMPAIGN_PERMIT_REQUEST_REPORT.DONATION_CHANNELS')} : </strong>
-        <span style="color:black;">${this.reportData?.requestEventPermit?.donationCollectionChannels?.[0].nameAr ?? ''}</span>
+        <span style="color:black;">
+        ${
+      this.reportData?.requestEventPermit?.donationCollectionChannels
+        && Array.isArray(this.reportData.requestEventPermit.donationCollectionChannels)
+        && this.reportData.requestEventPermit.donationCollectionChannels.length > 0
+        ? this.reportData.requestEventPermit.donationCollectionChannels[0].nameAr
+      : ''
+        }
+        </span>
+
       </div>
 
       <div style="border:1px solid #ccc;border-top:none;padding:6px;font-size:13px;">
