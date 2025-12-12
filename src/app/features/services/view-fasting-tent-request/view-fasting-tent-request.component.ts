@@ -1440,6 +1440,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.toastr.error(this.translate.instant('TOAST.SAVE_FAILED'));
+        this.spinnerService.hide();
       }
     });
   }
@@ -1629,9 +1630,11 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       tap({
         next: (res) => {
           this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
+          this.spinnerService.hide();
         },
         error: () => {
           this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
+          this.spinnerService.hide();
         },
         complete: () => this.spinnerService.hide()
       })
@@ -1663,9 +1666,11 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
       tap({
         next: (res) => {
           this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
+          this.spinnerService.hide();
         },
         error: () => {
           this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
+          this.spinnerService.hide();
         },
         complete: () => this.spinnerService.hide()
       })

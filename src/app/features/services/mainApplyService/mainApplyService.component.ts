@@ -185,7 +185,7 @@ export class MainApplyServiceComponent {
       //{ label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceConfirmationData' },
       //{ label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceInqueryData' },
       { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-edit', action: 'oneditServiceData' },
-      { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceData' },
+      // { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceData' },
       { label: this.translate.instant('Common.Print'), icon: 'fa fa-print', action: 'onPrintPDF' },
     ];
 
@@ -577,7 +577,7 @@ export class MainApplyServiceComponent {
     if (row.serviceId === "1") {
       return [
         { label: this.translate.instant('Common.applicantData'), icon: 'fas fa-address-card', action: 'onViewApplicantData' },
-        { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceData' }
+        // { label: this.translate.instant('Common.serviceData'), icon: 'icon-frame-view', action: 'onViewServiceData' }
       ];
     } else {
       return [

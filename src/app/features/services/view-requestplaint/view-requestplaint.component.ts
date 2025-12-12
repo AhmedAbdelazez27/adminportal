@@ -558,6 +558,7 @@ export class ViewRequestplaintComponent implements OnInit {
         this.spinnerService.hide();
       },
       error: () => {
+        this.spinnerService.hide();
         this.toastr.error(this.translate.instant('TOAST.SAVE_FAILED'));
       }
     });
@@ -679,6 +680,7 @@ export class ViewRequestplaintComponent implements OnInit {
                 this.toastr.warning(this.translate.instant('Common.ERROR'));
                 observer.error(res);
               }
+              this.spinnerService.hide();
             },
             error: (err) => {
               this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
@@ -748,9 +750,11 @@ export class ViewRequestplaintComponent implements OnInit {
     return this.mainApplyServiceService.saveComment(params).pipe(
       tap({
         next: (res) => {
+          this.spinnerService.hide();
           this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
         },
         error: () => {
+          this.spinnerService.hide();
           this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
         },
         complete: () => this.spinnerService.hide()
@@ -782,9 +786,11 @@ export class ViewRequestplaintComponent implements OnInit {
     return this.mainApplyServiceService.saveComment(params).pipe(
       tap({
         next: (res) => {
+          this.spinnerService.hide();
           this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
         },
         error: () => {
+          this.spinnerService.hide();
           this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
         },
         complete: () => this.spinnerService.hide()

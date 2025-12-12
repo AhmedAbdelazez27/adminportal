@@ -1393,6 +1393,7 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
         this.spinnerService.hide();
       },
       error: () => {
+        this.spinnerService.hide();
         this.toastr.error(this.translate.instant('TOAST.SAVE_FAILED'));
       }
     });
@@ -1583,9 +1584,11 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
     return this.mainApplyServiceService.saveComment(params).pipe(
       tap({
         next: (res) => {
+          this.spinnerService.hide();
           this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
         },
         error: () => {
+          this.spinnerService.hide();
           this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
         },
         complete: () => this.spinnerService.hide()
@@ -1617,9 +1620,11 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
     return this.mainApplyServiceService.saveComment(params).pipe(
       tap({
         next: (res) => {
+          this.spinnerService.hide();
           this.toastr.success(this.translate.instant('TOAST.TITLE.SUCCESS'));
         },
         error: () => {
+          this.spinnerService.hide();
           this.toastr.error(this.translate.instant('Common.ERROR_SAVING_DATA'));
         },
         complete: () => this.spinnerService.hide()
