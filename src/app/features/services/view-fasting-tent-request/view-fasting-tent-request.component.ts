@@ -95,6 +95,7 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
 
   // Loading states
   isLoading = false;
+  hasError = false;
   isLoadingComments = false;
   isSavingComment = false;
 
@@ -466,10 +467,12 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
         }
 
         this.isLoading = false;
+        this.hasError = false;
       },
       error: (error) => {
-        this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_DATA'));
         this.isLoading = false;
+        this.hasError = true;
+        this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_DATA'));
         this.router.navigate(['/']);
       }
     });
@@ -1388,19 +1391,19 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
   }
 
   acceptbtn(): void {
-    this.updateStatus("1", '');
+    this.updateStatus("1", '').subscribe();
   }
 
   rejectbtn(): void {
-    this.updateStatus("2", '');
+    this.updateStatus("2", '').subscribe();
   }
 
   cancelcustombtn(): void {
-    this.updateStatus("4", '');
+    this.updateStatus("4", '').subscribe();
   }
 
   custombtn(): void {
-    this.updateStatus("5", '');
+    this.updateStatus("5", '').subscribe();
   }
 
   rejectWithReasonbtn(): void {
@@ -1505,12 +1508,12 @@ export class ViewFastingTentRequestComponent implements OnInit, OnDestroy {
     const startDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.startDate ?? null);
     const endDate = this.openStandardReportService.formatDate(this.mainApplyService?.fastingTentService?.endDate ?? null);
 
-    if (status === "1" && !endDate && this.mainApplyService?.serviceId === 1) {
+    if (status == "1" && !endDate && this.mainApplyService?.serviceId == 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.END_DATE_REQUIRED'));
       return of(null); // return empty observable to keep signature consistent
     }
 
-    if (status === "1" && !startDate && this.mainApplyService?.serviceId === 1) {
+    if (status == "1" && !startDate && this.mainApplyService?.serviceId == 1) {
       this.toastr.warning(this.translate.instant('VALIDATION.START_DATE_REQUIRED'));
       return of(null);
     }

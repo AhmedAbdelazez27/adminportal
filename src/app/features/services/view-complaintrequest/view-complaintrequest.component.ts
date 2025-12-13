@@ -52,6 +52,7 @@ export class ViewComplaintrequestComponent implements OnInit {
   targetWorkFlowStep: WorkFlowStepDto | null = null;
   commentForm!: FormGroup;
   isLoading = false;
+  hasError = false;
   submitted = false;
   allApproved: boolean = false;
   userForm: FormGroup;
@@ -135,8 +136,13 @@ export class ViewComplaintrequestComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true;
+    this.hasError = false;
+
     const sub = this.mainApplyServiceService.getDetailById({ id }).subscribe({
       next: (resp: any) => {
+        this.isLoading = false;
+        this.hasError = false;
         this.mainApplyService = resp;  // تخزين البيانات القادمة من الـ API في mainApplyService
         //  let storeddepartmentId = localStorage.getItem('departmentId') ?? '';
 
@@ -209,6 +215,8 @@ export class ViewComplaintrequestComponent implements OnInit {
           this.workFlowSteps.every(step => step.serviceStatus === 1);
       },
       error: () => {
+        this.isLoading = false;
+        this.hasError = true;
         this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_DATA'));
         this.router.navigate(['/']);
       }

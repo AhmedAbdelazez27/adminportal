@@ -271,6 +271,7 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
   isLoadingComments = false;
 
   isLoading = false;
+  hasError = false;
 
   showAttachmentModal = false;
   selectedCommentAttachments: AttachmentDto[] = [];
@@ -481,10 +482,12 @@ export class ViewRequesteventpermitComponent implements OnInit, OnDestroy {
         }
 
         this.isLoading = false;
+        this.hasError = false;
       },
       error: () => {
-        this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_DATA'));
         this.isLoading = false;
+        this.hasError = true;
+        this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_DATA'));
         this.router.navigate(['/']);
       }
     });

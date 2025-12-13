@@ -298,6 +298,7 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
   advertisementMethodType: any[] = [];
   submitted = false;
   isLoading = false;
+  hasError = false;
   isSaving = false;
   isFormInitialized = false;
   workFlowQuery: any;
@@ -394,6 +395,9 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
       this.router.navigate(['/']);
       return;
     }
+
+    this.isLoading = true;
+    this.hasError = false;
 
     const sub = this.mainApplyServiceService.getDetailById({ id }).subscribe({
       next: (resp: any) => {
@@ -495,8 +499,13 @@ export class ViewCharityEventPermitComponent implements OnInit, OnDestroy {
         } else {
           this.initializeCommentsTable([]);
         }
+        
+        this.isLoading = false;
+        this.hasError = false;
       },
       error: () => {
+        this.isLoading = false;
+        this.hasError = true;
         this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_DATA'));
         this.router.navigate(['/']);
       }

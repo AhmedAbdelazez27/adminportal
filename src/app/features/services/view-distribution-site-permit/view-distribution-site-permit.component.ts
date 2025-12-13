@@ -467,6 +467,7 @@ export class ViewDistributionSitePermitComponent implements OnInit, OnDestroy {
         }
         
         this.isLoading = false;
+        this.hasError = false;
       },
       error: (error) => {
         this.hasError = true;

@@ -79,6 +79,10 @@ export class ViewRequestplaintComponent implements OnInit {
   commentsColumnDefs: ColDef[] = [];
   commentsColumnHeaderMap: { [k: string]: string } = {};
   isLoadingComments = false;
+  
+  // Loading states
+  isLoading = false;
+  hasError = false;
 
   // Modals: attachments (comments / partners)
   showAttachmentModal = false;
@@ -196,6 +200,9 @@ export class ViewRequestplaintComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true;
+    this.hasError = false;
+
     const sub = this.mainApplyServiceService.getDetailById({ id }).subscribe({
       next: (resp: any) => {
 
@@ -279,8 +286,13 @@ export class ViewRequestplaintComponent implements OnInit {
         } else {
           this.initializeCommentsTable([]);
         }
+        
+        this.isLoading = false;
+        this.hasError = false;
       },
       error: () => {
+        this.isLoading = false;
+        this.hasError = true;
         this.toastr.error(this.translate.instant('COMMON.ERROR_LOADING_DATA'));
         this.router.navigate(['/']);
       }

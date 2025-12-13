@@ -898,7 +898,7 @@
         </div>
       </div>
 
-      <div *ngIf="!isLoading && !mainApplyService" class="alert alert-danger text-center">
+      <div *ngIf="hasError && !isLoading" class="alert alert-danger text-center">
         <h5>{{ 'COMMON.ERROR' | translate }}</h5>
         <p>{{ 'COMMON.DATA_NOT_FOUND' | translate }}</p>
         <button class="btn btn-secondary" (click)="goBack()">{{ 'COMMON.GO_BACK' | translate }}</button>
